@@ -1,0 +1,31 @@
+{
+  "name": "@kamkam1_0/discord.js",
+  "version": "3.3.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KamKam0/discord.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KamKam0/discord.js/issues"
+  },
+  "keywords": ["Discordjs", "Events", "Handler"],
+  "homepage": "https://github.com/KamKam0/discord.js",
+  "author": "KamKam <kamkam.dev.contact@gmail.com>",
+  "license": "BSD 2",
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "fs": "^0.0.1-security",
+    "mysql2": "^2.3.3",
+    "node-fetch": "^2.6.7",
+    "ws": "^8.5.0",
+    "@kamkam1_0/discord-cooldown": "^1.0.0",
+    "@kamkam1_0/discord-eventhandler": "^1.1.0",
+    "@kamkam1_0/ms": "^1.0.0",
+    "@kamkam1_0/discord-commandhandler": "^1.5.1"
+  }
+}
