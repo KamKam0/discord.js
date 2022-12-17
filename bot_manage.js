@@ -4,7 +4,7 @@ module.exports.login = async (bot, presence) => {
         if(!bot.name || bot.name === null || bot.name === '00#404e') return reject(new Error("No bot name or invalid"))
         if(bot.state === "processing"){
             bot.discordjs.lancement = Date.now()
-            var us = await require("./Methods/user").createDM(bot.discordjs.token, bot.config["general"]["ID créateur"]).catch(err => {console.log(err)})
+            var us = await require("./Methods/user").createDM(bot.discordjs.token, bot.config.general["ID createur"]).catch(err => {console.log(err)})
             if(!us){
                 setTimeout(() => this.login(bot, presence), 5 * 1000 * 60)
                 return
