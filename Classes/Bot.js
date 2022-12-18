@@ -385,6 +385,11 @@ class Bot extends EventEmitter{
         this.database_state = "stable"
         return connexion
     }
+
+    TreatToken(env){
+        if(env.token && env.token_beta && typeof env.token_beta === "string" && process.argv.includes("-t")) this.discordjs.token = env.token_beta
+        else this.discordjs.token = env.token
+    }
     
     GetDB(){
         let env = getCheck(".env")
@@ -396,7 +401,7 @@ class Bot extends EventEmitter{
             console.log("Le token présente dans votre .env n'est pas un string")
             process.exit()
         }
-        this.discordjs.token = env.token
+        this.TreatToken(env)
         let config = getCheck("config.json")
         if(!config.general){
             console.log("Pas de sections general dans votre config.json")
