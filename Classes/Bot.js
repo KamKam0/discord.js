@@ -411,6 +411,18 @@ class Bot extends EventEmitter{
             console.log("Aucun fichier de langue ne correspond à votre language par défaut")
             process.exit()
         }
+        toreturn.forEach(langue => {
+            if(!langue["Langue_Code"]){
+                console.log("Aucun code de language présent dans un de vos fichiers langues")
+                process.exit()
+            }
+            ["Help", "Options", "Choices"].forEach(opt => {
+                if(!langue[opt]){
+                    console.log(`Aucun ${opt} dans votre fichier de langue ${langue["Langue_Code"]}`)
+                    process.exit()
+                }
+            })
+        })
         this.langues = toreturn
         let dbtr = {"general": config.general, "Dependencies": {}}
         if(config.dependencies){
