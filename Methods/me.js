@@ -60,17 +60,25 @@ module.exports.setactivity = async (bot, options) => {
 }
 
 module.exports.setpresence = async (bot, options) => {
+    console.log(1)
     if(!bot) return ({code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "Me"})
+    console.log(1)
     if(!options) return ({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Me"})
+    console.log(1)
     if(typeof options !== "object") return ({code: require("../DB/errors.json")["24"].code, message: require("../DB/errors.json")["24"].message, file: "Me"})
+    console.log(1)
     if(bot.state !== "ready") return ({code: require("../DB/errors.json")["39"].code, message: require("../DB/errors.json")["39"].message, file: "Me"})
+    console.log(1)
     if(!options.status) return ({code: require("../DB/errors.json")["41"].code, message: require("../DB/errors.json")["41"].message, file: "Me"})
+    console.log(1)
     if(!options.activities) return ({code: require("../DB/errors.json")["42"].code, message: require("../DB/errors.json")["42"].message, file: "Me"})
+    console.log(1)
 
     let body = {
         op: 3,
         d: require("../Utils/functions").presence({since: bot.discordjs.lancement, activities: options.activities, status: options.status})
     }
+    console.log(1)
     console.log("set presence - me")
     console.log(require("../Utils/functions").presence({since: bot.discordjs.lancement, activities: options.activities, status: options.status}))
     console.log(new Date(Date.now()).toLocaleString())
