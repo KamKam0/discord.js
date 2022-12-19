@@ -6,7 +6,7 @@ module.exports.login = async (bot, presence) => {
             bot.discordjs.lancement = Date.now()
             var us = await require("./Methods/user").createDM(bot.discordjs.token, bot.config.general["ID createur"]).catch(err => {console.log(err)})
             if(!us){
-                setTimeout(() => this.login(bot, presence), 5 * 1000 * 60)
+                setTimeout(() => this.login(bot, (bot.presence || presence)), 5 * 1000 * 60)
                 return
             }else bot.setCreator({id: us.recipients[0].id, channel_id: us.id})
         }
@@ -47,7 +47,7 @@ module.exports.login = async (bot, presence) => {
             const url = `${baseurl}/gateway/bot`
             const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
             if(!basedatas){
-                setTimeout(() => this.login(bot, presence), 5 * 1000 * 60)
+                setTimeout(() => this.login(bot, (bot.presence || presence)), 5 * 1000 * 60)
                 return
             }
             const datas = await basedatas.json()
@@ -62,17 +62,18 @@ module.exports.login = async (bot, presence) => {
         const WebSocket = new ws(trueurl)
         if(!WebSocket) return reject(new Error("Incorrect Infos"))
         bot.discordjs.ws = WebSocket
+        
+        if(bot.state !== "reconnect"){
+            var body_login = body = bot.get_connection((bot.presence || presence))
+            bot.presence = body_login.d.presence
+        }
 
         //setting gateaway
         WebSocket.on("open", async () => {
             if(bot.state === "reconnect"){
                 let body = {op: 6, d: {token: bot.discordjs.token, session_id: bot.discordjs.old_session, seq: (bot.discordjs.old_event - 1)}}
                 bot.discordjs.ws.send(JSON.stringify(body))
-            }else{
-                const body = bot.get_connection(presence)
-                bot.presence = body.d.presence
-                bot.discordjs.ws.send(JSON.stringify(body))
-            }
+            }else bot.discordjs.ws.send(JSON.stringify(body_login))
             setTimeout(() => {
                 if(!bot.discordjs.lastEvent){
                     console.log("Le processus de connexion n'a pas pu aboutir")
@@ -103,7 +104,7 @@ module.exports.login = async (bot, presence) => {
                         bot.discordjs.old_session = bot.discordjs.session_id
                         bot.discordjs.old_event = bot.discordjs.lastEvent
                         bot.state = "isession"
-                        setTimeout(() => this.login(bot, presence), 5000)
+                        setTimeout(() => this.login(bot, (bot.presence || presence)), 5000)
                     }else{
                         bot.discordjs.lastPing = Date.now()
                         bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": bot.discordjs.lastEvent}))
@@ -118,7 +119,7 @@ module.exports.login = async (bot, presence) => {
                 bot.discordjs.old_session = bot.discordjs.session_id
                 bot.discordjs.old_event = bot.discordjs.lastEvent
                 bot.state = "reconnect"
-                setTimeout(() => this.login(bot, presence), 5000)
+                setTimeout(() => this.login(bot, (bot.presence || presence)), 5000)
             }
             else if(message.op === 0){
                 if(!["GUILD_CREATE", "READY", "USER_UPDATE", "MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(message.t)) if(!bot.guilds.get(message.d.guild_id)) return
@@ -132,7 +133,7 @@ module.exports.login = async (bot, presence) => {
                 bot.discordjs.interval_state = null
                 clearInterval(bot.discordjs.interval)
                 bot.state = "isession"
-                setTimeout(() => this.login(bot, presence), 5000)
+                setTimeout(() => this.login(bot, (bot.presence || presence)), 5000)
             }
             else if(message.op === 1) bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": null}))
             else if(message.op === 11) bot.discordjs.lastACK = Date.now()
