@@ -2,28 +2,41 @@ const Guilds = require("../Managers/Guilds")
 const Users = require("../Managers/Users")
 const Channels = require("../Managers/Channels")
 const EventEmitter = require("node:events")
+const Cooldown = require("@kamkam1_0/discord-cooldown")
+const CommandHandler = require("@kamkam1_0/discord-commandhandler")
+const EventHandler = require("@kamkam1_0/discord-eventhandler")
+const VoiceManager = require("./VoiceManager")
+const ORM = require("@kamkam1_0/sql-orm")
 class Bot extends EventEmitter{
     constructor(elements){
         super()
         this.langues = []
         this.default_language = null
         this.discordjs = {ws: null, lastEvent: null, interval: null, lastACK: null, session_id: null, HBinterval: null, dvdatas: null, lancement: null, guild_ids: [], available_ids: [], interval_state: null, token: null, awaitMessages: [], awaitEmojis: [], lastPing: -1, reconnection_url: null}
-        this.database_state = "unstable"
         this.config = this.GetDB()
         this.name = this.checkName()
-        this.sql = this.BeginConnection(elements)
+        this.sql = new ORM({host: "127.0.0.1", port: 3306, user: "root", database: this.name})
         this.guilds = new Guilds(this)
         this.users = new Users(this)
         this.channels = new Channels(this)
         this.state = "processing"
-        this.cooldown = new (require("@kamkam1_0/discord-cooldown")).Cooldowns()
-        this.handler = new (require("@kamkam1_0/discord-commandhandler")).Handlers(this.name, this.langues)
-        this.events = new (require("@kamkam1_0/discord-eventhandler")).Events(this, get_events())
+        this.cooldown = new Cooldown.Cooldowns()
+        this.handler = new CommandHandler.Handlers(this.name, this.langues)
+        this.events = new EventHandler.Events(this, get_events())
         this.presence = null
         this.user = null
         this.creator = null
-        this.voice = new (require("./VoiceManager"))(this)
+        this.voice = new VoiceManager(this)
         this.utils = require("../Utils/functions")
+    }
+    
+    /*
+                    if(!na.includes("general")) connexion.query(`CREATE TABLE general (ID VARCHAR(1000), Language VARCHAR(1000), guild_state VARCHAR(1000)${elements ? ", " + elements : ""})`)
+                    if(!na.includes("admin")) connexion.query("CREATE TABLE admin (Pseudo VARCHAR(1000), ID VARCHAR(1000))")*/
+
+    get database_state(){
+        if(this.sql.connectionState) return "stable"
+        return "unstable"
     }
 
     checksql(message){
@@ -82,6 +95,7 @@ class Bot extends EventEmitter{
 
     ven(bot, ID){
         return new Promise((resolve, reject) => {
+            return resolve(ID)
             if(bot.sql){
                 bot.sql.query("SELECT * FROM general", function(err, result){
                     let vid = result.find(re => re.ID === ID)
@@ -346,44 +360,6 @@ class Bot extends EventEmitter{
             }
         })
         if(commands.length > 0) commands.commands.forEach(cmd => this.DeleteSlashCommand(cmd.id))
-    }
-
-    BeginConnection(elements){
-        const mysql = require("mysql2")
-        const connexion = mysql.createConnection({
-            host: '127.0.0.1',
-            user: 'root',
-            database: `${this.name}`
-        })
-        let erer = `Pas de base de données nommée ${this.name}`
-        connexion.query("SHOW TABLES", function(err, result){
-            if(err?.code === "ECONNREFUSED"){
-                console.log("Pas de connexion à une base sql !")
-                process.exit()
-            }
-            else if(err?.code === "ER_BAD_DB_ERROR"){
-                console.log(erer)
-                process.exit()
-            }
-            else if(err){
-                console.log(err)
-                process.exit()
-            }else{
-                if(!result[0]){
-                    connexion.query(`CREATE TABLE general (ID VARCHAR(1000), Language VARCHAR(1000), guild_state VARCHAR(1000)${elements ? ", " + elements : ""})`)
-                    connexion.query("CREATE TABLE admin (Pseudo VARCHAR(1000), ID VARCHAR(1000))")
-                }else{
-                    let na = []
-                    result.forEach(e => {
-                        na.push(Object.values(e)[0])
-                    })
-                    if(!na.includes("general")) connexion.query(`CREATE TABLE general (ID VARCHAR(1000), Language VARCHAR(1000), guild_state VARCHAR(1000)${elements ? ", " + elements : ""})`)
-                    if(!na.includes("admin")) connexion.query("CREATE TABLE admin (Pseudo VARCHAR(1000), ID VARCHAR(1000))")
-                }
-            }
-        })
-        this.database_state = "stable"
-        return connexion
     }
 
     TreatToken(env){
