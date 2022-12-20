@@ -27,6 +27,6 @@
     "@kamkam1_0/discord-eventhandler": "^1.1.0",
     "@kamkam1_0/ms": "^1.0.0",
     "@kamkam1_0/discord-commandhandler": "^1.5.1",
-    "@kamkam1_0/sql-orm": "1.0.1"
+    "@kamkam1_0/sql-orm": "^1.0.3"
   }
 }
