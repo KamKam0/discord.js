@@ -29,10 +29,6 @@ class Bot extends EventEmitter{
         this.voice = new VoiceManager(this)
         this.utils = require("../Utils/functions")
     }
-    
-    /*
-                    if(!na.includes("general")) connexion.query(`CREATE TABLE general (ID VARCHAR(1000), Language VARCHAR(1000), guild_state VARCHAR(1000)${elements ? ", " + elements : ""})`)
-                    if(!na.includes("admin")) connexion.query("CREATE TABLE admin (Pseudo VARCHAR(1000), ID VARCHAR(1000))")*/
 
     get database_state(){
         if(this.sql.connectionState) return "stable"
@@ -316,7 +312,7 @@ class Bot extends EventEmitter{
         commands.forEach(cmd => {
             if(!cmd.help) error.push({cmd: cmd.name, err: "no help"})
             else{
-                let verif = SlashChecker({...cmd.help, name: cmd.name}, true, this.langues)
+                let verif = SlashChecker({...cmd.help, name: cmd.name}, true, ((cmd.help.langues && cmd.help.langues[0]) ? cmd.help.langues : this.langues))
                 if(!verif.status) error.push({...verif, cmd: cmd.name})
             }
         })
