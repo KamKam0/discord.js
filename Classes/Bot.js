@@ -320,12 +320,13 @@ class Bot extends EventEmitter{
         else return {status: true}
     }
 
+    
     async CheckCommands(){
         let commands = await this.GetSlashCommands()
         const commandClass = require("../Classes/ApplicationCommand")
-        const Langue = this.langues.find(e => e.Langue_Code === this.default_language)["Help"]
 
         this.handler.GetAllCommandsfi().filter(cmd => !cmd.help.unclass && !cmd.help.nsfw).forEach(commande => {
+            let Langue = (commande.help.langues && commande.help.langues[0]) ? commande.help.langues.find(e => e.Langue_Code === this.default_language)["Help"] : this.langues.find(e => e.Langue_Code === this.default_language)["Help"]
             let descriptions_cmd = {}
             let names_cmd = {}
             let descriptions_opt = {}
@@ -336,7 +337,10 @@ class Bot extends EventEmitter{
                     value: la.Help[`${cmd.name}_description`],
                     writable: false
                 })*/
-            this.langues.forEach(la => {
+            if(commande.help.langues && commande.help.langues[0]) commande.help.langues.forEach(la => attribute(la))
+            else this.langues.forEach(la => attribute(la))
+
+            function attribute(la){
                 descriptions_cmd[la.Langue_Code] = la.Help[`${commande.name}_description`]
                 names_cmd[la.Langue_Code] = la.Help[`${commande.name}_name`]
                 if(commande.help.options) commande.help.options.forEach(option => {
@@ -345,17 +349,18 @@ class Bot extends EventEmitter{
                     names_opt[la.Langue_Code] = la.Options[`${commande.name}_${option.name}_name`]
                     if(option.choices) option.choices.forEach(choice => names_cho[la.Langue_Code] = la.Choices[`${commande.name}_${option.name}_${choice.name}_name`] )
                 })
-            })
+            }
 
             let cmd = commands.find(cmd => cmd.name === commande.name)
             if(!cmd) this.CreateSlashCommand({name: commande.name, description: Langue[`${commande.name}_description`], options: commande.help.options ? commande.help.options : []})
             else{
                 let truecmd = new commandClass({name: commande.name, description: Langue[`${commande.name}_description`], options: commande.help.options ? commande.help.options : [], description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_perm: commande.help.type, mem_perm: commande.help.autorisation})
-                if(!truecmd.compare(cmd)) this.ModifySlashCommand(truecmd)
+                if(!truecmd.compare(cmd)) this.ModifySlashCommand(truecmd).catch(err => console.log(err.content))
                 commands = commands.DeleteCommand(cmd.name)
             }
         })
         if(commands.length > 0) commands.commands.forEach(cmd => this.DeleteSlashCommand(cmd.id))
+
     }
 
     TreatToken(env){
