@@ -23,7 +23,7 @@
     "mysql2": "^2.3.3",
     "node-fetch": "^2.6.7",
     "ws": "^8.5.0",
-    "@kamkam1_0/discord-cooldown": "^1.2.1",
+    "@kamkam1_0/cooldown": "^1.3.1",
     "@kamkam1_0/discord-eventhandler": "^1.1.03",
     "@kamkam1_0/ms": "^1.0.1",
     "@kamkam1_0/discord-commandhandler": "^1.5.5",

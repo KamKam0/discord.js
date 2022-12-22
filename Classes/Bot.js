@@ -2,13 +2,13 @@ const Guilds = require("../Managers/Guilds")
 const Users = require("../Managers/Users")
 const Channels = require("../Managers/Channels")
 const EventEmitter = require("node:events")
-const Cooldown = require("@kamkam1_0/discord-cooldown")
+const Cooldown = require("@kamkam1_0/cooldown")
 const CommandHandler = require("@kamkam1_0/discord-commandhandler")
 const EventHandler = require("@kamkam1_0/discord-eventhandler")
 const VoiceManager = require("./VoiceManager")
 const ORM = require("@kamkam1_0/sql-orm")
 class Bot extends EventEmitter{
-    constructor(elements){
+    constructor(){
         super()
         this.langues = []
         this.default_language = null
@@ -20,7 +20,7 @@ class Bot extends EventEmitter{
         this.users = new Users(this)
         this.channels = new Channels(this)
         this.state = "processing"
-        this.cooldown = new Cooldown.Cooldowns()
+        this.cooldown = new Cooldown()
         this.handler = new CommandHandler.Handlers(this.name, this.langues)
         this.events = new EventHandler.Events(this, get_events())
         this.presence = null
@@ -120,7 +120,7 @@ class Bot extends EventEmitter{
     Login(presence){
         this.handler.Deploy()
         this.events.Deploy()
-        this.cooldown.Deploy()
+        this.cooldown.Deploy(["global", "commands", "verif", "mention"])
         return new Promise(async (resolve, reject) => {
             require("../bot_manage").login(this, presence)
             .catch(err => {
