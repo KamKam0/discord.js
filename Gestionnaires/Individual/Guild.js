@@ -57,6 +57,7 @@ class Guild{
         this.messages = new Messages(bot, this.id)
         this.db_language = guild.db_language
         this._bot = bot
+        this.bot_token = bot.discordjs.token
         this.voice = {state: "off", server: null, channel: null, queue: [], datas: null, ws: null, udp: null, lastPing: null, interval: null, ready: null, description: null, voice_channel: null, text_channel: null, resource: null, paused_since: null, playing: "true", connection: null, loop: "false", queueloop: "false", np: null}
     }
 
@@ -481,6 +482,18 @@ class Guild{
 
     get createdAt(){
         return require("../../Methods/general").createdAt(this.id, "guild")
+    }
+
+    displayIconURL(extension){
+        return require("../../Methods/general").iconURL(this.id, this.icon, "guild", extension)
+    }
+
+    displayBannerURL(extension){
+        return require("../../Methods/general").iconURL(this.id, this.icon, "gbanner", extension)
+    }
+
+    displaySplashURL(extension){
+        return require("../../Methods/general").iconURL(this.id, this.icon, "splash", extension)
     }
 
     get voiceAdapterCreator() {

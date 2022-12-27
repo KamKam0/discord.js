@@ -137,7 +137,7 @@ module.exports.delete = async (token, webhookid) => {
         } 
     })
 }
-module.exports.execute = async (token, webhook, options) => {
+module.exports.execute = async (token, webhook, options) => {//cp
     const fetch = require("node-fetch")
     let baseinfos = require("../Utils/functions").getbaseinfosre(token)
     const baseurl = baseinfos["baseurl"]

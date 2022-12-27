@@ -1,4 +1,5 @@
-module.exports.reply = async (token, interaction, response, path, method) => {
+const verify = require("../Utils/verify")
+module.exports.reply = async (token, interaction, response, path, method) => {//cp
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -62,67 +63,6 @@ module.exports.reply = async (token, interaction, response, path, method) => {
                 }else return reject(datas)
             }
         }
-        ////
-        /*if(response.files && Array.isArray(response.files) === true){
-            const FormData = require("form-data")
-            let body = new FormData()
-            let count = -1
-            response.files.forEach(file => {
-                if(file.name && file.extension && file.buffer){
-                    count++
-                    
-                    body.append(`files[${count}]`, file.buffer, `${file.name}.${file.extension}`);
-                }
-            })
-            let headers = require("../constants").getbaseinfosrecp(token).baseheaders
-            headers["Content-Type"] += body.getBoundary()
-            if(response.content || response.embeds || response.components){
-                let vody = {}
-                if(response.embeds && Array.isArray(response.embeds) === true && response.embeds[0]) vody.embeds = response.embeds
-                if(response.components && Array.isArray(response.components) === true && response.components[0]) vody.components = [{type: 1, components: response.components}]
-                if(response.content) vody.content = response.content
-                if(response.ephemeral === true) vody.flags = 64
-                let type
-                if(response.modifymessage) type = 7
-                else type = 9
-                body.append("payload_json", JSON.stringify({type: type, data: vody}))
-            }
-            
-            const basedatas = await fetch(url, {method: "POST", headers: headers, body: body}).catch(err => {})
-            if(basedatas.status === 204) return resolve("Done Successfully")
-            else{
-                const datas = await basedatas.json()
-                if(datas && datas.retry_after){
-                    setTimeout(() => {
-                        this.reply(token, interaction, response)
-                        .catch(err => { return reject(err)})
-                        .then(datas => { return resolve(datas)})
-                    }, datas.retry_after * 1000)
-                }else return reject(datas)
-            } 
-        }else{
-            if(response.modal) var basedatas = await fetch(url, {method: "POST", headers: baseheaders, body: JSON.stringify({type: 9, data: response.modal})})
-            else{
-                let vody = {}
-                if(response.embeds && Array.isArray(response.embeds) === true) vody.embeds = response.embeds
-                if(response.components && Array.isArray(response.components) === true) vody.components = [{type: 1, components: response.components}]
-                if(response.content) vody.content = response.content
-                if(!vody.content && !vody.embeds && !vody.components) return reject({code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"})
-                if(response.ephemeral === true) vody.flags = 64
-                var basedatas = await fetch(url, {method: "POST", headers: baseheaders, body: JSON.stringify({type: 4, data: vody})}).catch(err => {})
-            }
-            if(basedatas.status === 204) return resolve("Done Successfully")
-            else{
-                const datas = await basedatas.json()
-                if(datas && datas.retry_after){
-                    setTimeout(() => {
-                        this.reply(token, interaction, response)
-                        .catch(err => { return reject(err)})
-                        .then(datas => { return resolve(datas)})
-                    }, datas.retry_after * 1000)
-                }else return reject(datas)
-            } 
-        }*/
     })
 }
 module.exports.modifyreply = async (token, ID, interaction, response) => {
@@ -134,152 +74,31 @@ module.exports.modifyreply = async (token, ID, interaction, response) => {
         this.reply(token, interaction, response, ID, `${baseurl}/webhooks/${ID}/${interaction.token}/messages/@original`, "PATCH")
         .catch(err => { return reject(err)})
         .then(datas => { return resolve(datas)})
-        /*const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!ID){
-            let user = await require("../Methods/me").getuser(token)
-            ID = user.id
-        }
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Interaction"})
-        if(!interaction) return reject({code: require("../DB/errors.json")["43"].code, message: require("../DB/errors.json")["43"].message, file: "Interaction"})
-        if(!response) return reject({code: require("../DB/errors.json")["44"].code, message: require("../DB/errors.json")["44"].message, file: "Interaction"})
-        if(!interaction.id) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
-        if(!interaction.token) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
-        if(typeof response !== "object") return reject({code: require("../DB/errors.json")["24"].code, message: require("../DB/errors.json")["24"].message, file: "Interaction"})
-
-        const url = `${baseurl}/webhooks/${ID}/${interaction.token}/messages/@original`
-        if(response.files && Array.isArray(response.files) === true){
-            const FormData = require("form-data")
-            let body = new FormData()
-            let count = -1
-            response.files.forEach(file => {
-                if(file.name && file.extension && file.buffer){
-                    count++
-                    
-                    body.append(`files[${count}]`, file.buffer, `${file.name}.${file.extension}`);
-                }
-            })
-            let headers = require("../constants").getbaseinfosrecp(token).baseheaders
-            headers["Content-Type"] += body.getBoundary()
-            if(response.content || response.embeds || response.components){
-                let vody = {}
-                if(response.embeds && Array.isArray(response.embeds) === true) vody.embeds = response.embeds
-                if(response.components && Array.isArray(response.components) === true) vody.components = [{type: 1, components: response.components}]
-                if(response.content) vody.content = response.content
-                if(response.ephemeral === true) vody.flags = 64
-                body.append("payload_json", JSON.stringify(vody))
-            }
-            
-            const basedatas = await fetch(url, {method: "PATCH", headers: headers, body: body}).catch(err => {})
-            if(basedatas.status === 204) return resolve("Done Successfully")
-            else{
-                const datas = await basedatas.json()
-                if(datas && datas.retry_after){
-                    setTimeout(() => {
-                        this.modifyreply(token, ID, interaction, response)
-                        .catch(err => { return reject(err)})
-                        .then(datas => { return resolve(datas)})
-                    }, datas.retry_after * 1000)
-                }else return reject(datas)
-            } 
-        }else{
-            let vody = {}
-            if(response.embeds && Array.isArray(response.embeds) === true) vody.embeds = response.embeds
-            if(response.components && Array.isArray(response.components) === true) vody.components = [{type: 1, components: response.components}]
-            if(response.content) vody.content = response.content
-            if(!vody.content && !vody.embeds && !vody.components) return reject({code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"})
-            if(response.ephemeral === true) vody.flags = 64 
-            const basedatas = await fetch(url, {method: "PATCH", headers: baseheaders, body: JSON.stringify(vody)}).catch(err => {})
-            const datas = await basedatas.json()
-            if(!datas || datas.code || datas.retry_after){
-                if(datas && datas.retry_after){
-                    setTimeout(() => {
-                        this.modifyreply(token, ID, interaction, response)
-                        .catch(err => { return reject(err)})
-                        .then(datas => { return resolve(datas)})
-                    }, datas.retry_after * 1000)
-                }else return reject(datas)
-            }
-            else return resolve(datas)
-        }*/
         
     })
 }
 module.exports.deletereply = async (token, ID, interaction) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Interaction"})
-        if(!interaction) return reject({code: require("../DB/errors.json")["43"].code, message: require("../DB/errors.json")["43"].message, file: "Interaction"})
-        if(!interaction.id) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
-        if(!interaction.token) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
         if(!ID){
             let user = await require("../Methods/me").getuser(token)
             ID = user.id
         }
-        const url = `${baseurl}/webhooks/${ID}/${interaction.token}/messages/@original`
-        const basedatas = await fetch(url, {method: "DELETE", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.deletereply(token, ID, interaction)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
+        if(!interaction.id) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
+        if(!interaction.token) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
+        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: interaction, type: "object", data_name: "interaction"}], "DELETE", `webhooks/${ID}/${interaction.token}/messages/@original`, this.deletereply, "deletereply interaction")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 
-
-/////////
 module.exports.getcommands = async (token, ID,  trueid) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Interaction"})
         if(!ID){
             let user = await require("../Methods/me").getuser(token)
             ID = user.id
         }
-        const url = `${baseurl}/applications/${ID}/commands`
-        const basedatas = await fetch(url, {method: "GET", headers: baseheaders}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.getcommands(token, ID, trueid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else{
+        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: trueid, value_data: "id", type: "string", data_name: "trueid", required: false}], "GET", `applications/${ID}/commands`, this.getcommands, "getcommands interaction")
+        .then(datas => {
             if(trueid){
                 if(datas.find(com => com.id === trueid)) return resolve(new (require("../Gestionnaires/Individual/SlashCommand")(datas.find(com => com.id === trueid))))
                 else return reject("No command found")
@@ -288,123 +107,45 @@ module.exports.getcommands = async (token, ID,  trueid) => {
                 commands.AddCommands(datas.map(da => { return {...da, token: token}}))
                 return resolve(commands)
             }
-        }
+        })
+        .catch(err => reject(err))
     })
 }
 module.exports.deletecommand = async (token, ID,  interaction) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Interaction"})
-        if(!interaction) return reject({code: require("../DB/errors.json")["43"].code, message: require("../DB/errors.json")["43"].message, file: "Interaction"})
         if(!ID){
             let user = await require("../Methods/me").getuser(token)
             ID = user.id
         }
-        const url = `${baseurl}/applications/${ID}/commands/${interaction}`
-        const basedatas = await fetch(url, {method: "DELETE", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.deletecommand(token, ID, interaction)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
-            
+        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: interaction, value_data: "id", type: "string", data_name: "interaction"}], "DELETE", `applications/${ID}/commands/${interaction}`, this.deletecommand, "deletecommand interaction")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.createcommand = async (token, ID,  options) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Interaction"})
-        if(!options) return reject({code: require("../DB/errors.json")["46"].code, message: require("../DB/errors.json")["46"].message, file: "Interaction"})
         if(!ID){
             let user = await require("../Methods/me").getuser(token)
             ID = user.id
         }
-        if(typeof options !== "object") return reject({code: require("../DB/errors.json")["24"].code, message: require("../DB/errors.json")["24"].message, file: "Interaction"})
-
-        const url = `${baseurl}/applications/${ID}/commands`
         let check = this.VerifyInteraction(options)
         if(!check.status) return reject(check)
-        const basedatas = await fetch(url, {method: "POST", headers: baseheaders, body: JSON.stringify(options)}).catch(err => {})
-        const datas = await basedatas.json()
-        if(datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.createcommand(token, ID,  options)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/SlashCommand"))({...datas, token: token}))
+        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: options, type: "object", data_name: "options"}], "POST", `applications/${ID}/commands`, this.createcommand, "createcommand interaction")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.modifycommand = async (token, ID,  options) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Interaction"})
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Interaction"})
-        if(!ID) return reject({code: require("../DB/errors.json")["46"].code, message: require("../DB/errors.json")["46"].message, file: "Interaction"})
-        if(typeof options !== "object") return reject({code: require("../DB/errors.json")["24"].code, message: require("../DB/errors.json")["24"].message, file: "Interaction"})
         if(!ID){
             let user = await require("../Methods/me").getuser(token)
             ID = user.id
         }
-
-        const url = `${baseurl}/applications/${ID}/commands`
         let check = this.VerifyInteraction(options)
         if(!check.status) return reject(check)
-        const basedatas = await fetch(url, {method: "POST", headers: baseheaders, body: JSON.stringify(options)}).catch(err => {})
-        const datas = await basedatas.json()
-        if(datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.modifycommand(token, ID, options)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/SlashCommand"))({...datas, token: token}))
+        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: options, type: "object", data_name: "options"}], "POST", `applications/${ID}/commands`, this.modifycommand, "modifycommand interaction")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.VerifyInteraction = (object, state, languages) => {

@@ -1,11 +1,13 @@
-module.exports.iconURL = (ids, link, type) => {
+module.exports.iconURL = (ids, link, type, extension) => {
     if(!ids) return {code: require("../DB/errors.json")["13"].code, message: require("../DB/errors.json")["13"].message, file: "General"}
     if(!type) return {code: require("../DB/errors.json")["77"].code, message: require("../DB/errors.json")["77"].message, file: "General"}
+    if(extension && typeof extension !== "string") return {code: require("../DB/errors.json")["82"].code, message: require("../DB/errors.json")["82"].message, file: "General"}
     if(!["user", "guild", "gbanner", "ubanner" , "splash", "role", "event", "member", "mbanner"].includes(type)) return {code: require("../DB/errors.json")["78"].code, message: require("../DB/errors.json")["78"].message, file: "General"}
     if(!link) return null
-    let extension = "png"
+    extension = extension || "png"
     let baseurl = "https://cdn.discordapp.com"
     if(link.includes("a_")) extension = "gif"
+    if(!["png", "jpeg", "webp", "gif"].includes(extension.toLowerCase())) return {code: require("../DB/errors.json")["83"].code, message: require("../DB/errors.json")["83"].message, file: "General"}
     if(["user", "guild", "gbanner", "ubanner" , "splash", "role", "event"].includes(type)){
         if(typeof ids !=="string") return {code: require("../DB/errors.json")["79"].code, message: require("../DB/errors.json")["79"].message, file: "General"}
         if(!require("../Utils/functions").check_id(ids)) return {code: require("../DB/errors.json")["81"].code, message: require("../DB/errors.json")["81"].message, file: "General"}
@@ -46,7 +48,7 @@ module.exports.iconURL = (ids, link, type) => {
     }
 }
 
-module.exports.createdAt = (id, type) => {
+module.exports.createdAt = (id) => {
     if(!id) return ({code: require("../DB/errors.json")["13"].code, message: require("../DB/errors.json")["13"].message, file: "General"})
     if(!require("../Utils/functions").check_id(id)) return {code: require("../DB/errors.json")["81"].code, message: require("../DB/errors.json")["81"].message, file: "General"}
     const discordSnowflake = {

@@ -58,5 +58,9 @@ class Role{
     get iconURL(){
         return require("../../Methods/general").iconURL(this.id, this.icon, "role")
     }
+
+    displayIconURL(extension){
+        return require("../../Methods/general").iconURL(this.id, this.icon, "role", extension)
+    }
 }
 module.exports = Role

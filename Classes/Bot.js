@@ -12,9 +12,9 @@ class Bot extends EventEmitter{
         super()
         this.langues = []
         this.default_language = null
-        this.discordjs = {ws: null, lastEvent: null, interval: null, lastACK: null, session_id: null, HBinterval: null, dvdatas: null, lancement: null, guild_ids: [], available_ids: [], interval_state: null, token: null, awaitMessages: [], awaitEmojis: [], lastPing: -1, reconnection_url: null}
-        this.config = this.GetDB()
-        this.name = this.checkName()
+        this.discordjs = {ws: null, lastEvent: null, interval: null, lastACK: null, session_id: null, HBinterval: null, dvdatas: null, lancement: null, guild_ids: [], available_ids: [], interval_state: null, token: null, lastPing: -1, reconnection_url: null}
+        this.config = this.#GetDB()
+        this.name = this.#checkName()
         this.sql = new ORM({host: "127.0.0.1", port: 3306, user: "root", database: this.name})
         this.guilds = new Guilds(this)
         this.users = new Users(this)
@@ -35,19 +35,6 @@ class Bot extends EventEmitter{
         return "unstable"
     }
 
-    checksql(message){
-        if(!message) return "no message"
-        message = String(message)
-        let valide;
-        if(message.includes('WHERE')) valide = "error"
-        let check = ['select', 'from', 'create', 'database', 'insert', 'table', 'into', 'delete', 'drop', 'update', 'set', 'truncate', 'use', 'alter', 'lock', 'unlock', 'execute', 'grant', 'revoke', 'replicate', 'synchronize', "'", '"', '`', "//", "--"]
-        check.forEach(ch => {
-            if(message.includes(ch)) valide = "error"
-        })
-        if(!valide) return "complete"
-        else return "error"
-    }
-
     ms(number){
         if(number === 0) return 0
         if(!number) return 'Invalid Number'
@@ -62,43 +49,42 @@ class Bot extends EventEmitter{
 
 
     vstatus(bot, VID){
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             if(!bot.sql) return reject(new Error("La connexion avec la BDD sql n'est pas initialisée - bot"))
             if(!VID) return reject(new Error("Incorrect infos"))
             if(VID === this.config.general["ID createur"]) return resolve("ALL")
             else if(bot.sql){
-                bot.sql.query(`SELECT * FROM admin`, async function(err, admin){
-                    bot.sql.query(`SELECT * FROM vip`, async function(err, vip){
-                        if(admin && admin[0] && vip && vip[0]){
-                            if(admin.find(c => c.ID === VID) && vip.find(c => c.ID === VID)) return resolve("ALL")
-                            else{
-                                if(admin.find(c => c.ID === VID)) return resolve("Admin")
-                                else if(vip.find(c => c.ID === VID)) return resolve("VIP")
-                                else return resolve("User")
-                            }  
-                        }else if(admin && admin[0]){
-                            if(admin.find(c => c.ID === VID)) return resolve("Admin")
-                            else return resolve("User")
-                        }else if(vip && vip[0]){
-                            if(vip.find(c => c.ID === VID)) return resolve("VIP")
-                            else return resolve("User")
-                        }else return resolve("User")
-                    })
-                })
+                let admin = await bot.sql.select("admin")
+                let vip = await bot.sql.select("vip")
+                if(admin && admin[0] && vip && vip[0]){
+                    if(admin.find(c => c.ID === VID) && vip.find(c => c.ID === VID)) return resolve("ALL")
+                    else{
+                        if(admin.find(c => c.ID === VID)) return resolve("Admin")
+                        else if(vip.find(c => c.ID === VID)) return resolve("VIP")
+                        else return resolve("User")
+                    }  
+                }else if(admin && admin[0]){
+                    if(admin.find(c => c.ID === VID)) return resolve("Admin")
+                    else return resolve("User")
+                }else if(vip && vip[0]){
+                    if(vip.find(c => c.ID === VID)) return resolve("VIP")
+                    else return resolve("User")
+                }else return resolve("User")
             }
         })
     }
 
     ven(bot, ID){
-        return new Promise((resolve, reject) => {
-            return resolve(ID)
+        return new Promise(async (resolve, reject) => {
             if(bot.sql){
-                bot.sql.query("SELECT * FROM general", function(err, result){
-                    let vid = result.find(re => re.ID === ID)
-                    if(!vid || !vid.ID) vid = {ID: ID, Language: "fr"}
-                    return resolve(vid)
-                })
-            }else return resolve(ID)
+                let result = await bot.sql.select("general")
+                let vid = result.find(re => re.ID === ID)
+                if(!vid || !vid.ID){
+                    vid = {ID, Language: this.default_language, guild_state: "enable"}
+                    bot.sql.insert("general", vid)
+                }
+                return resolve(vid)
+            }else return resolve({ID: ID, Language: this.default_language})
         })
     }
 
@@ -108,7 +94,7 @@ class Bot extends EventEmitter{
         return this
     }
 
-    checkName(){
+    #checkName(){
         let link = process.cwd()
         let symbol;
         if(require("os").platform() === "darwin") symbol = "/"
@@ -129,36 +115,6 @@ class Bot extends EventEmitter{
                 reject(er)
             })
             .then(datas => { return resolve(datas)})
-        })
-    }
-
-    AwaitMesssages(channelid, options){
-        return new Promise(async (resolve, reject) => {
-            require("../Methods/channel").awaitMessages(this, channelid, options)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - AwaitMessages")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
-        })
-    }
-
-    warn(msg, id){
-        return new Promise(async (resolve, reject) => {
-            let embed = new (require("./Embed"))()
-            .setDescription(`❗️ | ${msg}`)
-            .setColor("ORANGE")
-            if(!type) type = "reply"
-            this.users.get(id).send({embeds: [embed]})
-            .then(obj => {
-                if(obj !== undefined) resolve(obj)
-            })
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - msgReponseWarn")
-                er.content = err
-                reject(er)
-            })
         })
     }
 
@@ -363,12 +319,12 @@ class Bot extends EventEmitter{
 
     }
 
-    TreatToken(env){
+    #TreatToken(env){
         if(env.token && env.token_beta && typeof env.token_beta === "string" && process.argv.includes("-t")) this.discordjs.token = env.token_beta
         else this.discordjs.token = env.token
     }
     
-    GetDB(){
+    #GetDB(){
         let env = getCheck(".env")
         if(!env.token){
             console.log("Pas de paramètre token dans votre .env")
@@ -378,7 +334,7 @@ class Bot extends EventEmitter{
             console.log("Le token présente dans votre .env n'est pas un string")
             process.exit()
         }
-        this.TreatToken(env)
+        this.#TreatToken(env)
         let config = getCheck("config.json")
         if(!config.general){
             console.log("Pas de sections general dans votre config.json")

@@ -13,14 +13,12 @@ class Channels{
     }
 
     AddChannel(Channel){
-        if(this._bot) this.channels.push(new (require(`../Individual/Channels_/Channel_${this.type0(Channel.type)}`))({...Channel, token: this._bot.discordjs.token}))
-        else this.channels.push(new (require(`../Individual/Channels_/Channel_${this.type0(Channel.type)}`))({...Channel}))
+        this.channels.push(new (require(`../Individual/Channels_/Channel_${this.type0(Channel.type)}`))({...Channel, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 
     AddChannels(Channels){
-        if(this._bot) this.channels.push(...Channels.map(ch => new (require(`../Individual/Channels_/Channel_${this.type0(ch.type)}`))({...ch, token: this._bot.discordjs.token})))
-        else this.channels.push(...Channels.map(ch => new (require(`../Individual/Channels_/Channel_${this.type0(ch.type)}`))({...ch})))
+        this.channels.push(...Channels.map(ch => new (require(`../Individual/Channels_/Channel_${this.type0(ch.type)}`))({...ch, token: this._bot.discordjs.token}, this._bot)))
         return this
     }
 

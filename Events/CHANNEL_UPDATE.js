@@ -17,7 +17,7 @@ module.exports = async (bot, datas) => {
         "GUILD_DIRECTORY": 14
     }
     const channel_e = require(`../Gestionnaires/Individual/Channels_/Channel_${convert[oldchannel.type]}`)
-    oldchannel = new channel_e({...oldchannel})
+    oldchannel = new channel_e({...oldchannel}, bot)
     guild.channels.get(datas.id).Modify_Datas(datas)
     bot.channels.get(datas.id).Modify_Datas(datas)
     let newchannel = guild.channels.get(datas.id)

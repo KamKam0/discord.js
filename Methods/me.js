@@ -1,31 +1,9 @@
+const verify = require("../Utils/verify")
 module.exports.getuser = async (token) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Me"})
-        const baseheaders = baseinfos["baseheaders"]
-        const url = `${baseurl}/users/@me`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.getuser(token)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/User"))({...datas, token: token}))
+        verify([{value: token, type: "string", data_name: "token"}], "GET", `users/@me`, this.getuser, "getuser me")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/User"))({...datas, token: token})))
+        .catch(err => reject(err))
     })
 }
 
@@ -87,34 +65,8 @@ module.exports.setpresence = async (bot, options) => {
 }
 module.exports.leave = async (token, guildid) => {
     return new Promise(async (resolve, reject) => {
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Me"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Me"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Me"})
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        const url = `${baseurl}/users/@me/guilds/${guildid}`
-        const basedatas = await fetch(url, {method: "DELETE", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.leave(token, guildid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
+        verify([{value: token, type: "string", data_name: "token"}, {value: guildid, value_data: "id", type: "string", data_name: "guildid"}], "DELETE", `users/@me/guilds/${guildid}`, this.leave, "leave me")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }

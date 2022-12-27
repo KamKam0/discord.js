@@ -94,6 +94,14 @@ class User{
         return require("../../Methods/general").iconURL(this.id, this.banner, "ubanner")
     }
 
+    displayAvatarURL(extension){
+        return require("../../Methods/general").iconURL(this.id, this.avatar, "user", extension)
+    }
+
+    displayBannerURL(extension){
+        return require("../../Methods/general").iconURL(this.id, this.banner, "ubanner", extension)
+    }
+
     get tag(){
        return `${this.username}#${this.discriminator}`
     }

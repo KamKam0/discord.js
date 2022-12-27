@@ -1,4 +1,4 @@
-module.exports.create = async (token, guildid, name, file, tags, description) => {
+module.exports.create = async (token, guildid, name, file, tags, description) => {//Cp
     return new Promise(async (resolve, reject) => {
         if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Stickers"})
         if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Stickers"})

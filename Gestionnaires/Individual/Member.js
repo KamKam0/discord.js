@@ -167,5 +167,9 @@ class Member{
     get avatarURL(){
         return require("../../Methods/general").iconURL({guild_id: this.guild_id, user_id: this.user_id}, this.avatar, "member")
     }
+
+    displayAvatarURL(extension){
+        return require("../../Methods/general").iconURL({guild_id: this.guild_id, user_id: this.user_id}, this.avatar, "member", extension)
+    }
 }
 module.exports = Member

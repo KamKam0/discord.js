@@ -1,4 +1,4 @@
-module.exports.send = async (token, channelid, options, path, method) => {
+module.exports.send = async (token, channelid, options, path, method) => {//cp
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)

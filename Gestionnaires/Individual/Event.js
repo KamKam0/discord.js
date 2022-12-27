@@ -117,5 +117,9 @@ class Event{
     get iconURL(){
         return require("../../Methods/general").iconURL(this.id, this.image, "event")
     }
+
+    displayIconURL(extension){
+        return require("../../Methods/general").iconURL(this.id, this.image, "event", extension)
+    }
 }
 module.exports = Event

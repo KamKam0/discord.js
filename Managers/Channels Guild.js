@@ -6,7 +6,7 @@ class Channels extends BaseChannel{
 
     create(options){
         return new Promise((resolve, reject) => {
-            require("../Methods/channel").create(this._bot.token, this.guild_id, options)
+            require("../Methods/channel").create(this._bot.token, this.guild_id, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - create, channel guild")

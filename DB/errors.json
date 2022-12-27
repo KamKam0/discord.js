@@ -318,5 +318,25 @@
     "81": {
         "code": "#0081",
         "message": "The provided id is incorrect"
+    },
+    "82": {
+        "code": "#0082",
+        "message": "The provided extension is not a string"
+    },
+    "83": {
+        "code": "#0083",
+        "message": "extension is not valid"
+    },
+    "84": {
+        "code": "#0084",
+        "message": "The value of the element is undefined"
+    },
+    "85": {
+        "code": "#0085",
+        "message": "The type of the value is not a "
+    },
+    "86": {
+        "code": "#0086",
+        "message": "The provided id is not correct"
     }
 }
