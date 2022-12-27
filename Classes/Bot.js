@@ -35,19 +35,6 @@ class Bot extends EventEmitter{
         return "unstable"
     }
 
-    ms(number){
-        if(number === 0) return 0
-        if(!number) return 'Invalid Number'
-        number = String(number).toLowerCase()
-        if(isNaN(number) && !number.endsWith("d")  && !number.endsWith("j") && !number.endsWith("h") && !number.endsWith("m") && !number.endsWith("s")) return 'Invalid Number'
-        if(number.endsWith("d") || number.endsWith("j")) return Number(`${number.endsWith("d") ? number.split("d")[0] : number.split("j")[0]}`) * 24 * 60 * 60 * 1000
-        if(number.endsWith("h")) return number.split("h")[0] * 60 * 60 * 1000
-        if(number.endsWith("m")) return number.split("m")[0] * 60 * 1000
-        if(number.endsWith("s")) return number.split("s")[0] * 1000
-        return Number(number)
-    }
-
-
     vstatus(bot, VID){
         return new Promise(async (resolve, reject) => {
             if(!bot.sql) return reject(new Error("La connexion avec la BDD sql n'est pas initialisée - bot"))
