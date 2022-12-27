@@ -7,14 +7,12 @@ class StageInstances{
     }
 
     AddStage(stage){
-        if(this._bot) this.stages.push(new StageInstance({...stage, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.stages.push(new StageInstance({...stage, guild_id: this.guild_id}))
+        this.stages.push(new StageInstance({...stage, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddStages(stages){
-        if(this._bot) this.stages.push(...stages.map(sta => new StageInstance({...sta, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.stages.push(...stages.map(sta => new StageInstance({...sta, guild_id: this.guild_id})))
+        this.stages.push(...stages.map(sta => new StageInstance({...sta, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

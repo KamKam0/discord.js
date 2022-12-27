@@ -1,5 +1,5 @@
 class User{
-    constructor(user){
+    constructor(user, bot){
         this.id = user.id
         this.username = user.username
         this.discriminator = user.discriminator
@@ -18,6 +18,7 @@ class User{
         this.dm = null
         this.guilds = user.guild_id ? [user.guild_id] : []
         this.bot_token = user.token
+        this._bot = bot
     }
 
     Modify_Datas(user){
@@ -36,7 +37,7 @@ class User{
     send(options){
         return new Promise(async (resolve, reject) => {
             if(this.dm){
-                require("../../Methods/message").send(this.bot_token, this.dm, options)
+                require("../../Methods/message").send(this.bot_token, this.dm, options, this._bot)
                 .then(da => { return resolve(da)})
                 .catch(err => {
                     let er = new Error("Une erreur s'est produite lors de la requête - send, user, dm")
@@ -44,11 +45,11 @@ class User{
                     reject(er)
                 })
             }else{
-                require("../../Methods/user").createDM(this.bot_token, this.id)
+                require("../../Methods/user").createDM(this.bot_token, this.id, this._bot)
                 .then(datas => { 
                     if(datas){
                         this.dm = datas.id
-                        require("../../Methods/message").send(this.bot_token, this.dm, options)
+                        require("../../Methods/message").send(this.bot_token, this.dm, options, this._bot)
                         .then(da => { return resolve(da)})
                         .catch(err => {
                             let er = new Error("Une erreur s'est produite lors de la requête - send, user, dmsend")

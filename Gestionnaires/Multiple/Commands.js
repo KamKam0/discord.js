@@ -10,12 +10,12 @@ class Commands{
     }
 
     AddCommand(int){
-        this.commands.push(new Slash(int))
+        this.commands.push(new Slash(int, this._bot))
         return this
     }
 
     AddCommands(commands){
-        this.commands.push(...commands.map(int => new Slash(int)))
+        this.commands.push(...commands.map(int => new Slash(int, this._bot)))
         return this
     }
 

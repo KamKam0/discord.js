@@ -1,5 +1,5 @@
 class Thread{
-    constructor(thread){
+    constructor(thread, bot){
         this.id = thread.id
         this.guild = thread.guild ? thread.guild : null
         this.guild_id = thread.guild_id
@@ -18,6 +18,7 @@ class Thread{
         this.last_message_id = thread.last_message_id ?  thread.last_message_id : null
         this.flags = thread.flags ? thread.flags : 0
         this.vguild_id = thread.guild ? thread.guild.vguild_id : null
+        this._bot = bot
     }
 
     SetOwner(owner){
@@ -58,7 +59,7 @@ class Thread{
 
     removemember(memberid){
         return new Promise((resolve, reject) => {
-            require("../../Methods/threads").removethreadmember(this.bot_token, this.id, memberid)
+            require("../../Methods/threads").removethreadmember(this.bot_token, this.id, memberid, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - removemember, threads")
@@ -70,7 +71,7 @@ class Thread{
 
     leave(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/threads").leavethread(this.bot_token, this.id, memberid)
+            require("../../Methods/threads").leavethread(this.bot_token, this.id, memberid, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - leave, threads")
@@ -82,7 +83,7 @@ class Thread{
 
     addmember(memberid){
         return new Promise((resolve, reject) => {
-            require("../../Methods/threads").addthreadmember(this.bot_token, this.id, memberid)
+            require("../../Methods/threads").addthreadmember(this.bot_token, this.id, memberid, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - addmember, threads")

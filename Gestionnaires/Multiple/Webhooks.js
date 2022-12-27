@@ -7,14 +7,12 @@ class Webhooks{
     }
 
     AddWebhook(webhook){
-        if(this._bot) this.webhooks.push(new Webhook({...webhook, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.webhooks.push(new Webhook({...webhook, guild_id: this.guild_id}))
+        this.webhooks.push(new Webhook({...webhook, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddWebhooks(webhooks){
-        if(this._bot) this.webhooks.push(...webhooks.map(we => new Webhook({...we, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.webhooks.push(...webhooks.map(we => new Webhook({...we,  guild_id: this.guild_id})))
+        this.webhooks.push(...webhooks.map(we => new Webhook({...we, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

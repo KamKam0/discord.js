@@ -1,5 +1,5 @@
 class Event{
-    constructor(event){
+    constructor(event, bot){
         this.id = event.id
         this.guild_id = event.guild_id
         this.creator_id = event.creator_id
@@ -17,6 +17,7 @@ class Event{
         this.guild = event.guild ? event.guild : null
         this.bot_token = event.token
         this.vguild_id = event.guild ? event.guild.vguild_id : null
+        this._bot = bot
     }
 
     SetCreator(creator){
@@ -92,7 +93,7 @@ class Event{
 
     modify(options){
         return new Promise((resolve, reject) => {
-            require("../../Methods/events").modify(this.bot_token, this.guild_id, this.id, options)
+            require("../../Methods/events").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modify, events")
@@ -104,7 +105,7 @@ class Event{
 
     delete(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/events").delete(this.bot_token, this.guild_id, this.id)
+            require("../../Methods/events").delete(this.bot_token, this.guild_id, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - delete, events")

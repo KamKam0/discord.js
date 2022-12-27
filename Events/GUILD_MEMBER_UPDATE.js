@@ -8,7 +8,7 @@ module.exports = async (bot, datas) => {
 
     let modifications = []
     let olddatas = Object.entries(oldmember)
-    let newdatas = Object.entries(new (require(`../Gestionnaires/Individual/Member`))(datas))
+    let newdatas = Object.entries(new (require(`../Gestionnaires/Individual/Member`))(datas, bot))
 
     olddatas.forEach(da => {
         let filter = ["guild", "bot_token", "user", "member", "channel", "parent", "owner", "vguild_id"]

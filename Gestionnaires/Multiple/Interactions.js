@@ -1,4 +1,4 @@
-const Interaction = require("../Individual/Interaction")
+const Interaction = require("../Individual/SlashCommand")
 class Interactions{
     constructor(_bot){
         this.interactions = []
@@ -6,14 +6,12 @@ class Interactions{
     }
 
     AddInteraction(int){
-        if(this._bot) this.interactions.push(new Interaction({...int, token: this._bot.discordjs.token}))
-        else this.interactions.push(new Interaction(int))
+        this.interactions.push(new Interaction({...int, token: this._bot.discordjs.token}))
         return this
     }
 
     AddInteractions(interactions){
-        if(this._bot) this.interactions.push(...interactions.map(int => new Interaction({...int, token: this._bot.discordjs.token})))
-        else this.interactions.push(...interactions.map(int => new Interaction(int)))
+        this.interactions.push(...interactions.map(int => new Interaction({...int, token: this._bot.discordjs.token}, this._bot)))
         return this
     }
 

@@ -1,5 +1,5 @@
 class Emoji{
-    constructor(emoji){
+    constructor(emoji, bot){
         this.id = emoji.id
         this.name = emoji.name
         this.roles_ids = emoji.roles ? emoji.roles : []
@@ -11,6 +11,7 @@ class Emoji{
         this.guild_id = emoji.guild_id
         this.bot_token = emoji.token
         this.vguild_id = emoji.guild ? emoji.guild.vguild_id : null
+        this._bot = bot
     }
 
     SetGuild(guild){
@@ -29,7 +30,7 @@ class Emoji{
 
     modify(options){
         return new Promise((resolve, reject) => {
-            require("../../Methods/emoji").modify(this.bot_token, this.guild_id, this.id, options)
+            require("../../Methods/emoji").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modify, Emoji")
@@ -41,7 +42,7 @@ class Emoji{
 
     delete(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/emoji").delete(this.bot_token, this.guild_id, this.id)
+            require("../../Methods/emoji").delete(this.bot_token, this.guild_id, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - Delete, emoji")

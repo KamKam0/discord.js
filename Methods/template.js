@@ -1,4 +1,4 @@
-module.exports.create = (token, guildid) => {
+module.exports.create = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -27,10 +27,10 @@ module.exports.create = (token, guildid) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot))
     })
 }
-module.exports.delete = (token, guildid, templatecode) => {
+module.exports.delete = (token, guildid, templatecode, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -60,10 +60,10 @@ module.exports.delete = (token, guildid, templatecode) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot))
     })
 }
-module.exports.get = (token, guildid, templatecode) => {
+module.exports.get = (token, guildid, templatecode, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -93,10 +93,10 @@ module.exports.get = (token, guildid, templatecode) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot))
     })
 }
-module.exports.getall = (token, guildid) => {
+module.exports.getall = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -126,13 +126,13 @@ module.exports.getall = (token, guildid) => {
                 }
         }
         else{
-            const templates = new (require("../Gestionnaires/Multiple/Templates"))()
+            const templates = new (require("../Gestionnaires/Multiple/Templates"))(bot)
             templates.AddTemplates(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
         }
     })
 }
-module.exports.createguild = (token, guildid, templatecode, options) => {
+module.exports.createguild = (token, guildid, templatecode, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -163,10 +163,10 @@ module.exports.createguild = (token, guildid, templatecode, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Guild"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Guild"))({...datas, token: token}, bot))
     })
 }
-module.exports.sync = (token, guildid, templatecode) => {
+module.exports.sync = (token, guildid, templatecode, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -196,10 +196,10 @@ module.exports.sync = (token, guildid, templatecode) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot))
     })
 }
-module.exports.modify = (token, guildid, templatecode, options) => {
+module.exports.modify = (token, guildid, templatecode, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -231,6 +231,6 @@ module.exports.modify = (token, guildid, templatecode, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot))
     })
 }

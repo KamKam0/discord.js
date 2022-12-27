@@ -3,7 +3,7 @@ module.exports = async (bot, oldemoji, newemoji) => {
     let oldemoji2 = guild.emojis.get(oldemoji.id)
     if(!oldemoji2) return
     const emoji_e = require(`../Gestionnaires/Individual/Emoji`)
-    oldemoji2 = new emoji_e({...oldemoji2})
+    oldemoji2 = new emoji_e({...oldemoji2}, bot)
     guild.emojis.get(oldemoji.id).Modify_Datas(newemoji)
     let newemoji2 = guild.emojis.get(oldemoji.id)
 

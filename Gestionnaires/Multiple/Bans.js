@@ -14,14 +14,12 @@ class Bans{
     }
 
     AddBan(ban){
-        if(this._bot) this.bans.push(new Ban({...ban, token: this._bot.discordjs.token}))
-        else this.bans.push(new Ban(ban))
+        this.bans.push(new Ban({...ban, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 
     AddBans(bans){
-        if(this._bot) this.bans.push(...bans.map(ba => new Ban({...ba, token: this._bot.discordjs.token})))
-        else this.bans.push(...bans.map(ba => new Ban(ba)))
+        this.bans.push(...bans.map(ba => new Ban({...ba, token: this._bot.discordjs.token}, this._bot)))
         return this
     }
 

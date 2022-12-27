@@ -1,8 +1,9 @@
 class base{
-    constructor(channel){
+    constructor(channel, bot){
         this.id = channel.id
         this.type = this.#type0(channel.type)
         this.bot_token = channel.token
+        this._bot = bot
     }
 
     Modify_Datas(channel){

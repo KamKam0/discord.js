@@ -1,5 +1,5 @@
 class Presence{
-    constructor(presence){
+    constructor(presence, bot){
         this.user_id = presence.user ? presence.user.id : presence.user_id
         this.user = presence.user ? presence.user : null
         this.guild = presence.guild ? presence.guild : null
@@ -9,6 +9,7 @@ class Presence{
         this.activities = presence.activities ? presence.activities : []
         this.client_status = presence.client_status
         this.vguild_id = presence.guild ? presence.guild.vguild_id : null
+        this._bot = bot
     }
 
     SetUser(user){

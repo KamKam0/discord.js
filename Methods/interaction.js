@@ -1,5 +1,5 @@
 const verify = require("../Utils/verify")
-module.exports.reply = async (token, interaction, response, path, method) => {//cp
+module.exports.reply = async (token, interaction, response, path, method, bot) => {//cp
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -65,7 +65,7 @@ module.exports.reply = async (token, interaction, response, path, method) => {//
         }
     })
 }
-module.exports.modifyreply = async (token, ID, interaction, response) => {
+module.exports.modifyreply = async (token, ID, interaction, response, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
             let user = await require("../Methods/me").getuser(token)
@@ -77,7 +77,7 @@ module.exports.modifyreply = async (token, ID, interaction, response) => {
         
     })
 }
-module.exports.deletereply = async (token, ID, interaction) => {
+module.exports.deletereply = async (token, ID, interaction, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
             let user = await require("../Methods/me").getuser(token)
@@ -91,7 +91,7 @@ module.exports.deletereply = async (token, ID, interaction) => {
     })
 }
 
-module.exports.getcommands = async (token, ID,  trueid) => {
+module.exports.getcommands = async (token, ID,  trueid, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
             let user = await require("../Methods/me").getuser(token)
@@ -100,10 +100,10 @@ module.exports.getcommands = async (token, ID,  trueid) => {
         verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: trueid, value_data: "id", type: "string", data_name: "trueid", required: false}], "GET", `applications/${ID}/commands?with_localizations=true`, this.getcommands, "getcommands interaction")
         .then(datas => {
             if(trueid){
-                if(datas.find(com => com.id === trueid)) return resolve(new (require("../Gestionnaires/Individual/SlashCommand")(datas.find(com => com.id === trueid))))
+                if(datas.find(com => com.id === trueid)) return resolve(new (require("../Gestionnaires/Individual/SlashCommand")(datas.find(com => com.id === trueid), bot)))
                 else return reject("No command found")
             }else{
-                const commands = new (require("../Gestionnaires/Multiple/Commands"))()
+                const commands = new (require("../Gestionnaires/Multiple/Commands"))(bot)
                 commands.AddCommands(datas.map(da => { return {...da, token: token}}))
                 return resolve(commands)
             }
@@ -111,7 +111,7 @@ module.exports.getcommands = async (token, ID,  trueid) => {
         .catch(err => reject(err))
     })
 }
-module.exports.deletecommand = async (token, ID,  interaction) => {
+module.exports.deletecommand = async (token, ID,  interaction, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
             let user = await require("../Methods/me").getuser(token)
@@ -122,7 +122,7 @@ module.exports.deletecommand = async (token, ID,  interaction) => {
         .catch(err => reject(err))
     })
 }
-module.exports.createcommand = async (token, ID,  options) => {
+module.exports.createcommand = async (token, ID,  options, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
             let user = await require("../Methods/me").getuser(token)
@@ -135,7 +135,7 @@ module.exports.createcommand = async (token, ID,  options) => {
         .catch(err => reject(err))
     })
 }
-module.exports.modifycommand = async (token, ID,  options) => {
+module.exports.modifycommand = async (token, ID,  options, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
             let user = await require("../Methods/me").getuser(token)

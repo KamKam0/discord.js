@@ -1,6 +1,6 @@
 const User = require("../User")
 class Modal{
-    constructor(modal){
+    constructor(modal, bot){
         this.id = modal.id
         this.application_id = modal.application_id
         this.custom_id = modal.data.custom_id
@@ -20,6 +20,7 @@ class Modal{
         this.bot_id = modal.bot_id
         this.vguild_id = modal.guild ? modal.guild.vguild_id : null
         this.typee = "modal"
+        this._bot = bot
     }
 
     get ismodal(){
@@ -76,7 +77,7 @@ class Modal{
 
     reply(options){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").reply(this.bot_token, this, options)
+            require("../../../Methods/interaction").reply(this.bot_token, this, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - reply, modal")
@@ -88,7 +89,7 @@ class Modal{
 
     modifyreply(options){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").modifyreply(this.bot_token, this.bot_id, this, options)
+            require("../../../Methods/interaction").modifyreply(this.bot_token, this.bot_id, this, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modifyreply, modal")
@@ -100,7 +101,7 @@ class Modal{
 
     deletereply(){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").deletereply(this.bot_token, this.bot_id, this)
+            require("../../../Methods/interaction").deletereply(this.bot_token, this.bot_id, this, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - deletereply, modal")
@@ -149,19 +150,19 @@ class Modal{
                 break;
             }
             if(type === "reply"){
-                require("../../../Methods/interaction").reply(this.bot_token, this, {embeds: [embed]})
+                require("../../../Methods/interaction").reply(this.bot_token, this, {embeds: [embed]}, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - reply, modal sendspe")
+                    let er = new Error("Une erreur s'est produite lors de la requête - reply, slash sendspe")
                     er.content = err
                     reject(er)
                 })
             } 
             if(type === "send"){
-                require("../../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]})
+                require("../../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]}, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - send, modal sendspe")
+                    let er = new Error("Une erreur s'est produite lors de la requête - send, slash sendspe")
                     er.content = err
                     reject(er)
                 })
@@ -173,7 +174,7 @@ class Modal{
         return new Promise(async (resolve, reject) => {
             this.SendSpe(msg, "error", type)
             .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - error, modal")
+                let er = new Error("Une erreur s'est produite lors de la requête - error, slash")
                 er.content = err
                 reject(er)
             })
@@ -185,7 +186,7 @@ class Modal{
         return new Promise(async (resolve, reject) => {
             this.SendSpe(msg, "success", type)
             .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - success, modal")
+                let er = new Error("Une erreur s'est produite lors de la requête - success, slash")
                 er.content = err
                 reject(er)
             })
@@ -197,7 +198,7 @@ class Modal{
         return new Promise(async (resolve, reject) => {
             this.SendSpe(msg, "warn", type)
             .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - warn_se, modal")
+                let er = new Error("Une erreur s'est produite lors de la requête - warn_se, slash")
                 er.content = err
                 reject(er)
             })
@@ -209,7 +210,7 @@ class Modal{
         return new Promise(async (resolve, reject) => {
             this.SendSpe(msg, "info", type)
             .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - info, modal")
+                let er = new Error("Une erreur s'est produite lors de la requête - info, slash")
                 er.content = err
                 reject(er)
             })
@@ -221,7 +222,7 @@ class Modal{
         return new Promise(async (resolve, reject) => {
             this.SendSpe(msg, "wait", type)
             .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - wait, modal")
+                let er = new Error("Une erreur s'est produite lors de la requête - wait, slash")
                 er.content = err
                 reject(er)
             })

@@ -7,14 +7,14 @@ class Users{
 
     AddUser(user){
         if(this.users.find(us => us.id === user.id)) this.users.find(us => us.id === user.id).guilds.push(user.guild_id)
-        else this.users.push(new User({...user, token: this._bot.discordjs.token}))
+        else this.users.push(new User({...user, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 
     AddUsers(users){
         let topush = users.filter(us1 => !this.users.find(us2 => us2.id === us1.id))
         let tomodif = users.filter(us1 => this.users.find(us2 => us2.id === us1.id))
-        if(topush[0]) this.users.push(...topush.map(sti => new User({...sti, token: this._bot.discordjs.token})))
+        if(topush[0]) this.users.push(...topush.map(sti => new User({...sti, token: this._bot.discordjs.token}, this._bot)))
         if(tomodif[0]) users.forEach(us2 => this.users.find(us => us.id === us2.id).guilds.push(us2.guild_id))
         return this
     }

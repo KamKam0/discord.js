@@ -1,11 +1,12 @@
 class WebhookUpdate{
-    constructor(webhook){
+    constructor(webhook, bot){
         this.guild = webhook.guild
         this.guild_id = webhook.guild_id
         this.bot_token = webhook.token
         this.channel_id = webhook.channel_id
         this.channel = webhook.channel
         this.vguild_id = null
+        this._bot = bot
     }
 
 

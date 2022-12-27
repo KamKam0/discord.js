@@ -7,14 +7,12 @@ class Threads{
     }
 
     AddThread(thread){
-        if(this._bot) this.threads.push(new Thread({...thread, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.threads.push(new Thread({...thread, guild_id: this.guild_id}))
+        this.threads.push(new Thread({...thread, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddThreads(Threads){
-        if(this._bot) this.threads.push(...Threads.map(th => new Thread({...th, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.threads.push(...Threads.map(th => new Thread({...th, guild_id: this.guild_id})))
+        this.threads.push(...Threads.map(th => new Thread({...th, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

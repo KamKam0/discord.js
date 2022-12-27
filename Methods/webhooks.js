@@ -1,4 +1,4 @@
-module.exports.create = async (token, channelid, options) => {
+module.exports.create = async (token, channelid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -30,10 +30,10 @@ module.exports.create = async (token, channelid, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Webhook"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Webhook"))({...datas, token: token}, bot))
     })
 }
-module.exports.get = async (token, channelid) => {
+module.exports.get = async (token, channelid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -63,13 +63,13 @@ module.exports.get = async (token, channelid) => {
                 }
         }
         else{
-            const webhooks = new (require("../Gestionnaires/Multiple/Webhooks"))()
+            const webhooks = new (require("../Gestionnaires/Multiple/Webhooks"))(bot)
             webhooks.AddWebhooks(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
         }
     })
 }
-module.exports.modify = async (token, webhookid, options) => {
+module.exports.modify = async (token, webhookid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -101,10 +101,10 @@ module.exports.modify = async (token, webhookid, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Webhook"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Webhook"))({...datas, token: token}, bot))
     })
 }
-module.exports.delete = async (token, webhookid) => {
+module.exports.delete = async (token, webhookid, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!webhookid) return reject({code: require("../DB/errors.json")["36"].code, message: require("../DB/errors.json")["36"].message, file: "Webhooks"})
         if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Webhooks"})
@@ -137,7 +137,7 @@ module.exports.delete = async (token, webhookid) => {
         } 
     })
 }
-module.exports.execute = async (token, webhook, options) => {//cp
+module.exports.execute = async (token, webhook, options, bot) => {//cp
     const fetch = require("node-fetch")
     let baseinfos = require("../Utils/functions").getbaseinfosre(token)
     const baseurl = baseinfos["baseurl"]
@@ -193,7 +193,7 @@ module.exports.execute = async (token, webhook, options) => {//cp
                     return reject(er)
                 }
             }
-            else return resolve(new (require("../Gestionnaires/Individual/Message"))(datas))
+            else return resolve(new (require("../Gestionnaires/Individual/Message"))(datas, bot))
         }else{
             if(options.content && typeof options.content === "string") body.content = options.content
             if(options.embeds && Array.isArray(options.embeds) === true){
@@ -232,7 +232,7 @@ module.exports.execute = async (token, webhook, options) => {//cp
                     return reject(er)
                 }
             }
-            else return resolve(new (require("../Gestionnaires/Individual/Message"))(datas))
+            else return resolve(new (require("../Gestionnaires/Individual/Message"))(datas, bot))
         }
     }
 }

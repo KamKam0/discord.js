@@ -1,4 +1,4 @@
-module.exports.mute = async (token, guildid, memberid, time) => {
+module.exports.mute = async (token, guildid, memberid, time, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -31,10 +31,10 @@ module.exports.mute = async (token, guildid, memberid, time) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}))
+        else return resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}, bot))
     })
 }
-module.exports.unmute = async (token, guildid, memberid) => {
+module.exports.unmute = async (token, guildid, memberid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -66,6 +66,6 @@ module.exports.unmute = async (token, guildid, memberid) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}))
+        else return resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}, bot))
     })
 }

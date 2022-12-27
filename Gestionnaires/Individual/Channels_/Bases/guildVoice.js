@@ -29,7 +29,7 @@ class guildVoice extends Base{
 
     getinvites(){
         return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/channel").getinvites(this.bot_token, this.id)
+            require("../../../../Methods/channel").getinvites(this.bot_token, this.id, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - getinvites, guildtext")
                 er.content = err
@@ -41,7 +41,7 @@ class guildVoice extends Base{
 
     createinvites(){
         return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/channel").createinvite(this.bot_token, this.id)
+            require("../../../../Methods/channel").createinvite(this.bot_token, this.id, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - createinvites, guildtext")
                 er.content = err
@@ -53,7 +53,7 @@ class guildVoice extends Base{
 
     editpermissions(overwrites){
         return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/channel").editpermissions(this.bot_token, this.id, overwrites)
+            require("../../../../Methods/channel").editpermissions(this.bot_token, this.id, overwrites, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - editpermissions, guildtext")
                 er.content = err
@@ -65,7 +65,7 @@ class guildVoice extends Base{
 
     deletepermissions(overwrites){
         return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/channel").deletepermission(this.bot_token, this.id, overwrites)
+            require("../../../../Methods/channel").deletepermission(this.bot_token, this.id, overwrites, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - deletepermissions, guildtext")
                 er.content = err

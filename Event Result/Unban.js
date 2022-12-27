@@ -1,13 +1,14 @@
 const User = require("../Gestionnaires/Individual/User")
 class Unban{
-    constructor(ban){
-        this.user = new User({...ban.user, token: ban.token})
+    constructor(ban, bot){
+        this.user = new User({...ban.user, token: ban.token}, bot)
         this.user_id = ban.user.id
         this.guild = ban.guild
         this.vguild_id = null
         this.guild_id = ban.guild_id
         this.bot_token = ban.token
         this.vguild_id = null
+        this._bot = bot
     }
 
     SetGuild(guild){

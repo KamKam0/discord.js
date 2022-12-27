@@ -1,5 +1,5 @@
 class MessageBulk{
-    constructor(message_bulk){
+    constructor(message_bulk, bot){
         this.ids = message_bulk.ids
         this.channel_id = message_bulk.channel_id
         this.channel = message_bulk.channel
@@ -7,6 +7,7 @@ class MessageBulk{
         this.guild_id = message_bulk.guild_id
         this.bot_token = message_bulk.token
         this.vguild_id = null
+        this._bot = bot
     }
 
     SetChannel(channel){

@@ -199,14 +199,14 @@ function presence(presence){
     }else return {activities: [], afk: false, status: "online", since: Date.now()}
 }
 
-function channel_backup(id, token){
+function channel_backup(id, token, bot){
     let channel = {
         id,
         type: 1,
         token
     }
 
-    return new (require("../Gestionnaires/Individual/Channels_/Channel_1"))(channel)
+    return new (require("../Gestionnaires/Individual/Channels_/Channel_1"))(channel, bot)
 }
 
 function check_options(structure, options){

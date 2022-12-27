@@ -1,4 +1,4 @@
-module.exports.send = async (token, channelid, options, path, method) => {//cp
+module.exports.send = async (token, channelid, options, path, method, bot) => {//cp
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -69,11 +69,11 @@ module.exports.send = async (token, channelid, options, path, method) => {//cp
                     return reject(er)
                 }
             }
-            else return resolve(new (require("../Gestionnaires/Individual/Message"))({...datas, token: token}))
+            else return resolve(new (require("../Gestionnaires/Individual/Message"))({...datas, token: token}, bot))
         }
     })
 }
-module.exports.modify = async (token, channelid, messageid, options) => {
+module.exports.modify = async (token, channelid, messageid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
         if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
@@ -86,7 +86,7 @@ module.exports.modify = async (token, channelid, messageid, options) => {
         .then(res => resolve(res))
     })
 }
-module.exports.crosspost = async (token, channelid, messageid) => {
+module.exports.crosspost = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -117,10 +117,10 @@ module.exports.crosspost = async (token, channelid, messageid) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Message"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Message"))({...datas, token: token}, bot))
     })
 }
-module.exports.fetch_messages = async (token, channelid, limit) => {
+module.exports.fetch_messages = async (token, channelid, limit, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -147,7 +147,7 @@ module.exports.fetch_messages = async (token, channelid, limit) => {
                     reject(er)
                 })
                         .then(datas => { 
-                            const messages = new (require("../Gestionnaires/Multiple/Messages"))()
+                            const messages = new (require("../Gestionnaires/Multiple/Messages"))(bot)
                             messages.AddMessages(datas)
                             return resolve(messages)
                         })
@@ -159,7 +159,7 @@ module.exports.fetch_messages = async (token, channelid, limit) => {
                 }
             }
             else{
-                const messages = new (require("../Gestionnaires/Individual/Messages"))()
+                const messages = new (require("../Gestionnaires/Individual/Messages"))(bot)
                 messages.AddMessages(datas.map(da => { return {...da, token: token}}))
                 return resolve(messages)
             }
@@ -177,7 +177,7 @@ module.exports.fetch_messages = async (token, channelid, limit) => {
                     reject(er)
                 })
                         .then(datas => { 
-                            const messages = new (require("../Gestionnaires/Individual/Messages"))()
+                            const messages = new (require("../Gestionnaires/Individual/Messages"))(bot)
                             messages.AddMessages(datas)
                             return resolve(messages)
                         })
@@ -189,7 +189,7 @@ module.exports.fetch_messages = async (token, channelid, limit) => {
                 }
             }
             else{
-                const messages = new (require("../Gestionnaires/Multiple/Messages"))()
+                const messages = new (require("../Gestionnaires/Multiple/Messages"))(bot)
                 messages.AddMessages(datas.map(da => { return {...da, token: token}}))
                 return resolve(messages)
             }
@@ -197,7 +197,7 @@ module.exports.fetch_messages = async (token, channelid, limit) => {
         
     })
 }
-module.exports.delete = async (token, channelid, messageid) => {
+module.exports.delete = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -231,7 +231,7 @@ module.exports.delete = async (token, channelid, messageid) => {
     })
 }
 
-module.exports.addreaction = async (token, channelid, messageid, emoji) => {
+module.exports.addreaction = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -268,7 +268,7 @@ module.exports.addreaction = async (token, channelid, messageid, emoji) => {
     })
 }
 
-module.exports.removereaction = async (token, channelid, messageid, emoji) => {
+module.exports.removereaction = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -304,7 +304,7 @@ module.exports.removereaction = async (token, channelid, messageid, emoji) => {
         } 
     })
 }
-module.exports.removeuserreaction = async (token, channelid, messageid, userid, emoji) => {
+module.exports.removeuserreaction = async (token, channelid, messageid, userid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -342,7 +342,7 @@ module.exports.removeuserreaction = async (token, channelid, messageid, userid, 
         } 
     })
 }
-module.exports.removeallreactions = async (token, channelid, messageid) => {
+module.exports.removeallreactions = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -377,7 +377,7 @@ module.exports.removeallreactions = async (token, channelid, messageid) => {
         } 
     })
 }
-module.exports.removeallreactionemoji = async (token, channelid, messageid, emoji) => {
+module.exports.removeallreactionemoji = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -413,7 +413,7 @@ module.exports.removeallreactionemoji = async (token, channelid, messageid, emoj
         } 
     })
 }
-module.exports.pin = async (token, channelid, messageid) => {
+module.exports.pin = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -448,7 +448,7 @@ module.exports.pin = async (token, channelid, messageid) => {
         } 
     })
 }
-module.exports.unpin = async (token, channelid, messageid) => {
+module.exports.unpin = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -483,9 +483,9 @@ module.exports.unpin = async (token, channelid, messageid) => {
         } 
     })
 }
-module.exports.fetch_reactions = async (token, channelid, messageid) => {
+module.exports.fetch_reactions = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
-        this.fetch_messages(token, channelid, messageid)
+        this.fetch_messages(token, channelid, messageid, bot)
         .catch(err => {
                     let er = new Error("Une erreur s'est produite lors de la requête")
                     er.content = err
@@ -496,7 +496,7 @@ module.exports.fetch_reactions = async (token, channelid, messageid) => {
         })
     })
 }
-module.exports.fetch_reaction = async (token, channelid, messageid, emoji) => {
+module.exports.fetch_reaction = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -529,7 +529,7 @@ module.exports.fetch_reaction = async (token, channelid, messageid, emoji) => {
                 }
         }
         else{
-            const messages = new (require("../Gestionnaires/Multiple/Messages"))()
+            const messages = new (require("../Gestionnaires/Multiple/Messages"))(bot)
             messages.AddMessages(datas.map(da => { return {...da, token: token}}))
             return resolve(messages)
         }

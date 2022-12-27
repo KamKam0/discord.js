@@ -1,6 +1,6 @@
 const User = require("../Individual/User")
 class Invite{
-    constructor(invite){
+    constructor(invite, bot){
         this.code = invite.code
         this.guild_id = invite.guild_id
         this.channel_id = invite.channel_id
@@ -18,6 +18,7 @@ class Invite{
         this.guild = invite.guild ? invite.guild : null
         this.bot_token = invite.token
         this.vguild_id = invite.guild ? invite.guild.vguild_id : null
+        this._bot = bot
     }
 
     type(type){
@@ -62,7 +63,7 @@ class Invite{
 
     delete(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/guild").deleteinvite(this.bot_token, this.id)
+            require("../../Methods/guild").deleteinvite(this.bot_token, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - delete, invite")

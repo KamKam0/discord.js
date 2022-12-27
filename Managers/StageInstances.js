@@ -6,7 +6,7 @@ class StageInstances extends BaseStage{
 
     create(options){
         return new Promise(async (resolve, reject) => {
-            require("../Methods/stages").create(this._bot.token, this.guild_id, options)
+            require("../Methods/stages").create(this._bot.token, this.guild_id, options, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - create, stage manager")
                 er.content = err

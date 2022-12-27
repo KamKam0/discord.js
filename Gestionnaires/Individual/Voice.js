@@ -1,5 +1,5 @@
 class Voice{
-    constructor(voice){
+    constructor(voice, bot){
         this.guild = voice.guild ? voice.guild : null
         this.guild_id = voice.guild_id
         this.bot_token = voice.token
@@ -18,6 +18,7 @@ class Voice{
         this.suppress = voice.suppress ? voice.suppress : false
         this.request_to_speak_timestamp = voice.request_to_speak_timestamp ? voice.request_to_speak_timestamp : null
         this.vguild_id = voice.guild ? voice.guild.vguild_id : null
+        this._bot = bot
     }
 
     SetUser(user){

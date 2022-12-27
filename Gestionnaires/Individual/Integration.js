@@ -1,5 +1,5 @@
 class Integration{
-    constructor(int){
+    constructor(int, bot){
         this.guild_id = int.guild_id
         this.id = int.id
         this.name = int.name
@@ -20,6 +20,7 @@ class Integration{
         this.guild = int.guild ? int.guild : null
         this.bot_token = int.token
         this.vguild_id = int.guild ? int.guild.vguild_id : null
+        this._bot = bot
     }
 
     type(type){
@@ -65,7 +66,7 @@ class Integration{
 
     delete(){
         return new Promise(async (resolve, reject) => {
-            require("../../Methods/guild").deleteintegration(this.bot_token, this.guild_id, this.id)
+            require("../../Methods/guild").deleteintegration(this.bot_token, this.guild_id, this.id, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - delete, invite")
                 er.content = err

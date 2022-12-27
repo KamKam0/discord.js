@@ -1,5 +1,5 @@
 class Slash{
-    constructor(slash){
+    constructor(slash, bot){
         this.id = slash.id
         this.application_id = slash.application_id
         this.version = slash.version
@@ -14,6 +14,7 @@ class Slash{
         this.description = slash.description ? slash.description : null
         this.dm_permission = slash.dm_permission ? slash.dm_permission : false
         this.bot_token = slash.token
+        this._bot = bot
     }
 }
 module.exports = Slash

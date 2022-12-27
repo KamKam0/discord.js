@@ -7,14 +7,12 @@ class Events{
     }
 
     AddEvent(event){
-        if(this._bot) this.events.push(new Event({...event, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.events.push(new Event({...event, guild_id: this.guild_id}))
+        this.events.push(new Event({...event, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddEvents(events){
-        if(this._bot) this.events.push(...events.map(ev => new Event({...ev, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.events.push(...events.map(ev => new Event({...ev, guild_id: this.guild_id})))
+        this.events.push(...events.map(ev => new Event({...ev, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

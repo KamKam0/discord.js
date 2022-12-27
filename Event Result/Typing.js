@@ -1,5 +1,5 @@
 class Typing{
-    constructor(typing){
+    constructor(typing, bot){
         this.channel_id = typing.channel_id
         this.channel = typing.channel
         this.guild = typing.guild
@@ -10,6 +10,7 @@ class Typing{
         this.member = typing.member
         this.timestamp = typing.timestamp
         this.vguild_id = null
+        this._bot = bot
     }
 
     SetUser(user){

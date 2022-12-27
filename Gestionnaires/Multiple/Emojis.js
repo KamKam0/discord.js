@@ -7,14 +7,12 @@ class Emojis{
     }
 
     AddEmoji(emoji){
-        if(this._bot) this.emojis.push(new Emoji({...emoji, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.emojis.push(new Emoji({...emoji, guild_id: this.guild_id}))
+        this.emojis.push(new Emoji({...emoji, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddEmojis(emojis){
-        if(this._bot) this.emojis.push(...emojis.map(emo => new Emoji({...emo, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.emojis.push(...emojis.map(emo => new Emoji({...emo, guild_id: this.guild_id})))
+        this.emojis.push(...emojis.map(emo => new Emoji({...emo, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

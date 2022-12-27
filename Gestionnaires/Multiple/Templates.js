@@ -6,14 +6,12 @@ class Templates{
     }
 
     AddTemplate(template){
-        if(this._bot) this.templates.push(new Template({...template, token: this._bot.discordjs.token}))
-        else this.templates.push(new Template(template))
+        this.templates.push(new Template({...template, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 
     AddTemplates(templates){
-        if(this._bot) this.templates.push(...templates.map(te => new Template({...te, token: this._bot.discordjs.token})))
-        else this.templates.push(...templates.map(te => new Template(te)))
+        this.templates.push(...templates.map(te => new Template({...te, token: this._bot.discordjs.token}, this._bot)))
         return this
     }
 

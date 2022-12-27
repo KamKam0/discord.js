@@ -7,14 +7,12 @@ class Voices{
     }
 
     AddVoice(voice){
-        if(this._bot) this.voices.push(new Voice({...voice, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.voices.push(new Voice({...voice, guild_id: this.guild_id}))
+        this.voices.push(new Voice({...voice, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddVoices(voices){
-        if(this._bot) this.voices.push(...voices.map(vo => new Voice({...vo, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.voices.push(...voices.map(vo => new Voice({...vo, guild_id: this.guild_id})))
+        this.voices.push(...voices.map(vo => new Voice({...vo, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

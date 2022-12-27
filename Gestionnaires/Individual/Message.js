@@ -1,6 +1,6 @@
 const User = require("./User")
 class Message{
-    constructor(message){
+    constructor(message, bot){
         this.user_id = message.user ? message.user_id : message.author.id
         this.user = message.user ? message.user : new User({...message.author, token: message.token})
         this.member = message.member ? message.member : null
@@ -37,6 +37,7 @@ class Message{
         this.guild_id = message.guild_id
         this.typee = "message"
         this.vguild_id = message.guild ? message.guild.vguild_id : null
+        this._bot = bot
     }
 
     SetMember(member){
@@ -107,7 +108,7 @@ class Message{
 
     delete(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").delete(this.bot_token, this.channel_id, this.id)
+            require("../../Methods/message").delete(this.bot_token, this.channel_id, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - delete, message")
@@ -119,7 +120,7 @@ class Message{
 
     modify(options){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").modify(this.bot_token, this.channel_id, this.id, options)
+            require("../../Methods/message").modify(this.bot_token, this.channel_id, this.id, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modify, message")
@@ -131,7 +132,7 @@ class Message{
 
     addreaction(emoji){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").addreaction(this.bot_token, this.channel_id, this.id, emoji)
+            require("../../Methods/message").addreaction(this.bot_token, this.channel_id, this.id, emoji, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - addreaction, message")
@@ -143,7 +144,7 @@ class Message{
 
     removereaction(emoji){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").removereaction(this.bot_token, this.channel_id, this.id, emoji)
+            require("../../Methods/message").removereaction(this.bot_token, this.channel_id, this.id, emoji, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - removereaction, message")
@@ -155,7 +156,7 @@ class Message{
 
     removeuserreaction(userid, emoji){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").removeuserreaction(this.bot_token, this.channel_id, this.id, userid, emoji)
+            require("../../Methods/message").removeuserreaction(this.bot_token, this.channel_id, this.id, userid, emoji, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - removeuserreaction, message")
@@ -167,7 +168,7 @@ class Message{
 
     removeallreaction(emoji){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").removeallreactionemoji(this.bot_token, this.channel_id, this.id, emoji)
+            require("../../Methods/message").removeallreactionemoji(this.bot_token, this.channel_id, this.id, emoji, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - removeallreaction, message")
@@ -179,7 +180,7 @@ class Message{
 
     removeallreactions(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").removeallreactions(this.bot_token, this.channel_id, this.id)
+            require("../../Methods/message").removeallreactions(this.bot_token, this.channel_id, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - removeallreactions, message")
@@ -197,7 +198,7 @@ class Message{
                 channel_id: this.channel_id,
                 guild_id: this.guild_id
             }
-            require("../../Methods/message").send(this.bot_token, this.channel_id, options)
+            require("../../Methods/message").send(this.bot_token, this.channel_id, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - reply, message")
@@ -209,7 +210,7 @@ class Message{
 
     pin(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").pin(this.bot_token, this.channel_id, this.id)
+            require("../../Methods/message").pin(this.bot_token, this.channel_id, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - pin, message")
@@ -221,7 +222,7 @@ class Message{
 
     unpin(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").unpin(this.bot_token, this.channel_id, this.id)
+            require("../../Methods/message").unpin(this.bot_token, this.channel_id, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - unpin, message")
@@ -233,7 +234,7 @@ class Message{
 
     fetchreactions(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").fetch_reactions(this.bot_token, this.channel_id, this.id)
+            require("../../Methods/message").fetch_reactions(this.bot_token, this.channel_id, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - fetchreactions, message")
@@ -245,7 +246,7 @@ class Message{
 
     fetchreaction(reaction){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").fetch_reaction(this.bot_token, this.channel_id, this.id, reaction)
+            require("../../Methods/message").fetch_reaction(this.bot_token, this.channel_id, this.id, reaction, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - fetchreaction, message")
@@ -257,7 +258,7 @@ class Message{
 
     crosspost(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/message").crosspost(this.bot_token, this.channel_id, this.id)
+            require("../../Methods/message").crosspost(this.bot_token, this.channel_id, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - crosspot, message")
@@ -302,7 +303,7 @@ class Message{
                 break;
             }
             if(type === "reply"){
-                require("../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed], replyto: this.id})
+                require("../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed], replyto: this.id}, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
                     let er = new Error("Une erreur s'est produite lors de la requête - reply, message Sendspe")
@@ -311,7 +312,7 @@ class Message{
                 })
             } 
             if(type === "send"){
-                require("../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]})
+                require("../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]}, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
                     let er = new Error("Une erreur s'est produite lors de la requête - send, message Sendspe")

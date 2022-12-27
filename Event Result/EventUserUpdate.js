@@ -1,5 +1,5 @@
 class EventUserUpdate{
-    constructor(eventupdate){
+    constructor(eventupdate, bot){
         this.guild_scheduled_event_id = eventupdate.guild_scheduled_event_id
         this.guild_scheduled_event = eventupdate.guild_scheduled_event
         this.user_id = eventupdate.user_id
@@ -8,6 +8,7 @@ class EventUserUpdate{
         this.guild_id = eventupdate.guild_id
         this.bot_token = eventupdate.token
         this.vguild_id = null
+        this._bot = bot
     }
 
     SetUser(user){

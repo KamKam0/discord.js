@@ -7,14 +7,12 @@ class Members{
     }
 
     AddMember(member){
-        if(this._bot) this.members.push(new Member({...member, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.members.push(new Member({...member, guild_id: this.guild_id}))
+        this.members.push(new Member({...member, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddMembers(members){
-        if(this._bot) this.members.push(...members.map(me => new Member({...me, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.members.push(...members.map(me => new Member({...me, guild_id: this.guild_id})))
+        this.members.push(...members.map(me => new Member({...me, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

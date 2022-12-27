@@ -1,5 +1,5 @@
 class Template{
-    constructor(template){
+    constructor(template, bot){
         this.code = template.code
         this.name = template.name
         this.description = template.description ? template.description : null
@@ -12,6 +12,7 @@ class Template{
         this.is_dirty = template.is_dirty ? template.is_dirty : false
         this.bot_token = template.token
         this.vguild_id = template.guild ? template.guild.vguild_id : null
+        this._bot = bot
     }
 
     SetCreator(creator){
@@ -35,7 +36,7 @@ class Template{
 
     createguildfrom(options){
         return new Promise((resolve, reject) => {
-            require("../../Methods/template").createguild(this.bot_token, this.source_guild_id, this.code, options)
+            require("../../Methods/template").createguild(this.bot_token, this.source_guild_id, this.code, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - createguildfrom, template")
@@ -47,7 +48,7 @@ class Template{
 
     sync(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/template").sync(this.bot_token, this.source_guild_id, this.code)
+            require("../../Methods/template").sync(this.bot_token, this.source_guild_id, this.code, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - sync, template")
@@ -59,7 +60,7 @@ class Template{
 
     modify(options){
         return new Promise((resolve, reject) => {
-            require("../../Methods/template").modify(this.bot_token, this.source_guild_id, this.code, options)
+            require("../../Methods/template").modify(this.bot_token, this.source_guild_id, this.code, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modify, template")
@@ -71,7 +72,7 @@ class Template{
 
     deletetemplate(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/template").delete(this.bot_token, this.source_guild_id, this.code)
+            require("../../Methods/template").delete(this.bot_token, this.source_guild_id, this.code, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - deletetemplate, template")

@@ -1,4 +1,4 @@
-module.exports.deleteinvite = async (token, inviteid) => {
+module.exports.deleteinvite = async (token, inviteid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -27,10 +27,10 @@ module.exports.deleteinvite = async (token, inviteid) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Invite"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Invite"))({...datas, token: token}, bot))
     })
 }
-module.exports.modify = (token, guildid, options) => {
+module.exports.modify = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -61,10 +61,10 @@ module.exports.modify = (token, guildid, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Guild"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Guild"))({...datas, token: token}, bot))
     })
 }
-module.exports.delete = (token, guildid) => {
+module.exports.delete = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -97,7 +97,7 @@ module.exports.delete = (token, guildid) => {
         }
     })
 }
-module.exports.changechposition = (token, guildid, options) => {
+module.exports.changechposition = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -132,7 +132,7 @@ module.exports.changechposition = (token, guildid, options) => {
         }
     })
 }
-module.exports.addmember = (token, guildid, userid, options) => {
+module.exports.addmember = (token, guildid, userid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -171,7 +171,7 @@ module.exports.addmember = (token, guildid, userid, options) => {
         }
     })
 }
-module.exports.modifymember = (token, guildid, userid, options) => {
+module.exports.modifymember = (token, guildid, userid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -204,10 +204,10 @@ module.exports.modifymember = (token, guildid, userid, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}))
+        else return resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}, bot))
     })
 }
-module.exports.modifycurrentmember = (token, guildid, nick) => {
+module.exports.modifycurrentmember = (token, guildid, nick, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -238,10 +238,10 @@ module.exports.modifycurrentmember = (token, guildid, nick) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}))
+        else return resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}, bot))
     })
 }
-module.exports.prune = (token, guildid, options) => {
+module.exports.prune = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -278,7 +278,7 @@ module.exports.prune = (token, guildid, options) => {
         }
     })
 }
-module.exports.getinvites = (token, guildid) => {
+module.exports.getinvites = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -307,13 +307,13 @@ module.exports.getinvites = (token, guildid) => {
                     return reject(er)
                 }
         }else{
-            const invites = new (require("../Gestionnaires/Multiple/Invites"))()
+            const invites = new (require("../Gestionnaires/Multiple/Invites"))(bot)
             invites.AddInvites(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
         }
     })
 }
-module.exports.getintegrations = (token, guildid) => {
+module.exports.getintegrations = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -343,13 +343,13 @@ module.exports.getintegrations = (token, guildid) => {
                 }
         }
         else{
-            const intergations = new (require("../Gestionnaires/Multiple/Integrations"))(guildid)
+            const intergations = new (require("../Gestionnaires/Multiple/Integrations"))(guildid, bot)
             intergations.AddIntegrations(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
         }
     })
 }
-module.exports.deleteintegration = (token, guildid, integrationid) => {
+module.exports.deleteintegration = (token, guildid, integrationid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -386,7 +386,7 @@ module.exports.deleteintegration = (token, guildid, integrationid) => {
         }
     })
 }
-module.exports.getwidgetsttings = (token, guildid) => {
+module.exports.getwidgetsttings = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -415,10 +415,10 @@ module.exports.getwidgetsttings = (token, guildid) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Event Result/WidgetSettings"))({...datas, token: token}))
+        else return resolve(new (require("../Event Result/WidgetSettings"))({...datas, token: token}, bot))
     })
 }
-module.exports.getwidget = (token, guildid) => {
+module.exports.getwidget = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -450,7 +450,7 @@ module.exports.getwidget = (token, guildid) => {
         else return resolve(datas)
     })
 }
-module.exports.getwidgetpng = (token, guildid) => {
+module.exports.getwidgetpng = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -482,7 +482,7 @@ module.exports.getwidgetpng = (token, guildid) => {
         else return resolve(datas)
     })
 }
-module.exports.modifywidget = (token, guildid, options) => {
+module.exports.modifywidget = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -516,7 +516,7 @@ module.exports.modifywidget = (token, guildid, options) => {
         else return resolve(datas)
     })
 }
-module.exports.getvanity = (token, guildid) => {
+module.exports.getvanity = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -548,7 +548,7 @@ module.exports.getvanity = (token, guildid) => {
         else return resolve(datas)
     })
 }
-module.exports.getwelcomescreen = (token, guildid) => {
+module.exports.getwelcomescreen = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -580,7 +580,7 @@ module.exports.getwelcomescreen = (token, guildid) => {
         else return resolve(datas)
     })
 }
-module.exports.modifywelcomescreen = (token, guildid, options) => {
+module.exports.modifywelcomescreen = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -614,7 +614,7 @@ module.exports.modifywelcomescreen = (token, guildid, options) => {
         else return resolve(datas)
     })
 }
-module.exports.modifyuservoice = (token, guildid, userid,  options) => {
+module.exports.modifyuservoice = (token, guildid, userid,  options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)

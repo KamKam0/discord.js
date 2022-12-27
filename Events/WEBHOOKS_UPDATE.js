@@ -5,7 +5,7 @@ module.exports = async (bot, datas) => {
     
     if(!datas.guild_id|| !guild) return
     
-    if(bot.database_state === "stable") bot.emit(name(), bot, (new webhook(datas)).SetGuild(bot.guilds.get(datas.guild_id)).SetChannel(bot.channels.get(datas.channel_id)))
+    if(bot.database_state === "stable") bot.emit(name(), bot, (new webhook(datas, bot)).SetGuild(bot.guilds.get(datas.guild_id)).SetChannel(bot.channels.get(datas.channel_id)))
 }
 
 function name(){ return "WEBHOOKS_UPDATE" }

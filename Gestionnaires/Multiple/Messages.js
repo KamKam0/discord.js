@@ -7,14 +7,12 @@ class Messages{
     }
 
     AddMessage(message){
-        if(this._bot) this.messages.push(new Message({...message, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.messages.push(new Message({...message, guild_id: this.guild_id}))
+        this.messages.push(new Message({...message, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddMessages(messages){
-        if(this._bot) this.messages.push(...messages.map(me => new Message({...me, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.messages.push(...messages.map(me => new Message({...me, guild_id: this.guild_id})))
+        this.messages.push(...messages.map(me => new Message({...me, token: this._bot.discordjs.token, guild_id: this.guild_id}), this._bot))
         return this
     }
 

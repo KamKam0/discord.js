@@ -12,14 +12,12 @@ class Presences{
     }
 
     AddPresence(presence){
-        if(this._bot) this.presences.push(new Presence({...presence, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.presences.push(new Presence({...presence, guild_id: this.guild_id}))
+        this.presences.push(new Presence({...presence, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddPresences(presences){
-        if(this._bot) this.presences.push(...presences.map(pr => new Presence({...pr, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.presences.push(...presences.map(pr => new Presence({...pr, guild_id: this.guild_id})))
+        this.presences.push(...presences.map(pr => new Presence({...pr, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

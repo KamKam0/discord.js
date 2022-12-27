@@ -4,7 +4,7 @@ module.exports = async (bot, oldsticker, newsticker) => {
     let oldsticker2 = guild.stickers.get(newsticker.id)
     if(!oldsticker2) return
     const sticker_e = require(`../Gestionnaires/Individual/Sticker`)
-    oldsticker2 = new sticker_e({...oldsticker2})
+    oldsticker2 = new sticker_e({...oldsticker2}, bot)
     guild.stickers.get(newsticker.id).Modify_Datas(newsticker)
     const newsticker2 = guild.stickers.get(newsticker.id)
 

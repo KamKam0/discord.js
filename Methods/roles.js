@@ -1,4 +1,4 @@
-module.exports.add = async (token, guildid, roleid, memberid) => {
+module.exports.add = async (token, guildid, roleid, memberid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -35,7 +35,7 @@ module.exports.add = async (token, guildid, roleid, memberid) => {
         } 
     })
 }
-module.exports.remove = async (token, guildid, roleid, memberid) => {
+module.exports.remove = async (token, guildid, roleid, memberid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -72,7 +72,7 @@ module.exports.remove = async (token, guildid, roleid, memberid) => {
         } 
     })
 }
-module.exports.delete = async (token, guildid, roleid) => {
+module.exports.delete = async (token, guildid, roleid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -107,7 +107,7 @@ module.exports.delete = async (token, guildid, roleid) => {
         } 
     })
 }
-module.exports.create = async (token, guildid, options) => {
+module.exports.create = async (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -142,10 +142,10 @@ module.exports.create = async (token, guildid, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Role"))({...datas, token: token, guild_id: guildid}))
+        else return resolve(new (require("../Gestionnaires/Individual/Role"))({...datas, token: token, guild_id: guildid}, bot))
     })
 }
-module.exports.changepositions = async (token, guildid, options) => {
+module.exports.changepositions = async (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -179,7 +179,7 @@ module.exports.changepositions = async (token, guildid, options) => {
         }else return resolve(datas)
     })
 }
-module.exports.modify = async (token, guildid, roleid, options) => {
+module.exports.modify = async (token, guildid, roleid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -212,6 +212,6 @@ module.exports.modify = async (token, guildid, roleid, options) => {
                     er.content = datas
                     return reject(er)
                 }
-        }else return resolve(new (require("../Gestionnaires/Individual/Role"))({...datas, token: token, guild_id: guildid}))
+        }else return resolve(new (require("../Gestionnaires/Individual/Role"))({...datas, token: token, guild_id: guildid}, bot))
     })
 }

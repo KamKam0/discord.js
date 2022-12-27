@@ -6,7 +6,7 @@ class Emojis extends BaseEmojis{
 
     create(name, imagedata, roles){
         return new Promise((resolve, reject) => {
-            require("../Methods/emoji").create(this._bot.token, this.guild_id, name, imagedata, roles)
+            require("../Methods/emoji").create(this._bot.token, this.guild_id, name, imagedata, roles, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - create, emoji manager")

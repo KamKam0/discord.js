@@ -1,4 +1,4 @@
-module.exports.create = async (token, guildid, name, file, tags, description) => {//Cp
+module.exports.create = async (token, guildid, name, file, tags, description, bot) => {//Cp
     return new Promise(async (resolve, reject) => {
         if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Stickers"})
         if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Stickers"})
@@ -37,10 +37,10 @@ module.exports.create = async (token, guildid, name, file, tags, description) =>
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Sticker"))({...datas, token: token, guild_id: guildid}))
+        else return resolve(new (require("../Gestionnaires/Individual/Sticker"))({...datas, token: token, guild_id: guildid}, bot))
     })
 }
-module.exports.delete = async (token, guildid, stickerid) => {
+module.exports.delete = async (token, guildid, stickerid, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Stickers"})
         if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Stickers"})
@@ -75,7 +75,7 @@ module.exports.delete = async (token, guildid, stickerid) => {
         } 
     })
 }
-module.exports.modify = async (token, guildid, stickerid, options) => {
+module.exports.modify = async (token, guildid, stickerid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Stickers"})
         if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Stickers"})
@@ -108,6 +108,6 @@ module.exports.modify = async (token, guildid, stickerid, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Sticker"))({...datas, token: token, guild_id: guildid}))
+        else return resolve(new (require("../Gestionnaires/Individual/Sticker"))({...datas, token: token, guild_id: guildid}, bot))
     })
 }

@@ -1,5 +1,5 @@
 const verify = require("../Utils/verify")
-module.exports.create = async (token, guildid, name, imagedata, roles) => {//cp
+module.exports.create = async (token, guildid, name, imagedata, roles, bot) => {//cp
     return new Promise(async (resolve, reject) => {
         if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Emoji"})
         if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Emoji"})
@@ -37,17 +37,17 @@ module.exports.create = async (token, guildid, name, imagedata, roles) => {//cp
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Emoji")({...datas, guild_id: guildid, token: token})))
+        else return resolve(new (require("../Gestionnaires/Individual/Emoji")({...datas, guild_id: guildid, token: token}, bot)))
     })
 }
-module.exports.delete = async (token, guildid, emojiid) => {
+module.exports.delete = async (token, guildid, emojiid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, type: "string", data_name: "token"}, {value: guildid, value_data: "id", type: "string", data_name: "guildid"}, {value: emojiid, value_data: "id", type: "string", data_name: "emojiid"}], "DELETE", `guilds/${guildid}/emojis/${emojiid}`, this.delete, "delete emoji")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
 }
-module.exports.modify = async (token, guildid, emojiid, options) => {
+module.exports.modify = async (token, guildid, emojiid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, type: "string", data_name: "token"}, {value: guildid, value_data: "id", type: "string", data_name: "guildid"}, {value: emojiid, value_data: "id", type: "string", data_name: "emojiid"}, {value: options, type: "object", data_name: "options"}], "PATCH", `guilds/${guildid}/emojis/${emojiid}`, this.delete, "delete emoji")
         .then(datas => resolve(datas))

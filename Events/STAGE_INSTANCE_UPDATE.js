@@ -3,7 +3,7 @@ module.exports = async (bot, datas) => {
     if(!guild) return
     let oldevent = guild.stage_instances.get(datas.id)
     const stage_e = require(`../Gestionnaires/Individual/StageInstance`)
-    oldevent = new stage_e({...oldevent})
+    oldevent = new stage_e({...oldevent}, bot)
     guild.stage_instances.get(datas.id).Modify_Datas(datas)
     const newevent = guild.stage_instances.get(datas.id)
 

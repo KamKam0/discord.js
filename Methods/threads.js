@@ -1,4 +1,4 @@
-module.exports.create_withoutm = async (token, channelid, options) => {
+module.exports.create_withoutm = async (token, channelid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -30,10 +30,10 @@ module.exports.create_withoutm = async (token, channelid, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Thread"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Thread"))({...datas, token: token}, bot))
     })
 }
-module.exports.create_withm = async (token, channelid, messageid, options) => {
+module.exports.create_withm = async (token, channelid, messageid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -67,10 +67,10 @@ module.exports.create_withm = async (token, channelid, messageid, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Thread"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Thread"))({...datas, token: token}, bot))
     })
 }
-module.exports.jointhread = async (token, threadid) => {
+module.exports.jointhread = async (token, threadid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -103,7 +103,7 @@ module.exports.jointhread = async (token, threadid) => {
         } 
     })
 }
-module.exports.addthreadmember = async (token, threadid, memberid) => {
+module.exports.addthreadmember = async (token, threadid, memberid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -138,7 +138,7 @@ module.exports.addthreadmember = async (token, threadid, memberid) => {
         } 
     })
 }
-module.exports.leavethread = async (token, threadid) => {
+module.exports.leavethread = async (token, threadid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -171,7 +171,7 @@ module.exports.leavethread = async (token, threadid) => {
         } 
     })
 }
-module.exports.removethreadmember = async (token, threadid, memberid) => {
+module.exports.removethreadmember = async (token, threadid, memberid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -206,7 +206,7 @@ module.exports.removethreadmember = async (token, threadid, memberid) => {
         } 
     })
 }
-module.exports.create_tforum = (token, channelid, options) => {
+module.exports.create_tforum = (token, channelid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -239,6 +239,6 @@ module.exports.create_tforum = (token, channelid, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Thread"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Thread"))({...datas, token: token}, bot))
     })
 }

@@ -1,5 +1,5 @@
 class Sticker{
-    constructor(sticker){
+    constructor(sticker, bot){
         this.id = sticker.id
         this.pack_id = sticker.pack_id ? sticker.pack_id : null
         this.name = sticker.name
@@ -14,6 +14,7 @@ class Sticker{
         this.bot_token = sticker.token
         this.sort_value = sticker.sort_value ? sticker.sort_value : null
         this.vguild_id = sticker.guild ? sticker.guild.vguild_id : null
+        this._bot = bot
     }
 
     SetGuild(guild){
@@ -32,7 +33,7 @@ class Sticker{
 
     modify(options){
         return new Promise((resolve, reject) => {
-            require("../../Methods/stickers").modify(this.bot_token, this.guild_id, this.id, options)
+            require("../../Methods/stickers").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modify, sticker")
@@ -44,7 +45,7 @@ class Sticker{
 
     delete(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/stickers").delete(this.bot_token, this.guild_id, this.id)
+            require("../../Methods/stickers").delete(this.bot_token, this.guild_id, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - delete, sticker")

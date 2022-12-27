@@ -25,18 +25,6 @@ class guildText extends TextBase{
         return this
     }
 
-    async awaitMessages(options){
-        return new Promise((resolve, reject) => {
-            require("../../../../Classes/Collector")(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
-            .then(datas => resolve(datas))
-            .catch(datas => reject(datas))
-        })
-    }
-
-    collectMessages(options){
-        return require("../../../../Classes/Collector").collect(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
-    }
-
     bulkdelete(number){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/message").fetch_messages(this.bot_token, this.id, number)
@@ -59,7 +47,7 @@ class guildText extends TextBase{
 
     getinvites(){
         return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/channel").getinvites(this.bot_token, this.id)
+            require("../../../../Methods/channel").getinvites(this.bot_token, this.id, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - getinvites, guildtext")
                 er.content = err
@@ -71,7 +59,7 @@ class guildText extends TextBase{
 
     createinvites(){
         return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/channel").createinvite(this.bot_token, this.id)
+            require("../../../../Methods/channel").createinvite(this.bot_token, this.id, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - createinvites, guildtext")
                 er.content = err
@@ -83,7 +71,7 @@ class guildText extends TextBase{
 
     editpermissions(overwrites){
         return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/channel").editpermissions(this.bot_token, this.id, overwrites)
+            require("../../../../Methods/channel").editpermissions(this.bot_token, this.id, overwrites, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - editpermissions, guildtext")
                 er.content = err
@@ -95,7 +83,7 @@ class guildText extends TextBase{
 
     deletepermissions(overwrites){
         return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/channel").deletepermission(this.bot_token, this.id, overwrites)
+            require("../../../../Methods/channel").deletepermission(this.bot_token, this.id, overwrites, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - deletepermissions, guildtext")
                 er.content = err
@@ -107,7 +95,7 @@ class guildText extends TextBase{
 
     follownewsChannel(targetid){
         return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/channel").follownews(this.bot_token, this.id, targetid)
+            require("../../../../Methods/channel").follownews(this.bot_token, this.id, targetid, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - follownewschannel, guildtext")
                 er.content = err

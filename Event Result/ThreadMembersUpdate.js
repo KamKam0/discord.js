@@ -1,5 +1,5 @@
 class ThreadUpdate{
-    constructor(threadupdate){
+    constructor(threadupdate, bot){
         this.id = threadupdate.id
         this.thread = threadupdate.thread
         this.guild = threadupdate.guild
@@ -9,6 +9,7 @@ class ThreadUpdate{
         this.removed_member = threadupdate.removed_member
         this.member_count = threadupdate.member_count
         this.vguild_id = null
+        this._bot = bot
     }
 
     SetThread(thread){

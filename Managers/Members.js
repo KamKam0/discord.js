@@ -6,7 +6,7 @@ class Members extends BaseMember{
 
     ban(ID, options){
         return new Promise((resolve, reject) => {
-            require("../Methods/ban").ban(this._bot.token, this.guild_id, ID, options)
+            require("../Methods/ban").ban(this._bot.token, this.guild_id, ID, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - ban, members manager")
@@ -18,7 +18,7 @@ class Members extends BaseMember{
 
     unban(ID, options){
         return new Promise((resolve, reject) => {
-            require("../Methods/ban").unban(this._bot.token, this.guild_id, ID, options)
+            require("../Methods/ban").unban(this._bot.token, this.guild_id, ID, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - unban, member manager")

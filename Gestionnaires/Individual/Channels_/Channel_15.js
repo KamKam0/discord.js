@@ -56,7 +56,7 @@ class Channel extends Base{
     
     createthread(options){
         return new Promise(async (resolve, reject) => {
-            require("../../../Methods/threads").create_tforum(this.bot_token, this.id, options)
+            require("../../../Methods/threads").create_tforum(this.bot_token, this.id, options, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - createthread, Channel15")
                 er.content = err

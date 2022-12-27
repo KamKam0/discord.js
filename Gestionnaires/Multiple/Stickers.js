@@ -7,14 +7,12 @@ class Stickers{
     }
 
     AddSticker(sticker){
-        if(this._bot) this.stickers.push(new Sticker({...sticker, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.stickers.push(new Sticker({...sticker, guild_id: this.guild_id}))
+        this.stickers.push(new Sticker({...sticker, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddStickers(stickers){
-        if(this._bot) this.stickers.push(...stickers.map(sti => new Sticker({...sti, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.stickers.push(...stickers.map(sti => new Sticker({...sti, guild_id: this.guild_id})))
+        this.stickers.push(...stickers.map(sti => new Sticker({...sti, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

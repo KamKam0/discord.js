@@ -1,7 +1,7 @@
 const User = require("../Gestionnaires/Individual/User")
 module.exports = async (bot, datas) => {
     console.log("Beginning of the process")
-    bot.user = new User({...datas.user, token: bot.discordjs.token})
+    bot.user = new User({...datas.user, token: bot.discordjs.token}, bot)
     bot.discordjs.dvdatas = datas.v
     bot.discordjs.guild_ids = datas.guilds.map(g => { return {id: g.id, vid: null}})
     if(bot.discordjs.guild_ids.length === 0){

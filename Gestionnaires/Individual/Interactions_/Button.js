@@ -1,7 +1,7 @@
 const Message = require("../Message")
 const User = require("../User")
 class Button{
-    constructor(button){
+    constructor(button, bot){
         this.id = button.id
         this.application_id = button.application_id
         this.custom_id = button.data.custom_id
@@ -21,6 +21,7 @@ class Button{
         this.bot_id = button.bot_id
         this.vguild_id = button.guild ? button.guild.vguild_id : null
         this.typee = "boutton"
+        this._bot = bot
     }
 
     get isButton(){
@@ -73,7 +74,7 @@ class Button{
 
     reply(options){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").reply(this.bot_token, this, options)
+            require("../../../Methods/interaction").reply(this.bot_token, this, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - reply, button")
@@ -85,7 +86,7 @@ class Button{
 
     modifyreply(options){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").modifyreply(this.bot_token, this.bot_id, this, options)
+            require("../../../Methods/interaction").modifyreply(this.bot_token, this.bot_id, this, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modifyreply, button")
@@ -97,7 +98,7 @@ class Button{
 
     deletereply(){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").deletereply(this.bot_token, this.bot_id, this)
+            require("../../../Methods/interaction").deletereply(this.bot_token, this.bot_id, this, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - deletereply, button")
@@ -146,19 +147,19 @@ class Button{
                 break;
             }
             if(type === "reply"){
-                require("../../../Methods/interaction").reply(this.bot_token, this, {embeds: [embed]})
+                require("../../../Methods/interaction").reply(this.bot_token, this, {embeds: [embed]}, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - reply, button sendspe")
+                    let er = new Error("Une erreur s'est produite lors de la requête - reply, slash sendspe")
                     er.content = err
                     reject(er)
                 })
             } 
             if(type === "send"){
-                require("../../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]})
+                require("../../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]}, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - send, button sendspe")
+                    let er = new Error("Une erreur s'est produite lors de la requête - send, slash sendspe")
                     er.content = err
                     reject(er)
                 })

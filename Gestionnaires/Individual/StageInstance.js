@@ -1,5 +1,5 @@
 class StageInstance{
-    constructor(stage){
+    constructor(stage, bot){
         this.id = stage.id
         this.guild_id = stage.guild_id
         this.channel_id = stage.channel_id
@@ -10,6 +10,7 @@ class StageInstance{
         this.guild = stage.guild ? stage.guild : null
         this.bot_token = stage.token
         this.vguild_id = stage.guild ? stage.guild.vguild_id : null
+        this._bot = bot
     }
 
     SetChannel(channel){
@@ -33,7 +34,7 @@ class StageInstance{
 
     modify(options){
         return new Promise((resolve, reject) => {
-            require("../../Methods/stages").modify(this.bot_token, this.guild_id, this.id, options)
+            require("../../Methods/stages").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modify, stage")
@@ -45,7 +46,7 @@ class StageInstance{
 
     delete(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/stages").delete(this.bot_token, this.guild_id, this.id)
+            require("../../Methods/stages").delete(this.bot_token, this.guild_id, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - delete, stage")

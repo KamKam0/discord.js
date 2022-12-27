@@ -7,14 +7,12 @@ class Invites{
     }
 
     AddInvite(invite){
-        if(this._bot) this.invites.push(new Invite({...invite, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.invites.push(new Invite({...invite, guild_id: this.guild_id}))
+        this.invites.push(new Invite({...invite, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddInvites(invites){
-        if(this._bot) this.invites.push(...invites.map(inv => new Invite({...inv, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.invites.push(...invites.map(inv => new Invite({...inv, guild_id: this.guild_id})))
+        this.invites.push(...invites.map(inv => new Invite({...inv, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

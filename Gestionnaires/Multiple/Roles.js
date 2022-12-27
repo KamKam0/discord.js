@@ -7,14 +7,12 @@ class Roles{
     }
 
     AddRole(role){
-        if(this._bot) this.roles.push(new Role({...role, token: this._bot.discordjs.token, guild_id: this.guild_id}))
-        else this.roles.push(new Role({...role, guild_id: this.guild_id}))
+        this.roles.push(new Role({...role, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddRoles(Roles){
-        if(this._bot) this.roles.push(...Roles.map(ro => new Role({...ro, token: this._bot.discordjs.token, guild_id: this.guild_id})))
-        else this.roles.push(...Roles.map(ro => new Role({...ro, guild_id: this.guild_id})))
+        this.roles.push(...Roles.map(ro => new Role({...ro, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

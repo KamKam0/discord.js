@@ -81,6 +81,18 @@ class Bot extends EventEmitter{
         return this
     }
 
+    async awaitInteractions(options){
+        return new Promise((resolve, reject) => {
+            require("../../../../Classes/Collector")(this._bot, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
+            .then(datas => resolve(datas))
+            .catch(datas => reject(datas))
+        })
+    }
+
+    collectInteractions(options){
+        return require("../../../../Classes/Collector").collect(this._bot, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
+    }
+
     #checkName(){
         let link = process.cwd()
         let symbol;
@@ -214,7 +226,7 @@ class Bot extends EventEmitter{
     
     SendMessage(channelid, options){
         return new Promise(async (resolve, reject) => {
-            require("../Methods/message").send(this.discordjs.token, channelid, options)
+            require("../Methods/message").send(this.discordjs.token, channelid, options, this)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - SendMessages Bot")
                 er.content = err

@@ -1,5 +1,5 @@
 class MessageReactionRemoveRemove{
-    constructor(message_add){
+    constructor(message_add, bot){
         this.channel_id = message_add.channel_id
         this.channel = message_add.channel
         this.guild = message_add.guild
@@ -8,6 +8,7 @@ class MessageReactionRemoveRemove{
         this.message_id = message_add.message_id
         this.emoji = message_add.emoji
         this.vguild_id = null
+        this._bot = bot
     }
 
     SetChannel(channel){

@@ -1,5 +1,5 @@
 class MessageReactionAdd{
-    constructor(message_add){
+    constructor(message_add, bot){
         this.user_id = message_add.user_id
         this.user = message_add.user
         this.member = message_add.member
@@ -11,6 +11,7 @@ class MessageReactionAdd{
         this.message_id = message_add.message_id
         this.emoji = message_add.emoji
         this.vguild_id = null
+        this._bot = bot
     }
 
     SetMember(member){

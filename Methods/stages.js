@@ -1,4 +1,4 @@
-module.exports.create = (token, options) => {
+module.exports.create = (token, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -27,10 +27,10 @@ module.exports.create = (token, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/StageInstance"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/StageInstance"))({...datas, token: token}, bot))
     })
 }
-module.exports.modify = (token, channelid, options) => {
+module.exports.modify = (token, channelid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -61,10 +61,10 @@ module.exports.modify = (token, channelid, options) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/StageInstance"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/StageInstance"))({...datas, token: token}, bot))
     })
 }
-module.exports.delete = (token, channelid) => {
+module.exports.delete = (token, channelid, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)

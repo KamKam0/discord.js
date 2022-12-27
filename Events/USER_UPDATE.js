@@ -3,7 +3,7 @@ module.exports = async (bot, datas) => {
 
     if(!olduser) return
     const user_e = require(`../Gestionnaires/Individual/User`)
-    olduser = new user_e({...olduser, token: bot.discordjs.token})
+    olduser = new user_e({...olduser, token: bot.discordjs.token}, bot)
 
     bot.users.get(datas.id).Modify_Datas(datas)
     

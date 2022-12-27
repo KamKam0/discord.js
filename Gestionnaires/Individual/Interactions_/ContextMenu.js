@@ -1,7 +1,7 @@
 const Message = require("../Message")
 const User = require("../User")
 class Menu{
-    constructor(menu){
+    constructor(menu, bot){
         this.id = menu.id
         this.application_id = menu.application_id
         this.custom_id = menu.data.custom_id
@@ -22,6 +22,7 @@ class Menu{
         this.bot_id = menu.bot_id
         this.vguild_id = menu.guild ? menu.guild.vguild_id : null
         this.typee = "menu"
+        this._bot = bot
     }
 
     get iscontextmenu(){
@@ -74,7 +75,7 @@ class Menu{
 
     reply(options){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").reply(this.bot_token, this, options)
+            require("../../../Methods/interaction").reply(this.bot_token, this, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - reply, contextmenu")
@@ -86,7 +87,7 @@ class Menu{
 
     modifyreply(options){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").modifyreply(this.bot_token, this.bot_id, this, options)
+            require("../../../Methods/interaction").modifyreply(this.bot_token, this.bot_id, this, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modifyreply, contextmenu")
@@ -98,7 +99,7 @@ class Menu{
 
     deletereply(){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").deletereply(this.bot_token, this.bot_id, this)
+            require("../../../Methods/interaction").deletereply(this.bot_token, this.bot_id, this, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - deletereply, contextmenu")
@@ -147,25 +148,26 @@ class Menu{
                 break;
             }
             if(type === "reply"){
-                require("../../../Methods/interaction").reply(this.bot_token, this, {embeds: [embed]})
+                require("../../../Methods/interaction").reply(this.bot_token, this, {embeds: [embed]}, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - reply, contextmenu sendspe")
+                    let er = new Error("Une erreur s'est produite lors de la requête - reply, slash sendspe")
                     er.content = err
                     reject(er)
                 })
             } 
             if(type === "send"){
-                require("../../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]})
+                require("../../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]}, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - send, contextmenu sendspe")
+                    let er = new Error("Une erreur s'est produite lors de la requête - send, slash sendspe")
                     er.content = err
                     reject(er)
                 })
             }
         })
     }
+
 
     error(msg, type){
         return new Promise(async (resolve, reject) => {

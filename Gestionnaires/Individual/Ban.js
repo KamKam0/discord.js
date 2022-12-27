@@ -1,6 +1,6 @@
 const User = require("./User")
 class Ban{
-    constructor(ban){
+    constructor(ban, bot){
         this.user = new User({...ban.user, token: ban.token})
         this.user_id = ban.user.id
         this.reason = ban.reason ? ban.reason : null
@@ -8,6 +8,7 @@ class Ban{
         this.guild_id = ban.guild_id
         this.vguild_id = ban.guild ? ban.guild.vguild_id : null
         this.bot_token = ban.token
+        this._bot = bot
     }
 
     SetUser(user){
@@ -31,7 +32,7 @@ class Ban{
 
     unban(options){
         return new Promise((resolve, reject) => {
-            require("../../Methods/ban").unban(this.bot_token, this.guild.id, this.user.id, options)
+            require("../../Methods/ban").unban(this.bot_token, this.guild.id, this.user.id, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - Ban function unban")

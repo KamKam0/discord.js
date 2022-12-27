@@ -12,7 +12,7 @@ module.exports = async (bot, datas) => {
     }
 
     const thread_e = require(`../Gestionnaires/Individual/Thread`)
-    oldthread = new thread_e({...oldthread})
+    oldthread = new thread_e({...oldthread}, bot)
 
     guild.threads.get(datas.id).Modify_Datas(datas)
 

@@ -1,5 +1,5 @@
 class Role{
-    constructor(role){
+    constructor(role, bot){
         this.id = role.id
         this.name = role.name
         this.color = role.color
@@ -15,6 +15,7 @@ class Role{
         this.guild_id = role.guild_id
         this.bot_token = role.token
         this.vguild_id = role.guild ? role.guild.vguild_id : null
+        this._bot = bot
     }
 
     SetGuild(guild){
@@ -33,7 +34,7 @@ class Role{
     
     delete(){
         return new Promise(async (resolve, reject) => {
-            require("../../Methods/roles").delete(this.bot_token, this.guild_id, this.id)
+            require("../../Methods/roles").delete(this.bot_token, this.guild_id, this.id, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - delete, role")
                 er.content = err
@@ -45,7 +46,7 @@ class Role{
     
     modify(options){
         return new Promise(async (resolve, reject) => {
-            require("../../Methods/roles").modify(this.bot_token, this.guild_id, this.id, options)
+            require("../../Methods/roles").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modify, role")
                 er.content = err

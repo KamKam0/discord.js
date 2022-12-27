@@ -28,7 +28,7 @@ class Guilds{
 
     ReplaceGuild(guild){
         this.guilds.splice(this.guilds.indexOf(this.guilds.find(gu => gu.id === guild.id)), 1)
-        this.guilds.push(new Guild(guild))
+        this.guilds.push(new Guild(this._bot, guild))
         return this
     }
 

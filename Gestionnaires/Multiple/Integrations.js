@@ -6,14 +6,12 @@ class Integrations{
     }
 
     AddIntegration(integration){
-        if(this._bot) this.integrations.push(new Integration({...integration, token: this._bot.discordjs.token}))
-        else this.integrations.push(new Integration(integration))
+        this.integrations.push(new Integration({...integration, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 
     AddIntegrations(integrations){
-        if(this._bot) this.integrations.push(...integrations.map(int => new Integration({...int, token: this._bot.discordjs.token})))
-        else this.integrations.push(...integrations.map(int => new Integration(int)))
+        this.integrations.push(...integrations.map(int => new Integration({...int, token: this._bot.discordjs.token}, this._bot)))
         return this
     }
 

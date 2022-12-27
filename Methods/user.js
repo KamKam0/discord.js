@@ -1,5 +1,5 @@
 
-module.exports.createDM = async (token, user) => {
+module.exports.createDM = async (token, user, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -28,10 +28,10 @@ module.exports.createDM = async (token, user) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Channels_/Channel_1"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Channels_/Channel_1"))({...datas, token: token}, bot))
     })
 }
-module.exports.createGroup = async (token, accesses, nicks) => {
+module.exports.createGroup = async (token, accesses, nicks, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
@@ -60,10 +60,10 @@ module.exports.createGroup = async (token, accesses, nicks) => {
                     return reject(er)
                 }
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Channels_/Channel_1"))({...datas, token: token}))
+        else return resolve(new (require("../Gestionnaires/Individual/Channels_/Channel_1"))({...datas, token: token}, bot))
     })
 }
-module.exports.send = async (bot, userid, options) => {
+module.exports.send = async (bot, userid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "User"})
         if(!user) return reject({code: require("../DB/errors.json")["7"].code, message: require("../DB/errors.json")["7"].message, file: "User"})

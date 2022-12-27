@@ -6,7 +6,7 @@ class Events extends BaseEvents{
 
     create(options){
         return new Promise((resolve, reject) => {
-            require("../Methods//events").create(this._bot.token, this.guild_id, options)
+            require("../Methods//events").create(this._bot.token, this.guild_id, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - create, events manager")

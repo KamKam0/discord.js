@@ -1,5 +1,5 @@
 class Webhook{
-    constructor(webhook){
+    constructor(webhook, bot){
         this.guild = webhook.guild ? webhook.guild : null
         this.guild_id = webhook.guild_id
         this.bot_token = webhook.bot_token
@@ -15,6 +15,7 @@ class Webhook{
         this.application_id = webhook.application_id
         this.url = webhook.url
         this.vguild_id = webhook.guild ? webhook.guild.vguild_id : null
+        this._bot = bot
     }
 
     SetUser(user){
@@ -60,7 +61,7 @@ class Webhook{
 
     execute(options){
         return new Promise((resolve, reject) => {
-            require("../../Methods/webhooks").create(this.bot_token, this, options)
+            require("../../Methods/webhooks").create(this.bot_token, this, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - execute, webhook")
@@ -72,7 +73,7 @@ class Webhook{
 
     modify(options){
         return new Promise((resolve, reject) => {
-            require("../Methods/webhooks").modify(this.bot_token, this.id, options)
+            require("../Methods/webhooks").modify(this.bot_token, this.id, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modify, webhook")
@@ -84,7 +85,7 @@ class Webhook{
 
     delete(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/webhooks").delete(this.bot_token, this.id)
+            require("../../Methods/webhooks").delete(this.bot_token, this.id, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - delete, webhook")

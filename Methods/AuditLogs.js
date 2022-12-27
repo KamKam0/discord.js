@@ -1,4 +1,4 @@
-module.exports = async (token, guildid) => {
+module.exports = async (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         require("../Utils/verify")([{value: token, type: "string", data_name: "token", required: true}, {value: guildid, value_data: "id", type: "string", data_name: "guildid", required: true}], "get", `guilds/${guildid}/audit-logs`, this, "audit-logs")
         .then(datas => {

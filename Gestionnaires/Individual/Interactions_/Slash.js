@@ -1,6 +1,6 @@
 const User = require("../User")
 class Slash{
-    constructor(slash){
+    constructor(slash, bot){
         this.id = slash.id
         this.application_id = slash.application_id
         this.guild_id = slash.guild_id
@@ -19,6 +19,7 @@ class Slash{
         this.bot_id = slash.bot_id
         this.vguild_id = slash.guild ? slash.guild.vguild_id : null
         this.typee = "slash"
+        this._bot = bot
     }
 
     get isslash(){
@@ -82,7 +83,7 @@ class Slash{
 
     reply(options){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").reply(this.bot_token, this, options)
+            require("../../../Methods/interaction").reply(this.bot_token, this, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - reply, slash")
@@ -94,7 +95,7 @@ class Slash{
 
     modifyreply(options){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").modifyreply(this.bot_token, this.bot_id, this, options)
+            require("../../../Methods/interaction").modifyreply(this.bot_token, this.bot_id, this, options, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - modifyreply, slash")
@@ -106,7 +107,7 @@ class Slash{
 
     deletereply(){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").deletereply(this.bot_token, this.bot_id, this)
+            require("../../../Methods/interaction").deletereply(this.bot_token, this.bot_id, this, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - deletereply, slash")
@@ -155,7 +156,7 @@ class Slash{
                 break;
             }
             if(type === "reply"){
-                require("../../../Methods/interaction").reply(this.bot_token, this, {embeds: [embed]})
+                require("../../../Methods/interaction").reply(this.bot_token, this, {embeds: [embed]}, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
                     let er = new Error("Une erreur s'est produite lors de la requête - reply, slash sendspe")
@@ -164,7 +165,7 @@ class Slash{
                 })
             } 
             if(type === "send"){
-                require("../../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]})
+                require("../../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]}, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
                     let er = new Error("Une erreur s'est produite lors de la requête - send, slash sendspe")
