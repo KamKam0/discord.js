@@ -2,9 +2,9 @@ class Option{
     constructor(option){
         this.type = option.type ?option.type : 3
         this.name = option.name
-        this.name_localizations = option.name_localizations ?option.name_localizations : []
+        this.name_localizations = option.name_localizations ?option.name_localizations : {}
         this.description = option.description ?option.description : null
-        this.description_localizations = option.description_localizations ?option.description_localizations : []
+        this.description_localizations = option.description_localizations ?option.description_localizations : {}
         this.required = option.required ? option.required : false
         this.choices = option.choices ? option.choices.map(choi => new (require("./Choice"))(choi)) : []
         this.min_value = option.min_value ? option.min_value : 0
@@ -18,13 +18,15 @@ class Option{
         for(const point of Object.keys(this)){
             let point2 = slash[point]
             if(point === "description_localizations" || point === "name_localizations"){
-                /*let ppoint = Object.entries(this[point])
+                let ppoint = Object.entries(this[point])
                 let ppoint2 = Object.entries(point2)
+                let errors
                 ppoint.forEach(po => {
                     let po2 = ppoint2.find(e => e[0] === po[0])
                     if(!po2) errors = true
                     if(po[1] !== po2[1]) errors=true
-                })*/
+                })
+                if(errors) return false
             }else if(point === "choices"){
                 for(const choice of this.choices){
                     if(!point2.find(opt => opt.name === choice.name)) return false

@@ -281,37 +281,42 @@ class Bot extends EventEmitter{
         let commands = await this.GetSlashCommands()
         const commandClass = require("../Classes/ApplicationCommand")
 
-        this.handler.GetAllCommandsfi().filter(cmd => !cmd.help.unclass && !cmd.help.nsfw).forEach(commande => {
-            let Langue = (commande.help.langues && commande.help.langues[0]) ? commande.help.langues.find(e => e.Langue_Code === this.default_language)["Help"] : this.langues.find(e => e.Langue_Code === this.default_language)["Help"]
-            let descriptions_cmd = {}
-            let names_cmd = {}
-            let descriptions_opt = {}
-            let names_opt = {}
-            let names_cho = {}
-            /*
-                Object.defineProperty(description_cmd, la.Langue_Code, {
-                    value: la.Help[`${cmd.name}_description`],
-                    writable: false
-                })*/
-            if(commande.help.langues && commande.help.langues[0]) commande.help.langues.forEach(la => attribute(la))
-            else this.langues.forEach(la => attribute(la))
+        this.handler.GetAllCommandsfi().filter(cmd => !cmd.help.unclass).forEach(commande => {
+            let descriptions_cmd, names_cmd, descriptions_opt, names_opt, names_cho;
 
-            function attribute(la){
+            let las = (commande.help.langues && commande.help.langues[0]) ? commande.help.langues : this.langues
+
+            descriptions_cmd = {}
+            names_cmd = {}
+            las.forEach(la => {
+                if(la.Langue_Code === this.default_language) commande.description = la.Help[`${commande.name}_description`]
                 descriptions_cmd[la.Langue_Code] = la.Help[`${commande.name}_description`]
                 names_cmd[la.Langue_Code] = la.Help[`${commande.name}_name`]
-                if(commande.help.options) commande.help.options.forEach(option => {
-                    if(la.Langue_Code === "en-US") option.description = la.Options[`${commande.name}_${option.name}_description`]
+            })
+            if(commande.help.options && commande.help.options[0]) commande.help.options.forEach(option => {
+                descriptions_opt = {}
+                names_opt = {}
+                las.forEach(la => {
+                    if(la.Langue_Code === this.default_language) option.description = la.Options[`${commande.name}_${option.name}_description`]
                     descriptions_opt[la.Langue_Code] = la.Options[`${commande.name}_${option.name}_description`]
                     names_opt[la.Langue_Code] = la.Options[`${commande.name}_${option.name}_name`]
-                    if(option.choices) option.choices.forEach(choice => names_cho[la.Langue_Code] = la.Choices[`${commande.name}_${option.name}_${choice.name}_name`] )
                 })
-            }
-
+                option.name_localizations = names_opt
+                option.description_localizations = descriptions_opt
+                if(option.choices) option.choices.forEach(choice => {
+                    names_cho = {}
+                    las.forEach(la => {
+                        names_cho[la.Langue_Code] = la.Choices[`${commande.name}_${option.name}_${choice.name}_name`]
+                    })
+                    choice.name_localizations = names_cho
+                })
+            })
+            
             let cmd = commands.find(cmd => cmd.name === commande.name)
-            if(!cmd) this.CreateSlashCommand({name: commande.name, description: Langue[`${commande.name}_description`], options: commande.help.options ? commande.help.options : []})
+            let datas  = new commandClass({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_perm: commande.help.type, mem_perm: commande.help.autorisation})
+            if(!cmd) this.CreateSlashCommand(datas)
             else{
-                let truecmd = new commandClass({name: commande.name, description: Langue[`${commande.name}_description`], options: commande.help.options ? commande.help.options : [], description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_perm: commande.help.type, mem_perm: commande.help.autorisation})
-                if(!truecmd.compare(cmd)) this.ModifySlashCommand(truecmd).catch(err => console.log(err.content))
+                if(!datas.compare(cmd)) this.ModifySlashCommand(datas)
                 commands = commands.DeleteCommand(cmd.name)
             }
         })

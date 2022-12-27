@@ -10,6 +10,7 @@ class Slash{
         this.default_member_permissions = slash.default_member_permissions ? slash.default_member_permissions : null
         this.type = slash.type ? slash.type : null
         this.name = slash.name
+        this.nsfw = slash.nsfw
         this.options = slash.options ? slash.options.map(opt => new (require("../../Classes/Options"))(opt)) : []
         this.description = slash.description ? slash.description : null
         this.dm_permission = slash.dm_permission ? slash.dm_permission : false

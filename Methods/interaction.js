@@ -97,7 +97,7 @@ module.exports.getcommands = async (token, ID,  trueid) => {
             let user = await require("../Methods/me").getuser(token)
             ID = user.id
         }
-        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: trueid, value_data: "id", type: "string", data_name: "trueid", required: false}], "GET", `applications/${ID}/commands`, this.getcommands, "getcommands interaction")
+        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: trueid, value_data: "id", type: "string", data_name: "trueid", required: false}], "GET", `applications/${ID}/commands?with_localizations=true`, this.getcommands, "getcommands interaction")
         .then(datas => {
             if(trueid){
                 if(datas.find(com => com.id === trueid)) return resolve(new (require("../Gestionnaires/Individual/SlashCommand")(datas.find(com => com.id === trueid))))
