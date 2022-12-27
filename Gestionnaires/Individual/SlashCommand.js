@@ -5,7 +5,6 @@ class Slash{
         this.version = slash.version
         this.description_localizations = slash.description_localizations ? slash.description_localizations : {}
         this.name_localizations = slash.name_localizations ? slash.name_localizations : {}
-        this.default_permission = slash.default_permission ? slash.default_permission : null
         this.dm_permission = slash.dm_permission ? slash.dm_permission : null
         this.default_member_permissions = slash.default_member_permissions ? slash.default_member_permissions : null
         this.type = slash.type ? slash.type : null
