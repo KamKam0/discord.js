@@ -1,7 +1,7 @@
 const verify = require("../Utils/verify")
-module.exports.getuser = async (token) => {
+module.exports.getuser = async (token, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, type: "string", data_name: "token"}], "GET", `users/@me`, this.getuser, "getuser me")
+        verify([{value: token, type: "string", data_name: "token", order:1}, {value: bot, type: "object", data_name: "bot", order: 2}], "GET", `users/@me`, this.getuser, "getuser me")
         .then(datas => resolve(new (require("../Gestionnaires/Individual/User"))({...datas, token: token})))
         .catch(err => reject(err))
     })

@@ -1,66 +1,15 @@
-
 module.exports.createDM = async (token, user, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "User"})
-        if(!user) return reject({code: require("../DB/errors.json")["7"].code, message: require("../DB/errors.json")["7"].message, file: "User"})
-        if(!require("../Utils/functions").check_id(user)) return reject({code: require("../DB/errors.json")["47"].code, message: require("../DB/errors.json")["47"].message, file: "User"})
-        const url = `${baseurl}/users/@me/channels`
-        const basedatas = await fetch(url, {method: "POST", headers: baseheaders, body: JSON.stringify({recipient_id: user})}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.createDM(token, user)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Channels_/Channel_1"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: user, type: "object", data_name: "user", order:2}, {value: {recipient_id: user}, type: "object", data_name: "options"}, {value: bot, type: "object", data_name: "bot", order: 3}], "POST", `users/@me/channels`, this.createDM, "createDM user")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Channels_/Channel_1"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.createGroup = async (token, accesses, nicks, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "User"})
-        if(!accesses) return reject({code: require("../DB/errors.json")["32"].code, message: require("../DB/errors.json")["32"].message, file: "User"})
-        if(!nicks) return reject({code: require("../DB/errors.json")["33"].code, message: require("../DB/errors.json")["33"].message, file: "User"})
-        const url = `${baseurl}/users/@me/channels`
-        const basedatas = await fetch(url, {method: "POST", headers: baseheaders, body: JSON.stringify({access_tokens: accesses, nicks: nicks})}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.createGroup(token, accesses, nicks)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Channels_/Channel_1"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: accesses, type: "array", data_name: "accesses", order:2}, {value: nicks, type: "array", data_name: "nicks", order:3}, {value: {access_tokens: accesses, nicks: nicks}, type: "object", data_name: "options"}, {value: bot, type: "object", data_name: "bot", order: 4}], "POST", `users/@me/channels`, this.createGroup, "createGroup user")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Channels_/Channel_1"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.send = async (bot, userid, options, bot) => {
@@ -70,22 +19,11 @@ module.exports.send = async (bot, userid, options, bot) => {
         if(!bot) return reject({code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "User"})
         
         this.createDM(bot, userid)
-        .catch(err => {
-            let er = new Error("Une erreur s'est produite lors de la requête")
-            er.content = err
-            reject(er)
-        })
+        .catch(err => reject(err))
         .then(channel => {
-        
             require("./message").send(bot, channel.id, options)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête")
-                er.content = err
-                reject(er)
-            })
-            .then(message => {
-                return resolve(message)
-            })
+            .catch(err => reject(err))
+            .then(message => resolve(message))
         })
         
     })

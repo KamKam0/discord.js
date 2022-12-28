@@ -1,653 +1,142 @@
+const verify = require("../Utils/verify")
 module.exports.deleteinvite = async (token, inviteid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!inviteid) return reject({code: require("../DB/errors.json")["22"].code, message: require("../DB/errors.json")["22"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(inviteid)) return reject({code: require("../DB/errors.json")["66"].code, message: require("../DB/errors.json")["66"].message, file: "Guild"})
-        const url = `${baseurl}/invites/${inviteid}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "DELETE"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.deleteinvite(token, inviteid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Invite"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: inviteid, value_data: "id", data_name: "inviteid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "DELETE", `invites/${inviteid}`, this.deleteinvite, "deleteinvite guild")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Invite"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.modify = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-
-        const url = `${baseurl}/guilds/${guildid}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "PATCH", body: JSON.stringify(options)}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.modify(token, guildid, options)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Guild"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, type: "object", data_name: "options", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}`, this.modify, "modify guild")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Guild"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.delete = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        const url = `${baseurl}/guilds/${guildid}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "DELETE"}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.delete(token, guildid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "DELETE", `guilds/${guildid}`, this.delete, "delete guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.changechposition = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-
-        const url = `${baseurl}/guilds/${guildid}/channels`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "PATCH", body: JSON.stringify(options)}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.changechposition(token, guildid, options)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, type: "object", data_name: "options", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/channels`, this.changechposition, "changechposition guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.addmember = (token, guildid, userid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Guild"})
-        if(!userid) return reject({code: require("../DB/errors.json")["7"].code, message: require("../DB/errors.json")["7"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(userid)) return reject({code: require("../DB/errors.json")["47"].code, message: require("../DB/errors.json")["47"].message, file: "Guild"})
-
-        const url = `${baseurl}/guilds/${guildid}/members/${userid}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "PUT", body: JSON.stringify(options)}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas.retry_after || datas.code){
-                if(datas && datas.retry_after){
-                    setTimeout(() => {
-                        this.addmember(token, guildid, userid, options)
-                        .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                        .then(datas => { return resolve(datas)})
-                    }, datas.retry_after * 1000)
-                }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-            }else return resolve(datas)
-        }
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: userid, value_data: "id", data_name: "userid", order:3}, {value: options, type: "object", data_name: "options", order: 4}, {value: bot, type: "object", data_name: "bot", order: 5}], "PUT", `guilds/${guildid}/members/${userid}`, this.addmember, "addmember guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.modifymember = (token, guildid, userid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Guild"})
-        if(!userid) return reject({code: require("../DB/errors.json")["7"].code, message: require("../DB/errors.json")["7"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(userid)) return reject({code: require("../DB/errors.json")["47"].code, message: require("../DB/errors.json")["47"].message, file: "Guild"})
-
-        const url = `${baseurl}/guilds/${guildid}/members/${userid}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "PATCH", body: JSON.stringify(options)}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.modifymember(token, guildid, userid, options)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: userid, value_data: "id", data_name: "userid", order:3}, {value: options, type: "object", data_name: "options", order: 4}, {value: bot, type: "object", data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/members/${userid}`, this.modifymember, "modifymember guild")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.modifycurrentmember = (token, guildid, nick, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!nick) return reject({code: require("../DB/errors.json")["18"].code, message: require("../DB/errors.json")["18"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        if(typeof nick !== "string") return reject({code: require("../DB/errors.json")["62"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        const url = `${baseurl}/guilds/${guildid}/members/@me`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "PATCH", body: JSON.stringify({nick: nick})}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.modifycurrentmember(token, guildid, nick)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: nick, data_name: "nick", value_data: "id", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/members/@me`, this.modifycurrentmember, "modifycurrentmember guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.prune = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-
-        const url = `${baseurl}/guilds/${guildid}/prune`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "POST", body: JSON.stringify(options)}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas.retry_after || datas.code){
-                if(datas && datas.retry_after){
-                    setTimeout(() => {
-                        this.prune(token, guildid, options)
-                        .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                        .then(datas => { return resolve(datas)})
-                    }, datas.retry_after * 1000)
-                }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-            }else return resolve(datas)
-        }
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, type: "object", data_name: "options", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "POST", `guilds/${guildid}/prune`, this.prune, "prune guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.getinvites = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        const url = `${baseurl}/guilds/${guildid}/invites`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.getinvites(token, guildid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }else{
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "GET", `guilds/${guildid}/invites`, this.getinvites, "getinvites guild")
+        .then(datas => {
             const invites = new (require("../Gestionnaires/Multiple/Invites"))(bot)
             invites.AddInvites(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
-        }
+        })
+        .catch(err => reject(err))
     })
 }
 module.exports.getintegrations = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        const url = `${baseurl}/guilds/${guildid}/integrations`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.getintegrations(token, guildid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else{
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "GET", `guilds/${guildid}/integrations`, this.getintegrations, "getintegrations guild")
+        .then(datas => {
             const intergations = new (require("../Gestionnaires/Multiple/Integrations"))(guildid, bot)
             intergations.AddIntegrations(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
-        }
+        })
+        .catch(err => reject(err))
     })
 }
 module.exports.deleteintegration = (token, guildid, integrationid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!integrationid) return reject({code: require("../DB/errors.json")["23"].code, message: require("../DB/errors.json")["23"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(integrationid)) return reject({code: require("../DB/errors.json")["67"].code, message: require("../DB/errors.json")["67"].message, file: "Guild"})
-        const url = `${baseurl}/guilds/${guildid}/integrations/${integrationid}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "DELETE"}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas.retry_after || datas.code){
-                if(datas && datas.retry_after){
-                    setTimeout(() => {
-                        this.deleteintegration(token, guildid, integrationid)
-                        .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                        .then(datas => { return resolve(datas)})
-                    }, datas.retry_after * 1000)
-                }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-            }else return resolve(datas)
-        }
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: integrationid, value_data: "id", data_name: "integrationid", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/integrations/${integrationid}`, this.deleteintegration, "deleteintegration guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.getwidgetsttings = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        const url = `${baseurl}/guilds/${guildid}/widget`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.getwidgetsttings(token, guildid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Event Result/WidgetSettings"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "GET", `guilds/${guildid}/widget`, this.getwidgetsttings, "getwidgetsttings guild")
+        .then(datas => resolve(new (require("../Event Result/WidgetSettings"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.getwidget = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        const url = `${baseurl}/guilds/${guildid}/widget.json`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.getwidget(token, guildid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(datas)
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: integrationid, value_data: "id", data_name: "integrationid", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "GET", `guilds/${guildid}/widget.json`, this.getwidget, "getwidget guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.getwidgetpng = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        const url = `${baseurl}/guilds/${guildid}/widget.png`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.getwidgetpng(token, guildid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(datas)
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: integrationid, value_data: "id", data_name: "integrationid", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "GET", `guilds/${guildid}/widget.png`, this.getwidgetpng, "getwidgetpng guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.modifywidget = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-
-        const url = `${baseurl}/guilds/${guildid}/widget`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "PATCH", body: JSON.stringify(options)}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.modifywidget(token, guildid, options)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(datas)
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, type: "object", data_name: "options", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/widget`, this.modifywidget, "modifywidget guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.getvanity = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        const url = `${baseurl}/guilds/${guildid}/vanity-url`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.getvanity(token, guildid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(datas)
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "GET", `guilds/${guildid}/vanity-url`, this.getvanity, "getvanity guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.getwelcomescreen = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        const url = `${baseurl}/guilds/${guildid}/welcome-screen`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.getwelcomescreen(token, guildid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(datas)
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "GET", `guilds/${guildid}/welcome-screen`, this.getwelcomescreen, "getwelcomescreen guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.modifywelcomescreen = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-
-        const url = `${baseurl}/guilds/${guildid}/welcome-screen`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "PACTH", body: JSON.stringify(options)}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.modifywelcomescreen(token, guildid, options)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(datas)
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, type: "object", data_name: "options", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/welcome-screen`, this.modifywelcomescreen, "modifywelcomescreen guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.modifyuservoice = (token, guildid, userid,  options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Guild"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Guild"})
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Guild"})
-        if(!userid) return reject({code: require("../DB/errors.json")["7"].code, message: require("../DB/errors.json")["7"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Guild"})
-        if(!require("../Utils/functions").check_id(userid)) return reject({code: require("../DB/errors.json")["47"].code, message: require("../DB/errors.json")["47"].message, file: "Guild"})
-
-        
-        const url = `${baseurl}/guilds/${guildid}/voice-states/${userid}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "PACTH", body: JSON.stringify(options)}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.modifyuservoice(token, guildid, userid, options)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(datas)
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: userid, value_data: "id", data_name: "userid", order:3}, {value: options, type: "object", data_name: "options", order: 4}, {value: bot, type: "object", data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/voice-states/${userid}`, this.modifyuservoice, "modifyuservoice guild")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }

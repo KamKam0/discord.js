@@ -123,7 +123,7 @@ class Bot extends EventEmitter{
                 let ID2 = await this.GetMe()
                 this.user = ID2
             }
-            require("../Methods/interaction").deletecommand(this.discordjs.token, this.user.id, options)
+            require("../Methods/interaction").deletecommand(this.discordjs.token, this.user.id, options, this)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - DeleteSlashCommandBot")
                 er.content = err
@@ -139,7 +139,7 @@ class Bot extends EventEmitter{
                 let ID2 = await this.GetMe()
                 this.user = ID2
             }
-            require("../Methods/interaction").createcommand(this.discordjs.token, this.user.id, options)
+            require("../Methods/interaction").createcommand(this.discordjs.token, this.user.id, options, this)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête CreaslashCommandBot")
                 er.content = err
@@ -155,7 +155,7 @@ class Bot extends EventEmitter{
                 let ID2 = await this.GetMe()
                 this.user = ID2
             }
-            require("../Methods/interaction").modifycommand(this.discordjs.token, this.user.id, options)
+            require("../Methods/interaction").modifycommand(this.discordjs.token, this.user.id, options, this)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - ModifySlashcommandbot")
                 er.content = err
@@ -171,7 +171,7 @@ class Bot extends EventEmitter{
                 let ID2 = await this.GetMe()
                 this.user = ID2
             }
-            require("../Methods/interaction").getcommands(this.discordjs.token, this.user.id, ID)
+            require("../Methods/interaction").getcommands(this.discordjs.token, this.user.id, ID, this)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - getslashcommandbot")
                 er.content = err
@@ -183,7 +183,7 @@ class Bot extends EventEmitter{
 
     GetMe(){
         return new Promise(async (resolve, reject) => {
-            require("../Methods/me").getuser(this.discordjs.token)
+            require("../Methods/me").getuser(this.discordjs.token, this)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - getme")
                 er.content = err
@@ -238,7 +238,7 @@ class Bot extends EventEmitter{
     
     ModifyMessage(channelid, messageid, options){
         return new Promise(async (resolve, reject) => {
-            require("../Methods/message").modify(this.discordjs.token, channelid, messageid, options)
+            require("../Methods/message").modify(this.discordjs.token, channelid, messageid, options, this)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - ModifyMessageBot")
                 er.content = err
@@ -250,7 +250,7 @@ class Bot extends EventEmitter{
     
     DeleteMessage(channelid, options){
         return new Promise(async (resolve, reject) => {
-            require("../Methods/message").delete(this.discordjs.token, channelid, options)
+            require("../Methods/message").delete(this.discordjs.token, channelid, options, this)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - DeleteMessageBot")
                 er.content = err

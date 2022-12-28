@@ -68,7 +68,7 @@ module.exports.reply = async (token, interaction, response, path, method, bot) =
 module.exports.modifyreply = async (token, ID, interaction, response, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token)
+            let user = await require("../Methods/me").getuser(token, bot)
             ID = user.id
         }
         this.reply(token, interaction, response, ID, `${baseurl}/webhooks/${ID}/${interaction.token}/messages/@original`, "PATCH")
@@ -80,12 +80,12 @@ module.exports.modifyreply = async (token, ID, interaction, response, bot) => {
 module.exports.deletereply = async (token, ID, interaction, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token)
+            let user = await require("../Methods/me").getuser(token, bot)
             ID = user.id
         }
         if(!interaction.id) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
         if(!interaction.token) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
-        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: interaction, type: "object", data_name: "interaction"}], "DELETE", `webhooks/${ID}/${interaction.token}/messages/@original`, this.deletereply, "deletereply interaction")
+        verify([{value: token, data_name: "token", order:1}, {value: ID, value_data: "id", data_name: "ID", order:2}, {value: interaction, type: "object", data_name: "interaction", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `webhooks/${ID}/${interaction.token}/messages/@original`, this.deletereply, "deletereply interaction")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
@@ -94,10 +94,10 @@ module.exports.deletereply = async (token, ID, interaction, bot) => {
 module.exports.getcommands = async (token, ID,  trueid, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token)
+            let user = await require("../Methods/me").getuser(token, bot)
             ID = user.id
         }
-        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: trueid, value_data: "id", type: "string", data_name: "trueid", required: false}], "GET", `applications/${ID}/commands?with_localizations=true`, this.getcommands, "getcommands interaction")
+        verify([{value: token, data_name: "token", order:1}, {value: ID, value_data: "id", data_name: "ID", order:2}, {value: trueid, value_data: "id", data_name: "trueid", required: false, order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "GET", `applications/${ID}/commands?with_localizations=true`, this.getcommands, "getcommands interaction")
         .then(datas => {
             if(trueid){
                 if(datas.find(com => com.id === trueid)) return resolve(new (require("../Gestionnaires/Individual/SlashCommand")(datas.find(com => com.id === trueid), bot)))
@@ -114,10 +114,10 @@ module.exports.getcommands = async (token, ID,  trueid, bot) => {
 module.exports.deletecommand = async (token, ID,  interaction, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token)
+            let user = await require("../Methods/me").getuser(token, bot)
             ID = user.id
         }
-        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: interaction, value_data: "id", type: "string", data_name: "interaction"}], "DELETE", `applications/${ID}/commands/${interaction}`, this.deletecommand, "deletecommand interaction")
+        verify([{value: token, data_name: "token", order:1}, {value: ID, value_data: "id", data_name: "ID", order:2}, {value: interaction, value_data: "id", data_name: "interaction", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `applications/${ID}/commands/${interaction}`, this.deletecommand, "deletecommand interaction")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
@@ -125,12 +125,12 @@ module.exports.deletecommand = async (token, ID,  interaction, bot) => {
 module.exports.createcommand = async (token, ID,  options, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token)
+            let user = await require("../Methods/me").getuser(token, bot)
             ID = user.id
         }
         let check = this.VerifyInteraction(options)
         if(!check.status) return reject(check)
-        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: options, type: "object", data_name: "options"}], "POST", `applications/${ID}/commands`, this.createcommand, "createcommand interaction")
+        verify([{value: token, data_name: "token", order:1}, {value: ID, value_data: "id", data_name: "ID", order:2}, {value: options, type: "object", data_name: "options", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "POST", `applications/${ID}/commands`, this.createcommand, "createcommand interaction")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
@@ -138,12 +138,12 @@ module.exports.createcommand = async (token, ID,  options, bot) => {
 module.exports.modifycommand = async (token, ID,  options, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token)
+            let user = await require("../Methods/me").getuser(token, bot)
             ID = user.id
         }
         let check = this.VerifyInteraction(options)
         if(!check.status) return reject(check)
-        verify([{value: token, type: "string", data_name: "token"}, {value: ID, value_data: "id", type: "string", data_name: "ID"}, {value: options, type: "object", data_name: "options"}], "POST", `applications/${ID}/commands`, this.modifycommand, "modifycommand interaction")
+        verify([{value: token, data_name: "token", order:1}, {value: ID, value_data: "id", data_name: "ID", order:2}, {value: options, type: "object", data_name: "options", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "POST", `applications/${ID}/commands`, this.modifycommand, "modifycommand interaction")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })

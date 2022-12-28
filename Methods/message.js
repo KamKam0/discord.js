@@ -86,40 +86,6 @@ module.exports.modify = async (token, channelid, messageid, options, bot) => {
         .then(res => resolve(res))
     })
 }
-module.exports.crosspost = async (token, channelid, messageid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(messageid)) return reject({code: require("../DB/errors.json")["69"].code, message: require("../DB/errors.json")["69"].message, file: "Message"})
-        const url = `${baseurl}/channels/${channelid}/messages/${messageid}/crosspost`
-        const basedatas = await fetch(url, {method: "POST", headers: baseheaders}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.crosspost(token, channelid, messageid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Message"))({...datas, token: token}, bot))
-    })
-}
 module.exports.fetch_messages = async (token, channelid, limit, bot) => {
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
@@ -197,341 +163,86 @@ module.exports.fetch_messages = async (token, channelid, limit, bot) => {
         
     })
 }
+module.exports.crosspost = async (token, channelid, messageid, bot) => {
+    return new Promise(async (resolve, reject) => {
+        verify([{value: token, data_name: "token", order:1},  {value: channelid, value_data: "id", data_name: "guildid", order:2},  {value: channelid, value_data: "id", data_name: "channelid", order:3},  {value: bot, type: "object", data_name: "bot", order: 4}], "POST", `channels/${channelid}/messages/${messageid}/crosspost`, this.crosspost, "crosspost message")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Message"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
+    })
+}
 module.exports.delete = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
-        const url = `${baseurl}/channels/${channelid}/messages/${messageid}`
-        const basedatas = await fetch(url, {method: "DELETE", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.delete(token, channelid, messageid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `channels/${channelid}/messages/${messageid}`, this.delete, "delete message")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 
 module.exports.addreaction = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
-        if(!emoji) return reject({code: require("../DB/errors.json")["25"].code, message: require("../DB/errors.json")["25"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(messageid)) return reject({code: require("../DB/errors.json")["69"].code, message: require("../DB/errors.json")["69"].message, file: "Message"})
-        const url = `${baseurl}/channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/@me`
-        const basedatas = await fetch(url, {method: "PUT", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.addreaction(token, channelid, messageid, emoji)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, type: "object", data_name: "bot", order: 5}], "PUT", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/@me`, this.addreaction, "addreaction message")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 
 module.exports.removereaction = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
-        if(!emoji) return reject({code: require("../DB/errors.json")["25"].code, message: require("../DB/errors.json")["25"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(messageid)) return reject({code: require("../DB/errors.json")["69"].code, message: require("../DB/errors.json")["69"].message, file: "Message"})
-        const url = `${baseurl}/channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/@me`
-        const basedatas = await fetch(url, {method: "DELETE", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.removereaction(token, channelid, messageid, emoji)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, type: "object", data_name: "bot", order: 5}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/@me`, this.removereaction, "removereaction message")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.removeuserreaction = async (token, channelid, messageid, userid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
-        if(!emoji) return reject({code: require("../DB/errors.json")["25"].code, message: require("../DB/errors.json")["25"].message, file: "Message"})
-        if(!userid) return reject({code: require("../DB/errors.json")["7"].code, message: require("../DB/errors.json")["7"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(messageid)) return reject({code: require("../DB/errors.json")["69"].code, message: require("../DB/errors.json")["69"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(userid)) return reject({code: require("../DB/errors.json")["47"].code, message: require("../DB/errors.json")["47"].message, file: "Message"})
-        const url = `${baseurl}/channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/${userid}`
-        const basedatas = await fetch(url, {method: "DELETE", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.removeuserreaction(token, channelid, messageid, userid, emoji)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: userid, value_data: "id", data_name: "userid", order:4}, {value: emoji, data_name: "emoji", order:5}, {value: bot, type: "object", data_name: "bot", order: 6}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/${userid}`, this.removeuserreaction, "removeuserreaction message")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.removeallreactions = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(messageid)) return reject({code: require("../DB/errors.json")["69"].code, message: require("../DB/errors.json")["69"].message, file: "Message"})
-        const url = `${baseurl}/channels/${channelid}/messages/${messageid}/reactions`
-        const basedatas = await fetch(url, {method: "DELETE", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.removeallreactions(token, channelid, messageid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions`, this.removeallreactions, "removeallreactions message")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.removeallreactionemoji = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
-        if(!emoji) return reject({code: require("../DB/errors.json")["25"].code, message: require("../DB/errors.json")["25"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(messageid)) return reject({code: require("../DB/errors.json")["69"].code, message: require("../DB/errors.json")["69"].message, file: "Message"})
-        const url = `${baseurl}/channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}`
-        const basedatas = await fetch(url, {method: "DELETE", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.removeallreactionemoji(token, channelid, messageid, emoji)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, type: "object", data_name: "bot", order: 5}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}`, this.removeallreactionemoji, "removeallreactionemoji message")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.pin = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(messageid)) return reject({code: require("../DB/errors.json")["69"].code, message: require("../DB/errors.json")["69"].message, file: "Message"})
-        const url = `${baseurl}/channels/${channelid}/pins/${messageid}`
-        const basedatas = await fetch(url, {method: "PUT", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.pin(token, channelid, messageid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "PUT", `channels/${channelid}/pins/${messageid}`, this.pin, "pin message")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.unpin = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(messageid)) return reject({code: require("../DB/errors.json")["69"].code, message: require("../DB/errors.json")["69"].message, file: "Message"})
-        const url = `${baseurl}/channels/${channelid}/pins/${messageid}`
-        const basedatas = await fetch(url, {method: "DELETE", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.pin(token, channelid, messageid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `channels/${channelid}/pins/${messageid}`, this.unpin, "unpin message")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.fetch_reactions = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
         this.fetch_messages(token, channelid, messageid, bot)
-        .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-        .then(datas => {
-            return resolve(datas.reactions)
-        })
+        .catch(err => reject(err))
+        .then(datas => resolve(datas.reactions))
     })
 }
 module.exports.fetch_reaction = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
-        if(!emoji) return reject({code: require("../DB/errors.json")["25"].code, message: require("../DB/errors.json")["25"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(messageid)) return reject({code: require("../DB/errors.json")["69"].code, message: require("../DB/errors.json")["69"].message, file: "Message"})
-        const url = `${baseurl}/channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}`
-        const basedatas = await fetch(url, {method: "GET", headers: baseheaders}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.fetch_reaction(token, channelid, messageid, emoji)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else{
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, type: "object", data_name: "bot", order: 5}], "GET", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}`, this.fetch_reaction, "fetch_reaction message")
+        .then(datas => {
             const messages = new (require("../Gestionnaires/Multiple/Messages"))(bot)
             messages.AddMessages(datas.map(da => { return {...da, token: token}}))
             return resolve(messages)
-        }
+        })
+        .catch(err => reject(err))
     })
 }

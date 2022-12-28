@@ -1,140 +1,33 @@
 module.exports.create = async (token, channelid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Webhooks"})
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Webhooks"})
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Webhooks"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Webhooks"})
-
-
-        const url = `${baseurl}/channels/${channelid}/webhooks`
-        const basedatas = await fetch(url, {method: "POST", headers: baseheaders, body: JSON.stringify(options)}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.create(token, channelid, options)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Webhook"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: options, type: "object", data_name: "options", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "POST", `channels/${channelid}/webhooks`, this.create, "create webhook")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Webhook"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.get = async (token, channelid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Webhooks"})
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Webhooks"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Webhooks"})
-        const url = `${baseurl}/channels/${channelid}/webhooks`
-        const basedatas = await fetch(url, {method: "GET", headers: baseheaders}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.get(token, channelid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else{
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "GET", `channels/${channelid}/webhooks`, this.get, "get webhook")
+        .then(datas => {
             const webhooks = new (require("../Gestionnaires/Multiple/Webhooks"))(bot)
             webhooks.AddWebhooks(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
-        }
+        })
+        .catch(err => reject(err))
     })
 }
 module.exports.modify = async (token, webhookid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Webhooks"})
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Webhooks"})
-        if(!webhookid) return reject({code: require("../DB/errors.json")["36"].code, message: require("../DB/errors.json")["36"].message, file: "Webhooks"})
-        if(!require("../Utils/functions").check_id(webhookid)) return reject({code: require("../DB/errors.json")["72"].code, message: require("../DB/errors.json")["72"].message, file: "Webhooks"})
-
-
-        const url = `${baseurl}/webhooks/${webhookid}`
-        const basedatas = await fetch(url, {method: "PATCH", headers: baseheaders, body: JSON.stringify(options)}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.modify(token, webhookid, options)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Webhook"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: webhookid, value_data: "id", data_name: "webhookid", order:2}, {value: options, type: "object", data_name: "options", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "PATCH", `webhooks/${webhookid}`, this.modify, "modify webhook")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Webhook"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.delete = async (token, webhookid, bot) => {
     return new Promise(async (resolve, reject) => {
-        if(!webhookid) return reject({code: require("../DB/errors.json")["36"].code, message: require("../DB/errors.json")["36"].message, file: "Webhooks"})
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Webhooks"})
-        if(!require("../Utils/functions").check_id(webhookid)) return reject({code: require("../DB/errors.json")["72"].code, message: require("../DB/errors.json")["72"].message, file: "Webhooks"})
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        const url = `${baseurl}/webhooks/${webhookid}`
-        const basedatas = await fetch(url, {method: "DELETE", headers: baseheaders}).catch(err => {})
-        if(!basedatas) return reject(basedatas)
-        else if(basedatas.status === 204) return resolve("Done Successfully")
-        else{
-            const datas = await basedatas.json()
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.delete(token, webhookid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        } 
+        verify([{value: token, data_name: "token", order:1}, {value: webhookid, value_data: "id", data_name: "webhookid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "DELETE", `webhooks/${webhookid}`, this.delete, "delete webhook")
+        .then(datas => resolve(datas))
+        .catch(err => reject(err))
     })
 }
 module.exports.execute = async (token, webhook, options, bot) => {//cp

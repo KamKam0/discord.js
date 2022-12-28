@@ -338,5 +338,9 @@
     "86": {
         "code": "#0086",
         "message": "The provided id is not correct"
+    },
+    "87": {
+        "code": "#0087",
+        "message": "Provided options are incorrect"
     }
 }

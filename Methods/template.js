@@ -1,236 +1,53 @@
 module.exports.create = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Template"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Template"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Template"})
-        const url = `${baseurl}/guilds/${guildid}/templates`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "POST"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.create(token, guildid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "POST", `guilds/${guildid}/templates`, this.create, "create template")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.delete = (token, guildid, templatecode, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Template"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Template"})
-        if(!templatecode) return reject({code: require("../DB/errors.json")["31"].code, message: require("../DB/errors.json")["31"].message, file: "Template"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Template"})
-        const url = `${baseurl}/guilds/${guildid}/templates/${templatecode}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "DELETE"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.delete(token, guildid, templatecode)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: templatecode, data_name: "templatecode", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/templates/${templatecode}`, this.delete, "delete template")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.get = (token, guildid, templatecode, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Template"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Template"})
-        if(!templatecode) return reject({code: require("../DB/errors.json")["31"].code, message: require("../DB/errors.json")["31"].message, file: "Template"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Template"})
-        const url = `${baseurl}/guilds/${guildid}/templates/${templatecode}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.get(token, guildid, templatecode)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: templatecode, data_name: "templatecode", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "GET", `guilds/${guildid}/templates/${templatecode}`, this.get, "get template")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.getall = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Template"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Template"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Template"})
-        const url = `${baseurl}/guilds/${guildid}/templates`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.getall(token, guildid)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else{
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "GET", `guilds/${guildid}/templates`, this.getall, "getall template")
+        .then(datas => {
             const templates = new (require("../Gestionnaires/Multiple/Templates"))(bot)
             templates.AddTemplates(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
-        }
+        })
+        .catch(err => reject(err))
     })
 }
 module.exports.createguild = (token, guildid, templatecode, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Template"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Template"})
-        if(!templatecode) return reject({code: require("../DB/errors.json")["31"].code, message: require("../DB/errors.json")["31"].message, file: "Template"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Template"})
-
-        const url = `${baseurl}/guilds/${guildid}/templates/${templatecode}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "POST", boyd: JSON.stringify(options)}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.createguild(token, guildid, templatecode)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Guild"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: templatecode, data_name: "templatecode", order:3}, {value: options, type: "object", data_name: "options", order: 4}, {value: bot, type: "object", data_name: "bot", order: 5}], "POST", `guilds/${guildid}/templates/${templatecode}`, this.createguild, "createguild template")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Guild"))(bot, {...datas, token: token})))
+        .catch(err => reject(err))
     })
 }
 module.exports.sync = (token, guildid, templatecode, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Template"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Template"})
-        if(!templatecode) return reject({code: require("../DB/errors.json")["31"].code, message: require("../DB/errors.json")["31"].message, file: "Template"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Template"})
-        const url = `${baseurl}/guilds/${guildid}/templates/${templatecode}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "PUT"}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.sync(token, guildid, templatecode)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: templatecode, data_name: "templatecode", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "PUT", `guilds/${guildid}/templates/${templatecode}`, this.sync, "sync template")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
 module.exports.modify = (token, guildid, templatecode, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        const fetch = require("node-fetch")
-        let baseinfos = require("../Utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
-        const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Template"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Template"})
-        if(!templatecode) return reject({code: require("../DB/errors.json")["31"].code, message: require("../DB/errors.json")["31"].message, file: "Template"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Template"})
-
-        
-        const url = `${baseurl}/guilds/${guildid}/templates/${templatecode}`
-        const basedatas = await fetch(url, {headers: baseheaders, method: "PATCH", boyd: JSON.stringify(options)}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.modify(token, guildid, templatecode)
-                    .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                    .then(datas => { return resolve(datas)})
-                }, datas.retry_after * 1000)
-            }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
-        }
-        else return resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot))
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: templatecode, data_name: "templatecode", order:3}, {value: options, type: "object", data_name: "options", order: 4}, {value: bot, type: "object", data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/templates/${templatecode}`, this.modify, "modify template")
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Template"))({...datas, token: token}, bot)))
+        .catch(err => reject(err))
     })
 }
