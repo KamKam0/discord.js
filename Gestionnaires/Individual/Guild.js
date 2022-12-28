@@ -58,9 +58,63 @@ class Guild{
         this.db_language = guild.db_language
         this._bot = bot
         this.bot_token = bot.discordjs.token
-        this.voice = {state: "off", server: null, channel: null, queue: [], datas: null, ws: null, udp: null, lastPing: null, interval: null, ready: null, description: null, voice_channel: null, text_channel: null, resource: null, paused_since: null, playing: "true", connection: null, loop: "false", queueloop: "false", np: null}
+        this.voice = {state: "off", paused_since: null, playing: "true", connection: null, resource: null}
     }
 
+    pause(){
+        if(this.voice.connection && this.voice.playing === "true"){
+            this.voice.playing = "false";
+            this.voice.connection.pause()
+            this.voice.paused_since = Date.now()
+        }
+    }
+
+    resume(){
+        if(this.voice.connection && this.voice.playing === "true"){
+            this.voice.playing = "true";
+            this.voice.connection.unpause()
+            this.voice.paused_since = null
+        }
+    }
+
+    play(stream, volume){
+        const {StreamType, createAudioResource, createAudioPlayer, getVoiceConnection} = require("@discordjs/voice")
+        if(this.voice.state === "on"){
+            if(volume){
+                if(!isNaN(volume)){
+                    if(typeof volume !== "number") volume = Number(volume)
+                    if(volume <0) volume = 100
+                    if(volume <=1) volume = volume / 100
+                }
+                else volume = 1
+            }
+            else volume = 1
+            const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary, inlineVolume: true});
+            resource.volume.setVolume()
+            const player = createAudioPlayer();
+    
+            player.play(resource);
+            getVoiceConnection(this.id).subscribe(player)
+    
+            this.voice.connection = player
+            this.voice.resource = resource
+        }
+    }
+
+    setvolume(volume){
+        if(this.voice.connection){
+            if(volume){
+                if(!isNaN(volume)){
+                    if(typeof volume !== "number") volume = Number(volume)
+                    if(volume <0) volume = 100
+                    if(volume <=1) volume = volume / 100
+                }
+                else volume = 1
+            }
+            else volume = 1
+            this.voice.resource.volume.setVolume(Number(volume)/100)
+        } 
+    }
 
     typeverif(type){
         if(isNaN(type)) return type
@@ -513,7 +567,7 @@ class Guild{
     }
 
     ResetVoice(){
-        this.voice = {state: "off", server: null, channel: null, queue: [], datas: null, ws: null, udp: null, lastPing: null, interval: null, ready: null, description: null, voice_channel: null, text_channel: null, resource: null, paused_since: null, playing: "true", connection: null, loop: "false", queueloop: "false", np: null}
+        this.voice = {state: "off", paused_since: null, playing: "true", connection: null, resource: null}//{state: "off", server: null, channel: null, queue: [], datas: null, ws: null, udp: null, lastPing: null, interval: null, ready: null, description: null, voice_channel: null, text_channel: null, resource: null, paused_since: null, playing: "true", connection: null, loop: "false", queueloop: "false", np: null}
     }
 
     VoiceCheck(){

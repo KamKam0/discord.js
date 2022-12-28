@@ -74,6 +74,26 @@ class guildVoice extends Base{
             .then(datas => { return resolve(datas)})
         })
     }
+
+    join(deaf, mute){
+        const {joinVoiceChannel} = require("@discordjs/voice")
+        let guild = this._bot.guilds.get(this.guild_id)
+        guild.voice.state = "on"
+        joinVoiceChannel({
+            channelId: this.id,
+            guildId: this.guild_id,
+            adapterCreator: guild.voiceAdapterCreator,
+            selfDeaf: deaf ?? false,
+            selfMute: mute ?? false
+        })
+    }
+
+    leave(){
+        const {getVoiceConnection} = require("@discordjs/voice")
+        let guild = this._bot.guilds.get(this.guild_id)
+        if(guild.voice.state === "on") getVoiceConnection(guild.id).disconnect()
+        if(guild.voice.state === "on") guild.ResetVoice()
+    }
 }
 
 module.exports = guildVoice
