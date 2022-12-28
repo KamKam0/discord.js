@@ -112,6 +112,7 @@ class Guild{
         let trueargs = Array(...arguments)
         trueargs.splice(0, 1)
         this.voice.connection.on("stateChange", async (oldstate, newstate) => {
+            this.voice.managing = false
             if(oldstate.status === "playing" && newstate.status === "idle"){
                 if(this.voiceQueue.loopState) fonction(this.voiceQueue.np, ...trueargs)
                 else if(this.voiceQueue.queueloopState){
@@ -122,8 +123,14 @@ class Guild{
                 else fonction(this.voiceQueue.next, ...trueargs)
             }
         })
-        this.voice.connection.on("stateChange", async (oldstate, newstate) => { if(newstate.status === "disconnected") return this.ResetVoice() })
-        this.voice.connection.on("error", err => console.log(err)) 
+        this.voice.connection.on("stateChange", async (oldstate, newstate) => { 
+            this.voice.managing = false
+            if(newstate.status === "disconnected") return this.ResetVoice() 
+        })
+        this.voice.connection.on("error", err =>{
+            this.voice.managing = false
+            console.log(err)
+        }) 
     }
 
     setvolume(volume){
