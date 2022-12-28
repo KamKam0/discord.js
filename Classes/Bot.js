@@ -226,7 +226,7 @@ class Bot extends EventEmitter{
     
     SendMessage(channelid, options){
         return new Promise(async (resolve, reject) => {
-            require("../Methods/message").send(this.discordjs.token, channelid, options, this)
+            require("../Methods/message").send(this.discordjs.token, channelid, options, undefined, undefined, this)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - SendMessages Bot")
                 er.content = err

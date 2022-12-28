@@ -65,7 +65,7 @@ class Member{
     send(options){
         return new Promise(async (resolve, reject) => {
             if(this.user.dm){
-                require("../../Methods/message").send(this.bot_token, this.user.dm, options, this._bot)
+                require("../../Methods/message").send(this.bot_token, this.user.dm, options, undefined, undefined, this._bot)
                 .then(da => { return resolve(da)})
                 .catch(err => {
                     let er = new Error("Une erreur s'est produite lors de la requête - send, member")
@@ -77,7 +77,7 @@ class Member{
                 .then(datas => { 
                     if(datas){
                         this.user.SetDM(datas.id)
-                        require("../../Methods/message").send(this.bot_token, this.user.dm, options, this._bot)
+                        require("../../Methods/message").send(this.bot_token, this.user.dm, options, undefined, undefined, this._bot)
                         .then(da => { return resolve(da)})
                         .catch(err => {
                             let er = new Error("Une erreur s'est produite lors de la requête - send, member dm method")

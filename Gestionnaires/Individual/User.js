@@ -37,7 +37,7 @@ class User{
     send(options){
         return new Promise(async (resolve, reject) => {
             if(this.dm){
-                require("../../Methods/message").send(this.bot_token, this.dm, options, this._bot)
+                require("../../Methods/message").send(this.bot_token, this.dm, options, undefined, undefined, this._bot)
                 .then(da => { return resolve(da)})
                 .catch(err => {
                     let er = new Error("Une erreur s'est produite lors de la requête - send, user, dm")
@@ -49,7 +49,7 @@ class User{
                 .then(datas => { 
                     if(datas){
                         this.dm = datas.id
-                        require("../../Methods/message").send(this.bot_token, this.dm, options, this._bot)
+                        require("../../Methods/message").send(this.bot_token, this.dm, options, undefined, undefined, this._bot)
                         .then(da => { return resolve(da)})
                         .catch(err => {
                             let er = new Error("Une erreur s'est produite lors de la requête - send, user, dmsend")

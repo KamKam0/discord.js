@@ -1,3 +1,4 @@
+const verify = require("../Utils/verify")
 module.exports.send = async (token, channelid, options, path, method, bot) => {//cp
     return new Promise(async (resolve, reject) => {
         const fetch = require("node-fetch")
@@ -81,7 +82,7 @@ module.exports.modify = async (token, channelid, messageid, options, bot) => {
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
         const baseurl = baseinfos["baseurl"]
         const url = `${baseurl}/channels/${channelid}/messages/${messageid}`
-        this.send(token, channelid, options, url, "PATCH")
+        this.send(token, channelid, options, url, "PATCH", bot)
         .catch(err => reject(err))
         .then(res => resolve(res))
     })
@@ -165,14 +166,14 @@ module.exports.fetch_messages = async (token, channelid, limit, bot) => {
 }
 module.exports.crosspost = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1},  {value: channelid, value_data: "id", data_name: "guildid", order:2},  {value: channelid, value_data: "id", data_name: "channelid", order:3},  {value: bot, type: "object", data_name: "bot", order: 4}], "POST", `channels/${channelid}/messages/${messageid}/crosspost`, this.crosspost, "crosspost message")
+        verify([{value: token, data_name: "token", order:1},  {value: channelid, value_data: "id", data_name: "guildid", order:2},  {value: channelid, value_data: "id", data_name: "channelid", order:3},  {value: bot, data_name: "bot", order: 4}], "POST", `channels/${channelid}/messages/${messageid}/crosspost`, this.crosspost, "crosspost message")
         .then(datas => resolve(new (require("../Gestionnaires/Individual/Message"))({...datas, token: token}, bot)))
         .catch(err => reject(err))
     })
 }
 module.exports.delete = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `channels/${channelid}/messages/${messageid}`, this.delete, "delete message")
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `channels/${channelid}/messages/${messageid}`, this.delete, "delete message")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
@@ -180,7 +181,7 @@ module.exports.delete = async (token, channelid, messageid, bot) => {
 
 module.exports.addreaction = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, type: "object", data_name: "bot", order: 5}], "PUT", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/@me`, this.addreaction, "addreaction message")
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, data_name: "bot", order: 5}], "PUT", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/@me`, this.addreaction, "addreaction message")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
@@ -188,42 +189,42 @@ module.exports.addreaction = async (token, channelid, messageid, emoji, bot) => 
 
 module.exports.removereaction = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, type: "object", data_name: "bot", order: 5}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/@me`, this.removereaction, "removereaction message")
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, data_name: "bot", order: 5}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/@me`, this.removereaction, "removereaction message")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
 }
 module.exports.removeuserreaction = async (token, channelid, messageid, userid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: userid, value_data: "id", data_name: "userid", order:4}, {value: emoji, data_name: "emoji", order:5}, {value: bot, type: "object", data_name: "bot", order: 6}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/${userid}`, this.removeuserreaction, "removeuserreaction message")
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: userid, value_data: "id", data_name: "userid", order:4}, {value: emoji, data_name: "emoji", order:5}, {value: bot, data_name: "bot", order: 6}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}/${userid}`, this.removeuserreaction, "removeuserreaction message")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
 }
 module.exports.removeallreactions = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions`, this.removeallreactions, "removeallreactions message")
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions`, this.removeallreactions, "removeallreactions message")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
 }
 module.exports.removeallreactionemoji = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, type: "object", data_name: "bot", order: 5}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}`, this.removeallreactionemoji, "removeallreactionemoji message")
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, data_name: "bot", order: 5}], "DELETE", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}`, this.removeallreactionemoji, "removeallreactionemoji message")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
 }
 module.exports.pin = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "PUT", `channels/${channelid}/pins/${messageid}`, this.pin, "pin message")
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, data_name: "bot", order: 4}], "PUT", `channels/${channelid}/pins/${messageid}`, this.pin, "pin message")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
 }
 module.exports.unpin = async (token, channelid, messageid, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `channels/${channelid}/pins/${messageid}`, this.unpin, "unpin message")
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `channels/${channelid}/pins/${messageid}`, this.unpin, "unpin message")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
@@ -237,7 +238,7 @@ module.exports.fetch_reactions = async (token, channelid, messageid, bot) => {
 }
 module.exports.fetch_reaction = async (token, channelid, messageid, emoji, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, type: "object", data_name: "bot", order: 5}], "GET", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}`, this.fetch_reaction, "fetch_reaction message")
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, data_name: "bot", order: 5}], "GET", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}`, this.fetch_reaction, "fetch_reaction message")
         .then(datas => {
             const messages = new (require("../Gestionnaires/Multiple/Messages"))(bot)
             messages.AddMessages(datas.map(da => { return {...da, token: token}}))

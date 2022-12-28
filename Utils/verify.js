@@ -7,7 +7,19 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
         for (const num in args){
             if(!args[num].value && (String(args[num].required) === "true" || String(args[num].required) === "undefined")) return reject({code: errors["84"].code, message: errors["84"].message, file: name, variable: args[num].data_name})
             if(args[num].value){
-                if(!args[num].type) args[num].type = "string"
+                if(!args[num].type){
+                    switch(args[num].data_name){
+                        case("bot"):
+                            args[num].type = ["function", "object"]
+                        break
+                        case("options"):
+                            args[num].type = "object"
+                        break
+                        default:
+                            args[num].type = "string"
+                        break
+                    }
+                }
                 if(Array.isArray(args[num].type)){
                     if(!args[num].type.includes("array")){
                         if(!args[num].type.includes(typeof args[num].value)) return reject({code: errors["85"].code, message: errors["85"].message+args[num].type, file: name, variable: args[num].data_name})

@@ -42,14 +42,14 @@ module.exports.create = async (token, guildid, name, imagedata, roles, bot) => {
 }
 module.exports.delete = async (token, guildid, emojiid, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: emojiid, value_data: "id", data_name: "emojiid", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/emojis/${emojiid}`, this.delete, "delete emoji")
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: emojiid, value_data: "id", data_name: "emojiid", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/emojis/${emojiid}`, this.delete, "delete emoji")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
 }
 module.exports.modify = async (token, guildid, emojiid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: emojiid, value_data: "id", data_name: "emojiid", order:3}, {value: options, type: "object", data_name: "options", order:4}, {value: bot, type: "object", data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/emojis/${emojiid}`, this.delete, "delete emoji")
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: emojiid, value_data: "id", data_name: "emojiid", order:3}, {value: options, data_name: "options", order:4}, {value: bot, data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/emojis/${emojiid}`, this.delete, "delete emoji")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })

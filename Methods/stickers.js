@@ -1,3 +1,4 @@
+const verify = require("../Utils/verify")
 module.exports.create = async (token, guildid, name, file, tags, description, bot) => {//Cp
     return new Promise(async (resolve, reject) => {
         if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Stickers"})
@@ -42,14 +43,14 @@ module.exports.create = async (token, guildid, name, file, tags, description, bo
 }
 module.exports.delete = async (token, guildid, stickerid, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: stickerid, value_data: "id", data_name: "stickerid", order:3}, {value: bot, type: "object", data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/stickers/${stickerid}`, this.delete, "delete sticker")
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: stickerid, value_data: "id", data_name: "stickerid", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/stickers/${stickerid}`, this.delete, "delete sticker")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })
 }
 module.exports.modify = async (token, guildid, stickerid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: stickerid, value_data: "id", data_name: "stickerid", order:3}, {value: options, type: "object", data_name: "options", order: 4}, {value: bot, type: "object", data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/stickers/${stickerid}`, this.modify, "modify sticker")
+        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: stickerid, value_data: "id", data_name: "stickerid", order:3}, {value: options, data_name: "options", order: 4}, {value: bot, data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/stickers/${stickerid}`, this.modify, "modify sticker")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })

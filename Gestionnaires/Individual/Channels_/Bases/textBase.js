@@ -66,7 +66,7 @@ class TextBase extends Base{
 
     send(options){
         return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/message").send(this.bot_token, this.id, options, this._bot)
+            require("../../../../Methods/message").send(this.bot_token, this.id, options, undefined, undefined, this._bot)
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - send, guildtext")
                 er.content = err

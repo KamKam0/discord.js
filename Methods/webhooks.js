@@ -1,13 +1,14 @@
+const verify = require("../Utils/verify")
 module.exports.create = async (token, channelid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: options, type: "object", data_name: "options", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "POST", `channels/${channelid}/webhooks`, this.create, "create webhook")
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "POST", `channels/${channelid}/webhooks`, this.create, "create webhook")
         .then(datas => resolve(new (require("../Gestionnaires/Individual/Webhook"))({...datas, token: token}, bot)))
         .catch(err => reject(err))
     })
 }
 module.exports.get = async (token, channelid, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "GET", `channels/${channelid}/webhooks`, this.get, "get webhook")
+        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `channels/${channelid}/webhooks`, this.get, "get webhook")
         .then(datas => {
             const webhooks = new (require("../Gestionnaires/Multiple/Webhooks"))(bot)
             webhooks.AddWebhooks(datas.map(da => { return {...da, token: token}}))
@@ -18,14 +19,14 @@ module.exports.get = async (token, channelid, bot) => {
 }
 module.exports.modify = async (token, webhookid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: webhookid, value_data: "id", data_name: "webhookid", order:2}, {value: options, type: "object", data_name: "options", order: 3}, {value: bot, type: "object", data_name: "bot", order: 4}], "PATCH", `webhooks/${webhookid}`, this.modify, "modify webhook")
+        verify([{value: token, data_name: "token", order:1}, {value: webhookid, value_data: "id", data_name: "webhookid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `webhooks/${webhookid}`, this.modify, "modify webhook")
         .then(datas => resolve(new (require("../Gestionnaires/Individual/Webhook"))({...datas, token: token}, bot)))
         .catch(err => reject(err))
     })
 }
 module.exports.delete = async (token, webhookid, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: webhookid, value_data: "id", data_name: "webhookid", order:2}, {value: bot, type: "object", data_name: "bot", order: 3}], "DELETE", `webhooks/${webhookid}`, this.delete, "delete webhook")
+        verify([{value: token, data_name: "token", order:1}, {value: webhookid, value_data: "id", data_name: "webhookid", order:2}, {value: bot, data_name: "bot", order: 3}], "DELETE", `webhooks/${webhookid}`, this.delete, "delete webhook")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })

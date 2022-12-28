@@ -198,7 +198,7 @@ class Message{
                 channel_id: this.channel_id,
                 guild_id: this.guild_id
             }
-            require("../../Methods/message").send(this.bot_token, this.channel_id, options, this._bot)
+            require("../../Methods/message").send(this.bot_token, this.channel_id, options, undefined, undefined, this._bot)
             .then(datas => { return resolve(datas)})
             .catch(err => {
                 let er = new Error("Une erreur s'est produite lors de la requête - reply, message")
@@ -303,7 +303,7 @@ class Message{
                 break;
             }
             if(type === "reply"){
-                require("../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed], replyto: this.id}, this._bot)
+                require("../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed], replyto: this.id}, undefined, undefined, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
                     let er = new Error("Une erreur s'est produite lors de la requête - reply, message Sendspe")
@@ -312,7 +312,7 @@ class Message{
                 })
             } 
             if(type === "send"){
-                require("../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]}, this._bot)
+                require("../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]}, undefined, undefined, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => {
                     let er = new Error("Une erreur s'est produite lors de la requête - send, message Sendspe")
