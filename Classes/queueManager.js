@@ -63,8 +63,8 @@ class Queue{
         return Boolean(this.#queueloop_state)
     }
 
-    getNP(){
-        return this.np
+    get next(){
+        return this.container[0]
     }
 
     setNP(song){
@@ -75,6 +75,14 @@ class Queue{
     removeNP(){
         this.np = null
         return null
+    }
+
+    reset(){
+        this.textChannel = null
+        this.container = []
+        this.#loop_state = "false"
+        this.#queueloop_state = "false"
+        this.np = null
     }
 }
 

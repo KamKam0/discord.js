@@ -59,8 +59,12 @@ class Guild{
         this.db_language = guild.db_language
         this._bot = bot
         this.bot_token = bot.discordjs.token
-        this.voice = {state: "off", paused_since: null, playing: "true", connection: null, resource: null}
+        this.voice = {state: "off", paused_since: null, playing: "true", connection: null, resource: null, managing: false}
         this.voiceQueue = new queueManager()
+    }
+
+    get playing(){
+        return Boolean(this.voice.playing)
     }
 
     pause(){
@@ -101,6 +105,25 @@ class Guild{
             this.voice.connection = player
             this.voice.resource = resource
         }
+    }
+
+    manageVoice(fonction){
+        if(this.voice.managing) return
+        let trueargs = Array(...arguments)
+        trueargs.splice(0, 1)
+        this.voice.connection.on("stateChange", async (oldstate, newstate) => {
+            if(oldstate.status === "playing" && newstate.status === "idle"){
+                if(this.voiceQueue.loopState) fonction(this.voiceQueue.np, ...trueargs)
+                else if(this.voiceQueue.queueloopState){
+                    this.voiceQueue.addSong(this.voiceQueue.np)
+                    this.voiceQueue.removeSong()
+                    fonction(this.voiceQueue.next, ...trueargs)
+                }
+                else fonction(this.voiceQueue.next, ...trueargs)
+            }
+        })
+        this.voice.connection.on("stateChange", async (oldstate, newstate) => { if(newstate.status === "disconnected") return this.ResetVoice() })
+        this.voice.connection.on("error", err => console.log(err)) 
     }
 
     setvolume(volume){
