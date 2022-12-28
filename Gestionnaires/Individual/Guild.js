@@ -9,6 +9,7 @@ const Threads = require("../../Managers/Threads")
 const Events = require("../../Managers/Events")
 const Presences = require("../../Managers/Presences")
 const Messages = require("../../Managers/Messages")
+const queueManager = require("../../Classes/queueManager")
 class Guild{
     constructor(bot, guild){
         this.name = guild.name
@@ -59,6 +60,7 @@ class Guild{
         this._bot = bot
         this.bot_token = bot.discordjs.token
         this.voice = {state: "off", paused_since: null, playing: "true", connection: null, resource: null}
+        this.voiceQueue = new queueManager()
     }
 
     pause(){
@@ -567,7 +569,7 @@ class Guild{
     }
 
     ResetVoice(){
-        this.voice = {state: "off", paused_since: null, playing: "true", connection: null, resource: null}//{state: "off", server: null, channel: null, queue: [], datas: null, ws: null, udp: null, lastPing: null, interval: null, ready: null, description: null, voice_channel: null, text_channel: null, resource: null, paused_since: null, playing: "true", connection: null, loop: "false", queueloop: "false", np: null}
+        this.voice = {state: "off", paused_since: null, playing: "true", connection: null, resource: null}
     }
 
     VoiceCheck(){
