@@ -1,18 +1,18 @@
 class Sticker{
     constructor(sticker, bot){
         this.id = sticker.id
-        this.pack_id = sticker.pack_id ? sticker.pack_id : null
+        this.pack_id = sticker.pack_id || null
         this.name = sticker.name
-        this.description = sticker.description ? sticker.description : null
-        this.tags = sticker.tags ? sticker.tags : []
-        this.asset = sticker.asset ? sticker.asset : null
-        this.type = sticker.type ? sticker.type : null
-        this.format_type = sticker.format_type ? sticker.format_type : null
-        this.available = sticker.available ? sticker.available : false
-        this.guild = sticker.guild ? sticker.guild : null
+        this.description = sticker.description || null
+        this.tags = sticker.tags || []
+        this.asset = sticker.asset || null
+        this.type = sticker.type || null
+        this.format_type = sticker.format_type || null
+        this.available = sticker.available || false
+        this.guild = sticker.guild || null
         this.guild_id = sticker.guild_id
         this.bot_token = sticker.token
-        this.sort_value = sticker.sort_value ? sticker.sort_value : null
+        this.sort_value = sticker.sort_value || null
         this.vguild_id = sticker.guild ? sticker.guild.vguild_id : null
         this._bot = bot
     }

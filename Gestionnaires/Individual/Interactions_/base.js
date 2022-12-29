@@ -17,7 +17,7 @@ class base{
         this.version = interaction.version
         this.guild_locale = interaction.guild_locale
         this.locale = interaction.locale
-        this.guild = interaction.guild ? interaction.guild : null
+        this.guild = interaction.guild || null
         this.bot_token = interaction.bot_token
         this.bot_id = interaction.bot_id
         this.vguild_id = interaction.guild ? interaction.guild.vguild_id : null

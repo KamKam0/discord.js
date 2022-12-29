@@ -1,18 +1,18 @@
 class Member{
     constructor(member, bot){
         this.user_id = member.user.id
-        this.user = member.user ? member.user : null
-        this.nick = member.nick ? member.nick : null
-        this.avatar = member.avatar ? member.avatar : null
-        this.roles = member.roles ? member.roles : []
-        this.premium_since = member.premium_since ?  member.premium_since : null
+        this.user = member.user || null
+        this.nick = member.nick || null
+        this.avatar = member.avatar || null
+        this.roles = member.roles || []
+        this.premium_since = member.premium_since || null
         this.joined_at = member.joined_at
-        this.deaf = member.deaf ? member.deaf : null
-        this.mute = member.mute ? member.mute : null
-        this.pending = member.pending ? member.pending : false
-        this.permissions = member.permissions ? member.permissions : null
-        this.communication_disabled_until = member.communication_disabled_until ? member.communication_disabled_until : null
-        this.guild = member.guild ? member.guild : null
+        this.deaf = member.deaf || null
+        this.mute = member.mute || null
+        this.pending = member.pending || false
+        this.permissions = member.permissions || null
+        this.communication_disabled_until = member.communication_disabled_until || null
+        this.guild = member.guild || null
         this.bot_token = member.token
         this.guild_id = member.guild_id
         this.vguild_id = member.guild ? member.guild.vguild_id : null

@@ -3,11 +3,11 @@ class StageInstance{
         this.id = stage.id
         this.guild_id = stage.guild_id
         this.channel_id = stage.channel_id
-        this.channel = stage.channel ? stage.channel : null
-        this.topic = stage.topic ? stage.topic : null
-        this.privacy_level = stage.privacy_level ? stage.privacy_level : null
-        this.discoverable_disabled = stage.discoverable_disabled ? stage.discoverable_disabled : false
-        this.guild = stage.guild ? stage.guild : null
+        this.channel = stage.channel || null
+        this.topic = stage.topic || null
+        this.privacy_level = stage.privacy_level || null
+        this.discoverable_disabled = stage.discoverable_disabled ?? false
+        this.guild = stage.guild || null
         this.bot_token = stage.token
         this.vguild_id = stage.guild ? stage.guild.vguild_id : null
         this._bot = bot

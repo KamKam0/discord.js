@@ -5,13 +5,13 @@ class guildVoice extends Base{
         this.position = channel.position
         this.permission_overwrites = channel.permission_overwrites
         this.name = channel.name
-        this.nsfw = channel.nsfw ? channel.nsfw : false
+        this.nsfw = channel.nsfw ?? false
         this.bitrate = channel.bitrate
         this.user_limit = channel.user_limit
         this.parent_id = channel.parent_id
-        this.parent = channel.parent ? channel.parent : null
+        this.parent = channel.parent || null
         this.rtc_region = channel.rtc_region
-        this.guild = channel.guild ? channel.guild : null
+        this.guild = channel.guild || null
         this.guild_id = channel.guild_id
         this.vguild_id = channel.guild ? channel.guild.vguild_id : null
     }

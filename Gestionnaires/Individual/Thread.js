@@ -1,22 +1,22 @@
 class Thread{
     constructor(thread, bot){
         this.id = thread.id
-        this.guild = thread.guild ? thread.guild : null
+        this.guild = thread.guild || null
         this.guild_id = thread.guild_id
         this.bot_token = thread.token
         this.type = thread.type
-        this.archived = thread.thread_metadata ? thread.thread_metadata.archived : thread.archived
+        this.archived = thread.thread_metadata || thread.archived
         this.auto_archive_duration =  thread.thread_metadata ? thread.thread_metadata.auto_archive_duration : thread.auto_archive_duration
         this.archive_timestamp = thread.thread_metadata ? thread.thread_metadata.archive_timestamp : thread.archive_timestamp
         this.locked = thread.thread_metadata ? thread.thread_metadata.locked : thread.locked
-        this.rate_limit_per_user = thread.rate_limit_per_user ? thread.rate_limit_per_user : 0
+        this.rate_limit_per_user = thread.rate_limit_per_user || 0
         this.parent_id = thread.parent_id
-        this.parent = thread.parent ? thread.parent : null
+        this.parent = thread.parent || null
         this.owner_id = thread.owner_id
-        this.owner = thread.owner ? thread.owner : null
+        this.owner = thread.owner || null
         this.name = thread.name
-        this.last_message_id = thread.last_message_id ?  thread.last_message_id : null
-        this.flags = thread.flags ? thread.flags : 0
+        this.last_message_id = thread.last_message_id || null
+        this.flags = thread.flags || 0
         this.vguild_id = thread.guild ? thread.guild.vguild_id : null
         this._bot = bot
     }

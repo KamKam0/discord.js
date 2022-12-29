@@ -1,12 +1,12 @@
 class Presence{
     constructor(presence, bot){
         this.user_id = presence.user ? presence.user.id : presence.user_id
-        this.user = presence.user ? presence.user : null
-        this.guild = presence.guild ? presence.guild : null
+        this.user = presence.user || null
+        this.guild = presence.guild || null
         this.guild_id = presence.guild_id
         this.bot_token = presence.token
-        this.status = presence.status ? presence.status : null
-        this.activities = presence.activities ? presence.activities : []
+        this.status = presence.status || null
+        this.activities = presence.activities || []
         this.client_status = presence.client_status
         this.vguild_id = presence.guild ? presence.guild.vguild_id : null
         this._bot = bot

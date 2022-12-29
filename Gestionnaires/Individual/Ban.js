@@ -3,8 +3,8 @@ class Ban{
     constructor(ban, bot){
         this.user = new User({...ban.user, token: ban.token}, bot)
         this.user_id = ban.user.id
-        this.reason = ban.reason ? ban.reason : null
-        this.guild = ban.guild ? ban.guild : null
+        this.reason = ban.reason ||  null
+        this.guild = ban.guild || null
         this.guild_id = ban.guild_id
         this.vguild_id = ban.guild ? ban.guild.vguild_id : null
         this.bot_token = ban.token

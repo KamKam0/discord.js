@@ -3,9 +3,9 @@ class Event{
         this.id = event.id
         this.guild_id = event.guild_id
         this.creator_id = event.creator_id
-        this.creator = event.creator ? event.creator : null
+        this.creator = event.creator || null
         this.name = event.name
-        this.description = event.description ? event.description : null
+        this.description = event.description || null
         this.scheduled_start_time = event.scheduled_start_time
         this.scheduled_end_time = event.scheduled_end_time
         this.privacy_level = this.privacy(event.privacy_level)
@@ -13,8 +13,8 @@ class Event{
         this.entity_type = this.type(event.entity_type)
         this.entity_id = event.entity_id
         this.entity_metadata = event.entity_metadata
-        this.image = event.image ? event.image : null
-        this.guild = event.guild ? event.guild : null
+        this.image = event.image || null
+        this.guild = event.guild || null
         this.bot_token = event.token
         this.vguild_id = event.guild ? event.guild.vguild_id : null
         this._bot = bot

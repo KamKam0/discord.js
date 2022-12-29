@@ -2,12 +2,12 @@ class Emoji{
     constructor(emoji, bot){
         this.id = emoji.id
         this.name = emoji.name
-        this.roles_ids = emoji.roles ? emoji.roles : []
-        this.require_colons = emoji.require_colons ? emoji.require_colons : null
-        this.managed = emoji.managed ? emoji.managed : false
-        this.animated = emoji.animated ? emoji.animated : false
-        this.available = emoji.available ? emoji.available : true
-        this.guild = emoji.guild ? emoji.guild : null
+        this.roles_ids = emoji.roles || []
+        this.require_colons = emoji.require_colons || null
+        this.managed = emoji.managed ?? false
+        this.animated = emoji.animated ?? false
+        this.available = emoji.available ?? true
+        this.guild = emoji.guild || null
         this.guild_id = emoji.guild_id
         this.bot_token = emoji.token
         this.vguild_id = emoji.guild ? emoji.guild.vguild_id : null

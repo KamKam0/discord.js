@@ -2,14 +2,14 @@ class Template{
     constructor(template, bot){
         this.code = template.code
         this.name = template.name
-        this.description = template.description ? template.description : null
+        this.description = template.description || null
         this.creator_id = template.creator_id
-        this.creator = template.creator ? template.creator : null
+        this.creator = template.creator || null
         this.created_at = template.created_at
-        this.updated_at = template.updated_at ? template.updated_at : null
+        this.updated_at = template.updated_at || null
         this.guild_id = template.source_guild_id
-        this.guild = template.serialized_source_guild ? template.serialized_source_guild : null
-        this.is_dirty = template.is_dirty ? template.is_dirty : false
+        this.guild = template.serialized_source_guild || null
+        this.is_dirty = template.is_dirty || false
         this.bot_token = template.token
         this.vguild_id = template.guild ? template.guild.vguild_id : null
         this._bot = bot

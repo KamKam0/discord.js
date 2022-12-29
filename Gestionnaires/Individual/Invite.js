@@ -4,24 +4,24 @@ class Invite{
         this.code = invite.code
         this.guild_id = invite.guild_id
         this.channel_id = invite.channel_id
-        this.channel = invite.channel ? invite.channel : null
+        this.channel = invite.channel || null
         this.inviter_id = invite.inviter ? invite.inviter.id : null
         this.inviter = new User({...invite.inviter, token: invite.token}, bot)
-        this.target_type = this.type(invite.target_type)
+        this.target_type = this.#type(invite.target_type)
         this.expires_at = invite.expires_at
-        this.uses = invite.uses ? invite.uses : 0
+        this.uses = invite.uses || 0
         this.type = invite.type
-        this.temporary = invite.temporary ? invite.temporary : false
+        this.temporary = invite.temporary || false
         this.max_uses = invite.max_uses
         this.max_age = invite.max_age
         this.created_at = invite.created_at
-        this.guild = invite.guild ? invite.guild : null
+        this.guild = invite.guild || null
         this.bot_token = invite.token
         this.vguild_id = invite.guild ? invite.guild.vguild_id : null
         this._bot = bot
     }
 
-    type(type){
+    #type(type){
         if(isNaN(type)) return type
         else{
             const convert = {
@@ -53,7 +53,7 @@ class Invite{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined"){
                 if(e[0] === "target_type"){
-                    if(this[e[0]] !== this.type(e[1])) this[e[0]] = this.type(e[1])
+                    if(this[e[0]] !== this.#type(e[1])) this[e[0]] = this.#type(e[1])
                 }
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }

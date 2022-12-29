@@ -1,16 +1,17 @@
+const User = require("./User")
 class Webhook{
     constructor(webhook, bot){
-        this.guild = webhook.guild ? webhook.guild : null
+        this.guild = webhook.guild || null
         this.guild_id = webhook.guild_id
         this.bot_token = webhook.bot_token
         this.type = this.type2(webhook.type)
         this.id = webhook.id
         this.channel_id = webhook.channel_id
-        this.channel = webhook.channel ? webhook.channel : null
-        this.user_id = webhook.user? webhook.user.id : null
-        this.user = webhook.user ? webhook.user : null
-        this.name = webhook.name ? webhook.name : null
-        this.avatar = webhook.avatar ? webhook.avatar : null
+        this.channel = webhook.channel || null
+        this.user_id = webhook.user ? webhook.user.id : null
+        this.user = webhook.user || null
+        this.name = webhook.name || null
+        this.avatar = webhook.avatar || null
         this.token = webhook.token
         this.application_id = webhook.application_id
         this.url = webhook.url

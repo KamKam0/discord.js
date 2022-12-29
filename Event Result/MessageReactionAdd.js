@@ -7,7 +7,7 @@ class MessageReactionAdd{
         this.channel = message_add.channel ? message_add.channel : require("../Utils/functions").channel_backup(message_add.channel_id, message_add.bot_token)
         this.guild = message_add.guild
         this.bot_token = message_add.token
-        this.guild_id = message_add.guild_id ? message_add.guild_id : null
+        this.guild_id = message_add.guild_id || null
         this.message_id = message_add.message_id
         this.emoji = message_add.emoji
         this.vguild_id = null
