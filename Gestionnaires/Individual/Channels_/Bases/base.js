@@ -11,7 +11,7 @@ class base{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined"){
                 if(e[0] === "type"){
-                    if(this[e[0]] !== this.type0(e[1])) this[e[0]] = this.type0(e[1])
+                    if(this[e[0]] !== this.#type0(e[1])) this[e[0]] = this.#type0(e[1])
                 }
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }

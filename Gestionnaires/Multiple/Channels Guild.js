@@ -5,7 +5,7 @@ class Channels{
         this._bot = _bot
     }
 
-    type0(type){
+    #type0(type){
         if(!isNaN(type)) return type
         else{
             const convert = require("../../constants").channels_type
@@ -14,12 +14,12 @@ class Channels{
     }
 
     AddChannel(Channel){
-        this.channels.push(new (require(`../Individual/Channels_/Channel_${this.type0(Channel.type)}`))({...Channel, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
+        this.channels.push(new (require(`../Individual/Channels_/Channel_${this.#type0(Channel.type)}`))({...Channel, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
     AddChannels(Channels){
-        this.channels.push(...Channels.map(ch => new (require(`../Individual/Channels_/Channel_${this.type0(ch.type)}`))({...ch, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
+        this.channels.push(...Channels.map(ch => new (require(`../Individual/Channels_/Channel_${this.#type0(ch.type)}`))({...ch, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot)))
         return this
     }
 

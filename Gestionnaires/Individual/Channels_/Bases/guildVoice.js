@@ -78,6 +78,7 @@ class guildVoice extends Base{
     join(deaf, mute){
         const {joinVoiceChannel} = require("@discordjs/voice")
         let guild = this._bot.guilds.get(this.guild_id)
+        guild.ResetVoice()
         guild.voice.state = "on"
         joinVoiceChannel({
             channelId: this.id,

@@ -24,7 +24,7 @@ class Option{
                 ppoint.forEach(po => {
                     let po2 = ppoint2.find(e => e[0] === po[0])
                     if(!po2) errors = true
-                    if(po[1] !== po2[1]) errors=true
+                    else if(po[1] !== po2[1]) errors=true
                 })
                 if(errors) return false
             }else if(point === "choices"){
