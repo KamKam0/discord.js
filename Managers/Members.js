@@ -6,15 +6,15 @@ class Members extends BaseMember{
 
     ban(ID, options){
         return new Promise((resolve, reject) => {
-            require("../Methods/ban").ban(this._bot.token, this.guild_id, ID, options, this._bot)
+            require("../Methods/ban").ban(this._bot.discordjs.token, this.guild_id, ID, options, this._bot)
             .then(datas => resolve(datas))
             .catch(err => reject(err))
         })
     }
 
-    unban(ID, options){
+    unban(ID){
         return new Promise((resolve, reject) => {
-            require("../Methods/ban").unban(this._bot.token, this.guild_id, ID, options, this._bot)
+            require("../Methods/ban").unban(this._bot.discordjs.token, this.guild_id, ID, this._bot)
             .then(datas => resolve(datas))
             .catch(err => reject(err))
         })

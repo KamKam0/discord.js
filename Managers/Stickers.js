@@ -6,7 +6,7 @@ class Stickers extends BaseStage{
     
     create(name, file, tags, description){
         return new Promise((resolve, reject) => {
-            require("../Methods/stickers").create(this._bot.token, this.guild_id, name, file, tags, description, this._bot)
+            require("../Methods/stickers").create(this._bot.discordjs.token, this.guild_id, name, file, tags, description, this._bot)
             .then(datas => resolve(datas))
             .catch(err => reject(err))
         })

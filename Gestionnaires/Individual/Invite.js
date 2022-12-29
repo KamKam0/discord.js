@@ -6,7 +6,7 @@ class Invite{
         this.channel_id = invite.channel_id
         this.channel = invite.channel ? invite.channel : null
         this.inviter_id = invite.inviter ? invite.inviter.id : null
-        this.inviter = new User({...invite.inviter, token: invite.token})
+        this.inviter = new User({...invite.inviter, token: invite.token}, bot)
         this.target_type = this.type(invite.target_type)
         this.expires_at = invite.expires_at
         this.uses = invite.uses ? invite.uses : 0

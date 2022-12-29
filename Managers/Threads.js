@@ -6,7 +6,7 @@ class Threads extends BaseThreads{
 
     join(threadid){
         return new Promise((resolve, reject) => {
-            require("../Methods/threads").jointhread(this._bot.token, threadid, this._bot)
+            require("../Methods/threads").jointhread(this._bot.discordjs.token, threadid, this._bot)
             .then(datas => resolve(datas))
             .catch(err => reject(err))
         })
@@ -14,7 +14,7 @@ class Threads extends BaseThreads{
 
     createwithmessage(channelid, messageid, options){
         return new Promise((resolve, reject) => {
-            require("../Methods/threads").create_withm(this._bot.token, channelid, messageid, options, this._bot)
+            require("../Methods/threads").create_withm(this._bot.discordjs.token, channelid, messageid, options, this._bot)
             .then(datas => resolve(datas))
             .catch(err => reject(err))
         })
@@ -22,7 +22,7 @@ class Threads extends BaseThreads{
 
     createwithoutmessage(channelid, options){
         return new Promise((resolve, reject) => {
-            require("../Methods/threads").create_withoutm(this._bot.token, channelid, options, this._bot)
+            require("../Methods/threads").create_withoutm(this._bot.discordjs.token, channelid, options, this._bot)
             .then(datas => resolve(datas))
             .catch(err => reject(err))
         })

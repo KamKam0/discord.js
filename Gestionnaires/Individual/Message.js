@@ -2,7 +2,7 @@ const User = require("./User")
 class Message{
     constructor(message, bot){
         this.user_id = message.user ? message.user_id : message.author.id
-        this.user = message.user ? message.user : new User({...message.author, token: message.token})
+        this.user = message.user ? message.user : new User({...message.author, token: message.token}, bot)
         this.member = message.member ? message.member : null
         this.id = message.id
         this.channel_id = message.channel_id
