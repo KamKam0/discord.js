@@ -1,12 +1,14 @@
 class Queue{
     #loop_state;
     #queueloop_state;
-    constructor(){
+    #voiceInfos;
+    constructor(voice){
         this.textChannel = null
         this.container = []
         this.#loop_state = "false"
         this.#queueloop_state = "false"
         this.np = null
+        this.#voiceInfos = voice
     }
 
     getQueue(){
@@ -83,6 +85,13 @@ class Queue{
         this.#loop_state = "false"
         this.#queueloop_state = "false"
         this.np = null
+    }
+
+    get totalTime(){
+        if(this.#voiceInfos.playing === "false") return
+        let time = this.container.reduce((a, b) => a + b.time, 0) - this.np.time
+        time -= Number(this.np.time) - (this.#voiceInfos.connection._state.playbackDuration / 1000).toFixed(0)
+        return time
     }
 }
 

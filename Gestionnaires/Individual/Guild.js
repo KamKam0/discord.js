@@ -24,13 +24,13 @@ class Guild{
         this.afk_timeout = guild.afk_timeout ? guild.afk_timeout : null
         this.widget_enabled = guild.widget_enabled ? guild.widget_enabled : false
         this.widget_channel_id = guild.widget_channel_id ? guild.widget_channel_id : null
-        this.verification_level = this.typeverif(guild.verification_level)
-        this.default_message_notifications = this.typemesdef(guild.default_message_notifications)
-        this.explicit_content_filter = this.typeexpll(guild.explicit_content_filter)
+        this.verification_level = this.#typeverif(guild.verification_level)
+        this.default_message_notifications = this.#typemesdef(guild.default_message_notifications)
+        this.explicit_content_filter = this.#typeexpll(guild.explicit_content_filter)
         this.roles = (new Roles(bot, this.id)).AddRoles(guild.roles)
         this.emojis = (new Emojis(bot, this.id)).AddEmojis(guild.emojis)
         this.features = guild.features ? guild.features : []
-        this.mfa_level = this.typemfa(guild.mfa_level)
+        this.mfa_level = this.#typemfa(guild.mfa_level)
         this.application_id = guild.application_id
         this.system_channel_id = guild.system_channel_id ? guild.system_channel_id : null
         this.system_channel_flags = guild.system_channel_flags ? guild.system_channel_flags : 0
@@ -45,12 +45,12 @@ class Guild{
         this.vanity_url_code = guild.vanity_url_code ? guild.vanity_url_code : null
         this.description = guild.description ? guild.description : null
         this.banner = guild.banner ? guild.banner : null
-        this.premium_tier = this.typeprem(guild.premium_tier)
+        this.premium_tier = this.#typeprem(guild.premium_tier)
         this.premium_subscription_count = guild.premium_subscription_count ? guild.premium_subscription_count : 0
         this.preferred_locale = guild.preferred_locale
         this.public_updates_channel_id = guild.public_updates_channel_id ? guild.public_updates_channel_id : null
         this.welcome_screen = guild.welcome_screen ? guild.welcome_screen : null
-        this.nsfw_level = this.typensfw(guild.nsfw_level)
+        this.nsfw_level = this.#typensfw(guild.nsfw_level)
         this.stage_instances = (new StageInstances(bot, this.id)).AddStages(guild.stage_instances)
         this.stickers = (new Stickers(bot, this.id)).AddStickers(guild.stickers)
         this.guild_scheduled_events = (new Events(bot, this.id)).AddEvents(guild.guild_scheduled_events)
@@ -60,7 +60,7 @@ class Guild{
         this._bot = bot
         this.bot_token = bot.discordjs.token
         this.voice = {state: "off", paused_since: null, playing: "true", connection: null, resource: null, managing: false}
-        this.voiceQueue = new queueManager()
+        this.voiceQueue = new queueManager(this.voice)
     }
 
     get playing(){
@@ -76,7 +76,7 @@ class Guild{
     }
 
     resume(){
-        if(this.voice.connection && this.voice.playing === "true"){
+        if(this.voice.connection && this.voice.playing === "false"){
             this.voice.playing = "true";
             this.voice.connection.unpause()
             this.voice.paused_since = null
@@ -86,25 +86,20 @@ class Guild{
     play(stream, volume){
         const {StreamType, createAudioResource, createAudioPlayer, getVoiceConnection} = require("@discordjs/voice")
         if(this.voice.state === "on"){
-            if(volume){
-                if(!isNaN(volume)){
-                    if(typeof volume !== "number") volume = Number(volume)
-                    if(volume <0) volume = 100
-                    if(volume <=1) volume = volume / 100
-                }
-                else volume = 1
-            }
-            else volume = 1
+            volume = this.#trvolume(volume)
             const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary, inlineVolume: true});
-            resource.volume.setVolume()
+            resource.volume.setVolume(volume)
             const player = createAudioPlayer();
-    
+        
+            
             player.play(resource);
             getVoiceConnection(this.id).subscribe(player)
-    
+        
             this.voice.connection = player
             this.voice.resource = resource
+
         }
+
     }
 
     manageVoice(fonction){
@@ -112,8 +107,8 @@ class Guild{
         let trueargs = Array(...arguments)
         trueargs.splice(0, 1)
         this.voice.connection.on("stateChange", async (oldstate, newstate) => {
-            this.voice.managing = false
             if(oldstate.status === "playing" && newstate.status === "idle"){
+                this.voice.managing = false
                 if(this.voiceQueue.loopState) fonction(this.voiceQueue.np, ...trueargs)
                 else if(this.voiceQueue.queueloopState){
                     this.voiceQueue.addSong(this.voiceQueue.np)
@@ -135,20 +130,25 @@ class Guild{
 
     setvolume(volume){
         if(this.voice.connection){
-            if(volume){
-                if(!isNaN(volume)){
-                    if(typeof volume !== "number") volume = Number(volume)
-                    if(volume <0) volume = 100
-                    if(volume <=1) volume = volume / 100
-                }
-                else volume = 1
-            }
-            else volume = 1
-            this.voice.resource.volume.setVolume(Number(volume)/100)
+            volume = this.#trvolume(volume)
+            this.voice.resource.volume.setVolume(volume)
         } 
     }
 
-    typeverif(type){
+    #trvolume(volume){
+        if(volume){
+            if(!isNaN(volume)){
+                if(typeof volume !== "number") volume = Number(volume)
+                if(volume <0) volume = 100
+                if(volume >1) volume = volume / 100
+            }
+            else volume = 1
+        }
+        else volume = 1
+        return volume
+    }
+
+    #typeverif(type){
         if(isNaN(type)) return type
         else{
             const convert = {
@@ -162,7 +162,7 @@ class Guild{
         }
     }
 
-    typemesdef(type){
+    #typemesdef(type){
         if(isNaN(type)) return type
         else{
             const convert = {
@@ -173,7 +173,7 @@ class Guild{
         }
     }
 
-    typeexpll(type){
+    #typeexpll(type){
         if(isNaN(type)) return type
         else{
             const convert = {
@@ -185,7 +185,7 @@ class Guild{
         }
     }
 
-    typemfa(type){
+    #typemfa(type){
         if(isNaN(type)) return type
         else{
             const convert = {
@@ -196,7 +196,7 @@ class Guild{
         }
     }
 
-    typeprem(type){
+    #typeprem(type){
         if(isNaN(type)) return type
         else{
             const convert = {
@@ -209,7 +209,7 @@ class Guild{
         }
     }
 
-    typensfw(type){
+    #typensfw(type){
         if(isNaN(type)) return type
         else{
             const convert = {
@@ -228,22 +228,22 @@ class Guild{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined"){
                 if(e[0] === "verification_level"){
-                    if(this[e[0]] !== this.typeverif(e[1])) this[e[0]] = this.typeverif(e[1])
+                    if(this[e[0]] !== this.#typeverif(e[1])) this[e[0]] = this.#typeverif(e[1])
                 }
                 else if(e[0] === "default_message_notifications"){
-                    if(this[e[0]] !== this.typemesdef(e[1])) this[e[0]] = this.typemesdef(e[1])
+                    if(this[e[0]] !== this.#typemesdef(e[1])) this[e[0]] = this.#typemesdef(e[1])
                 }
                 else if(e[0] === "explicit_content_filter"){
-                    if(this[e[0]] !== this.typeexpll(e[1])) this[e[0]] = this.typeexpll(e[1])
+                    if(this[e[0]] !== this.#typeexpll(e[1])) this[e[0]] = this.#typeexpll(e[1])
                 }
                 else if(e[0] === "mfa_level"){
-                    if(this[e[0]] !== this.typemfa(e[1])) this[e[0]] = this.typemfa(e[1])
+                    if(this[e[0]] !== this.#typemfa(e[1])) this[e[0]] = this.#typemfa(e[1])
                 }
                 else if(e[0] === "premium_tier"){
-                    if(this[e[0]] !== this.typeprem(e[1])) this[e[0]] = this.typeprem(e[1])
+                    if(this[e[0]] !== this.#typeprem(e[1])) this[e[0]] = this.#typeprem(e[1])
                 }
                 else if(e[0] === "nsfw_level"){
-                    if(this[e[0]] !== this.typensfw(e[1])) this[e[0]] = this.typensfw(e[1])
+                    if(this[e[0]] !== this.#typensfw(e[1])) this[e[0]] = this.#typensfw(e[1])
                 }
                 else if(this[e[0]] !== e[1] && !treatable.includes(e[0])) this[e[0]] = e[1] 
             } 
@@ -504,6 +504,7 @@ class Guild{
 
     ResetVoice(){
         this.voice = {state: "off", paused_since: null, playing: "true", connection: null, resource: null}
+        this.voiceQueue.reset()
     }
 
     VoiceCheck(){
