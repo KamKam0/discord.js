@@ -57,12 +57,8 @@ module.exports.send = async (token, channelid, options, path, method, bot) => {/
                 if(datas && datas.retry_after){
                     setTimeout(() => {
                         this.send(token, channelid, options)
-                        .catch(err => {
-                            let er = new Error("Une erreur s'est produite lors de la requête")
-                            er.content = err
-                            reject(er)
-                        })
-                        .then(datas => { return resolve(datas)})
+                        .catch(err => reject(err))
+                        .then(datas => resolve(datas))
                     }, datas.retry_after * 1000)
                 }else{
                     let er = new Error("Une erreur s'est produite lors de la requête")
@@ -108,11 +104,7 @@ module.exports.fetch_messages = async (token, channelid, limit, bot) => {
                 if(datas && datas.retry_after){
                     setTimeout(() => {
                         this.fetch_messages(token, channelid, limit)
-                        .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
+                        .catch(err => reject(err))
                         .then(datas => { 
                             const messages = new (require("../Gestionnaires/Multiple/Messages"))(bot)
                             messages.AddMessages(datas)
@@ -138,11 +130,7 @@ module.exports.fetch_messages = async (token, channelid, limit, bot) => {
                 if(datas && datas.retry_after){
                     setTimeout(() => {
                         this.fetch_messages(token, channelid, limit)
-                        .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
+                        .catch(err => reject(err))
                         .then(datas => { 
                             const messages = new (require("../Gestionnaires/Individual/Messages"))(bot)
                             messages.AddMessages(datas)

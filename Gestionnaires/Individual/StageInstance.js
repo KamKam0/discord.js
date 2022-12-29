@@ -35,24 +35,16 @@ class StageInstance{
     modify(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/stages").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modify, stage")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/stages").delete(this.bot_token, this.guild_id, this.id, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - delete, stage")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 }

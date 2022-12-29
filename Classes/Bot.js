@@ -108,12 +108,8 @@ class Bot extends EventEmitter{
         this.cooldown.Deploy(["global", "commands", "verif", "mention"])
         return new Promise(async (resolve, reject) => {
             require("../bot_manage").login(this, presence)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - Login")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
@@ -124,12 +120,8 @@ class Bot extends EventEmitter{
                 this.user = ID2
             }
             require("../Methods/interaction").deletecommand(this.discordjs.token, this.user.id, options, this)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - DeleteSlashCommandBot")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
@@ -140,12 +132,8 @@ class Bot extends EventEmitter{
                 this.user = ID2
             }
             require("../Methods/interaction").createcommand(this.discordjs.token, this.user.id, options, this)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête CreaslashCommandBot")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
@@ -156,12 +144,8 @@ class Bot extends EventEmitter{
                 this.user = ID2
             }
             require("../Methods/interaction").modifycommand(this.discordjs.token, this.user.id, options, this)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - ModifySlashcommandbot")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
@@ -172,24 +156,16 @@ class Bot extends EventEmitter{
                 this.user = ID2
             }
             require("../Methods/interaction").getcommands(this.discordjs.token, this.user.id, ID, this)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getslashcommandbot")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     GetMe(){
         return new Promise(async (resolve, reject) => {
             require("../Methods/me").getuser(this.discordjs.token, this)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getme")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
@@ -227,36 +203,24 @@ class Bot extends EventEmitter{
     SendMessage(channelid, options){
         return new Promise(async (resolve, reject) => {
             require("../Methods/message").send(this.discordjs.token, channelid, options, undefined, undefined, this)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - SendMessages Bot")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
     
     ModifyMessage(channelid, messageid, options){
         return new Promise(async (resolve, reject) => {
             require("../Methods/message").modify(this.discordjs.token, channelid, messageid, options, this)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - ModifyMessageBot")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
     
     DeleteMessage(channelid, options){
         return new Promise(async (resolve, reject) => {
             require("../Methods/message").delete(this.discordjs.token, channelid, options, this)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - DeleteMessageBot")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 

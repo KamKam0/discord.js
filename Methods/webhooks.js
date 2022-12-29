@@ -74,12 +74,8 @@ module.exports.execute = async (token, webhook, options, bot) => {//cp
                 if(datas && datas.retry_after){
                     setTimeout(() => {
                         this.execute(token, webhook, options)
-                        .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                        .then(datas => { return resolve(datas)})
+                        .catch(err => reject(err))
+                        .then(datas => resolve(datas))
                     }, datas.retry_after * 1000)
                 }else{
                     let er = new Error("Une erreur s'est produite lors de la requête")
@@ -113,12 +109,8 @@ module.exports.execute = async (token, webhook, options, bot) => {//cp
                 if(datas && datas.retry_after){
                     setTimeout(() => {
                         this.execute(token, webhook, options)
-                        .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = err
-                    reject(er)
-                })
-                        .then(datas => { return resolve(datas)})
+                        .catch(err => reject(err))
+                        .then(datas => resolve(datas))
                     }, datas.retry_after * 1000)
                 }else{
                     let er = new Error("Une erreur s'est produite lors de la requête")

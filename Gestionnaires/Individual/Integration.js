@@ -67,12 +67,8 @@ class Integration{
     delete(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").deleteintegration(this.bot_token, this.guild_id, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - delete, invite")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 }

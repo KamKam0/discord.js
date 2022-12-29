@@ -41,24 +41,16 @@ class Member{
     kick(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/kick")(this.bot_token, this.guild_id, this.user_id, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - kick, member")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     ban(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/ban").ban(this.bot_token, this.guild_id, this.user_id, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - ban, member")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
@@ -67,11 +59,7 @@ class Member{
             if(this.user.dm){
                 require("../../Methods/message").send(this.bot_token, this.user.dm, options, undefined, undefined, this._bot)
                 .then(da => { return resolve(da)})
-                .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - send, member")
-                    er.content = err
-                    reject(er)
-                })
+                .catch(err => reject(err))
             }else{
                 require("../../Methods/user").createDM(this.bot_token, this.user.id, this._bot)
                 .then(datas => { 
@@ -79,18 +67,10 @@ class Member{
                         this.user.SetDM(datas.id)
                         require("../../Methods/message").send(this.bot_token, this.user.dm, options, undefined, undefined, this._bot)
                         .then(da => { return resolve(da)})
-                        .catch(err => {
-                            let er = new Error("Une erreur s'est produite lors de la requête - send, member dm method")
-                            er.content = err
-                            reject(er)
-                        })
+                        .catch(err => reject(err))
                     }
                 })
-                .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - send, member createdm mehtod")
-                    er.content = err
-                    reject(er)
-                })
+                .catch(err => reject(err))
             }
         })
     }
@@ -98,24 +78,16 @@ class Member{
     mute(time){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/mute").mute(this.bot_token, this.guild_id, this.user_id, time, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - mute, member")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
     
     unmute(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/mute").unmute(this.bot_token, this.guild_id, this.user_id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - unmute, member")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
@@ -131,36 +103,24 @@ class Member{
     addrole(roleid){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/roles").add(this.bot_token, this.guild_id, roleid, this.user_id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - addrole, member")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     removerole(roleid){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/roles").remove(this.bot_token, this.guild_id, roleid, this.user_id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - removerole, member")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     modify(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").modifymember(this.bot_token, this.guild_id, this.user_id, options, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modify, member")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 

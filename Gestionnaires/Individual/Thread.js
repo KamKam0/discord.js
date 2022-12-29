@@ -60,36 +60,24 @@ class Thread{
     removemember(memberid){
         return new Promise((resolve, reject) => {
             require("../../Methods/threads").removethreadmember(this.bot_token, this.id, memberid, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - removemember, threads")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     leave(){
         return new Promise((resolve, reject) => {
             require("../../Methods/threads").leavethread(this.bot_token, this.id, memberid, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - leave, threads")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     addmember(memberid){
         return new Promise((resolve, reject) => {
             require("../../Methods/threads").addthreadmember(this.bot_token, this.id, memberid, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - addmember, threads")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 }

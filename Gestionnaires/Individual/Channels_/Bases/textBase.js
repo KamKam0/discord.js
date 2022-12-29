@@ -19,72 +19,48 @@ class TextBase extends Base{
     fetchmessages(limit){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/message").fetch_messages(this.bot_token, this.id, limit, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - fetchmessages, guildtext")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
     
     fetchmessage(ID){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/message").fetch_messages(this.bot_token, this.id, ID, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - fetchmessage, guildtext")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     getpins(){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").getpins(this.bot_token, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getpins, guildtext")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     triggertyping(){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").triggertyping(this.bot_token, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - triggertyping, guildtext")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     send(options){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/message").send(this.bot_token, this.id, options, undefined, undefined, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - send, guildtext")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     edit(options){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").modify(this.bot_token, this.id, options, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - edit, guildtext")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 }

@@ -30,48 +30,32 @@ class guildVoice extends Base{
     getinvites(){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").getinvites(this.bot_token, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getinvites, guildtext")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     createinvites(){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").createinvite(this.bot_token, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - createinvites, guildtext")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     editpermissions(overwrites){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").editpermissions(this.bot_token, this.id, overwrites, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - editpermissions, guildtext")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     deletepermissions(overwrites){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").deletepermission(this.bot_token, this.id, overwrites, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - deletepermissions, guildtext")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 

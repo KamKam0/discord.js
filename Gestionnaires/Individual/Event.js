@@ -94,24 +94,16 @@ class Event{
     modify(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/events").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modify, events")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/events").delete(this.bot_token, this.guild_id, this.id, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - delete, events")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 

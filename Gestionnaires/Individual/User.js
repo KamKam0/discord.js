@@ -39,11 +39,7 @@ class User{
             if(this.dm){
                 require("../../Methods/message").send(this.bot_token, this.dm, options, undefined, undefined, this._bot)
                 .then(da => { return resolve(da)})
-                .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - send, user, dm")
-                    er.content = err
-                    reject(er)
-                })
+                .catch(err => reject(err))
             }else{
                 require("../../Methods/user").createDM(this.bot_token, this.id, this._bot)
                 .then(datas => { 
@@ -51,18 +47,10 @@ class User{
                         this.dm = datas.id
                         require("../../Methods/message").send(this.bot_token, this.dm, options, undefined, undefined, this._bot)
                         .then(da => { return resolve(da)})
-                        .catch(err => {
-                            let er = new Error("Une erreur s'est produite lors de la requête - send, user, dmsend")
-                            er.content = err
-                            reject(er)
-                        })
+                        .catch(err => reject(err))
                     }
                 })
-                .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - send, user, createdm")
-                    er.content = err
-                    reject(er)
-                })
+                .catch(err => reject(err))
             }
         })
     }

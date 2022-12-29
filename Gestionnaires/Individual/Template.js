@@ -37,48 +37,32 @@ class Template{
     createguildfrom(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").createguild(this.bot_token, this.source_guild_id, this.code, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - createguildfrom, template")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     sync(){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").sync(this.bot_token, this.source_guild_id, this.code, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - sync, template")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     modify(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").modify(this.bot_token, this.source_guild_id, this.code, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modify, template")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     deletetemplate(){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").delete(this.bot_token, this.source_guild_id, this.code, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - deletetemplate, template")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 }

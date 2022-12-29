@@ -35,24 +35,16 @@ class Role{
     delete(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/roles").delete(this.bot_token, this.guild_id, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - delete, role")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
     
     modify(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/roles").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modify, role")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 

@@ -58,7 +58,7 @@ module.exports.reply = async (token, interaction, response, path, method, bot) =
                     setTimeout(() => {
                         this.reply(token, interaction, response, path, method)
                         .catch(err => { return reject(err)})
-                        .then(datas => { return resolve(datas)})
+                        .then(datas => resolve(datas))
                     }, datas.retry_after * 1000)
                 }else return reject(datas)
             }
@@ -73,7 +73,7 @@ module.exports.modifyreply = async (token, ID, interaction, response, bot) => {
         }
         this.reply(token, interaction, response, ID, `${baseurl}/webhooks/${ID}/${interaction.token}/messages/@original`, "PATCH")
         .catch(err => { return reject(err)})
-        .then(datas => { return resolve(datas)})
+        .then(datas => resolve(datas))
         
     })
 }

@@ -33,12 +33,8 @@ class Ban{
     unban(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/ban").unban(this.bot_token, this.guild.id, this.user.id, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - Ban function unban")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 }

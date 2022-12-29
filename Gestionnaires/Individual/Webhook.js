@@ -62,36 +62,24 @@ class Webhook{
     execute(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/webhooks").create(this.bot_token, this, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - execute, webhook")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     modify(options){
         return new Promise((resolve, reject) => {
             require("../Methods/webhooks").modify(this.bot_token, this.id, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modify, webhook")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/webhooks").delete(this.bot_token, this.id, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - delete, webhook")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 }

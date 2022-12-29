@@ -58,36 +58,24 @@ class base{
     reply(options){
         return new Promise((resolve, reject) => {
             require("../../../Methods/interaction").reply(this.bot_token, this, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - reply, contextmenu")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     modifyreply(options){
         return new Promise((resolve, reject) => {
             require("../../../Methods/interaction").modifyreply(this.bot_token, this.bot_id, this, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modifyreply, contextmenu")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     deletereply(){
         return new Promise((resolve, reject) => {
             require("../../../Methods/interaction").deletereply(this.bot_token, this.bot_id, this, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - deletereply, contextmenu")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
     
@@ -132,20 +120,12 @@ class base{
             if(type === "reply"){
                 require("../../../Methods/interaction").reply(this.bot_token, this, {embeds: [embed]}, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
-                .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - reply, slash sendspe")
-                    er.content = err
-                    reject(er)
-                })
+                .catch(err => reject(err))
             } 
             if(type === "send"){
                 require("../../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]}, undefined, undefined, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
-                .catch(err => {
-                    let er = new Error("Une erreur s'est produite lors de la requête - send, slash sendspe")
-                    er.content = err
-                    reject(er)
-                })
+                .catch(err => reject(err))
             }
         })
     }
@@ -154,60 +134,40 @@ class base{
     error(msg, type){
         return new Promise(async (resolve, reject) => {
             this.SendSpe(msg, "error", type)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - error, contextmenu")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     success(msg, type){
         return new Promise(async (resolve, reject) => {
             this.SendSpe(msg, "success", type)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - success, contextmenu")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     warn_se(msg, type){
         return new Promise(async (resolve, reject) => {
             this.SendSpe(msg, "warn", type)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - warn_se, contextmenu")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     info(msg, type){
         return new Promise(async (resolve, reject) => {
             this.SendSpe(msg, "info", type)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - info, contextmenu")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     wait(msg, type){
         return new Promise(async (resolve, reject) => {
             this.SendSpe(msg, "wait", type)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - wait, contextmenu")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 

@@ -269,288 +269,192 @@ class Guild{
     fetchbans(){
         return new Promise((resolve, reject) => {
             require("../../Methods/ban").fetch(this.bot_token, this.id, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - fetfchbans, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     fetchban(ID){
         return new Promise((resolve, reject) => {
             require("../../Methods/ban").fetchspe(this.bot_token, this.id, ID, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - fetchban, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     fetchauditlogs(){
         return new Promise((resolve, reject) => {
             require("../../Methods/AuditLogs")(this.bot_token, this.id, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - fetchaudit, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     leave(){
         return new Promise((resolve, reject) => {
             require("../../Methods/me").leave(this.bot_token, this.id, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - leave, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     createtemplate(){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").create(this.bot_token, this.id, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - createmplate, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     gettemplate(templatecode){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").get(this.bot_token, this.id, templatecode, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - gettemplate, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     gettemplates(){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").getall(this.bot_token, this.id, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - gettemplates, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     createwebhook(channelid, options){
         return new Promise((resolve, reject) => {
             require("../../Methods/webhooks").create(this.bot_token, channelid, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - createwebhook, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     getwebhook(channelid){
         return new Promise((resolve, reject) => {
             require("../../Methods/webhooks").get(this.bot_token, channelid, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getwebhook, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     getinvites(){
         return new Promise((resolve, reject) => {
             require("../../Methods/guild").getinvites(this.bot_token, this.id, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getinvites, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     modify(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/guild").modify(this.bot_token, this.id, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modify, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/guild").delete(this.bot_token, this.id, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - delete , guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     addmember(userid, options){
         return new Promise((resolve, reject) => {
             require("../../Methods/guild").addmember(this.bot_token, this.id, userid, options, this._bot)
-            .then(datas => { return resolve(datas)})
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - addmember, guild")
-                er.content = err
-                reject(er)
-            })
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
         })
     }
 
     modifybot(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").modifycurrentmember(this.bot_token, this.id, this._bot.user.id, options, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modifybot, guild")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     prune(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").prune(this.bot_token, this.id, options, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - prune, guild")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     getintegrations(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getintegrations(this.bot_token, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getintegrations, guild")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     getwidgetsettings(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getwidgetsttings(this.bot_token, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getwidgetsettings, guild")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     getwidgetPNG(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getwidgetpng(this.bot_token, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getwidgetPNG, guild")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     getwidget(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getwidget(this.bot_token, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getwidget, guild")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     modifywidget(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").modifywidget(this.bot_token, this.id, options, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modifywidget, guild")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     getvanity(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getvanity(this.bot_token, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getvanity, guild")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     getwelcomescreen(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getwelcomescreen(this.bot_token, this.id, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - getwelcomescrren, guild")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     modifywelcomescreen(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").modifywelcomescreen(this.bot_token, this.id, options, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modifywelcomescreen, guild")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
     modifyuservoice(userid, options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").modifyuservoice(this.bot_token, this.id, userid, options, this._bot)
-            .catch(err => {
-                let er = new Error("Une erreur s'est produite lors de la requête - modifyuservoice, guild")
-                er.content = err
-                reject(er)
-            })
-            .then(datas => { return resolve(datas)})
+            .catch(err => reject(err))
+            .then(datas => resolve(datas))
         })
     }
 
