@@ -15,7 +15,7 @@ class Bot extends EventEmitter{
         this.discordjs = {ws: null, lastEvent: null, interval: null, lastACK: null, session_id: null, HBinterval: null, dvdatas: null, lancement: null, guild_ids: [], available_ids: [], interval_state: null, token: null, lastPing: -1, reconnection_url: null}
         this.config = this.#GetDB()
         this.name = this.#checkName()
-        this.sql = String(elements) === "false" ? false : (typeof elements === "object" ? new ORM({host: "127.0.0.1", port: 3306, user: "root", database: this.name}) : process.exit())
+        this.sql = String(elements) === "false" ? false : ((typeof elements === "object" || !elements) ? new ORM(elements || {host: "127.0.0.1", port: 3306, user: "root", database: this.name}) : process.exit())
         this.guilds = new Guilds(this)
         this.users = new Users(this)
         this.channels = new Channels(this)
