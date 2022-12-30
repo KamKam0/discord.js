@@ -17,7 +17,7 @@ class User{
         this.public_flags = user.public_flags || null
         this.dm = null
         this.guilds = user.guild_id ? [user.guild_id] : []
-        this.bot_token = user.token
+        this.bot_token = bot.discordjs.token
         this._bot = bot
     }
 
@@ -26,11 +26,6 @@ class User{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
-        return this
-    }
-
-    SetDM(dm){
-        this.dm = dm
         return this
     }
 

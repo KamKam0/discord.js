@@ -4,7 +4,7 @@ module.exports = async (bot, datas) => {
     if(!datas.guild_id || !guild) return
     guild.channels.AddChannel(datas)
     bot.channels.AddChannel(datas)
-    if(bot.database_state === "stable") bot.emit(name(), bot, bot.channels.get(datas.id))
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, bot.channels.get(datas.id))
 }
 
 function name(){ return "CHANNEL_CREATE" }

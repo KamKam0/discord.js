@@ -9,9 +9,9 @@ class Sticker{
         this.type = sticker.type || null
         this.format_type = sticker.format_type || null
         this.available = sticker.available || false
-        this.guild = sticker.guild || null
+        this.guild = sticker.guild_id ? bot.guilds.get(sticker.guild_id) : null
         this.guild_id = sticker.guild_id
-        this.bot_token = sticker.token
+        this.bot_token = bot.discordjs.token
         this.sort_value = sticker.sort_value || null
         this.vguild_id = sticker.guild ? sticker.guild.vguild_id : null
         this._bot = bot

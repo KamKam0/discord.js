@@ -25,7 +25,7 @@ module.exports = async (bot, datas) => {
     })
 
     oldrole.modifications = modifications
-    if(bot.database_state === "stable") bot.emit(name(), bot, oldrole, newrole)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, oldrole, newrole)
 }
 
 function name(){ return "GUILD_ROLE_UPDATE" }

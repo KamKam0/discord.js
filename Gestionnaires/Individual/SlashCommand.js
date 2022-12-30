@@ -12,7 +12,7 @@ class Slash{
         this.nsfw = slash.nsfw
         this.options = slash.options ? slash.options.map(opt => new (require("../../Classes/Options"))(opt)) : []
         this.description = slash.description || null
-        this.bot_token = slash.token
+        this.bot_token = bot.discordjs.token
         this._bot = bot
     }
 }

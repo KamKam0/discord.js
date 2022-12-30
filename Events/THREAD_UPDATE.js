@@ -7,7 +7,7 @@ module.exports = async (bot, datas) => {
     if(!oldthread){
         guild.threads.AddThread(datas)
         const newthread2 = guild.threads.get(datas.id)
-        if(bot.database_state === "stable") bot.emit(name(), bot, null, newthread2)
+        if(bot.database_state !== "unstable") bot.emit(name(), bot, null, newthread2)
         return
     }
 
@@ -32,7 +32,7 @@ module.exports = async (bot, datas) => {
 
     oldthread.modifications = modifications
 
-    if(bot.database_state === "stable") bot.emit(name(), bot, oldthread, newthread)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, oldthread, newthread)
 }
 
 function name(){ return "THREAD_UPDATE" }

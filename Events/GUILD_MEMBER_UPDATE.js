@@ -32,7 +32,7 @@ module.exports = async (bot, datas) => {
         guild.members.get(datas.user.id).Modify_Datas(datas)
         const newmember = guild.members.get(datas.user.id)
         oldmember.modifications = modifications
-        if(bot.database_state === "stable") bot.emit(name(), bot, oldmember, newmember)
+        if(bot.database_state !== "unstable") bot.emit(name(), bot, oldmember, newmember)
     }
 }
 

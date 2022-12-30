@@ -1,9 +1,9 @@
 class Thread{
     constructor(thread, bot){
         this.id = thread.id
-        this.guild = thread.guild || null
+        this.guild = thread.guild_id ? bot.guilds.get(thread.guild_id) : null
         this.guild_id = thread.guild_id
-        this.bot_token = thread.token
+        this.bot_token = bot.discordjs.token
         this.type = thread.type
         this.archived = thread.thread_metadata || thread.archived
         this.auto_archive_duration =  thread.thread_metadata ? thread.thread_metadata.auto_archive_duration : thread.auto_archive_duration
@@ -11,38 +11,15 @@ class Thread{
         this.locked = thread.thread_metadata ? thread.thread_metadata.locked : thread.locked
         this.rate_limit_per_user = thread.rate_limit_per_user || 0
         this.parent_id = thread.parent_id
-        this.parent = thread.parent || null
+        this.parent = thread.parent ? this.guild.channels.get(thread.parent) : null
         this.owner_id = thread.owner_id
-        this.owner = thread.owner || null
+        this.owner = thread.owner_id ? this.guild.members.get(thread.owner_id).user : null
         this.name = thread.name
         this.last_message_id = thread.last_message_id || null
         this.flags = thread.flags || 0
-        this.vguild_id = thread.guild ? thread.guild.vguild_id : null
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
     }
-
-    SetOwner(owner){
-        if(owner === undefined) return this
-        this.owner = owner
-        return this
-    }
-
-    SetParent(parent){
-        this.parent = parent
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
-    }
-
-    SetMemberCount(count){
-        this.member_count = count
-        return this
-    }
-
     Modify_Datas(thread){
         let tocheck = Object.entries(thread)
         tocheck.forEach(e => { 

@@ -5,7 +5,7 @@ module.exports = async (bot, datas) => {
   
     guild.roles.AddRole({...datas.role, guild_id: guild.id})
     
-    if(bot.database_state === "stable") bot.emit(name(), bot, guild.roles.get(datas.role.id))
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, guild.roles.get(datas.role.id))
 }
 
 function name(){ return "GUILD_ROLE_CREATE" }

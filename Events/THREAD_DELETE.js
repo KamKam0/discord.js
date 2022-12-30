@@ -3,7 +3,7 @@ module.exports = async (bot, datas) => {
     if(!guild) return
     const thread = guild.threads.get(datas.id)
     guild.threads.DeleteThread(datas.id)
-    if(bot.database_state === "stable") bot.emit(name(), bot, thread)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, thread)
 }
 
 function name(){ return "THREAD_DELETE" }

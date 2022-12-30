@@ -1,13 +1,13 @@
 class Voice{
     constructor(voice, bot){
-        this.guild = voice.guild || null
-        this.guild_id = voice.guild_id
-        this.bot_token = voice.token
-        this.channel_id = voice.channel_id
-        this.channel = voice.channel || null
+        this.guild = voice.guild_id ? bot.guilds.get(voice.guild_id) : null
+        this.guild_id = voice.guild_id || null
+        this.bot_token = bot.discordjs.token
+        this.channel_id = voice.channel_id || null
+        this.channel = this.channel_id ? bot.channels.get(this.channel_id) : null
         this.user_id = voice.user_id
-        this.member = voice.member || null
-        this.user = voice.user || null
+        this.member = voice.member ? this.guild.members.get(voice.member.user_id) : null
+        this.user = voice.user ? bot.users.get(voice.user.id) :  null
         this.session_id = voice.session_id
         this.deaf = voice.deaf ?? false
         this.mute = voice.mute ?? false
@@ -17,29 +17,8 @@ class Voice{
         this.self_video = voice.self_video ?? false
         this.suppress = voice.suppress ?? false
         this.request_to_speak_timestamp = voice.request_to_speak_timestamp || null
-        this.vguild_id = voice.guild ? voice.guild.vguild_id : null
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
-    }
-
-    SetUser(user){
-        this.user = user
-        return this
-    }
-
-    SetMember(member){
-        this.member = member
-        return this
-    }
-
-    SetChannel(channel){
-        this.channel = channel
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 
     Modify_Datas(voice){

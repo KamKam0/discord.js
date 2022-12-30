@@ -3,7 +3,7 @@ module.exports = async (bot, datas) => {
     if(!guild) return
     const event = guild.stage_instances.get(datas.id)
     guild.stage_instances.DeleteStage(datas.id)
-    if(bot.database_state === "stable") bot.emit(name(), bot, event)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, event)
 }
 
 function name(){ return "STAGE_INSTANCE_DELETE" }

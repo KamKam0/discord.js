@@ -6,45 +6,21 @@ class base{
         this.application_id = interaction.application_id
         this._bot = bot
         this.custom_id = interaction.data.custom_id
-        this.guild_id = interaction.guild_id
+        this.guild_id = interaction.guild_id || null
+        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
         this.channel_id = interaction.channel_id
-        this.message = interaction.message ? (new Message({...interaction.message, guild_id: interaction.guild_id, channel_id: interaction.channel_id, token: interaction.bot_token})) : null
-        this.channel = interaction.channel ? interaction.channel : require("../../../Utils/functions").channel_backup(interaction.channel_id, interaction.bot_token)
+        this.message = interaction.message ? (new Message({...interaction.message, guild_id: interaction.guild_id, channel_id: interaction.channel_id}, bot)) : null
+        this.channel = interaction.channel ? bot.channels.get(this.channel_id) : require("../../../Utils/functions").channel_backup(interaction.channel_id, interaction.bot_token, bot)
         this.user_id = interaction.user ? interaction.user.id : interaction.member.user.id
-        this.user = interaction.user ? new User({...interaction.user, token: interaction.token}) : new User({...interaction.member.user, token: interaction.token})
-        this.member = interaction.member ? interaction.member : null
+        this.user = bot.users.get(this.user_id) ?? new User(interaction.user, bot)
+        this.member = interaction.member && this.guild ? this.guild.members.get(this.user_id) : null
         this.token = interaction.token
         this.version = interaction.version
         this.guild_locale = interaction.guild_locale
         this.locale = interaction.locale
-        this.guild = interaction.guild || null
-        this.bot_token = interaction.bot_token
+        this.bot_token = bot.discordjs.token
         this.bot_id = interaction.bot_id
-        this.vguild_id = interaction.guild ? interaction.guild.vguild_id : null
-    }
-
-    SetMember(member){
-        this.member = member
-        if(this.message) this.message.SetMember(member)
-        return this
-    }
-
-    SetUser(user){
-        this.user = user
-        return this
-    }
-
-    SetChannel(channel){
-        this.channel = channel
-        if(this.message) this.message.SetChannel(channel)
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        if(this.message) this.message.SetGuild(guild)
-        return this
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
     }
 
     Modify_Datas(inte){

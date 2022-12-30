@@ -22,7 +22,7 @@ module.exports = async (bot, oldsticker, newsticker) => {
 
     oldsticker2.modifications = modifications
 
-    if(bot.database_state === "stable") bot.emit(name(), bot, oldsticker2, newsticker2)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, oldsticker2, newsticker2)
 }
 
 function name(){ return "GUILD_STICKER_UPDATE" }

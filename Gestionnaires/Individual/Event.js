@@ -1,39 +1,24 @@
+const User = require("./User")
 class Event{
     constructor(event, bot){
         this.id = event.id
         this.guild_id = event.guild_id
         this.creator_id = event.creator_id
-        this.creator = event.creator || null
+        this.creator = bot.users.get(this.creator_id) ?? new User(this.creator, bot)
         this.name = event.name
         this.description = event.description || null
         this.scheduled_start_time = event.scheduled_start_time
         this.scheduled_end_time = event.scheduled_end_time
-        this.privacy_level = this.privacy(event.privacy_level)
-        this.status = this.status2(event.status)
-        this.entity_type = this.type(event.entity_type)
+        this.privacy_level = this.#privacy(event.privacy_level)
+        this.status = this.#status2(event.status)
+        this.entity_type = this.#type(event.entity_type)
         this.entity_id = event.entity_id
         this.entity_metadata = event.entity_metadata
         this.image = event.image || null
-        this.guild = event.guild || null
-        this.bot_token = event.token
-        this.vguild_id = event.guild ? event.guild.vguild_id : null
+        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
+        this.bot_token = bot.discordjs.token
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
-    }
-
-    SetCreator(creator){
-        this.creator = creator
-        return this
-    }
-
-    SetChannel(channel){
-        this.channel = channel
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 
     Modify_Datas(event){
@@ -41,13 +26,13 @@ class Event{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined"){
                 if(e[0] === "entity_type"){
-                    if(this[e[0]] !== this.type(e[1])) this[e[0]] = this.type(e[1])
+                    if(this[e[0]] !== this.#type(e[1])) this[e[0]] = this.#type(e[1])
                 }
                 else if(e[0] === "status"){
-                    if(this[e[0]] !== this.status2(e[1])) this[e[0]] = this.status2(e[1])
+                    if(this[e[0]] !== this.#status2(e[1])) this[e[0]] = this.#status2(e[1])
                 }
                 else if(e[0] === "privacy_level"){
-                    if(this[e[0]] !== this.privacy(e[1])) this[e[0]] = this.privacy(e[1])
+                    if(this[e[0]] !== this.#privacy(e[1])) this[e[0]] = this.#privacy(e[1])
                 }
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
@@ -55,7 +40,7 @@ class Event{
         return this
     }
 
-    type(type){
+    #type(type){
         if(isNaN(type)) return type
         else{
             let convert = {
@@ -67,7 +52,7 @@ class Event{
         }
     }
 
-    status2(status){
+    #status2(status){
         if(isNaN(status)) return status
         else{
             let convert = {
@@ -80,7 +65,7 @@ class Event{
         }
     }
 
-    privacy(privacy){
+    #privacy(privacy){
         if(isNaN(privacy)) return privacy
         else{
             let convert = {

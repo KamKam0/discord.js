@@ -2,11 +2,13 @@ const User = require("./User")
 class Message{
     constructor(message, bot){
         this.user_id = message.user ? message.user_id : message.author.id
-        this.user = message.user ? message.user : new User({...message.author, token: message.token}, bot)
-        this.member = message.member || null
+        this.user = this.user_id ? bot.users.get(this.user_id) : null
+        this.guild_id = message.guild_id || null
+        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
+        this.member = message.guild_id ? this.guild.members.get(this.user_id) : null
         this.id = message.id
         this.channel_id = message.channel_id
-        this.channel = message.channel || null
+        this.channel = this.channel_id ? bot.channels.get(this.channel_id) : null
         this.content = message.content
         this.timestamp = message.timestamp
         this.edited_timestamp = message.edited_timestamp || null        
@@ -21,44 +23,21 @@ class Message{
         this.nonce = message.nonce || null
         this.pinned = message.pinned || false
         this.webhook_id = message.webhook_id|| null
-        this.type = this.type2(message.type)
+        this.type = this.#type2(message.type)
         this.activity = message.activity || null
         this.message_reference = message.message_reference || null
         this.application_id = message.application_id
         this.flags = message.flags || 0
         this.referenced_message = message.referenced_message || null
-        this.interaction = message.interaction || null
-        this.thread = message.thread || null
+        /*this.interaction = message.interaction || null
+        this.thread = message.thread || null*/
         this.components = message.components || []
         this.sticker_items = message.sticker_items || []
         this.stickers = message.stickers || []
-        this.guild = message.guild || null
-        this.bot_token = message.token
-        this.guild_id = message.guild_id
+        this.bot_token = bot.discordjs.token
         this.typee = "message"
-        this.vguild_id = message.guild ? message.guild.vguild_id : null
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
-    }
-
-    SetMember(member){
-        this.member = member
-        return this
-    }
-
-    SetUser(user){
-        this.user = user
-        return this
-    }
-
-    SetChannel(channel){
-        this.channel = channel
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 
     Modify_Datas(message){
@@ -66,7 +45,7 @@ class Message{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined"){
                 if(e[0] === "type"){
-                    if(this[e[0]] !== this.type2(e[1])) this[e[0]] = this.type2(e[1])
+                    if(this[e[0]] !== this.#type2(e[1])) this[e[0]] = this.#type2(e[1])
                 }
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
@@ -74,7 +53,7 @@ class Message{
         return this
     }
 
-    type2(type){
+    #type2(type){
         if(isNaN(type)) return type
         else{
             const convert = {

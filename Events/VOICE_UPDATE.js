@@ -19,7 +19,7 @@ module.exports = async (bot, oldvoice, newvoice) => {
     })
 
     oldvoice2.modifications = modifications
-    if(bot.database_state === "stable") bot.emit(name(), bot, oldvoice2, newvoice2)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, oldvoice2, newvoice2)
 }
 
 function name(){ return "VOICE_UPDATE" }

@@ -21,6 +21,6 @@ module.exports = async (bot, datas) => {
 
     oldevent.modifications = modifications
 
-    if(bot.database_state === "stable") bot.emit(name(), bot, oldevent, newevent)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, oldevent, newevent)
 }
 function name(){ return "STAGE_INSTANCE_UPDATE" }

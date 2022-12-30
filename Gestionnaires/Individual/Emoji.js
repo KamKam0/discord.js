@@ -7,17 +7,11 @@ class Emoji{
         this.managed = emoji.managed ?? false
         this.animated = emoji.animated ?? false
         this.available = emoji.available ?? true
-        this.guild = emoji.guild || null
         this.guild_id = emoji.guild_id
-        this.bot_token = emoji.token
-        this.vguild_id = emoji.guild ? emoji.guild.vguild_id : null
+        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
+        this.bot_token = bot.discordjs.token
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 
     Modify_Datas(emoji){

@@ -5,7 +5,7 @@ module.exports = async (bot, datas) => {
     bot.guilds = bot.guilds.DeleteGuild(datas.id)
     bot.users.DeleteUsers(guild.members.Map(users => { return {user: users.ID, guild: guild.id}}))
     bot.channels.DeleteChannels(guild.channels.map(ch => ch.id))
-    if(bot.database_state === "stable") bot.emit(name(), bot, guild)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, guild)
 }
 
 function name(){ return "GUILD_DELETE" }

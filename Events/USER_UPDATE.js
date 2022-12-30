@@ -26,7 +26,7 @@ module.exports = async (bot, datas) => {
 
     olduser.modifications = modifications
 
-    if(bot.database_state === "stable") bot.emit(name(), bot, olduser, newuser)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, olduser, newuser)
 }
 
 function name(){ return "USER_UPDATE" }

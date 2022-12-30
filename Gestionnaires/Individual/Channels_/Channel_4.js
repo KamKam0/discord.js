@@ -2,19 +2,13 @@ const Base = require("./Bases/base")
 class Channel extends Base{
     constructor(channel, bot){
         super(channel, bot)
-        this.guild = channel.guild || null
+        this.guild_id = channel.guild_id
+        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
         this.position = channel.position
         this.permission_overwrites = channel.permission_overwrites
         this.name = channel.name
         this.nsfw = channel.nsfw ?? false
-        this.guild_id = channel.guild_id
-        this.vguild_id = channel.guild ? channel.guild.vguild_id : null
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
     }
     
     edit(options){

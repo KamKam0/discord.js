@@ -49,7 +49,7 @@ module.exports = async (bot, datas) => {
     oldchannel.modifications = modifications
 
 
-    if(bot.database_state === "stable") bot.emit(name(), bot, oldchannel, newchannel)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, oldchannel, newchannel)
 }
 
 function name(){ return "CHANNEL_UPDATE" }

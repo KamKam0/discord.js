@@ -6,7 +6,7 @@ module.exports = async (bot, datas) => {
         const mess_u_p = new (require("../Event Result/MessageDelete"))(datas, bot)
         mess_u_p.SetChannel(bot.channels.get(datas.channel_id))
         mess_u_p.SetGuild(bot.guilds.get(datas.guild_id))
-        if(bot.database_state === "stable") return bot.emit(name(), bot, mess_u_p)
+        if(bot.database_state !== "unstable") return bot.emit(name(), bot, mess_u_p)
     }
     else{
         const message_e = require(`../Gestionnaires/Individual/Message`)
@@ -34,7 +34,7 @@ module.exports = async (bot, datas) => {
     
         oldmessage.modifications = modifications
     
-        if(bot.database_state === "stable") bot.emit(name(), bot, oldmessage, newmessage)
+        if(bot.database_state !== "unstable") bot.emit(name(), bot, oldmessage, newmessage)
     }
     
 }

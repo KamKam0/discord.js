@@ -1,7 +1,7 @@
 class Member{
     constructor(member, bot){
         this.user_id = member.user.id
-        this.user = member.user || null
+        this.user = this.user_id ? bot.users.get(this.user_id) : null
         this.nick = member.nick || null
         this.avatar = member.avatar || null
         this.roles = member.roles || []
@@ -12,22 +12,11 @@ class Member{
         this.pending = member.pending || false
         this.permissions = member.permissions || null
         this.communication_disabled_until = member.communication_disabled_until || null
-        this.guild = member.guild || null
-        this.bot_token = member.token
+        this.guild = member.guild_id ? bot.guilds.get(member.guild_id) : null
+        this.bot_token = bot.discordjs.token
         this.guild_id = member.guild_id
-        this.vguild_id = member.guild ? member.guild.vguild_id : null
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
-    }
-
-    SetUser(user){
-        this.user = user
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 
     Modify_Datas(member){

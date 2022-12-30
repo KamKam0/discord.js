@@ -6,11 +6,11 @@ class Channel extends Base{
         this.permission_overwrites = channel.permission_overwrites
         this.name = channel.name
         this.nsfw = channel.nsfw ?? false
-        this.parent_id = channel.parent_id
-        this.parent = channel.parent || null
-        this.guild = channel.guild || null
+        this.parent_id = channel.parent_id || null
+        this.parent = this.parent_id ? bot.channels.get(this.parent_id) : null
         this.guild_id = channel.guild_id
-        this.vguild_id = channel.guild ? channel.guild.vguild_id : null
+        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this.topic = channel.topic
         this.rate_limit_per_user = channel.rate_limit_per_user
         this.template = channel.template

@@ -19,7 +19,7 @@ module.exports = async (bot, datas) => {
     if(datas.added_members) to_transmit.added_members = (new Members(bot)).AddMembers(datas.added_members)
     if(datas.removed_member) to_transmit.removed_member = (new Members(bot)).AddMembers(datas.removed_member)
 
-    if(bot.database_state === "stable") bot.emit(name(), bot, (new ThreadUpdate(to_transmit, bot)).SetGuild(guild).SetThread(thread))
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, (new ThreadUpdate(to_transmit, bot)).SetGuild(guild).SetThread(thread))
 }
 
 function name(){ return "THREAD_MEMBERS_UPDATE" }

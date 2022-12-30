@@ -1,10 +1,7 @@
-const TextBase = require("./textBase")
-class guildText extends TextBase{
+const Base = require("./base")
+class baseGuild extends Base{
     constructor(channel, bot){
         super(channel, bot)
-        this.rate_limit_per_user = channel.rate_limit_per_user || 0
-        //
-
         this.position = channel.position
         this.permission_overwrites = channel.permission_overwrites
         this.name = channel.name
@@ -14,26 +11,6 @@ class guildText extends TextBase{
         this.guild_id = channel.guild_id || null
         this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
         this.vguild_id = channel.guild ? channel.guild.vguild_id : nul
-    }
-
-    bulkdelete(number){
-        return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/message").fetch_messages(this.bot_token, this.id, number, this._bot)
-            .catch(err => reject(err))
-            .then(datas => {
-                require("../../../../Methods/channel").bulkdelete(this.bot_token, this.id, datas.map(msg => msg.id), this._bot)
-                .catch(err => reject(err))
-                .then(vdatas => { return resolve(vdatas)})
-            })
-        })
-    }
-
-    follownewsChannel(targetid){
-        return new Promise(async (resolve, reject) => {
-            require("../../../../Methods/channel").follownews(this.bot_token, this.id, targetid, this._bot)
-            .catch(err => reject(err))
-            .then(datas => resolve(datas))
-        })
     }
 
     getinvites(){
@@ -69,4 +46,4 @@ class guildText extends TextBase{
     }
 }
 
-module.exports = guildText
+module.exports = baseGuild

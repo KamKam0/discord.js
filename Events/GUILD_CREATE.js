@@ -23,10 +23,10 @@ module.exports = async (bot, datas) => {
         if(bot.discordjs.available_ids.length === 0){
           console.log("Bot Ready")
           bot.state = "ready"
-          if(bot.database_state === "stable") bot.emit("READY", bot)
+          if(bot.database_state !== "unstable") bot.emit("READY", bot)
         }
-      }else if(bot.database_state === "stable") bot.emit(name(), bot, bot.guilds.get(datas.id))
-    }else if(bot.database_state === "stable") bot.emit(name(), bot, bot.guilds.get(datas.id))
+      }else if(bot.database_state !== "unstable") bot.emit(name(), bot, bot.guilds.get(datas.id))
+    }else if(bot.database_state !== "unstable") bot.emit(name(), bot, bot.guilds.get(datas.id))
   }
   if(bot.state === "isession"){
     if(!bot.guilds.get(datas.id)){

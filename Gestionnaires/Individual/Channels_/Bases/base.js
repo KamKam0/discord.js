@@ -2,7 +2,7 @@ class base{
     constructor(channel, bot){
         this.id = channel.id
         this.type = this.#type0(channel.type)
-        this.bot_token = channel.token
+        this.bot_token = bot.discordjs.token
         this._bot = bot
     }
 

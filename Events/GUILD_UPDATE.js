@@ -23,7 +23,7 @@ module.exports = async (bot, datas) => {
 
     oldguild.modifications = modifications
     
-    if(bot.database_state === "stable") bot.emit(name(), bot, oldguild, newguild)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, oldguild, newguild)
 }
 
 function name(){ return "GUILD_UPDATE" }

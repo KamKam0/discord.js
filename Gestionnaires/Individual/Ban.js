@@ -1,25 +1,14 @@
 const User = require("./User")
 class Ban{
     constructor(ban, bot){
-        this.user = new User({...ban.user, token: ban.token}, bot)
+        this.user = new User(ban.user, bot)
         this.user_id = ban.user.id
         this.reason = ban.reason ||  null
-        this.guild = ban.guild || null
-        this.guild_id = ban.guild_id
+        this.guild_id = ban.guild_id || null
+        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
         this.vguild_id = ban.guild ? ban.guild.vguild_id : null
-        this.bot_token = ban.token
+        this.bot_token = bot.discordjs.token
         this._bot = bot
-    }
-
-    SetUser(user){
-        this.user = user
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 
     Modify_Datas(ban){

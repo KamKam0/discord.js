@@ -13,10 +13,10 @@ module.exports = async (bot, datas) => {
     const oldvoice = guild.voice_states.get(datas.user_id)
     const newvoice = datas
 
-    if(String(oldvoice) === "undefined" && String(newvoice.channel_id) !== "null") if(bot.database_state === "stable") require("./VOICE_CREATE")(bot, newvoice)
+    if(String(oldvoice) === "undefined" && String(newvoice.channel_id) !== "null") if(bot.database_state !== "unstable") require("./VOICE_CREATE")(bot, newvoice)
     if(String(oldvoice) !== "undefined" && String(newvoice.channel_id) === "null"){
         oldvoice.guild_id = datas.guild_id
-        if(bot.database_state === "stable") require("./VOICE_DELETE")(bot, oldvoice)
+        if(bot.database_state !== "unstable") require("./VOICE_DELETE")(bot, oldvoice)
     }
-    else if(String(oldvoice) !== "undefined" && String(newvoice.channel_id) !== "null" && String(oldvoice.channel_id) !==  String(newvoice.channel_id)) if(bot.database_state === "stable") require("./VOICE_UPDATE")(bot, oldvoice, newvoice)
+    else if(String(oldvoice) !== "undefined" && String(newvoice.channel_id) !== "null" && String(oldvoice.channel_id) !==  String(newvoice.channel_id)) if(bot.database_state !== "unstable") require("./VOICE_UPDATE")(bot, oldvoice, newvoice)
 }

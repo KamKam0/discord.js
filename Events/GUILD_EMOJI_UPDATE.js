@@ -21,7 +21,7 @@ module.exports = async (bot, oldemoji, newemoji) => {
 
     oldemoji2.modifications = modifications
 
-    if(bot.database_state === "stable") bot.emit(name(), bot, oldemoji2, newemoji2)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, oldemoji2, newemoji2)
 }
 
 function name(){ return "GUILD_EMOJI_UPDATE" }

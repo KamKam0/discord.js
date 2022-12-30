@@ -5,7 +5,7 @@ module.exports = async (bot, datas) => {
     datas.token = bot.discordjs.token
     const ban = new Ban(datas, bot)
     ban.SetGuild(guild)
-    if(bot.database_state === "stable") bot.emit(name(), bot, ban)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, ban)
 }
 
 function name(){ return "GUILD_BAN_ADD" }

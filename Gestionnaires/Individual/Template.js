@@ -1,29 +1,19 @@
+const User = require("./User")
 class Template{
     constructor(template, bot){
         this.code = template.code
         this.name = template.name
         this.description = template.description || null
         this.creator_id = template.creator_id
-        this.creator = template.creator || null
+        this.creator = template.creator_id ? new User(template.creator, bot) : null
         this.created_at = template.created_at
         this.updated_at = template.updated_at || null
         this.guild_id = template.source_guild_id
         this.guild = template.serialized_source_guild || null
         this.is_dirty = template.is_dirty || false
-        this.bot_token = template.token
+        this.bot_token = bot.discordjs.token
         this.vguild_id = template.guild ? template.guild.vguild_id : null
         this._bot = bot
-    }
-
-    SetCreator(creator){
-        this.creator = creator
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 
     Modify_Datas(template){

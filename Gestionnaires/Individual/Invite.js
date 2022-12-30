@@ -4,9 +4,9 @@ class Invite{
         this.code = invite.code
         this.guild_id = invite.guild_id
         this.channel_id = invite.channel_id
-        this.channel = invite.channel || null
+        this.channel = this.channel_id ? bot.channels.get(this.channel_id) : null
         this.inviter_id = invite.inviter ? invite.inviter.id : null
-        this.inviter = new User({...invite.inviter, token: invite.token}, bot)
+        this.inviter = bot.users.get(this.inviter_id) ?? new User(invite.inviter, bot)
         this.target_type = this.#type(invite.target_type)
         this.expires_at = invite.expires_at
         this.uses = invite.uses || 0
@@ -15,9 +15,9 @@ class Invite{
         this.max_uses = invite.max_uses
         this.max_age = invite.max_age
         this.created_at = invite.created_at
-        this.guild = invite.guild || null
-        this.bot_token = invite.token
-        this.vguild_id = invite.guild ? invite.guild.vguild_id : null
+        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
+        this.bot_token = bot.discordjs.token
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
     }
 
@@ -30,22 +30,6 @@ class Invite{
             }
             return convert[type]
         }
-    }
-
-    SetInviter(inviter){
-        this.inviter = inviter
-        return this
-    }
-
-    SetChannel(channel){
-        this.channel = channel
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 
     Modify_Datas(invite){

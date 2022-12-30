@@ -8,14 +8,14 @@ const EventHandler = require("@kamkam1_0/discord-eventhandler")
 const VoiceManager = require("./VoiceManager")
 const ORM = require("@kamkam1_0/sql-orm")
 class Bot extends EventEmitter{
-    constructor(){
+    constructor(elements){
         super()
         this.langues = []
         this.default_language = null
         this.discordjs = {ws: null, lastEvent: null, interval: null, lastACK: null, session_id: null, HBinterval: null, dvdatas: null, lancement: null, guild_ids: [], available_ids: [], interval_state: null, token: null, lastPing: -1, reconnection_url: null}
         this.config = this.#GetDB()
         this.name = this.#checkName()
-        this.sql = new ORM({host: "127.0.0.1", port: 3306, user: "root", database: this.name})
+        this.sql = String(elements) === "false" ? false : (typeof elements === "object" ? new ORM({host: "127.0.0.1", port: 3306, user: "root", database: this.name}) : process.exit())
         this.guilds = new Guilds(this)
         this.users = new Users(this)
         this.channels = new Channels(this)
@@ -31,13 +31,14 @@ class Bot extends EventEmitter{
     }
 
     get database_state(){
+        if(!this.sql) return false
         if(this.sql.connectionState) return "stable"
         return "unstable"
     }
 
     vstatus(bot, VID){
         return new Promise(async (resolve, reject) => {
-            if(!bot.sql) return reject(new Error("La connexion avec la BDD sql n'est pas initialisée - bot"))
+            if(!bot.database_state || bot.database_state === "unstable") return reject(new Error("La connexion avec la BDD sql n'est pas initialisée - bot"))
             if(!VID) return reject(new Error("Incorrect infos"))
             if(VID === this.config.general["ID createur"]) return resolve("ALL")
             else if(bot.sql){
@@ -63,7 +64,7 @@ class Bot extends EventEmitter{
 
     ven(bot, ID){
         return new Promise(async (resolve, reject) => {
-            if(bot.sql){
+            if(bot.database_state === "stable"){
                 let result = await bot.sql.select("general")
                 let vid = result.find(re => re.ID === ID)
                 if(!vid || !vid.ID){
