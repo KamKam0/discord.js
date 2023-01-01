@@ -284,7 +284,7 @@ class Bot extends EventEmitter{
                 commands = commands.DeleteCommand(cmd.name)
             }
         })
-        if(commands.length > 0) commands.commands.forEach(cmd => this.DeleteSlashCommand(cmd.id))
+        if(commands.length > 0) commands.container.forEach(cmd => this.DeleteSlashCommand(cmd.id))
 
     }
 
