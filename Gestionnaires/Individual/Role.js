@@ -11,7 +11,7 @@ class Role{
         this.managed = role.managed || null
         this.mentionable = role.mentionable
         this.tags = role.tags || null
-        this.guild = role.guild_id ? bot.guilds.getrole.guild_id() : null
+        this.guild = role.guild_id ? bot.guilds.get(role.guild_id) : null
         this.guild_id = role.guild_id
         this.bot_token = bot.discordjs.token
         this.vguild_id = this.guild ? this.guild.vguild_id : null

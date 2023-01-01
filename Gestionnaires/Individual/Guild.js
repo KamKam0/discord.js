@@ -59,7 +59,7 @@ class Guild{
         this.db_language = guild.db_language
         this._bot = bot
         this.bot_token = bot.discordjs.token
-        this.voice = {state: "off", paused_since: null, playing: "true", connection: null, resource: null, managing: false}
+        this.voice = {state: "off", paused_since: null, playing: false, connection: null, resource: null, managing: false}
         this.voiceQueue = new queueManager(this.voice)
     }
 
@@ -68,16 +68,16 @@ class Guild{
     }
 
     pause(){
-        if(this.voice.connection && this.voice.playing === "true"){
-            this.voice.playing = "false";
+        if(this.voice.connection && this.voice.playing){
+            this.voice.playing = false;
             this.voice.connection.pause()
             this.voice.paused_since = Date.now()
         }
     }
 
     resume(){
-        if(this.voice.connection && this.voice.playing === "false"){
-            this.voice.playing = "true";
+        if(this.voice.connection && !this.voice.playing){
+            this.voice.playing = true;
             this.voice.connection.unpause()
             this.voice.paused_since = null
         }
@@ -115,7 +115,10 @@ class Guild{
                     this.voiceQueue.removeSong()
                     fonction(this.voiceQueue.next, ...trueargs)
                 }
-                else fonction(this.voiceQueue.next, ...trueargs)
+                else{
+                    this.voiceQueue.removeSong()
+                    fonction(this.voiceQueue.next, ...trueargs)
+                }
             }
         })
         this.voice.connection.on("stateChange", async (oldstate, newstate) => { 
@@ -503,7 +506,7 @@ class Guild{
     }
 
     ResetVoice(){
-        this.voice = {state: "off", paused_since: null, playing: "true", connection: null, resource: null}
+        this.voice = {state: "off", paused_since: null, playing: false, connection: null, resource: null}
         this.voiceQueue.reset()
     }
 

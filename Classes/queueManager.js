@@ -5,8 +5,8 @@ class Queue{
     constructor(voice){
         this.textChannel = null
         this.container = []
-        this.#loop_state = "false"
-        this.#queueloop_state = "false"
+        this.#loop_state = false
+        this.#queueloop_state = false
         this.np = null
         this.#voiceInfos = voice
     }
@@ -36,33 +36,23 @@ class Queue{
     }
 
     loop(){
-        if(this.loop_state === "false"){
-            this.loop_state = "true"
-            return true
-        }
-        else if(this.loop_state === "true"){
-            this.loop_state = "false"
-            return false
-        }
+        if(this.#loop_state) this.#loop_state = false
+        if(!this.#loop_state) this.#loop_state = true
+        return this.loopState
     }
 
     get loopState(){
-        return Boolean(this.loop_state)
+        return this.loop_state
     }
 
     queueloop(){
-        if(this.#queueloop_state === "false"){
-            this.#queueloop_state = "true"
-            return true
-        }
-        else if(this.#queueloop_state === "true"){
-            this.#queueloop_state = "false"
-            return false
-        }
+        if(this.#queueloop_state) this.#queueloop_state = false
+        if(!this.#queueloop_state) this.#queueloop_state = true
+        return this.#queueloop_state
     }
 
     get queueloopState(){
-        return Boolean(this.#queueloop_state)
+        return this.#queueloop_state
     }
 
     get next(){
@@ -82,13 +72,13 @@ class Queue{
     reset(){
         this.textChannel = null
         this.container = []
-        this.#loop_state = "false"
-        this.#queueloop_state = "false"
+        this.#loop_state = false
+        this.#queueloop_state = false
         this.np = null
     }
 
     get totalTime(){
-        if(this.#voiceInfos.playing === "false") return
+        if(this.#voiceInfos.playing === false) return
         let time = this.container.reduce((a, b) => a + b.time, 0) - this.np.time
         time -= Number(this.np.time) - (this.#voiceInfos.connection._state.playbackDuration / 1000).toFixed(0)
         return time
