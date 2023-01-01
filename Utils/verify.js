@@ -60,7 +60,7 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
             resolve(datas)
         }else{
             const datas = await basedatas.json()
-            if(!datas || (datas.code && !datas.retry_after)) reject(createError(name, err))
+            if(!datas || (datas.code && !datas.retry_after)) reject(createError(name, datas))
             else if(datas.retry_after){
                 setTimeout(() => {
                     fonction(...args.filter(arg => arg.data_name !== "options" || (arg.data_name === "options" && arg.order)).sort((a, b) => a.order - b.order).map(arg => arg.value))

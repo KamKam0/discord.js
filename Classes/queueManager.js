@@ -93,7 +93,6 @@ class Queue{
         if(!this.#voiceInfos.playing) return
         let time = this.container.slice(0, (this.container.length - 1)).reduce((a, b) => a + b.time, 0) - this.np.time
         time += (Number(this.np.time) - (this.#voiceInfos.connection._state.playbackDuration / 1000).toFixed(0))
-        console.log(time)
         return time
     }
 
