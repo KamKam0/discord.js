@@ -1,24 +1,12 @@
 class WebhookUpdate{
     constructor(webhook, bot){
-        this.guild = webhook.guild
-        this.guild_id = webhook.guild_id
-        this.bot_token = webhook.token
-        this.channel_id = webhook.channel_id
-        this.channel = webhook.channel
-        this.vguild_id = null
+        this.channel_id = webhook.channel_id || null
+        this.channel = this.channel_id ? bot.channels.get(this.channel_id) : null
+        this.guild_id = webhook.guild_id || null
+        this.guild = webhook.guild || bot.guilds.get(this.guild_id) || null
+        this.bot_token = bot.discordjs.token
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
-    }
-
-
-    SetChannel(channel){
-        this.channel = channel
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 }
 module.exports = WebhookUpdate

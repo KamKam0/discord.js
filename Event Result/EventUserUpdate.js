@@ -1,30 +1,14 @@
 class EventUserUpdate{
     constructor(eventupdate, bot){
-        this.guild_scheduled_event_id = eventupdate.guild_scheduled_event_id
-        this.guild_scheduled_event = eventupdate.guild_scheduled_event
-        this.user_id = eventupdate.user_id
-        this.user = eventupdate.user
-        this.guild = eventupdate.guild
-        this.guild_id = eventupdate.guild_id
-        this.bot_token = eventupdate.token
-        this.vguild_id = null
+        this.guild_scheduled_event_id = eventupdate.guild_scheduled_event_id || null
+        this.guild_scheduled_event = eventupdate.guild || bot.guilds.get(eventupdate.guild_scheduled_event_id) || null
+        this.user_id = eventupdate.user_id || null
+        this.user = this.user_id ? bot.users.Get(this.user_id) : null
+        this.guild = this.guild_scheduled_event
+        this.guild_id = this.guild_scheduled_event_id
+        this.bot_token = bot.discordjs.token
+        this.vguild_id = this.guild_id ? this.guild.vguild_id : null
         this._bot = bot
-    }
-
-    SetUser(user){
-        this.user = user
-        return this
-    }    
-
-    SetEventChannel(channel){
-        this.guild_scheduled_event = channel
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 }
 module.exports = EventUserUpdate

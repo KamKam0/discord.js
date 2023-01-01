@@ -7,21 +7,10 @@ class StageInstance{
         this.topic = stage.topic || null
         this.privacy_level = stage.privacy_level || null
         this.discoverable_disabled = stage.discoverable_disabled ?? false
-        this.guild = stage.guild_id ? bot.guilds.get(this.guild_id) : null
+        this.guild = stage.guild || bot.guilds.get(this.guild_id) || null
         this.bot_token = bot.discordjs.token
         this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
-    }
-
-    SetChannel(channel){
-        this.channel = channel
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 
     Modify_Datas(stage){

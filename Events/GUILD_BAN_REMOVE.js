@@ -4,7 +4,6 @@ module.exports = async (bot, datas) => {
     if(!guild) return
     datas.token = bot.discordjs.token
     const unban = new Unban(datas, bot)
-    unban.SetGuild(guild)
     if(bot.database_state !== "unstable") bot.emit(name(), bot, unban)
 }
 

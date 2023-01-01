@@ -21,8 +21,9 @@ class Queue{
     }
 
     addSong(song){
+        if(!song.place) song.place = this.container.length
         this.container.push(song)
-        return this.container
+        return song
     }
 
     removeSong(option){
@@ -77,11 +78,27 @@ class Queue{
         this.np = null
     }
 
+    get length(){
+        return this.container.length
+    }
+
     get totalTime(){
-        if(this.#voiceInfos.playing === false) return
+        if(!this.#voiceInfos.playing) return
         let time = this.container.reduce((a, b) => a + b.time, 0) - this.np.time
-        time -= Number(this.np.time) - (this.#voiceInfos.connection._state.playbackDuration / 1000).toFixed(0)
+        time += (Number(this.np.time) - (this.#voiceInfos.connection._state.playbackDuration / 1000).toFixed(0))
         return time
+    }
+
+    get timeBeforeLast(){
+        if(!this.#voiceInfos.playing) return
+        let time = this.container.slice(0, (this.container.length - 1)).reduce((a, b) => a + b.time, 0) - this.np.time
+        time += (Number(this.np.time) - (this.#voiceInfos.connection._state.playbackDuration / 1000).toFixed(0))
+        console.log(time)
+        return time
+    }
+
+    _update(infos){
+        this.#voiceInfos = infos
     }
 }
 

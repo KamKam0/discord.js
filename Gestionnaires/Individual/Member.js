@@ -12,7 +12,7 @@ class Member{
         this.pending = member.pending || false
         this.permissions = member.permissions || null
         this.communication_disabled_until = member.communication_disabled_until || null
-        this.guild = member.guild_id ? bot.guilds.get(member.guild_id) : null
+        this.guild = member.guild || bot.guilds.get(member.guild_id) || null
         this.bot_token = bot.discordjs.token
         this.guild_id = member.guild_id
         this.vguild_id = this.guild ? this.guild.vguild_id : null

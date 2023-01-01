@@ -11,7 +11,7 @@ module.exports = async (bot, datas) => {
         return
     }
 
-    const thread_e = require(`../Gestionnaires/Individual/Thread`)
+    const thread_e = require(`../Gestionnaires/Individual/Channels_/Channel_11`)
     oldthread = new thread_e({...oldthread}, bot)
 
     guild.threads.get(datas.id).Modify_Datas(datas)

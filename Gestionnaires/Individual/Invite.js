@@ -15,7 +15,7 @@ class Invite{
         this.max_uses = invite.max_uses
         this.max_age = invite.max_age
         this.created_at = invite.created_at
-        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
+        this.guild = invite.guild || bot.guilds.get(this.guild_id) || null
         this.bot_token = bot.discordjs.token
         this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot

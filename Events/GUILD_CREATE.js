@@ -13,9 +13,9 @@ module.exports = async (bot, datas) => {
         activities: []
       }
     }))
-    bot.guilds.AddGuild(datas)
     bot.users.AddUsers(datas.members.map(e => { return {...e.user, guild_id: datas.id}}))
     bot.channels.AddChannels(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
+    bot.guilds.AddGuild(datas)
     if(bot.state === "processing"){
       if(bot.discordjs.available_ids.find(id => id.id === datas.id)){
         bot.discordjs.available_ids = bot.discordjs.available_ids.filter(id => id.id !== datas.id)

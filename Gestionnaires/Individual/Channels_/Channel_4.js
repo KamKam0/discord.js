@@ -3,7 +3,7 @@ class Channel extends Base{
     constructor(channel, bot){
         super(channel, bot)
         this.guild_id = channel.guild_id
-        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
+        this.guild = channel.guild || bot.guilds.get(this.guild_id) || null
         this.position = channel.position
         this.permission_overwrites = channel.permission_overwrites
         this.name = channel.name

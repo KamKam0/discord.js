@@ -9,7 +9,7 @@ class Channel extends Base{
         this.parent_id = channel.parent_id || null
         this.parent = this.parent_id ? bot.channels.get(this.parent_id) : null
         this.guild_id = channel.guild_id
-        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
+        this.guild = channel.guild || bot.guilds.get(this.guild_id) || null
         this.vguild_id = this.guild ? this.guild.vguild_id : null
         this.topic = channel.topic
         this.rate_limit_per_user = channel.rate_limit_per_user
@@ -18,17 +18,6 @@ class Channel extends Base{
         this.default_reaction_emoji = channel.default_reaction_emoji
         this.available_tags = channel.available_tags
         this.flags = channel.flags
-    }
-
-    SetParent(parent){
-        this.parent = parent
-        return this
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 
     #type2(type){

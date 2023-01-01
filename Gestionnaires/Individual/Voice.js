@@ -1,6 +1,6 @@
 class Voice{
     constructor(voice, bot){
-        this.guild = voice.guild_id ? bot.guilds.get(voice.guild_id) : null
+        this.guild = voice.guild || bot.guilds.get(voice.guild_id) || null
         this.guild_id = voice.guild_id || null
         this.bot_token = bot.discordjs.token
         this.channel_id = voice.channel_id || null

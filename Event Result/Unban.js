@@ -1,20 +1,13 @@
 const User = require("../Gestionnaires/Individual/User")
 class Unban{
     constructor(ban, bot){
-        this.user = new User({...ban.user, token: ban.token}, bot)
-        this.user_id = ban.user.id
-        this.guild = ban.guild
-        this.vguild_id = null
-        this.guild_id = ban.guild_id
-        this.bot_token = ban.token
-        this.vguild_id = null
+        this.guild_id = ban.guild_id || null
+        this.guild = ban.guild || bot.guilds.get(this.guild_id) || null
+        this.bot_token = bot.discordjs.token
+        this.vguild_id = this.guild ? this.guild.vguild_id : null
+        this.user = new User({...ban.user, token: this.bot_token}, bot)
+        this.user_id = ban.user.id || null
         this._bot = bot
-    }
-
-    SetGuild(guild){
-        this.guild = guild
-        this.vguild_id = guild.vguild_id
-        return this
     }
 
     Modify_Datas(ban){
@@ -25,7 +18,7 @@ class Unban{
         return this
     }
 
-    Ban(options){
+    ban(options){
         return new Promise((resolve, reject) => {
             require("../Methods/ban").ban(this.bot_token, this.guild.id, this.user.id, options)
             .then(datas => resolve(datas))

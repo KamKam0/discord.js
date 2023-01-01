@@ -5,6 +5,10 @@ class Members extends Base{
         super(_bot, guildid)
     }
 
+    get(ID){
+        return this.container.find(ba => ba.user_id === ID)
+    }
+
     AddMember(member){
         this.container.push(new Member({...member, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this

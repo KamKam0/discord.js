@@ -1,6 +1,6 @@
 class Webhook{
     constructor(webhook, bot){
-        this.guild = webhook.guild_id ? bot.guilds.get(webhook.guild_id) : null
+        this.guild = webhook.guild || bot.guilds.get(webhook.guild_id) || null
         this.guild_id = webhook.guild_id || null
         this.bot_token = bot.discordjs.token
         this.type = this.#type2(webhook.type)

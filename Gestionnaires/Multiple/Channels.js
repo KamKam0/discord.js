@@ -13,7 +13,7 @@ class Channels extends Base{
     }
 
     AddChannel(Channel){
-        this.channels.push(new (require(`../Individual/Channels_/Channel_${this.#type0(Channel.type)}`))({...Channel, token: this._bot.discordjs.token}, this._bot))
+        this.container.push(new (require(`../Individual/Channels_/Channel_${this.#type0(Channel.type)}`))({...Channel, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 
@@ -23,12 +23,12 @@ class Channels extends Base{
     }
 
     DeleteChannel(ID){
-        this.channels.splice(this.channels.indexOf(this.channels.find(ch => ch.id === ID)), 1)
+        this.container.splice(this.container.indexOf(this.container.find(ch => ch.id === ID)), 1)
         return this
     }
 
     DeleteChannels(IDS){
-        IDS.forEach(ID => this.channels.splice(this.channels.indexOf(this.channels.find(ch => ch.id === ID)), 1))
+        IDS.forEach(ID => this.container.splice(this.container.indexOf(this.container.find(ch => ch.id === ID)), 1))
         return this
     }
 }

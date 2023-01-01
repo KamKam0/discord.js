@@ -12,7 +12,7 @@ class guildText extends TextBase{
         this.parent_id = channel.parent_id || null
         this.parent = this.parent_id ? bot.channels.get(this.parent_id) : null
         this.guild_id = channel.guild_id || null
-        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
+        this.guild = channel.guild || bot.guilds.get(this.guild_id) || null
         this.vguild_id = channel.guild ? channel.guild.vguild_id : null
     }
 

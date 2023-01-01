@@ -1,4 +1,4 @@
-const Thread = require("../Individual/Thread")
+const Thread = require("../Individual/Channels_/Channel_11")
 const Base = require("./baseMultiple")
 class Threads extends Base{
     constructor(_bot, guildid){

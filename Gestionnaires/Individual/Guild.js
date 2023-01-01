@@ -27,8 +27,6 @@ class Guild{
         this.verification_level = this.#typeverif(guild.verification_level)
         this.default_message_notifications = this.#typemesdef(guild.default_message_notifications)
         this.explicit_content_filter = this.#typeexpll(guild.explicit_content_filter)
-        this.roles = (new Roles(bot, this.id)).AddRoles(guild.roles)
-        this.emojis = (new Emojis(bot, this.id)).AddEmojis(guild.emojis)
         this.features = guild.features || []
         this.mfa_level = this.#typemfa(guild.mfa_level)
         this.application_id = guild.application_id
@@ -37,11 +35,6 @@ class Guild{
         this.rules_channel_id = guild.rules_channel_id || null
         this.joined_at = guild.joined_at
         this.unavailable = guild.unavailable ?? false
-        this.voice_states = (new Voices(bot, this.id)).AddVoices(guild.voice_states)
-        this.members = (new Members(bot, this.id)).AddMembers(guild.members)
-        this.channels = (new Channels(bot, this.id)).AddChannels(guild.channels)
-        this.threads = (new Threads(bot, this.id)).AddThreads(guild.threads)
-        this.presences = (new Presences(bot, this.id)).AddPresences(guild.presences)
         this.vanity_url_code = guild.vanity_url_code|| null
         this.description = guild.description || null
         this.banner = guild.banner || null
@@ -51,9 +44,16 @@ class Guild{
         this.public_updates_channel_id = guild.public_updates_channel_id || null
         this.welcome_screen = guild.welcome_screen || null
         this.nsfw_level = this.#typensfw(guild.nsfw_level)
-        this.stage_instances = (new StageInstances(bot, this.id)).AddStages(guild.stage_instances)
-        this.stickers = (new Stickers(bot, this.id)).AddStickers(guild.stickers)
-        this.guild_scheduled_events = (new Events(bot, this.id)).AddEvents(guild.guild_scheduled_events)
+        this.roles = (new Roles(bot, this.id)).AddRoles(guild.roles.map(el => { return {...el, guild: this}}))
+        this.emojis = (new Emojis(bot, this.id)).AddEmojis(guild.emojis.map(el => { return {...el, guild: this}}))
+        this.stickers = (new Stickers(bot, this.id)).AddStickers(guild.stickers.map(el => { return {...el, guild: this}}))
+        this.presences = (new Presences(bot, this.id)).AddPresences(guild.presences.map(el => { return {...el, guild: this}}))
+        this.channels = (new Channels(bot, this.id)).AddChannels(guild.channels.map(el => { return {...el, guild: this}}))
+        this.stage_instances = (new StageInstances(bot, this.id)).AddStages(guild.stage_instances.map(el => { return {...el, guild: this}}))
+        this.guild_scheduled_events = (new Events(bot, this.id)).AddEvents(guild.guild_scheduled_events.map(el => { return {...el, guild: this}}))
+        this.voice_states = (new Voices(bot, this.id)).AddVoices(guild.voice_states.map(el => { return {...el, guild: this}}))
+        this.members = (new Members(bot, this.id)).AddMembers(guild.members.map(el => { return {...el, guild: this}}))
+        this.threads = (new Threads(bot, this.id)).AddThreads(guild.threads.map(el => { return {...el, guild: this}}))
         this.premium_progress_bar_enabled = guild.premium_progress_bar_enabled ?? false
         this.messages = new Messages(bot, this.id)
         this.db_language = guild.db_language
@@ -72,6 +72,7 @@ class Guild{
             this.voice.playing = false;
             this.voice.connection.pause()
             this.voice.paused_since = Date.now()
+            this.voiceQueue._update(this.voice)
         }
     }
 
@@ -80,6 +81,7 @@ class Guild{
             this.voice.playing = true;
             this.voice.connection.unpause()
             this.voice.paused_since = null
+            this.voiceQueue._update(this.voice)
         }
     }
 
@@ -97,7 +99,8 @@ class Guild{
         
             this.voice.connection = player
             this.voice.resource = resource
-
+            this.voice.playing = true
+            this.voiceQueue._update(this.voice)
         }
 
     }

@@ -15,7 +15,7 @@ class Event{
         this.entity_id = event.entity_id
         this.entity_metadata = event.entity_metadata
         this.image = event.image || null
-        this.guild = this.guild_id ? bot.guilds.get(this.guild_id) : null
+        this.guild = event.guild || bot.guilds.get(this.guild_id) || null
         this.bot_token = bot.discordjs.token
         this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
