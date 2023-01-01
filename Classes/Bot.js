@@ -84,14 +84,14 @@ class Bot extends EventEmitter{
 
     async awaitInteractions(options){
         return new Promise((resolve, reject) => {
-            require("../../../../Classes/Collector")(this._bot, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
+            require("./Collector")(this, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
             .then(datas => resolve(datas))
             .catch(datas => reject(datas))
         })
     }
 
     collectInteractions(options){
-        return require("../../../../Classes/Collector").collect(this._bot, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
+        return require("./Collector").collect(this, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
     }
 
     #checkName(){
