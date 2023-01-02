@@ -38,17 +38,17 @@ module.exports.setactivity = async (bot, options) => {
 }
 
 module.exports.setpresence = async (bot, options) => {
-    console.log(1)
     if(!bot) return ({code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "Me"})
-    console.log(1)
     if(!options) return ({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Me"})
-    console.log(1)
     if(typeof options !== "object") return ({code: require("../DB/errors.json")["24"].code, message: require("../DB/errors.json")["24"].message, file: "Me"})
     console.log(1)
+    console.log(bot.state)
     if(bot.state !== "ready") return ({code: require("../DB/errors.json")["39"].code, message: require("../DB/errors.json")["39"].message, file: "Me"})
     console.log(1)
+    console.log(options.status)
     if(!options.status) return ({code: require("../DB/errors.json")["41"].code, message: require("../DB/errors.json")["41"].message, file: "Me"})
     console.log(1)
+    console.log(options.activities)
     if(!options.activities) return ({code: require("../DB/errors.json")["42"].code, message: require("../DB/errors.json")["42"].message, file: "Me"})
     console.log(1)
 

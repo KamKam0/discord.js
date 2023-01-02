@@ -196,8 +196,6 @@ class Bot extends EventEmitter{
     }
 
     SetPresence(options){
-        console.log("set presence - bot")
-        console.log(new Date(Date.now()).toLocaleString())
         return require("../Methods/me").setpresence(this, options)
     }
     

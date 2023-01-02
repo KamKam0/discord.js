@@ -51,6 +51,11 @@ module.exports = async (bot, datas) => {
       bot.channels.CheckChannels(datas)
       bot.users.CheckUsers(datas)
     }
+    if(bot.discordjs.available_ids.find(id => id.id === datas.id)){
+      bot.discordjs.available_ids = bot.discordjs.available_ids.filter(id => id.id !== datas.id)
+      bot.discordjs.guild_ids.find(gu => gu.id === datas.id).vid = datas.vguild_id
+      if(bot.discordjs.available_ids.length === 0) bot.state = "ready"
+    }
   }
 }
 
