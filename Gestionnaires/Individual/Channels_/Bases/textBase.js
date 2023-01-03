@@ -4,6 +4,14 @@ class TextBase extends Base{
         super(channel, bot)
     }
 
+    /**
+     * 
+     * @param {object} options
+     * @param {string} options.user_id
+     * @param {number} options.number
+     * @param {number} options.time
+     * @returns 
+     */
     async awaitMessages(options){
         return new Promise((resolve, reject) => {
             require("../../../../Classes/Collector")(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
@@ -12,10 +20,23 @@ class TextBase extends Base{
         })
     }
 
+    /**
+     * 
+     * @param {object} options
+     * @param {string} options.user_id
+     * @param {number} options.number
+     * @param {number} options.time
+     * @returns 
+     */
     collectMessages(options){
         return require("../../../../Classes/Collector").collect(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
     }
 
+    /**
+     * 
+     * @param {number} limit 
+     * @returns 
+     */
     fetchmessages(limit){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/message").fetch_messages(this.bot_token, this.id, limit, this._bot)
@@ -24,6 +45,11 @@ class TextBase extends Base{
         })
     }
     
+    /**
+     * 
+     * @param {string} ID 
+     * @returns 
+     */
     fetchmessage(ID){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/message").fetch_messages(this.bot_token, this.id, ID, this._bot)
@@ -32,6 +58,10 @@ class TextBase extends Base{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     getpins(){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").getpins(this.bot_token, this.id, this._bot)
@@ -40,6 +70,10 @@ class TextBase extends Base{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     triggertyping(){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").triggertyping(this.bot_token, this.id, this._bot)
@@ -48,6 +82,11 @@ class TextBase extends Base{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     send(options){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/message").send(this.bot_token, this.id, options, undefined, undefined, this._bot)
@@ -56,6 +95,11 @@ class TextBase extends Base{
         })
     }
 
+    /**
+     * 
+     * @param {object[]} options 
+     * @returns 
+     */
     edit(options){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").modify(this.bot_token, this.id, options, this._bot)

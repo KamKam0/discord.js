@@ -1,19 +1,44 @@
 const constants = require("../constants")
+
+/**
+ * 
+ * @param {*} token 
+ * @returns 
+ */
 function getbaseinfosre(token){
     const baseurl = GetApiURL()
     const baseheaders = GetHeaders(token, "basic")
     return {baseurl, baseheaders}
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @returns 
+ */
 function getbaseinfosrecp(token){
     const baseurl = GetApiURL()
     const baseheaders = GetHeaders(token, "file")
     return {baseurl, baseheaders}
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @returns 
+ */
 function getbaseinfosre_xww(token){
     const baseurl = GetApiURL()
     const baseheaders = GetHeaders(token, "url")
     return {baseurl, baseheaders}
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} type 
+ * @returns 
+ */
 function GetHeaders(token, type){
     const version = require("../index").version
     switch(type){
@@ -43,10 +68,16 @@ function GetHeaders(token, type){
         break;
     }
 }
+
 function GetApiURL(){
     return "https://discord.com/api/v10"
 }
 
+/**
+ * 
+ * @param {object[]} permissions 
+ * @returns 
+ */
 function get_bitfield(permissions){
     if(!Array.isArray(permissions)) return null
     if(!permissions[0]) return 0
@@ -58,6 +89,11 @@ function get_bitfield(permissions){
     return result
 }
 
+/**
+ * 
+ * @param {object[]} intents 
+ * @returns 
+ */
 function get_intents_n(intents){
     if(!Array.isArray(intents) && typeof intents !== "string" && intents !== "ALL") return "Incorrect Intents"
     let result = 0
@@ -73,6 +109,11 @@ function get_intents_n(intents){
     return result
 }
 
+/**
+ * 
+ * @param {number} bitfield 
+ * @returns 
+ */
 function get_badges(bitfield){
     if(!bitfield) return "Incorrect number"
     const ACFlags = Object.entries(constants.badges).sort(function(a,b) {
@@ -89,12 +130,22 @@ function get_badges(bitfield){
     return final_p
 }
 
+/**
+ * 
+ * @param {string} color 
+ * @returns 
+ */
 function check_color(color){
     let check = String(color).match(/^#([a-f0-9]{6}|[a-f0-9]{3})\b$/i)
     if(String(check) !== "null") return true
     else return false
 }
 
+/**
+ * 
+ * @param {number} bitfield 
+ * @returns 
+ */
 function bietfieldpermission(bitfield){
 
     const ACFlags = Object.entries(constants.permissions_bitfield).sort(function(a,b) {
@@ -111,6 +162,11 @@ function bietfieldpermission(bitfield){
     return final_p
 }
 
+/**
+ * 
+ * @param {string} Id 
+ * @returns 
+ */
 function check_id(Id){
     if(isNaN(Id)) return false
     if(typeof Id !== "string") return false
@@ -118,6 +174,11 @@ function check_id(Id){
     return true
 }
 
+/**
+ * 
+ * @param {object} overwrites 
+ * @returns 
+ */
 function check_overwrites(overwrites){
     if(!Array.isArray(overwrites)) return false
     if(overwrites.length === 0) return false
@@ -136,6 +197,11 @@ function check_overwrites(overwrites){
     return result_final
 }
 
+/**
+ * 
+ * @param {object} presence 
+ * @returns 
+ */
 function presence(presence){
     if(presence && typeof presence === "object"){
         let since = null
@@ -199,6 +265,13 @@ function presence(presence){
     }else return {activities: [], afk: false, status: "online", since: Date.now()}
 }
 
+/**
+ * 
+ * @param {string} id 
+ * @param {string} token 
+ * @param {object} bot 
+ * @returns 
+ */
 function channel_backup(id, token, bot){
     let channel = {
         id,
@@ -212,7 +285,7 @@ function channel_backup(id, token, bot){
 function check_options(structure, options){
     let error = {count: 0, state: true}
     return error
-    if(typeof options !== "object"){
+    /*if(typeof options !== "object"){
         error.count++
         error[`error_${error.count}`] = "Invalid type of options"
         error.state = false
@@ -233,8 +306,14 @@ function check_options(structure, options){
     else{
         error.state = false
         return error
-    }
+    }*/
 }
+
+/**
+ * 
+ * @param {object} options 
+ * @returns 
+ */
 
 function analyse_data(options){
     if(!options) return null
@@ -246,6 +325,12 @@ function analyse_data(options){
     else if(typeof options === "object" && (options.content || options.embeds || options.files || options.modal || options.components || options.sticker_ids)) return options
     else return null
 }
+
+/**
+ * 
+ * @param {object[]} embeds 
+ * @returns 
+ */
 function check_embed(embeds){
     if(!embeds) return []
     if(!Array.isArray(embeds)){
@@ -267,17 +352,35 @@ function check_embed(embeds){
     })
     return trueembeds
 }
+
+/**
+ * 
+ * @param {string} content 
+ * @returns 
+ */
 function check_content(content){
     if(!content) return null
     if(typeof content !== "string") return null
     if(content.length < 1 || content.length > 2000) return null
     return content
 }
+
+/**
+ * 
+ * @param {object[]} stickers 
+ * @returns 
+ */
 function check_stickers(stickers){
     if(!stickers) return []
     if(!Array.isArray(stickers)) return []
     return stickers
 }
+
+/**
+ * 
+ * @param {object[]} components 
+ * @returns 
+ */
 function check_components(components){
     if(!components) return []
     let defcompo = [
@@ -296,6 +399,12 @@ function check_components(components){
     }
     return defcompo
 }
+
+/**
+ * 
+ * @param {object[]} files 
+ * @returns 
+ */
 function check_files(files){
     if(!files) return []
     if(!Array.isArray(files)){
@@ -311,6 +420,12 @@ function check_files(files){
     })
     return truefiles
 }
+
+/**
+ * 
+ * @param {object} reference 
+ * @returns 
+ */
 function check_reference(reference){
     if(typeof reference !== "object") return null
     if(!reference.channel_id || !reference.message_id) return null

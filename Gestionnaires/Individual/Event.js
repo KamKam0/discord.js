@@ -75,7 +75,11 @@ class Event{
         }
     }
 
-
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modify(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/events").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
@@ -84,6 +88,10 @@ class Event{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/events").delete(this.bot_token, this.guild_id, this.id, this._bot)
@@ -96,6 +104,11 @@ class Event{
         return require("../../Methods/general").iconURL(this.id, this.image, "event")
     }
 
+    /**
+     * 
+     * @param {string} extension 
+     * @returns 
+     */
     displayIconURL(extension){
         return require("../../Methods/general").iconURL(this.id, this.image, "event", extension)
     }

@@ -31,6 +31,11 @@ class Channel extends Base{
         }
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     edit(options){
         return new Promise(async (resolve, reject) => {
             require("../../../Methods/channel").modify(this.bot_token, this.id, options, this._bot)
@@ -39,6 +44,11 @@ class Channel extends Base{
         })
     }
     
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     createthread(options){
         return new Promise(async (resolve, reject) => {
             require("../../../Methods/threads").create_tforum(this.bot_token, this.id, options, this._bot)

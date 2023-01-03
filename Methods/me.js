@@ -1,4 +1,11 @@
 const verify = require("../Utils/verify")
+
+/**
+ * 
+ * @param {string} token 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.getuser = async (token, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, type: "string", data_name: "token", order:1}, {value: bot, data_name: "bot", order: 2}], "GET", `users/@me`, this.getuser, "getuser me")
@@ -7,6 +14,12 @@ module.exports.getuser = async (token, bot) => {
     })
 }
 
+/**
+ * 
+ * @param {object} bot 
+ * @param {object} options 
+ * @returns 
+ */
 module.exports.setstatus = (bot, options) => {
     if(!bot) return ({code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "Me"})
     if(!options) return ({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Me"})
@@ -22,6 +35,12 @@ module.exports.setstatus = (bot, options) => {
     return 'complete'
 }
 
+/**
+ * 
+ * @param {object} bot 
+ * @param {object} options 
+ * @returns 
+ */
 module.exports.setactivity = async (bot, options) => {
     if(!bot) return ({code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "Me"})
     if(!options) return ({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Me"})
@@ -37,6 +56,12 @@ module.exports.setactivity = async (bot, options) => {
     return 'complete'
 }
 
+/**
+ * 
+ * @param {object} bot 
+ * @param {object} options 
+ * @returns 
+ */
 module.exports.setpresence = async (bot, options) => {
     if(!bot) return ({code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "Me"})
     if(!options) return ({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Me"})
@@ -63,6 +88,13 @@ module.exports.setpresence = async (bot, options) => {
     bot.discordjs.ws.send(JSON.stringify(body))
     return 'complete'
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @returns 
+ */
 module.exports.leave = async (token, guildid) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, type: "string", data_name: "token"}, {value: guildid, value_data: "id", type: "string", data_name: "guildid"}], "DELETE", `users/@me/guilds/${guildid}`, this.leave, "leave me")

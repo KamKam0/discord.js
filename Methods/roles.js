@@ -1,4 +1,14 @@
 const verify = require("../Utils/verify")
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} roleid 
+ * @param {string} memberid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.add = async (token, guildid, roleid, memberid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: roleid, value_data: "id", data_name: "roleid", order:3}, {value: memberid, value_data: "id", data_name: "memberid", order:4}, {value: bot, data_name: "bot", order: 5}], "PUT", `guilds/${guildid}/members/${memberid}/roles/${roleid}`, this.add, "add role")
@@ -6,6 +16,16 @@ module.exports.add = async (token, guildid, roleid, memberid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} roleid 
+ * @param {string} memberid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.remove = async (token, guildid, roleid, memberid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: roleid, value_data: "id", data_name: "roleid", order:3}, {value: memberid, value_data: "id", data_name: "memberid", order:4}, {value: bot, data_name: "bot", order: 5}], "DELETE", `guilds/${guildid}/members/${memberid}/roles/${roleid}`, this.remove, "remove role")
@@ -13,6 +33,15 @@ module.exports.remove = async (token, guildid, roleid, memberid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} roleid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.delete = async (token, guildid, roleid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: roleid, value_data: "id", data_name: "roleid", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/roles/${roleid}`, this.delete, "delete role")
@@ -20,6 +49,15 @@ module.exports.delete = async (token, guildid, roleid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.create = async (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order:3}, {value: bot, data_name: "bot", order: 4}], "POST", `guilds/${guildid}/roles`, this.create, "create role")
@@ -27,6 +65,15 @@ module.exports.create = async (token, guildid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.changepositions = async (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order:3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/roles`, this.changepositions, "changepositions role")
@@ -34,6 +81,16 @@ module.exports.changepositions = async (token, guildid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} roleid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.modify = async (token, guildid, roleid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: roleid, value_data: "id", data_name: "roleid", order:3}, {value: options, data_name: "options", order:4}, {value: bot, data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/roles/${roleid}`, this.modify, "modify role")

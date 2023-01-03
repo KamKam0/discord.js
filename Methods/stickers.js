@@ -1,4 +1,16 @@
 const verify = require("../Utils/verify")
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} name 
+ * @param {buffer} file 
+ * @param {object[]} tags 
+ * @param {string} description 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.create = async (token, guildid, name, file, tags, description, bot) => {//Cp
     return new Promise(async (resolve, reject) => {
         if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Stickers"})
@@ -37,6 +49,15 @@ module.exports.create = async (token, guildid, name, file, tags, description, bo
         else return resolve(new (require("../Gestionnaires/Individual/Sticker"))({...datas, token: token, guild_id: guildid}, bot))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} stickerid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.delete = async (token, guildid, stickerid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: stickerid, value_data: "id", data_name: "stickerid", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/stickers/${stickerid}`, this.delete, "delete sticker")
@@ -44,6 +65,16 @@ module.exports.delete = async (token, guildid, stickerid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} stickerid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.modify = async (token, guildid, stickerid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: stickerid, value_data: "id", data_name: "stickerid", order:3}, {value: options, data_name: "options", order: 4}, {value: bot, data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/stickers/${stickerid}`, this.modify, "modify sticker")

@@ -8,6 +8,13 @@ class Channel extends TetxBase{
         this.owner_id = channel.owner_id
     }
 
+    /**
+     * 
+     * @param {string} userid 
+     * @param {string} nick 
+     * @param {string} accesstoken 
+     * @returns 
+     */
     addmember(userid, nick, accesstoken){
         return new Promise(async (resolve, reject) => {
             require("../../../Methods/dm").adduser(this.bot_token, this.id, userid, nick, accesstoken, this._bot)
@@ -16,6 +23,11 @@ class Channel extends TetxBase{
         })
     }
 
+    /**
+     * 
+     * @param {string} userid 
+     * @returns 
+     */
     removemember(userid){
         return new Promise(async (resolve, reject) => {
             require("../../../Methods/dm").removeuser(this.bot_token, this.id, userid, this._bot)

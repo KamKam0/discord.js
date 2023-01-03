@@ -4,6 +4,11 @@ class StageInstances extends BaseStage{
         super(bot, guild_id)
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     create(options){
         return new Promise(async (resolve, reject) => {
             require("../Methods/stages").create(this._bot.discordjs.token, this.guild_id, options, this._bot)

@@ -4,6 +4,11 @@ class Channel extends GuildVoice{
         super(channel, bot)
     }
     
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     send(options){
         return new Promise(async (resolve, reject) => {
             require("../../../Methods/message").send(this.bot_token, this.id, options, undefined, undefined, this._bot)
@@ -12,6 +17,11 @@ class Channel extends GuildVoice{
         })
     }
 
+    /**
+     * 
+     * @param {number} limit 
+     * @returns 
+     */
     fetchmessages(limit){
         return new Promise(async (resolve, reject) => {
             require("../../../Methods/message").fetch_messages(this.bot_token, this.id, limit, this._bot)
@@ -20,6 +30,11 @@ class Channel extends GuildVoice{
         })
     }
     
+    /**
+     * 
+     * @param {string} ID 
+     * @returns 
+     */
     fetchmessage(ID){
         return new Promise(async (resolve, reject) => {
             require("../../../Methods/message").fetch_messages(this.bot_token, this.id, ID, this._bot)
@@ -28,6 +43,11 @@ class Channel extends GuildVoice{
         })
     }
     
+    /**
+     * 
+     * @param {number} number 
+     * @returns 
+     */
     bulkdelete(number){
         return new Promise(async (resolve, reject) => {
             require("../../../Methods/message").fetch_messages(this.bot_token, this.id, number, this._bot)

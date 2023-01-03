@@ -22,6 +22,11 @@ class Emoji{
         return this
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modify(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/emoji").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
@@ -30,6 +35,10 @@ class Emoji{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/emoji").delete(this.bot_token, this.guild_id, this.id, this._bot)

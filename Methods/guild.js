@@ -1,4 +1,12 @@
 const verify = require("../Utils/verify")
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} inviteid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.deleteinvite = async (token, inviteid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: inviteid, value_data: "id", data_name: "inviteid", order:2}, {value: bot, data_name: "bot", order: 3}], "DELETE", `invites/${inviteid}`, this.deleteinvite, "deleteinvite guild")
@@ -6,6 +14,15 @@ module.exports.deleteinvite = async (token, inviteid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.modify = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}`, this.modify, "modify guild")
@@ -13,6 +30,14 @@ module.exports.modify = (token, guildid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.delete = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "DELETE", `guilds/${guildid}`, this.delete, "delete guild")
@@ -20,6 +45,15 @@ module.exports.delete = (token, guildid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.changechposition = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/channels`, this.changechposition, "changechposition guild")
@@ -27,6 +61,16 @@ module.exports.changechposition = (token, guildid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} userid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.addmember = (token, guildid, userid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: userid, value_data: "id", data_name: "userid", order:3}, {value: options, data_name: "options", order: 4}, {value: bot, data_name: "bot", order: 5}], "PUT", `guilds/${guildid}/members/${userid}`, this.addmember, "addmember guild")
@@ -34,6 +78,16 @@ module.exports.addmember = (token, guildid, userid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} userid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.modifymember = (token, guildid, userid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: userid, value_data: "id", data_name: "userid", order:3}, {value: options, data_name: "options", order: 4}, {value: bot, data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/members/${userid}`, this.modifymember, "modifymember guild")
@@ -41,6 +95,15 @@ module.exports.modifymember = (token, guildid, userid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} nick 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.modifycurrentmember = (token, guildid, nick, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: nick, data_name: "nick", value_data: "id", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/members/@me`, this.modifycurrentmember, "modifycurrentmember guild")
@@ -48,6 +111,15 @@ module.exports.modifycurrentmember = (token, guildid, nick, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.prune = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "POST", `guilds/${guildid}/prune`, this.prune, "prune guild")
@@ -55,6 +127,14 @@ module.exports.prune = (token, guildid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.getinvites = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/invites`, this.getinvites, "getinvites guild")
@@ -66,6 +146,14 @@ module.exports.getinvites = (token, guildid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.getintegrations = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/integrations`, this.getintegrations, "getintegrations guild")
@@ -77,6 +165,15 @@ module.exports.getintegrations = (token, guildid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} integrationid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.deleteintegration = (token, guildid, integrationid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: integrationid, value_data: "id", data_name: "integrationid", order: 3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/integrations/${integrationid}`, this.deleteintegration, "deleteintegration guild")
@@ -84,6 +181,14 @@ module.exports.deleteintegration = (token, guildid, integrationid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.getwidgetsttings = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/widget`, this.getwidgetsttings, "getwidgetsttings guild")
@@ -91,6 +196,14 @@ module.exports.getwidgetsttings = (token, guildid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.getwidget = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: integrationid, value_data: "id", data_name: "integrationid", order: 3}, {value: bot, data_name: "bot", order: 4}], "GET", `guilds/${guildid}/widget.json`, this.getwidget, "getwidget guild")
@@ -98,6 +211,14 @@ module.exports.getwidget = (token, guildid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.getwidgetpng = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: integrationid, value_data: "id", data_name: "integrationid", order: 3}, {value: bot, data_name: "bot", order: 4}], "GET", `guilds/${guildid}/widget.png`, this.getwidgetpng, "getwidgetpng guild")
@@ -105,6 +226,15 @@ module.exports.getwidgetpng = (token, guildid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.modifywidget = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/widget`, this.modifywidget, "modifywidget guild")
@@ -112,6 +242,14 @@ module.exports.modifywidget = (token, guildid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.getvanity = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/vanity-url`, this.getvanity, "getvanity guild")
@@ -119,6 +257,14 @@ module.exports.getvanity = (token, guildid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.getwelcomescreen = (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/welcome-screen`, this.getwelcomescreen, "getwelcomescreen guild")
@@ -126,6 +272,15 @@ module.exports.getwelcomescreen = (token, guildid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.modifywelcomescreen = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/welcome-screen`, this.modifywelcomescreen, "modifywelcomescreen guild")
@@ -133,6 +288,16 @@ module.exports.modifywelcomescreen = (token, guildid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} userid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.modifyuservoice = (token, guildid, userid,  options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: userid, value_data: "id", data_name: "userid", order:3}, {value: options, data_name: "options", order: 4}, {value: bot, data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/voice-states/${userid}`, this.modifyuservoice, "modifyuservoice guild")

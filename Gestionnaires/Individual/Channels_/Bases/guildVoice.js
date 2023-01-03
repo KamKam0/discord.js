@@ -7,6 +7,11 @@ class guildVoice extends Base{
         this.rtc_region = channel.rtc_region
     }
 
+    /**
+     * 
+     * @param {boolean} deaf 
+     * @param {boolean} mute 
+     */
     join(deaf, mute){
         const {joinVoiceChannel} = require("@discordjs/voice")
         let guild = this._bot.guilds.get(this.guild_id)

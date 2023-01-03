@@ -47,7 +47,10 @@ class Integration{
         return this
     }
     
-
+    /**
+     * 
+     * @returns 
+     */
     delete(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").deleteintegration(this.bot_token, this.guild_id, this.id, this._bot)

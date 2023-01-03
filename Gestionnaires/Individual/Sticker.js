@@ -25,6 +25,11 @@ class Sticker{
         return this
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modify(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/stickers").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
@@ -33,6 +38,10 @@ class Sticker{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/stickers").delete(this.bot_token, this.guild_id, this.id, this._bot)

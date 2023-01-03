@@ -1,3 +1,8 @@
+/**
+ * 
+ * @param {object} options 
+ * @returns 
+ */
 module.exports = async (options) => {
     if(typeof options !== "object" || !options.value || typeof options.value !== "object" || !options.check || !Array.isArray(options.check)) return undefined
     let [values, checks] = [Object.entries(options.value), options.check]

@@ -24,6 +24,11 @@ class Template{
         return this
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     createguildfrom(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").createguild(this.bot_token, this.source_guild_id, this.code, options, this._bot)
@@ -32,6 +37,10 @@ class Template{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     sync(){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").sync(this.bot_token, this.source_guild_id, this.code, this._bot)
@@ -40,6 +49,11 @@ class Template{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modify(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").modify(this.bot_token, this.source_guild_id, this.code, options, this._bot)
@@ -48,6 +62,10 @@ class Template{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     deletetemplate(){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").delete(this.bot_token, this.source_guild_id, this.code, this._bot)

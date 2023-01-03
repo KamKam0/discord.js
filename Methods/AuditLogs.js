@@ -1,3 +1,10 @@
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} bot 
+ * @returns
+ */
 module.exports = async (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         require("../Utils/verify")([{value: token, data_name: "token", order: 1}, {value: guildid, value_data: "id", data_name: "guildid", order: 2}, {value: bot, data_name: "bot", order: 3}], "get", `guilds/${guildid}/audit-logs`, this, "audit-logs")

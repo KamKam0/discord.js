@@ -45,6 +45,10 @@ class Invite{
         return this
     }
 
+    /**
+     * 
+     * @returns 
+     */
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/guild").deleteinvite(this.bot_token, this.id, this._bot)

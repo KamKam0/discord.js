@@ -164,22 +164,11 @@ class Guild{
         })
         return this
     }
-    /*
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined"){
-                if(e[0] === "entity_type"){
-                    if(this[e[0]] !== this.type(e[1])) this[e[0]] = this.type(e[1])
-                }
-                else if(e[0] === "status"){
-                    if(this[e[0]] !== this.status(e[1])) this[e[0]] = this.status(e[1])
-                }
-                else if(e[0] === "privacy_level"){
-                    if(this[e[0]] !== this.privacy(e[1])) this[e[0]] = this.privacy(e[1])
-                }
-                else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
-            }
-        })*/
 
+    /**
+     * 
+     * @returns 
+     */
     fetchbans(){
         return new Promise((resolve, reject) => {
             require("../../Methods/ban").fetch(this.bot_token, this.id, this._bot)
@@ -188,6 +177,11 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @param {string} ID 
+     * @returns 
+     */
     fetchban(ID){
         return new Promise((resolve, reject) => {
             require("../../Methods/ban").fetchspe(this.bot_token, this.id, ID, this._bot)
@@ -196,6 +190,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     fetchauditlogs(){
         return new Promise((resolve, reject) => {
             require("../../Methods/AuditLogs")(this.bot_token, this.id, this._bot)
@@ -204,6 +202,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     leave(){
         return new Promise((resolve, reject) => {
             require("../../Methods/me").leave(this.bot_token, this.id, this._bot)
@@ -212,6 +214,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     createtemplate(){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").create(this.bot_token, this.id, this._bot)
@@ -220,6 +226,11 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @param {string} templatecode 
+     * @returns 
+     */
     gettemplate(templatecode){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").get(this.bot_token, this.id, templatecode, this._bot)
@@ -228,6 +239,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     gettemplates(){
         return new Promise((resolve, reject) => {
             require("../../Methods/template").getall(this.bot_token, this.id, this._bot)
@@ -236,6 +251,12 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @param {string} channelid 
+     * @param {object} options 
+     * @returns 
+     */
     createwebhook(channelid, options){
         return new Promise((resolve, reject) => {
             require("../../Methods/webhooks").create(this.bot_token, channelid, options, this._bot)
@@ -244,6 +265,11 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @param {string} channelid 
+     * @returns 
+     */
     getwebhook(channelid){
         return new Promise((resolve, reject) => {
             require("../../Methods/webhooks").get(this.bot_token, channelid, this._bot)
@@ -252,6 +278,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     getinvites(){
         return new Promise((resolve, reject) => {
             require("../../Methods/guild").getinvites(this.bot_token, this.id, this._bot)
@@ -260,6 +290,11 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modify(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/guild").modify(this.bot_token, this.id, options, this._bot)
@@ -268,6 +303,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/guild").delete(this.bot_token, this.id, this._bot)
@@ -276,6 +315,12 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @param {string} userid 
+     * @param {object} options 
+     * @returns 
+     */
     addmember(userid, options){
         return new Promise((resolve, reject) => {
             require("../../Methods/guild").addmember(this.bot_token, this.id, userid, options, this._bot)
@@ -284,6 +329,11 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modifybot(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").modifycurrentmember(this.bot_token, this.id, this._bot.user.id, options, this._bot)
@@ -292,6 +342,11 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     prune(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").prune(this.bot_token, this.id, options, this._bot)
@@ -300,6 +355,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     getintegrations(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getintegrations(this.bot_token, this.id, this._bot)
@@ -308,6 +367,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     getwidgetsettings(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getwidgetsttings(this.bot_token, this.id, this._bot)
@@ -316,6 +379,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     getwidgetPNG(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getwidgetpng(this.bot_token, this.id, this._bot)
@@ -324,6 +391,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     getwidget(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getwidget(this.bot_token, this.id, this._bot)
@@ -332,6 +403,11 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modifywidget(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").modifywidget(this.bot_token, this.id, options, this._bot)
@@ -340,6 +416,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     getvanity(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getvanity(this.bot_token, this.id, this._bot)
@@ -348,6 +428,10 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     getwelcomescreen(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").getwelcomescreen(this.bot_token, this.id, this._bot)
@@ -356,6 +440,11 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modifywelcomescreen(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").modifywelcomescreen(this.bot_token, this.id, options, this._bot)
@@ -364,6 +453,12 @@ class Guild{
         })
     }
 
+    /**
+     * 
+     * @param {string} userid 
+     * @param {object} options 
+     * @returns 
+     */
     modifyuservoice(userid, options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").modifyuservoice(this.bot_token, this.id, userid, options, this._bot)
@@ -388,14 +483,29 @@ class Guild{
         return require("../../Methods/general").createdAt(this.id, "guild")
     }
 
+    /**
+     * 
+     * @param {string} extension 
+     * @returns 
+     */
     displayIconURL(extension){
         return require("../../Methods/general").iconURL(this.id, this.icon, "guild", extension)
     }
 
+    /**
+     * 
+     * @param {string} extension 
+     * @returns 
+     */
     displayBannerURL(extension){
         return require("../../Methods/general").iconURL(this.id, this.icon, "gbanner", extension)
     }
 
+    /**
+     * 
+     * @param {string} extension 
+     * @returns 
+     */
     displaySplashURL(extension){
         return require("../../Methods/general").iconURL(this.id, this.icon, "splash", extension)
     }

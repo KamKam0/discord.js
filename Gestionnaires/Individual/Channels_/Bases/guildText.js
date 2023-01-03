@@ -16,6 +16,11 @@ class guildText extends TextBase{
         this.vguild_id = channel.guild ? channel.guild.vguild_id : null
     }
 
+    /**
+     * 
+     * @param {number} number 
+     * @returns 
+     */
     bulkdelete(number){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/message").fetch_messages(this.bot_token, this.id, number, this._bot)
@@ -28,6 +33,11 @@ class guildText extends TextBase{
         })
     }
 
+    /**
+     * 
+     * @param {string} targetid 
+     * @returns 
+     */
     follownewsChannel(targetid){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").follownews(this.bot_token, this.id, targetid, this._bot)
@@ -36,6 +46,10 @@ class guildText extends TextBase{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     getinvites(){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").getinvites(this.bot_token, this.id, this._bot)
@@ -44,6 +58,10 @@ class guildText extends TextBase{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     createinvites(){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").createinvite(this.bot_token, this.id, this._bot)
@@ -52,6 +70,11 @@ class guildText extends TextBase{
         })
     }
 
+    /**
+     * 
+     * @param {object} overwrites 
+     * @returns 
+     */
     editpermissions(overwrites){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").editpermissions(this.bot_token, this.id, overwrites, this._bot)
@@ -60,6 +83,11 @@ class guildText extends TextBase{
         })
     }
 
+    /**
+     * 
+     * @param {object} overwrites 
+     * @returns 
+     */
     deletepermissions(overwrites){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").deletepermission(this.bot_token, this.id, overwrites, this._bot)

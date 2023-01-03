@@ -43,6 +43,11 @@ class Webhook{
         return this
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     execute(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/webhooks").create(this.bot_token, this, options, this._bot)
@@ -51,6 +56,11 @@ class Webhook{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modify(options){
         return new Promise((resolve, reject) => {
             require("../Methods/webhooks").modify(this.bot_token, this.id, options, this._bot)
@@ -59,6 +69,10 @@ class Webhook{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/webhooks").delete(this.bot_token, this.id, this._bot)

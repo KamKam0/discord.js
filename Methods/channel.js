@@ -1,4 +1,13 @@
 const verify = require("../Utils/verify")
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} channelid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.modify = (token, channelid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order: 1}, {value: channelid, value_data: "id", data_name: "channelid", order: 2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `channels/${channelid}`, this.modify, "modify channel")
@@ -6,6 +15,15 @@ module.exports.modify = (token, channelid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} channelid 
+ * @param {object[]} ids 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.bulkdelete = (token, channelid, ids, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order: 1}, {value: channelid, value_data: "id", data_name: "channelid", order: 2}, {value: {messages: ids}, data_name: "options"}, {value: ids, type: "array", data_name: "ids", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `channels/${channelid}/messages/bulk-delete`, this.bulkdelete, "bulkdelete channel")
@@ -13,6 +31,15 @@ module.exports.bulkdelete = (token, channelid, ids, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} channelid 
+ * @param {object} bot 
+ * @returns 
+ */
+
 module.exports.getinvites = (token, channelid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order: 1}, {value: channelid, value_data: "id", data_name: "channelid", order: 2}, {value: bot, data_name: "bot", order: 3}], "GET", `channels/${channelid}/invites`, this.getinvites, "getinvites channel")
@@ -24,6 +51,14 @@ module.exports.getinvites = (token, channelid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string*} channelid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.createinvite = (token, channelid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: bot, data_name: "bot", order: 3}, {value: {}, data_name: "options"}], "POST", `channels/${channelid}/invites`, this.createinvite, "createinvite channel")
@@ -31,6 +66,15 @@ module.exports.createinvite = (token, channelid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} channelid 
+ * @param {object} newoverwrite 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.editpermissions = (token, channelid, newoverwrite, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: newoverwrite, value_data: "newoverwrite", type: "array", data_name: "options", order:3}, {value: bot, data_name: "bot", order: 4}], "PUT", `channels/${channelid}/permissions/${newoverwrite.id}`, this.editpermissions, "editpermissions channel")
@@ -38,6 +82,15 @@ module.exports.editpermissions = (token, channelid, newoverwrite, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} channelid 
+ * @param {object} newoverwrite 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.deletepermission = (token, channelid, overwrite, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: overwrite, value_data: "overwrite", type: "array", data_name: "options", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `channels/${channelid}/permissions/${overwrite.id}`, this.deletepermission, "deletepermission channel")
@@ -45,6 +98,15 @@ module.exports.deletepermission = (token, channelid, overwrite, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} channelid 
+ * @param {string} targetid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.follownews = (token, channelid, targetid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: targetid, value_data: "id", data_name: "targetid", order:3}, {value: {webhook_channel_id: targetid}, data_name: "options"}, {value: bot, data_name: "bot", order: 4}], "POST", `channels/${channelid}/followers`, this.follownews, "follownews channel")
@@ -52,6 +114,14 @@ module.exports.follownews = (token, channelid, targetid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} channelid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.getpins = (token, channelid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: bot, data_name: "bot", order: 3}], "POST", `channels/${channelid}/pins`, this.getpins, "getpins channel")
@@ -63,6 +133,14 @@ module.exports.getpins = (token, channelid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} channelid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.triggertyping = (token, channelid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: bot, data_name: "bot", order: 3}], "POST", `channels/${channelid}/typing`, this.triggertyping, "triggertyping channel")
@@ -74,6 +152,15 @@ module.exports.triggertyping = (token, channelid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.create = (token, guildid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, value_data: "options", data_name: "options", order:3}, {value: bot, data_name: "bot", order: 4}], "POST", `guilds/${guildid}`, this.create, "create channel")

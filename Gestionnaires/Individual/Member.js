@@ -28,6 +28,11 @@ class Member{
         return this
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     kick(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/kick")(this.bot_token, this.guild_id, this.user_id, options, this._bot)
@@ -36,6 +41,11 @@ class Member{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     ban(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/ban").ban(this.bot_token, this.guild_id, this.user_id, options, this._bot)
@@ -44,6 +54,11 @@ class Member{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     send(options){
         return new Promise(async (resolve, reject) => {
             if(this.user.dm){
@@ -65,6 +80,11 @@ class Member{
         })
     }
     
+    /**
+     * 
+     * @param {number} time 
+     * @returns 
+     */
     mute(time){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/mute").mute(this.bot_token, this.guild_id, this.user_id, time, this._bot)
@@ -73,6 +93,10 @@ class Member{
         })
     }
     
+    /**
+     * 
+     * @returns 
+     */
     unmute(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/mute").unmute(this.bot_token, this.guild_id, this.user_id, this._bot)
@@ -81,15 +105,30 @@ class Member{
         })
     }
 
+    /**
+     * 
+     * @param {object[]} permission 
+     * @returns 
+     */
     haspermission(permission){
         return require("../../Methods/permissions").wawper(this.guild, this.user_id, permission, this._bot)
     }
 
+    /**
+     * 
+     * @param {string} ID 
+     * @returns 
+     */
     hasrole(ID){
         if(!this.roles.includes(ID)) return false
         else return true
     }
 
+    /**
+     * 
+     * @param {string} roleid 
+     * @returns 
+     */
     addrole(roleid){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/roles").add(this.bot_token, this.guild_id, roleid, this.user_id, this._bot)
@@ -98,6 +137,11 @@ class Member{
         })
     }
 
+    /**
+     * 
+     * @param {string} roleid 
+     * @returns 
+     */
     removerole(roleid){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/roles").remove(this.bot_token, this.guild_id, roleid, this.user_id, this._bot)
@@ -106,6 +150,11 @@ class Member{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modify(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/guild").modifymember(this.bot_token, this.guild_id, this.user_id, options, this._bot)
@@ -119,6 +168,11 @@ class Member{
         return require("../../Methods/general").iconURL({guild_id: this.guild_id, user_id: this.user_id}, this.avatar, "member")
     }
 
+    /**
+     * 
+     * @param {string} extension 
+     * @returns 
+     */
     displayAvatarURL(extension){
         return require("../../Methods/general").iconURL({guild_id: this.guild_id, user_id: this.user_id}, this.avatar, "member", extension)
     }

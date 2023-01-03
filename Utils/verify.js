@@ -1,3 +1,13 @@
+/**
+ * 
+ * @param {(string|object|object[])} args 
+ * @param {string} method 
+ * @param {string} url 
+ * @param {function} fonction 
+ * @param {string} name 
+ * @param {string} baseinfo 
+ * @returns 
+ */
 module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
     return new Promise(async (resolve, reject) => {
         const errors = require("../DB/errors.json")

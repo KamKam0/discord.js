@@ -31,6 +31,11 @@ class base{
         return this
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     reply(options){
         return new Promise((resolve, reject) => {
             require("../../../Methods/interaction").reply(this.bot_token, this, options, this._bot)
@@ -39,6 +44,11 @@ class base{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modifyreply(options){
         return new Promise((resolve, reject) => {
             require("../../../Methods/interaction").modifyreply(this.bot_token, this.bot_id, this, options, this._bot)
@@ -47,6 +57,10 @@ class base{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     deletereply(){
         return new Promise((resolve, reject) => {
             require("../../../Methods/interaction").deletereply(this.bot_token, this.bot_id, this, this._bot)
@@ -59,7 +73,7 @@ class base{
         return  require("../../../Methods/general").createdAt(this.id, "interaction")
     }
 
-    SendSpe(msg, truetype, type){
+    #SendSpe(msg, truetype, type){
         return new Promise(async (resolve, reject) => {
             if(!type) type = "reply"
             let embed = new (require("../../../Classes/Embed"))()
@@ -106,42 +120,71 @@ class base{
         })
     }
 
-
+    /**
+     * 
+     * @param {string} msg 
+     * @param {string} [type=reply]
+     * @returns 
+     */
     error(msg, type){
         return new Promise(async (resolve, reject) => {
-            this.SendSpe(msg, "error", type)
+            this.#SendSpe(msg, "error", type)
             .catch(err => reject(err))
             .then(datas => resolve(datas))
         })
     }
 
+    /**
+     * 
+     * @param {string} msg 
+     * @param {string} [type=reply]
+     * @returns 
+     */
     success(msg, type){
         return new Promise(async (resolve, reject) => {
-            this.SendSpe(msg, "success", type)
+            this.#SendSpe(msg, "success", type)
             .catch(err => reject(err))
             .then(datas => resolve(datas))
         })
     }
 
+    /**
+     * 
+     * @param {string} msg 
+     * @param {string} [type=reply]
+     * @returns 
+     */
     warn_se(msg, type){
         return new Promise(async (resolve, reject) => {
-            this.SendSpe(msg, "warn", type)
+            this.#SendSpe(msg, "warn", type)
             .catch(err => reject(err))
             .then(datas => resolve(datas))
         })
     }
 
+    /**
+     * 
+     * @param {string} msg 
+     * @param {string} [type=reply]
+     * @returns 
+     */
     info(msg, type){
         return new Promise(async (resolve, reject) => {
-            this.SendSpe(msg, "info", type)
+            this.#SendSpe(msg, "info", type)
             .catch(err => reject(err))
             .then(datas => resolve(datas))
         })
     }
 
+    /**
+     * 
+     * @param {string} msg 
+     * @param {string} [type=reply]
+     * @returns 
+     */
     wait(msg, type){
         return new Promise(async (resolve, reject) => {
-            this.SendSpe(msg, "wait", type)
+            this.#SendSpe(msg, "wait", type)
             .catch(err => reject(err))
             .then(datas => resolve(datas))
         })

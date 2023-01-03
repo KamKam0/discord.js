@@ -148,6 +148,14 @@ module.exports.modifycommand = async (token, ID,  options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {object} object 
+ * @param {boolean} state 
+ * @param {object[]} languages 
+ * @returns 
+ */
 module.exports.VerifyInteraction = (object, state, languages) => {
     if(typeof object !== "object") return {errors: [{err: "invalid object"}], status: false}
     let first = check_command(object, state, languages)

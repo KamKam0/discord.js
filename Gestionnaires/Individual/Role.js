@@ -26,6 +26,10 @@ class Role{
         return this
     }
     
+    /**
+     * 
+     * @returns 
+     */
     delete(){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/roles").delete(this.bot_token, this.guild_id, this.id, this._bot)
@@ -34,6 +38,11 @@ class Role{
         })
     }
     
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modify(options){
         return new Promise(async (resolve, reject) => {
             require("../../Methods/roles").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
@@ -46,6 +55,11 @@ class Role{
         return require("../../Methods/general").iconURL(this.id, this.icon, "role")
     }
 
+    /**
+     * 
+     * @param {string} extension 
+     * @returns 
+     */
     displayIconURL(extension){
         return require("../../Methods/general").iconURL(this.id, this.icon, "role", extension)
     }

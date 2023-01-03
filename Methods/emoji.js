@@ -1,4 +1,15 @@
 const verify = require("../Utils/verify")
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} name 
+ * @param {buffer} imagedata 
+ * @param {object[]} roles 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.create = async (token, guildid, name, imagedata, roles, bot) => {//cp
     return new Promise(async (resolve, reject) => {
         if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Emoji"})
@@ -36,6 +47,15 @@ module.exports.create = async (token, guildid, name, imagedata, roles, bot) => {
         else return resolve(new (require("../Gestionnaires/Individual/Emoji")({...datas, guild_id: guildid, token: token}, bot)))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} emojiid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.delete = async (token, guildid, emojiid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: emojiid, value_data: "id", data_name: "emojiid", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/emojis/${emojiid}`, this.delete, "delete emoji")
@@ -43,6 +63,17 @@ module.exports.delete = async (token, guildid, emojiid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} guildid 
+ * @param {string} emojiid 
+ * @param {object} options 
+ * @param {string} options.name
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.modify = async (token, guildid, emojiid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: emojiid, value_data: "id", data_name: "emojiid", order:3}, {value: options, data_name: "options", order:4}, {value: bot, data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/emojis/${emojiid}`, this.delete, "delete emoji")

@@ -13,6 +13,11 @@ class baseGuild extends BaseGuild{
         this.last_message_id = channel.last_message_id || null
     }
 
+    /**
+     * 
+     * @param {string} memberid 
+     * @returns 
+     */
     removemember(memberid){
         return new Promise((resolve, reject) => {
             require("../../Methods/threads").removethreadmember(this.bot_token, this.id, memberid, this._bot)
@@ -21,6 +26,10 @@ class baseGuild extends BaseGuild{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     leave(){
         return new Promise((resolve, reject) => {
             require("../../Methods/threads").leavethread(this.bot_token, this.id, memberid, this._bot)
@@ -29,6 +38,11 @@ class baseGuild extends BaseGuild{
         })
     }
 
+    /**
+     * 
+     * @param {string} memberid 
+     * @returns 
+     */
     addmember(memberid){
         return new Promise((resolve, reject) => {
             require("../../Methods/threads").addthreadmember(this.bot_token, this.id, memberid, this._bot)

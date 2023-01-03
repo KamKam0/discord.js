@@ -1,3 +1,11 @@
+/**
+ * 
+ * @param {string} ids 
+ * @param {string} [link=null] 
+ * @param {string} type
+ * @param {string} [extension=png]
+ * @returns 
+ */
 module.exports.iconURL = (ids, link, type, extension) => {
     if(!ids) return {code: require("../DB/errors.json")["13"].code, message: require("../DB/errors.json")["13"].message, file: "General"}
     if(!type) return {code: require("../DB/errors.json")["77"].code, message: require("../DB/errors.json")["77"].message, file: "General"}
@@ -48,6 +56,11 @@ module.exports.iconURL = (ids, link, type, extension) => {
     }
 }
 
+/**
+ * 
+ * @param {string} id 
+ * @returns 
+ */
 module.exports.createdAt = (id) => {
     if(!id) return ({code: require("../DB/errors.json")["13"].code, message: require("../DB/errors.json")["13"].message, file: "General"})
     if(!require("../Utils/functions").check_id(id)) return {code: require("../DB/errors.json")["81"].code, message: require("../DB/errors.json")["81"].message, file: "General"}

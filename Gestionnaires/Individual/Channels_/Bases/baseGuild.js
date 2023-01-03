@@ -13,6 +13,10 @@ class baseGuild extends Base{
         this.vguild_id = channel.guild ? channel.guild.vguild_id : null
     }
 
+    /**
+     * 
+     * @returns 
+     */
     getinvites(){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").getinvites(this.bot_token, this.id, this._bot)
@@ -21,7 +25,11 @@ class baseGuild extends Base{
         })
     }
 
-    createinvites(){
+    /**
+     * 
+     * @returns 
+     */
+    createinvite(){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").createinvite(this.bot_token, this.id, this._bot)
             .catch(err => reject(err))
@@ -29,6 +37,11 @@ class baseGuild extends Base{
         })
     }
 
+    /**
+     * 
+     * @param {object} overwrites 
+     * @returns 
+     */
     editpermissions(overwrites){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").editpermissions(this.bot_token, this.id, overwrites, this._bot)
@@ -37,6 +50,11 @@ class baseGuild extends Base{
         })
     }
 
+    /**
+     * 
+     * @param {object} overwrites 
+     * @returns 
+     */
     deletepermissions(overwrites){
         return new Promise(async (resolve, reject) => {
             require("../../../../Methods/channel").deletepermission(this.bot_token, this.id, overwrites, this._bot)

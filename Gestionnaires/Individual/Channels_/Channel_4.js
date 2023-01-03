@@ -11,6 +11,11 @@ class Channel extends Base{
         this.vguild_id = this.guild ? this.guild.vguild_id : null
     }
     
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     edit(options){
         return new Promise(async (resolve, reject) => {
             require("../../../Methods/channel").modify(this.bot_token, this.id, options, this._bot)

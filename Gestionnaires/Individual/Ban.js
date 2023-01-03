@@ -19,6 +19,11 @@ class Ban{
         return this
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     unban(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/ban").unban(this.bot_token, this.guild.id, this.user.id, options, this._bot)

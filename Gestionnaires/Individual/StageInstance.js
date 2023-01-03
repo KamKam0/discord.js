@@ -21,6 +21,11 @@ class StageInstance{
         return this
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modify(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/stages").modify(this.bot_token, this.guild_id, this.id, options, this._bot)
@@ -29,6 +34,10 @@ class StageInstance{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/stages").delete(this.bot_token, this.guild_id, this.id, this._bot)

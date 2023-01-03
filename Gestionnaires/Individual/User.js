@@ -28,6 +28,11 @@ class User{
         return this
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     send(options){
         return new Promise(async (resolve, reject) => {
             if(this.dm){
@@ -59,6 +64,10 @@ class User{
         else return {state: true, errors: null}
     }
 
+    /**
+     * 
+     * @returns 
+     */
     displayPublicFlags(){
         if(this.public_flags === 0) return []
         let badges = require("../../Utils/functions").get_badges(this.public_flags)
@@ -77,10 +86,20 @@ class User{
         return require("../../Methods/general").iconURL(this.id, this.banner, "ubanner")
     }
 
+    /**
+     * 
+     * @param {string} extension 
+     * @returns 
+     */
     displayAvatarURL(extension){
         return require("../../Methods/general").iconURL(this.id, this.avatar, "user", extension)
     }
 
+    /**
+     * 
+     * @param {string} extension 
+     * @returns 
+     */
     displayBannerURL(extension){
         return require("../../Methods/general").iconURL(this.id, this.banner, "ubanner", extension)
     }

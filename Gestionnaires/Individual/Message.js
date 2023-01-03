@@ -85,6 +85,10 @@ class Message{
         }
     }
 
+    /**
+     * 
+     * @returns 
+     */
     delete(){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").delete(this.bot_token, this.channel_id, this.id, this._bot)
@@ -93,6 +97,11 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     modify(options){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").modify(this.bot_token, this.channel_id, this.id, options, this._bot)
@@ -101,6 +110,11 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @param {string} emoji 
+     * @returns 
+     */
     addreaction(emoji){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").addreaction(this.bot_token, this.channel_id, this.id, emoji, this._bot)
@@ -109,6 +123,11 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @param {string} emoji 
+     * @returns 
+     */
     removereaction(emoji){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").removereaction(this.bot_token, this.channel_id, this.id, emoji, this._bot)
@@ -117,6 +136,12 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @param {string} userid 
+     * @param {string} emoji 
+     * @returns 
+     */
     removeuserreaction(userid, emoji){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").removeuserreaction(this.bot_token, this.channel_id, this.id, userid, emoji, this._bot)
@@ -125,6 +150,11 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @param {string} emoji 
+     * @returns 
+     */
     removeallreaction(emoji){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").removeallreactionemoji(this.bot_token, this.channel_id, this.id, emoji, this._bot)
@@ -133,6 +163,10 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     removeallreactions(){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").removeallreactions(this.bot_token, this.channel_id, this.id, this._bot)
@@ -141,6 +175,11 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
     reply(options){
         return new Promise((resolve, reject) => {
             options = require("../../Utils/functions").analyse_data(options)
@@ -155,6 +194,10 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     pin(){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").pin(this.bot_token, this.channel_id, this.id, this._bot)
@@ -163,6 +206,10 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     unpin(){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").unpin(this.bot_token, this.channel_id, this.id, this._bot)
@@ -171,6 +218,10 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     fetchreactions(){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").fetch_reactions(this.bot_token, this.channel_id, this.id, this._bot)
@@ -179,6 +230,11 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @param {string} reaction 
+     * @returns 
+     */
     fetchreaction(reaction){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").fetch_reaction(this.bot_token, this.channel_id, this.id, reaction, this._bot)
@@ -187,6 +243,10 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @returns 
+     */
     crosspost(){
         return new Promise((resolve, reject) => {
             require("../../Methods/message").crosspost(this.bot_token, this.channel_id, this.id, this._bot)
@@ -195,7 +255,7 @@ class Message{
         })
     }
 
-    SendSpe(msg, truetype, type){
+    #SendSpe(msg, truetype, type){
         return new Promise(async (resolve, reject) => {
             if(!type) type = "reply"
             let embed = new (require("../../Classes/Embed"))()
@@ -242,41 +302,71 @@ class Message{
         })
     }
 
+    /**
+     * 
+     * @param {string} msg 
+     * @param {string} [type=reply]
+     * @returns 
+     */
     error(msg, type){
         return new Promise(async (resolve, reject) => {
-            this.SendSpe(msg, "error", type)
+            this.#SendSpe(msg, "error", type)
             .catch(err => reject(err))
             .then(datas => resolve(datas))
         })
     }
 
+    /**
+     * 
+     * @param {string} msg 
+     * @param {string} [type=reply]
+     * @returns 
+     */
     success(msg, type){
         return new Promise(async (resolve, reject) => {
-            this.SendSpe(msg, "success", type)
+            this.#SendSpe(msg, "success", type)
             .catch(err => reject(err))
             .then(datas => resolve(datas))
         })
     }
 
+    /**
+     * 
+     * @param {string} msg 
+     * @param {string} [type=reply]
+     * @returns 
+     */
     warn_se(msg, type){
         return new Promise(async (resolve, reject) => {
-            this.SendSpe(msg, "warn", type)
+            this.#SendSpe(msg, "warn", type)
             .catch(err => reject(err))
             .then(datas => resolve(datas))
         })
     }
 
+    /**
+     * 
+     * @param {string} msg 
+     * @param {string} [type=reply]
+     * @returns 
+     */
     info(msg, type){
         return new Promise(async (resolve, reject) => {
-            this.SendSpe(msg, "info", type)
+            this.#SendSpe(msg, "info", type)
             .catch(err => reject(err))
             .then(datas => resolve(datas))
         })
     }
 
+    /**
+     * 
+     * @param {string} msg 
+     * @param {string} [type=reply]
+     * @returns 
+     */
     wait(msg, type){
         return new Promise(async (resolve, reject) => {
-            this.SendSpe(msg, "wait", type)
+            this.#SendSpe(msg, "wait", type)
             .catch(err => reject(err))
             .then(datas => resolve(datas))
         })

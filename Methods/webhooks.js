@@ -1,4 +1,12 @@
 const verify = require("../Utils/verify")
+/**
+ * 
+ * @param {string} token 
+ * @param {string} channelid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.create = async (token, channelid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "POST", `channels/${channelid}/webhooks`, this.create, "create webhook")
@@ -6,6 +14,14 @@ module.exports.create = async (token, channelid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} channelid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.get = async (token, channelid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `channels/${channelid}/webhooks`, this.get, "get webhook")
@@ -17,6 +33,15 @@ module.exports.get = async (token, channelid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} webhookid 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.modify = async (token, webhookid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: webhookid, value_data: "id", data_name: "webhookid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `webhooks/${webhookid}`, this.modify, "modify webhook")
@@ -24,6 +49,14 @@ module.exports.modify = async (token, webhookid, options, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} webhookid 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.delete = async (token, webhookid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: webhookid, value_data: "id", data_name: "webhookid", order:2}, {value: bot, data_name: "bot", order: 3}], "DELETE", `webhooks/${webhookid}`, this.delete, "delete webhook")
@@ -31,6 +64,15 @@ module.exports.delete = async (token, webhookid, bot) => {
         .catch(err => reject(err))
     })
 }
+
+/**
+ * 
+ * @param {string} token 
+ * @param {object} webhook 
+ * @param {object} options 
+ * @param {object} bot 
+ * @returns 
+ */
 module.exports.execute = async (token, webhook, options, bot) => {//cp
     const fetch = require("node-fetch")
     let baseinfos = require("../Utils/functions").getbaseinfosre(token)
