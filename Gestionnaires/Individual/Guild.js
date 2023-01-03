@@ -9,7 +9,7 @@ const Threads = require("../../Managers/Threads")
 const Events = require("../../Managers/Events")
 const Presences = require("../../Managers/Presences")
 const Messages = require("../../Managers/Messages")
-const queueManager = require("../../Classes/queueManager")
+const voiceManager = require("../../Classes/guildVoiceManager")
 class Guild{
     constructor(bot, guild){
         this.name = guild.name
@@ -59,99 +59,7 @@ class Guild{
         this.db_language = guild.db_language
         this._bot = bot
         this.bot_token = bot.discordjs.token
-        this.voice = {state: "off", paused_since: null, playing: false, connection: null, resource: null, managing: false}
-        this.voiceQueue = new queueManager(this.voice)
-    }
-
-    get playing(){
-        return Boolean(this.voice.playing)
-    }
-
-    pause(){
-        if(this.voice.connection && this.voice.playing){
-            this.voice.playing = false;
-            this.voice.connection.pause()
-            this.voice.paused_since = Date.now()
-            this.voiceQueue._update(this.voice)
-        }
-    }
-
-    resume(){
-        if(this.voice.connection && !this.voice.playing){
-            this.voice.playing = true;
-            this.voice.connection.unpause()
-            this.voice.paused_since = null
-            this.voiceQueue._update(this.voice)
-        }
-    }
-
-    play(stream, volume){
-        const {StreamType, createAudioResource, createAudioPlayer, getVoiceConnection} = require("@discordjs/voice")
-        if(this.voice.state === "on"){
-            volume = this.#trvolume(volume)
-            const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary, inlineVolume: true});
-            resource.volume.setVolume(volume)
-            const player = createAudioPlayer();
-        
-            
-            player.play(resource);
-            getVoiceConnection(this.id).subscribe(player)
-        
-            this.voice.connection = player
-            this.voice.resource = resource
-            this.voice.playing = true
-            this.voiceQueue._update(this.voice)
-        }
-
-    }
-
-    manageVoice(fonction){
-        if(this.voice.managing) return
-        let trueargs = Array(...arguments)
-        trueargs.splice(0, 1)
-        this.voice.connection.on("stateChange", async (oldstate, newstate) => {
-            if(oldstate.status === "playing" && newstate.status === "idle"){
-                this.voice.managing = false
-                if(this.voiceQueue.loopState) fonction(this.voiceQueue.np, ...trueargs)
-                else if(this.voiceQueue.queueloopState){
-                    this.voiceQueue.addSong(this.voiceQueue.np)
-                    this.voiceQueue.removeSong()
-                    fonction(this.voiceQueue.next, ...trueargs)
-                }
-                else{
-                    this.voiceQueue.removeSong()
-                    fonction(this.voiceQueue.next, ...trueargs)
-                }
-            }
-        })
-        this.voice.connection.on("stateChange", async (oldstate, newstate) => { 
-            this.voice.managing = false
-            if(newstate.status === "disconnected") return this.ResetVoice() 
-        })
-        this.voice.connection.on("error", err =>{
-            this.voice.managing = false
-            console.log(err)
-        }) 
-    }
-
-    setvolume(volume){
-        if(this.voice.connection){
-            volume = this.#trvolume(volume)
-            this.voice.resource.volume.setVolume(volume)
-        } 
-    }
-
-    #trvolume(volume){
-        if(volume){
-            if(!isNaN(volume)){
-                if(typeof volume !== "number") volume = Number(volume)
-                if(volume <0) volume = 100
-                if(volume >1) volume = volume / 100
-            }
-            else volume = 1
-        }
-        else volume = 1
-        return volume
+        this.voice = new voiceManager(this._bot, this.id)
     }
 
     #typeverif(type){
@@ -490,32 +398,6 @@ class Guild{
 
     displaySplashURL(extension){
         return require("../../Methods/general").iconURL(this.id, this.icon, "splash", extension)
-    }
-
-    get voiceAdapterCreator() {
-        return methods => {
-          this._bot.voice.adapters.set(this.id, methods);
-          return {
-            sendPayload: data => {
-              if (this._bot.state !== "ready") return false;
-              this._bot.discordjs.ws.send(JSON.stringify(data));
-              return true;
-            },
-            destroy: () => {
-              this._bot.voice.adapters.delete(this.id);
-            },
-          };
-        };
-    }
-
-    ResetVoice(){
-        this.voice = {state: "off", paused_since: null, playing: false, connection: null, resource: null}
-        this.voiceQueue.reset()
-    }
-
-    VoiceCheck(){
-        if(this.voice.state === "off") return false
-        return true
     }
 
     get membercount(){

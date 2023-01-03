@@ -9,7 +9,6 @@ class User{
         this.mfa_enabled = user.mfa_enabled || false
         this.banner = user.banner || null
         this.accent_color = user.accent_color || null
-        this.locale = user.locale
         this.verified = user.verified ?? false
         this.email = user.email || null
         this.flags = user.flags || 0

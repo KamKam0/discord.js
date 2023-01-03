@@ -7,12 +7,13 @@ class Member{
         this.roles = member.roles || []
         this.premium_since = member.premium_since || null
         this.joined_at = member.joined_at
-        this.deaf = member.deaf || null
-        this.mute = member.mute || null
+        this.deaf = member.deaf ?? false
+        this.mute = member.mute ?? false
+        this.guild = member.guild || bot.guilds.get(member.guild_id) || null
+        this.voice = {presence: member.voice_presence || this.guild?.voice_states.get(this.user_id) || null, channel: member.voice_channel || this.guild?.voice_states.get(this.user_id)?.channel || null}
         this.pending = member.pending || false
         this.permissions = member.permissions || null
         this.communication_disabled_until = member.communication_disabled_until || null
-        this.guild = member.guild || bot.guilds.get(member.guild_id) || null
         this.bot_token = bot.discordjs.token
         this.guild_id = member.guild_id
         this.vguild_id = this.guild ? this.guild.vguild_id : null
