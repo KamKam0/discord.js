@@ -50,6 +50,10 @@ class Collector extends event{
             if(Array.isArray(this.message_id) && !this.message_id.includes(datas.message.id)) return
             else if(datas.message.id !== this.message_id) return
         }
+        if(this.interaction_id){
+            if(Array.isArray(this.interaction_id) && !(this.interaction_id.includes(datas.id) || this.interaction_id.includes(datas.custom_id))) return
+            else if((datas.custom_id !== this.interaction_id) && (datas.id !== this.interaction_id)) return
+        }
         if(this.channel_id){
             if(Array.isArray(this.channel_id) && !this.channel_id.includes(datas.channel_id)) return
             else if(datas.channel_id !== this.channel_id) return

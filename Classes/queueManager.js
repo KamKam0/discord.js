@@ -99,6 +99,22 @@ class Queue{
     _update(infos){
         this.#voiceInfos = infos
     }
+
+    filter(filter){
+        return this.container.filter(filter)
+    }
+
+    find(filter){
+        return this.container.find(filter)
+    }
+
+    map(filter){
+        return this.container.map(filter)
+    }
+
+    get(position){
+        return this.container[position]
+    }
 }
 
 module.exports = Queue

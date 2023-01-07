@@ -12,6 +12,20 @@ class voiceManager{
         this.id = guild_id
     }
 
+    end(){
+        if(this.state && (this.playing || this.paused_since)) this.connection.stop()
+    }
+
+    stop(){
+        if(this.state){
+            this.queue.reset()
+            this.connection.stop()
+            const {getVoiceConnection} = require("@discordjs/voice")
+            getVoiceConnection(this.id).disconnect()
+            this.reset()
+        }
+    }
+
     reset(){
         this.state = false
         this.paused_since = null
