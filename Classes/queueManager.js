@@ -16,7 +16,7 @@ class Queue{
     }
 
     clearQueue(){
-        this.container = []
+        this.container = [this.container[0]]
         return this
     }
 
@@ -39,11 +39,11 @@ class Queue{
     loop(){
         if(this.#loop_state) this.#loop_state = false
         if(!this.#loop_state) this.#loop_state = true
-        return this.loopState
+        return this.#loop_state
     }
 
     get loopState(){
-        return this.loop_state
+        return this.#loop_state
     }
 
     queueloop(){

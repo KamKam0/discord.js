@@ -4,6 +4,7 @@ module.exports = async (bot, oldvoice, newvoice) => {
     const voice_e = require(`../Gestionnaires/Individual/Voice`)
     oldvoice2 = new voice_e({...oldvoice2}, bot)
     guild.voice_states.get(newvoice.user_id).Modify_Datas(newvoice)
+    guild.members.get(newvoice.user_id).voice = {presence: guild.voice_states.get(newvoice.user_id), channel: guild.voice_states.get(newvoice.user_id)?.channel || null}
     const newvoice2 = guild.voice_states.get(newvoice.user_id)
 
     let modifications = []

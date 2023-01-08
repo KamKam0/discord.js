@@ -29,8 +29,8 @@ class guildVoice extends Base{
     leave(){
         const {getVoiceConnection} = require("@discordjs/voice")
         let guild = this._bot.guilds.get(this.guild_id)
-        if(guild.voice.state === "on") getVoiceConnection(guild.id).disconnect()
-        if(guild.voice.state === "on") guild.voice.reset()
+        if(guild.voice.state) getVoiceConnection(this.guild_id).disconnect()
+        if(guild.voice.state) guild.voice.reset()
     }
 }
 

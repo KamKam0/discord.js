@@ -56,7 +56,7 @@ class Guild{
         this.threads = (new Threads(bot, this.id)).AddThreads(guild.threads.map(el => { return {...el, guild: this}}))
         this.premium_progress_bar_enabled = guild.premium_progress_bar_enabled ?? false
         this.messages = new Messages(bot, this.id)
-        this.me = this.members.get(bot.user_id)
+        this.me = this.members.get(bot.user.id)
         this.db_language = guild.db_language
         this._bot = bot
         this.bot_token = bot.discordjs.token

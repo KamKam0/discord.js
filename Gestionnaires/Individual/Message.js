@@ -3,10 +3,10 @@ class Message{
     constructor(message, bot){
         this._bot = bot
         this.user_id = message.user ? message.user_id : message.author.id
-        this.user = this.user_id ? bot.users.get(this.user_id) : null
+        this.user = this.user_id ? (bot.users.get(this.user_id) ?? null) : null
         this.guild_id = message.guild_id || null
         this.guild = message.guild || bot.guilds.get(this.guild_id) || null
-        this.member = message.guild_id ? this.guild.members.get(this.user_id) : null
+        this.member = message.guild_id ? (this.guild.members.get(this.user_id) ?? null) : null
         this.id = message.id
         this.channel_id = message.channel_id
         this.channel = this.channel_id ? bot.channels.get(this.channel_id) : null
