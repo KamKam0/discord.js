@@ -96,6 +96,13 @@ class Queue{
         return time
     }
 
+    get ongoingTime(){
+        if(!this.#voiceInfos.playing) return
+        let played = (this.#voiceInfos.connection._state.playbackDuration / 1000).toFixed(0)
+        let remaining = Number(this.np.time) - played
+       return {total: Number(this.np.time), remaining, played}
+    }
+
     _update(infos){
         this.#voiceInfos = infos
     }
@@ -114,6 +121,10 @@ class Queue{
 
     get(position){
         return this.container[position]
+    }
+
+    splice(starting, ending){
+        this.container.splice(starting, ending)
     }
 }
 

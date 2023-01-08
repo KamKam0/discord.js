@@ -1,6 +1,7 @@
-const User = require("./User")
+const Mentions = require("../Multiple/Mentions")
 class Message{
     constructor(message, bot){
+        this._bot = bot
         this.user_id = message.user ? message.user_id : message.author.id
         this.user = this.user_id ? bot.users.get(this.user_id) : null
         this.guild_id = message.guild_id || null
@@ -9,19 +10,19 @@ class Message{
         this.id = message.id
         this.channel_id = message.channel_id
         this.channel = this.channel_id ? bot.channels.get(this.channel_id) : null
-        this.content = message.content
+        this.content = message.content === "" ? null : message.content
         this.timestamp = message.timestamp
         this.edited_timestamp = message.edited_timestamp || null        
         this.tts = message.tts ? message.tts : false
-        this.mention_everyone = message.mention_everyone || false
-        this.mentions = message.mentions || []
-        this.mention_roles = message.mention_roles || []
-        this.mention_channels = message.mention_channels || []
+        this.mention_everyone = message.mention_everyone ?? false
+        this.mention_roles = (message.mention_roles && message.mention_roles[0]) ? (new Mentions(bot, this.guild_id, "role")).AddMentions(message.mention_roles) :  new Mentions(bot, this.guild_id, "role")
+        this.mention_channels = this.#treatMentionsChannels(this.content)
+        this.mention_members = (message.mentions && message.mentions.filter(e => e.member)[0]) ? (new Mentions(bot, this.guild_id, "member")).AddMentions(message.mentions.filter(e => e.member).map(e => e.id)) :  new Mentions(bot, this.guild_id, "member")
         this.attachments = message.attachments || []
         this.embeds = message.embeds || []
         this.reactions = message.reactions || []
         this.nonce = message.nonce || null
-        this.pinned = message.pinned || false
+        this.pinned = message.pinned ?? false
         this.webhook_id = message.webhook_id|| null
         this.type = this.#type2(message.type)
         this.activity = message.activity || null
@@ -29,15 +30,12 @@ class Message{
         this.application_id = message.application_id
         this.flags = message.flags || 0
         this.referenced_message = message.referenced_message || null
-        /*this.interaction = message.interaction || null
-        this.thread = message.thread || null*/
         this.components = message.components || []
         this.sticker_items = message.sticker_items || []
         this.stickers = message.stickers || []
         this.bot_token = bot.discordjs.token
         this.typee = "message"
         this.vguild_id = this.guild ? this.guild.vguild_id : null
-        this._bot = bot
     }
 
     Modify_Datas(message){
@@ -51,6 +49,16 @@ class Message{
             }
         })
         return this
+    }
+
+    #treatMentionsChannels(content){
+        let clas = new Mentions(this._bot, this.guild_id, "channel")
+        if(!content) return clas
+        if(content.includes("<#")){
+            let splitted = content.split("<#").filter(e => e.includes(">")).map(e => e.split(">")[0]).filter(e => !isNaN(e))
+            if(splitted && splitted[0]) clas.AddMentions(splitted)
+        }
+        return clas
     }
 
     #type2(type){

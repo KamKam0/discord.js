@@ -11,7 +11,7 @@ class Invite{
         this.expires_at = invite.expires_at
         this.uses = invite.uses || 0
         this.type = invite.type
-        this.temporary = invite.temporary || false
+        this.temporary = invite.temporary ?? false
         this.max_uses = invite.max_uses
         this.max_age = invite.max_age
         this.created_at = invite.created_at

@@ -10,7 +10,7 @@ class Template{
         this.updated_at = template.updated_at || null
         this.guild_id = template.source_guild_id
         this.guild = template.serialized_source_guild || null
-        this.is_dirty = template.is_dirty || false
+        this.is_dirty = template.is_dirty ?? false
         this.bot_token = bot.discordjs.token
         this.vguild_id = template.guild ? template.guild.vguild_id : null
         this._bot = bot

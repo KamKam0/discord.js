@@ -28,7 +28,7 @@ module.exports = async (bot, datas) => {
     if(!modifications[0]) return require("./USER_UPDATE")(bot, datas.user)
     else{
         const member_e = require(`../Gestionnaires/Individual/Member`)
-        oldmember = new member_e({...oldmember})
+        oldmember = new member_e({...oldmember}, bot)
         guild.members.get(datas.user.id).Modify_Datas(datas)
         const newmember = guild.members.get(datas.user.id)
         oldmember.modifications = modifications

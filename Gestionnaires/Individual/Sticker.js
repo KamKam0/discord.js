@@ -8,7 +8,7 @@ class Sticker{
         this.asset = sticker.asset || null
         this.type = sticker.type || null
         this.format_type = sticker.format_type || null
-        this.available = sticker.available || false
+        this.available = sticker.available ?? false
         this.guild = sticker.guild || bot.guilds.get(sticker.guild_id) || null
         this.guild_id = sticker.guild_id
         this.bot_token = bot.discordjs.token

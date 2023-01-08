@@ -6,7 +6,7 @@ class Interactions extends Base{
     }
 
     AddInteraction(int){
-        this.container.push(new Interaction({...int, token: this._bot.discordjs.token}))
+        this.container.push(new Interaction({...int, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 

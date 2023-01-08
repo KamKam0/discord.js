@@ -11,7 +11,7 @@ class Member{
         this.mute = member.mute ?? false
         this.guild = member.guild || bot.guilds.get(member.guild_id) || null
         this.voice = {presence: member.voice_presence || this.guild?.voice_states.get(this.user_id) || null, channel: member.voice_channel || this.guild?.voice_states.get(this.user_id)?.channel || null}
-        this.pending = member.pending || false
+        this.pending = member.pending ?? false
         this.permissions = member.permissions || null
         this.communication_disabled_until = member.communication_disabled_until || null
         this.bot_token = bot.discordjs.token

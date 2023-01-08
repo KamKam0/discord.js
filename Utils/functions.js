@@ -343,9 +343,9 @@ function check_embed(embeds){
         if(emb.author && !emb.author.name) return
         if(!emb.color || typeof emb.color !== "number") emb.color = 0x000000
         if(emb.fields) emb.fields = emb.fields.map(field => {
-            if(!field.value && !field.name) return {name: "\u200b", value: "\u200b", inline: field.inline || false}
-            else if(!field.value) return {name: field.name, value: "\u200b", inline: field.inline || false}
-            else if(!field.name) return {name: "\u200b", value: field.value, inline: field.inline || false}
+            if(!field.value && !field.name) return {name: "\u200b", value: "\u200b", inline: field.inline ?? false}
+            else if(!field.value) return {name: field.name, value: "\u200b", inline: field.inline ?? false}
+            else if(!field.name) return {name: "\u200b", value: field.value, inline: field.inline ?? false}
             else return field
         })
         if(emb.title || emb.description || emb.fields[0]) trueembeds.push(emb)

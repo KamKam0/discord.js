@@ -6,7 +6,7 @@ class User{
         this.avatar = user.avatar
         this.bot = user.bot ?? false
         this.system = user.system || null
-        this.mfa_enabled = user.mfa_enabled || false
+        this.mfa_enabled = user.mfa_enabled ?? false
         this.banner = user.banner || null
         this.accent_color = user.accent_color || null
         this.verified = user.verified ?? false
