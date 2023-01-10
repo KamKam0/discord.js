@@ -9,7 +9,6 @@ class MessageReactionAdd{
         this.emoji = message_add.emoji
         this.guild_id = message_add.guild_id || null
         this.guild = message_add.guild || bot.guilds.get(this.guild_id) || null
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this.member = this.guild && this.user_id ? this.guild.users.get(this.user_id) : null
         this._bot = bot
     }

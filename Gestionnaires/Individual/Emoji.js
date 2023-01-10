@@ -10,11 +10,10 @@ class Emoji{
         this.guild_id = emoji.guild_id
         this.guild = emoji.guild || bot.guilds.get(this.guild_id) || null
         this.bot_token = bot.discordjs.token
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
     }
 
-    Modify_Datas(emoji){
+    __Modify_Datas(emoji){
         let tocheck = Object.entries(emoji)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 

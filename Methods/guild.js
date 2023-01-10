@@ -140,7 +140,7 @@ module.exports.getinvites = (token, guildid, bot) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/invites`, this.getinvites, "getinvites guild")
         .then(datas => {
             const invites = new (require("../Gestionnaires/Multiple/Invites"))(bot)
-            invites.AddInvites(datas.map(da => { return {...da, token: token}}))
+            invites.__AddInvites(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
         })
         .catch(err => reject(err))
@@ -159,7 +159,7 @@ module.exports.getintegrations = (token, guildid, bot) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/integrations`, this.getintegrations, "getintegrations guild")
         .then(datas => {
             const intergations = new (require("../Gestionnaires/Multiple/Integrations"))(guildid, bot)
-            intergations.AddIntegrations(datas.map(da => { return {...da, token: token}}))
+            intergations.__AddIntegrations(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
         })
         .catch(err => reject(err))

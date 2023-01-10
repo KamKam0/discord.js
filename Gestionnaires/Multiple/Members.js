@@ -9,17 +9,17 @@ class Members extends Base{
         return this.container.find(ba => ba.user_id === ID)
     }
 
-    AddMember(member){
+    __AddMember(member){
         this.container.push(new Member({...member, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
-    AddMembers(members){
-        members.map(me => this.AddMember(me))
+    __AddMembers(members){
+        members.map(me => this.__AddMember(me))
         return this
     }
 
-    DeleteMember(ID){
+    __DeleteMember(ID){
         this.container.splice(this.container.indexOf(this.container.find(me => me.user.id === ID)), 1)
         return this
     }

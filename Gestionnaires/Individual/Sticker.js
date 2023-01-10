@@ -13,11 +13,10 @@ class Sticker{
         this.guild_id = sticker.guild_id
         this.bot_token = bot.discordjs.token
         this.sort_value = sticker.sort_value || null
-        this.vguild_id = sticker.guild ? sticker.guild.vguild_id : null
         this._bot = bot
     }
 
-    Modify_Datas(sticker){
+    __Modify_Datas(sticker){
         let tocheck = Object.entries(sticker)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 

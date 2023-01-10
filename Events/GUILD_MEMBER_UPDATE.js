@@ -11,7 +11,7 @@ module.exports = async (bot, datas) => {
     let newdatas = Object.entries(new (require(`../Gestionnaires/Individual/Member`))(datas, bot))
 
     olddatas.forEach(da => {
-        let filter = ["guild", "bot_token", "user", "member", "channel", "parent", "owner", "vguild_id"]
+        let filter = ["guild", "bot_token", "user", "member", "channel", "parent", "owner"]
         if(!filter.includes(da[0])){
             let comparaison = newdatas.find(e => e[0] === da[0])[1]
             if(da[0] === "roles"){
@@ -29,7 +29,7 @@ module.exports = async (bot, datas) => {
     else{
         const member_e = require(`../Gestionnaires/Individual/Member`)
         oldmember = new member_e({...oldmember}, bot)
-        guild.members.get(datas.user.id).Modify_Datas(datas)
+        guild.members.get(datas.user.id).__Modify_Datas(datas)
         const newmember = guild.members.get(datas.user.id)
         oldmember.modifications = modifications
         if(bot.database_state !== "unstable") bot.emit(name(), bot, oldmember, newmember)

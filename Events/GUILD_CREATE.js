@@ -2,9 +2,15 @@ module.exports = async (bot, datas) => {
   datas.token = bot.discordjs.token
   if(bot.state === "processing" || bot.state === "ready"){
     if(datas.id){
-      let gdta = await bot.ven(bot, datas.id)
-      datas.vguild_id = gdta.ID
-      datas.db_language = gdta.Language
+      if(bot.database_state === "stable"){
+          let result = await bot.sql.select("general")
+          let vid = result.find(re => re.ID === datas.id)
+          if(!vid || !vid.ID){
+              vid = {ID, Language: this.default_language, guild_state: "enable"}
+              bot.sql.insert("general", vid)
+              datas.db_language  = bot.default_lan
+          }else datas.db_language  = vid.Language
+      }else datas.db_language  = bot.default_language
     }
     datas.presences.push(...datas.members.filter(me => !datas.presences.find(pr => pr.user_id === me.user.id)).map(e => {
       return {
@@ -13,13 +19,12 @@ module.exports = async (bot, datas) => {
         activities: []
       }
     }))
-    bot.users.AddUsers(datas.members.map(e => { return {...e.user, guild_id: datas.id}}))
-    bot.channels.AddChannels(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
-    bot.guilds.AddGuild(datas)
+    bot.users.__AddUsers(datas.members.map(e => { return {...e.user, guild_id: datas.id}}))
+    bot.channels.__AddChannels(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
+    bot.guilds.__AddGuild(datas)
     if(bot.state === "processing"){
       if(bot.discordjs.available_ids.find(id => id.id === datas.id)){
         bot.discordjs.available_ids = bot.discordjs.available_ids.filter(id => id.id !== datas.id)
-        bot.discordjs.guild_ids.find(gu => gu.id === datas.id).vid = datas.vguild_id
         if(bot.discordjs.available_ids.length === 0){
           bot.state = "ready"
           if(bot.database_state !== "unstable") bot.emit("READY", bot)
@@ -36,9 +41,9 @@ module.exports = async (bot, datas) => {
           activities: []
         }
       }))
-      bot.guilds.AddGuild(datas)
-      bot.users.AddUsers(datas.members.map(e => { return {...e.user, guild_id: datas.id}}))
-      bot.channels.AddChannels(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
+      bot.guilds.__AddGuild(datas)
+      bot.users.__AddUsers(datas.members.map(e => { return {...e.user, guild_id: datas.id}}))
+      bot.channels.__AddChannels(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
     }else{
       datas.presences.push(...datas.members.filter(me => !datas.presences.find(pr => pr.user_id === me.user.id)).map(e => {
         return {
@@ -53,7 +58,6 @@ module.exports = async (bot, datas) => {
     }
     if(bot.discordjs.available_ids.find(id => id.id === datas.id)){
       bot.discordjs.available_ids = bot.discordjs.available_ids.filter(id => id.id !== datas.id)
-      bot.discordjs.guild_ids.find(gu => gu.id === datas.id).vid = datas.vguild_id
       if(bot.discordjs.available_ids.length === 0) bot.state = "ready"
     }
   }

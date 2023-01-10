@@ -9,7 +9,7 @@ module.exports = async (bot, datas) => {
     else{
         const message_e = require(`../Gestionnaires/Individual/Message`)
         oldmessage = new message_e({...oldmessage}, bot)
-        guild.messages.get(datas.id).Modify_Datas(datas)
+        guild.messages.get(datas.id).__Modify_Datas(datas)
         const newmessage = guild.messages.get(datas.id)
     
         let modifications = []

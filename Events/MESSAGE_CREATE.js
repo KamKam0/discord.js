@@ -3,7 +3,7 @@ module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     datas.token = bot.discordjs.token
     const message = new Message(datas, bot)
-    if(guild) guild.messages.AddMessage(datas)
+    if(guild) guild.messages.__AddMessage(datas)
     if(bot.database_state !== "unstable") bot.emit(name(), bot, message)
 }
 

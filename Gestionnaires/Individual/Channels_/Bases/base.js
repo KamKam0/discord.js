@@ -6,7 +6,7 @@ class base{
         this._bot = bot
     }
 
-    Modify_Datas(channel){
+    __Modify_Datas(channel){
         let tocheck = Object.entries(channel)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined"){

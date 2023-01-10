@@ -19,7 +19,6 @@ class Integration{
         this.revoked = int.revoked ?? false
         this.guild = int.guild || bot.guilds.get(this.guild_id) || null
         this.bot_token = bot.discordjs.token
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
     }
 
@@ -34,7 +33,7 @@ class Integration{
         }
     }
 
-    Modify_Datas(inte){
+    __Modify_Datas(inte){
         let tocheck = Object.entries(inte)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined"){

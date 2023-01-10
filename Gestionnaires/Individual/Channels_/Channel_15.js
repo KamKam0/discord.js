@@ -10,7 +10,6 @@ class Channel extends Base{
         this.parent = this.parent_id ? bot.channels.get(this.parent_id) : null
         this.guild_id = channel.guild_id
         this.guild = channel.guild || bot.guilds.get(this.guild_id) || null
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this.topic = channel.topic
         this.rate_limit_per_user = channel.rate_limit_per_user
         this.template = channel.template

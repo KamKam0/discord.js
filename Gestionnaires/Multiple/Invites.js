@@ -5,13 +5,13 @@ class Invites extends Base{
         super(_bot, guildid)
     }
 
-    AddInvite(invite){
+    __AddInvite(invite){
         this.container.push(new Invite({...invite, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
-    AddInvites(invites){
-        invites.map(inv => this.AddInvite(inv))
+    __AddInvites(invites){
+        invites.map(inv => this.__AddInvite(inv))
         return this
     }
 }

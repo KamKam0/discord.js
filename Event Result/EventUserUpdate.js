@@ -7,7 +7,6 @@ class EventUserUpdate{
         this.guild = this.guild_scheduled_event
         this.guild_id = this.guild_scheduled_event_id
         this.bot_token = bot.discordjs.token
-        this.vguild_id = this.guild_id ? this.guild.vguild_id : null
         this._bot = bot
     }
 }

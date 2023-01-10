@@ -3,14 +3,14 @@ class Reactions{
         this.reactions = []
     }
 
-    AddReaction(reaction){
+    __AddReaction(reaction){
         let tosearch = reaction.emoji.name ? reaction.emoji.name : reaction.emoji.id
         if(this.get(tosearch)) this.get(tosearch).AddCount(reaction)
         else this.reactions.push(reaction)
         return this
     }
 
-    AddReactions(Reactions){
+    __AddReactions(Reactions){
         this.reactions.push(...Reactions)
         return this
     }

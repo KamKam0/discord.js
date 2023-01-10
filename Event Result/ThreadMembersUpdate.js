@@ -3,7 +3,6 @@ class ThreadUpdate{
         this.guild_id = threadupdate.guild_id || null
         this.guild = threadupdate.guild || bot.guilds.get(this.guild_id) || null
         this.bot_token = bot.discordjs.token
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this.id = threadupdate.id
         this.thread = new (require("../Gestionnaires/Individual/Channels_/Channel_11"))(threadupdate.thread, bot)
         this.added_members = threadupdate.added_members

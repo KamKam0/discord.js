@@ -5,13 +5,13 @@ class Bans extends Base{
         super(_bot, guild_id)
     }
 
-    AddBan(ban){
+    __AddBan(ban){
         this.container.push(new Ban({...ban, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 
-    AddBans(bans){
-        bans.map(ba => this.AddBan(ba))
+    __AddBans(bans){
+        bans.map(ba => this.__AddBan(ba))
         return this
     }
 }

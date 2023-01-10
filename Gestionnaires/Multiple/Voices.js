@@ -5,17 +5,17 @@ class Voices extends Base{
         super(bot, guildid)
     }
 
-    AddVoice(voice){
+    __AddVoice(voice){
         this.container.push(new Voice({...voice, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
-    AddVoices(voices){
-        voices.map(vo => this.AddVoice(vo))
+    __AddVoices(voices){
+        voices.map(vo => this.__AddVoice(vo))
         return this
     }
 
-    DeleteVoice(ID){
+    __DeleteVoice(ID){
         this.container.splice(this.container.indexOf(this.container.find(vo => vo.user_id === ID)), 1)
         return this
     }

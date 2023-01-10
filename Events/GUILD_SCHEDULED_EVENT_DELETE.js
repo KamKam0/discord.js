@@ -5,7 +5,7 @@ module.exports = async (bot, datas) => {
 
     const oldevent = guild.guild_scheduled_events.get(datas.id)
 
-    guild.guild_scheduled_events.DeleteEvent(datas.id)
+    guild.guild_scheduled_events.__DeleteEvent(datas.id)
     
     if(bot.database_state !== "unstable") bot.emit(name(), bot, oldevent)
 }

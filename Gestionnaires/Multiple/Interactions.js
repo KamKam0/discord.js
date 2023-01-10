@@ -5,13 +5,13 @@ class Interactions extends Base{
         super(_bot)
     }
 
-    AddInteraction(int){
+    __AddInteraction(int){
         this.container.push(new Interaction({...int, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 
-    AddInteractions(interactions){
-        interactions.map(int => this.AddInteraction(int))
+    __AddInteractions(interactions){
+        interactions.map(int => this.__AddInteraction(int))
         return this
     }
 }

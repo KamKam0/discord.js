@@ -9,11 +9,10 @@ class StageInstance{
         this.discoverable_disabled = stage.discoverable_disabled ?? false
         this.guild = stage.guild || bot.guilds.get(this.guild_id) || null
         this.bot_token = bot.discordjs.token
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
     }
 
-    Modify_Datas(stage){
+    __Modify_Datas(stage){
         let tocheck = Object.entries(stage)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 

@@ -12,11 +12,10 @@ class Template{
         this.guild = template.serialized_source_guild || null
         this.is_dirty = template.is_dirty ?? false
         this.bot_token = bot.discordjs.token
-        this.vguild_id = template.guild ? template.guild.vguild_id : null
         this._bot = bot
     }
 
-    Modify_Datas(template){
+    __Modify_Datas(template){
         let tocheck = Object.entries(template)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 

@@ -10,7 +10,6 @@ class baseGuild extends Base{
         this.parent = this.parent_id ? bot.channels.get(this.parent_id) : null
         this.guild_id = channel.guild_id || null
         this.guild = channel.guild || bot.guilds.get(this.guild_id) || null
-        this.vguild_id = channel.guild ? channel.guild.vguild_id : null
     }
 
     /**

@@ -44,7 +44,7 @@ class voiceManager{
             this.playing = false;
             this.connection.pause()
             this.paused_since = Date.now()
-            this.queue._update(this)
+            this.queue.__update(this)
         }
     }
 
@@ -53,7 +53,7 @@ class voiceManager{
             this.playing = true;
             this.connection.unpause()
             this.paused_since = null
-            this.queue._update(this)
+            this.queue.__update(this)
         }
     }
 
@@ -72,7 +72,7 @@ class voiceManager{
             this.connection = player
             this.resource = resource
             this.playing = true
-            this.queue._update(this)
+            this.queue.__update(this)
         }
 
     }

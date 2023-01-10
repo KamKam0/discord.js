@@ -18,8 +18,8 @@ module.exports = async (bot, datas) => {
     }
     const channel_e = require(`../Gestionnaires/Individual/Channels_/Channel_${convert[oldchannel.type]}`)
     oldchannel = new channel_e({...oldchannel}, bot)
-    guild.channels.get(datas.id).Modify_Datas(datas)
-    bot.channels.get(datas.id).Modify_Datas(datas)
+    guild.channels.get(datas.id).__Modify_Datas(datas)
+    bot.channels.get(datas.id).__Modify_Datas(datas)
     let newchannel = guild.channels.get(datas.id)
     
     let modifications = []

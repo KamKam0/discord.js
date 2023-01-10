@@ -14,7 +14,6 @@ class Webhook{
         this.token = webhook.token
         this.application_id = webhook.application_id
         this.url = webhook.url
-        this.vguild_id = webhook.guild_id ? this.guild.vguild_id : null
         this._bot = bot
     }
 
@@ -30,7 +29,7 @@ class Webhook{
         }
     }
 
-    Modify_Datas(webhook){
+    __Modify_Datas(webhook){
         let tocheck = Object.entries(webhook)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined"){

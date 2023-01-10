@@ -17,11 +17,10 @@ class Voice{
         this.self_video = voice.self_video ?? false
         this.suppress = voice.suppress ?? false
         this.request_to_speak_timestamp = voice.request_to_speak_timestamp || null
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
     }
 
-    Modify_Datas(voice){
+    __Modify_Datas(voice){
         let tocheck = Object.entries(voice)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 

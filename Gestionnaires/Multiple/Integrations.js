@@ -5,17 +5,17 @@ class Integrations extends Base{
         super(_bot)
     }
 
-    AddIntegration(integration){
+    __AddIntegration(integration){
         this.container.push(new Integration({...integration, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 
-    AddIntegrations(integrations){
-        integrations.map(int => this.AddIntegration(int))
+    __AddIntegrations(integrations){
+        integrations.map(int => this.__AddIntegration(int))
         return this
     }
 
-    DeleteIntegration(ID){
+    __DeleteIntegration(ID){
         this.container.splice(this.container.indexOf(this.container.find(int => int.id === ID)), 1)
         return this
     }

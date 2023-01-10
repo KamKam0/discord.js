@@ -20,10 +20,9 @@ class base{
         this.locale = interaction.locale
         this.bot_token = bot.discordjs.token
         this.bot_id = interaction.bot_id
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
     }
 
-    Modify_Datas(inte){
+    __Modify_Datas(inte){
         let tocheck = Object.entries(inte)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 

@@ -14,7 +14,6 @@ class Guild{
     constructor(bot, guild){
         this.name = guild.name
         this.id = guild.id
-        this.vguild_id = guild.vguild_id
         this.icon = guild.icon || null
         this.splash = guild.splash || null
         this.discovery_splash = guild.discovery_splash || null
@@ -44,16 +43,21 @@ class Guild{
         this.public_updates_channel_id = guild.public_updates_channel_id || null
         this.welcome_screen = guild.welcome_screen || null
         this.nsfw_level = this.#typensfw(guild.nsfw_level)
-        this.roles = (new Roles(bot, this.id)).AddRoles(guild.roles.map(el => { return {...el, guild: this}}))
-        this.emojis = (new Emojis(bot, this.id)).AddEmojis(guild.emojis.map(el => { return {...el, guild: this}}))
-        this.stickers = (new Stickers(bot, this.id)).AddStickers(guild.stickers.map(el => { return {...el, guild: this}}))
-        this.presences = (new Presences(bot, this.id)).AddPresences(guild.presences.map(el => { return {...el, guild: this}}))
-        this.channels = (new Channels(bot, this.id)).AddChannels(guild.channels.map(el => { return {...el, guild: this}}))
-        this.stage_instances = (new StageInstances(bot, this.id)).AddStages(guild.stage_instances.map(el => { return {...el, guild: this}}))
-        this.guild_scheduled_events = (new Events(bot, this.id)).AddEvents(guild.guild_scheduled_events.map(el => { return {...el, guild: this}}))
-        this.voice_states = (new Voices(bot, this.id)).AddVoices(guild.voice_states.map(el => { return {...el, guild: this}}))
-        this.members = (new Members(bot, this.id)).AddMembers(guild.members.map(el => { return {...el, guild: this}}))
-        this.threads = (new Threads(bot, this.id)).AddThreads(guild.threads.map(el => { return {...el, guild: this}}))
+        this.roles = (new Roles(bot, this.id)).__AddRoles(guild.roles.map(el => { return {...el, guild: this}}))
+        this.emojis = (new Emojis(bot, this.id)).__AddEmojis(guild.emojis.map(el => { return {...el, guild: this}}))
+        this.stickers = (new Stickers(bot, this.id)).__AddStickers(guild.stickers.map(el => { return {...el, guild: this}}))
+        this.presences = (new Presences(bot, this.id)).__AddPresences(guild.presences.map(el => { return {...el, guild: this}}))
+        this.channels = (new Channels(bot, this.id)).__AddChannels(guild.channels.map(el => { return {...el, guild: this}}))
+        this.stage_instances = (new StageInstances(bot, this.id)).__AddStages(guild.stage_instances.map(el => { return {...el, guild: this}}))
+        this.guild_scheduled_events = (new Events(bot, this.id)).__AddEvents(guild.guild_scheduled_events.map(el => { return {...el, guild: this}}))
+        this.members = (new Members(bot, this.id)).__AddMembers(guild.members.map(el => { return {...el, guild: this}}))
+        this.threads = (new Threads(bot, this.id)).__AddThreads(guild.threads.map(el => { return {...el, guild: this}}))
+        this.voice_states = (new Voices(bot, this.id)).__AddVoices(guild.voice_states.map(el => { return {...el, guild: this}}))
+        this.voice_states.container.forEach(voi => {
+            this.channels.get(voi.channel_id).members.container.push(voi.member)
+            this.members.get(voi.user_id).voice.presence = voi
+            this.members.get(voi.user_id).voice.channel = this.channels.get(voi.channel_id)
+        })
         this.premium_progress_bar_enabled = guild.premium_progress_bar_enabled ?? false
         this.messages = new Messages(bot, this.id)
         this.me = this.members.get(bot.user.id)
@@ -137,7 +141,7 @@ class Guild{
         }
     }
 
-    Modify_Datas(guild){
+    __Modify_Datas(guild){
         let treatable = ["permissions", "roles", "emojis", "voice_states", "members", "channels", "threads", "presences", "stage_instances", "stickers", "guild_scheduled_events"]
         let tocheck = Object.entries(guild)
         tocheck.forEach(e => { 

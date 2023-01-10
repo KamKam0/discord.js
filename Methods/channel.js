@@ -45,7 +45,7 @@ module.exports.getinvites = (token, channelid, bot) => {
         verify([{value: token, data_name: "token", order: 1}, {value: channelid, value_data: "id", data_name: "channelid", order: 2}, {value: bot, data_name: "bot", order: 3}], "GET", `channels/${channelid}/invites`, this.getinvites, "getinvites channel")
         .then(datas => {
             const invites = new (require("../Gestionnaires/Multiple/Invites"))(bot)
-            invites.AddInvites(datas.map(da => { return {...da, token: token}}))
+            invites.__AddInvites(datas.map(da => { return {...da, token: token}}))
             return resolve(invites)
         })
         .catch(err => reject(err))
@@ -127,7 +127,7 @@ module.exports.getpins = (token, channelid, bot) => {
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: bot, data_name: "bot", order: 3}], "POST", `channels/${channelid}/pins`, this.getpins, "getpins channel")
         .then(datas => {
             const messages = new (require("../Gestionnaires/Multiple/Messages"))(bot)
-            messages.AddMessages(datas.map(da => { return {...da, token: token}}))
+            messages.__AddMessages(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
         })
         .catch(err => reject(err))
@@ -146,7 +146,7 @@ module.exports.triggertyping = (token, channelid, bot) => {
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: bot, data_name: "bot", order: 3}], "POST", `channels/${channelid}/typing`, this.triggertyping, "triggertyping channel")
         .then(datas => {
             const messages = new (require("../Gestionnaires/Multiple/Messages"))(bot)
-            messages.AddMessages(datas.map(da => { return {...da, token: token}}))
+            messages.__AddMessages(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
         })
         .catch(err => reject(err))

@@ -5,17 +5,17 @@ class Webhooks extends Base{
         super(bot, guildid)
     }
 
-    AddWebhook(webhook){
+    __AddWebhook(webhook){
         this.container.push(new Webhook({...webhook, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
-    AddWebhooks(webhooks){
-        webhooks.map(we => this.AddWebhook(we))
+    __AddWebhooks(webhooks){
+        webhooks.map(we => this.__AddWebhook(we))
         return this
     }
 
-    DeleteWebhook(ID){
+    __DeleteWebhook(ID){
         this.container.splice(this.container.indexOf(this.container.find(we => we.id === ID)), 1)
         return this
     }

@@ -8,11 +8,10 @@ class Presence{
         this.status = presence.status || null
         this.activities = presence.activities || []
         this.client_status = presence.client_status
-        this.vguild_id = presence.guild ? presence.guild.vguild_id : null
         this._bot = bot
     }
 
-    Modify_Datas(presence){
+    __Modify_Datas(presence){
         let tocheck = Object.entries(presence)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 

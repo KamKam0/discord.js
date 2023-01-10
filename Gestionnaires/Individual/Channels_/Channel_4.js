@@ -8,7 +8,6 @@ class Channel extends Base{
         this.permission_overwrites = channel.permission_overwrites
         this.name = channel.name
         this.nsfw = channel.nsfw ?? false
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
     }
     
     /**

@@ -15,9 +15,9 @@ class Message{
         this.edited_timestamp = message.edited_timestamp || null        
         this.tts = message.tts ? message.tts : false
         this.mention_everyone = message.mention_everyone ?? false
-        this.mention_roles = (message.mention_roles && message.mention_roles[0]) ? (new Mentions(bot, this.guild_id, "role")).AddMentions(message.mention_roles) :  new Mentions(bot, this.guild_id, "role")
+        this.mention_roles = (message.mention_roles && message.mention_roles[0]) ? (new Mentions(bot, this.guild_id, "role")).__AddMentions(message.mention_roles) :  new Mentions(bot, this.guild_id, "role")
         this.mention_channels = this.#treatMentionsChannels(this.content)
-        this.mention_members = (message.mentions && message.mentions.filter(e => e.member)[0]) ? (new Mentions(bot, this.guild_id, "member")).AddMentions(message.mentions.filter(e => e.member).map(e => e.id)) :  new Mentions(bot, this.guild_id, "member")
+        this.mention_members = (message.mentions && message.mentions.filter(e => e.member)[0]) ? (new Mentions(bot, this.guild_id, "member")).__AddMentions(message.mentions.filter(e => e.member).map(e => e.id)) :  new Mentions(bot, this.guild_id, "member")
         this.attachments = message.attachments || []
         this.embeds = message.embeds || []
         this.reactions = message.reactions || []
@@ -35,10 +35,9 @@ class Message{
         this.stickers = message.stickers || []
         this.bot_token = bot.discordjs.token
         this.typee = "message"
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
     }
 
-    Modify_Datas(message){
+    __Modify_Datas(message){
         let tocheck = Object.entries(message)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined"){
@@ -56,7 +55,7 @@ class Message{
         if(!content) return clas
         if(content.includes("<#")){
             let splitted = content.split("<#").filter(e => e.includes(">")).map(e => e.split(">")[0]).filter(e => !isNaN(e))
-            if(splitted && splitted[0]) clas.AddMentions(splitted)
+            if(splitted && splitted[0]) clas.__AddMentions(splitted)
         }
         return clas
     }

@@ -5,11 +5,11 @@ module.exports = async (bot, datas) => {
     const user_e = require(`../Gestionnaires/Individual/User`)
     olduser = new user_e({...olduser, token: bot.discordjs.token}, bot)
 
-    bot.users.get(datas.id).Modify_Datas(datas)
+    bot.users.get(datas.id).__Modify_Datas(datas)
     
     const newuser = bot.users.get(datas.id)
 
-    if(olduser.id === bot.user.id) bot.user.Modify_Datas(datas)
+    if(olduser.id === bot.user.id) bot.user.__Modify_Datas(datas)
 
 
     let modifications = []

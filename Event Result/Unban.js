@@ -4,13 +4,12 @@ class Unban{
         this.guild_id = ban.guild_id || null
         this.guild = ban.guild || bot.guilds.get(this.guild_id) || null
         this.bot_token = bot.discordjs.token
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this.user = new User({...ban.user, token: this.bot_token}, bot)
         this.user_id = ban.user.id || null
         this._bot = bot
     }
 
-    Modify_Datas(ban){
+    __Modify_Datas(ban){
         let tocheck = Object.entries(ban)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 

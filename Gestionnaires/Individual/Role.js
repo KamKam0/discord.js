@@ -14,11 +14,10 @@ class Role{
         this.guild = role.guild || bot.guilds.get(role.guild_id) || null
         this.guild_id = role.guild_id
         this.bot_token = bot.discordjs.token
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
     }
     
-    Modify_Datas(role){
+    __Modify_Datas(role){
         let tocheck = Object.entries(role)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 

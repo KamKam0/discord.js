@@ -1,10 +1,12 @@
 const Base = require("./baseGuild")
+const Members = require("../../../Multiple/Members")
 class guildVoice extends Base{
     constructor(channel, bot){
         super(channel, bot)
         this.bitrate = channel.bitrate
         this.user_limit = channel.user_limit
         this.rtc_region = channel.rtc_region
+        this.members = (new Members(this._bot, this.guild_id))
     }
 
     /**

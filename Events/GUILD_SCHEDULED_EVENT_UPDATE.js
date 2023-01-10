@@ -9,7 +9,7 @@ module.exports = async (bot, datas) => {
     const event_e = require(`../Gestionnaires/Individual/Event`)
     oldevent = new event_e({...oldevent}, bot)
 
-    guild.guild_scheduled_events.get(datas.id).Modify_Datas(datas)
+    guild.guild_scheduled_events.get(datas.id).__Modify_Datas(datas)
 
     const newevent = guild.guild_scheduled_events.get(datas.id)
 

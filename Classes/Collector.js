@@ -12,23 +12,23 @@ class Collector extends event{
         this.channel_id = options.channel_id
         this.guild_id = options.guild_id
         this.timeout = null
-        this.HandleFunction = this.handlePacket.bind(this)
-        this.UnHandleFunction = this.handleDeletePacket.bind(this)
-        this.deploy = this.start()
+        this.HandleFunction = this.__handlePacket.bind(this)
+        this.UnHandleFunction = this.__handleDeletePacket.bind(this)
+        this.deploy = this.#start()
     }
 
-    start(){
+    #start(){
         if(this.type === "message") this.bot.addListener("MESSAGE_CREATE", this.HandleFunction)
         if(this.type === "interaction") this.bot.addListener("INTERACTION_CREATE", this.HandleFunction)
         this.bot.addListener("CHANNEL_DELETE", this.UnHandleFunction)
         this.bot.addListener("GUILD_DELETE", this.UnHandleFunction)
         if(this.options.time) this.timeout = setTimeout(() => {
             this.timeout = null
-            this.end()
+            this.__end()
         }, this.options.time * 1000)
     }
 
-    end(argu){
+    __end(argu){
         if(this.type === "message") this.bot.removeListener("MESSAGE_CREATE", this.HandleFunction)
         if(this.type === "interaction") this.bot.removeListener("INTERACTION_CREATE", this.HandleFunction)
         this.bot.removeListener("CHANNEL_DELETE", this.UnHandleFunction)
@@ -41,7 +41,7 @@ class Collector extends event{
         if(this.timeout) clearTimeout(this.timeout)
     }
 
-    handlePacket(bot, datas){
+    __handlePacket(bot, datas){
         if(this.type === "message" && this.message_id){
             if(Array.isArray(this.message_id) && !this.message_id.includes(datas.id)) return
             else if(datas.id !== this.message_id) return
@@ -68,10 +68,10 @@ class Collector extends event{
         }
         this.collection.push(datas)
         if(this.type2 === 1) this.emit("collecting", bot, datas)
-        if(this.options.number && this.options.number === this.collection.length) this.end()
+        if(this.options.number && this.options.number === this.collection.length) this.__end()
     }
 
-    handleDeletePacket(bot, datas){
+    __handleDeletePacket(bot, datas){
         let states = []
         if(this.channel_id){
             if(Array.isArray(this.channel_id) && this.channel_id.includes(datas.channel_id)) states.push(true)
@@ -83,7 +83,7 @@ class Collector extends event{
         }
         if(states.includes(true)){
             this.emit("error")
-            this.end("argu")
+            this.__end("argu")
         }
     }
 }

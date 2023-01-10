@@ -103,7 +103,7 @@ class Queue{
        return {total: Number(this.np.time), remaining, played}
     }
 
-    _update(infos){
+    __update(infos){
         this.#voiceInfos = infos
     }
 

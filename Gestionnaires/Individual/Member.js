@@ -10,17 +10,16 @@ class Member{
         this.deaf = member.deaf ?? false
         this.mute = member.mute ?? false
         this.guild = member.guild || bot.guilds.get(member.guild_id) || null
-        this.voice = {presence: member.voice_presence || this.guild?.voice_states.get(this.user_id) || null, channel: member.voice_channel || this.guild?.voice_states.get(this.user_id)?.channel || null}
+        this.voice = {presence: member.voice_presence || this.guild?.voice_states?.get(this.user_id) || null, channel: member.voice_channel || this.guild?.voice_states?.get(this.user_id)?.channel || null}
         this.pending = member.pending ?? false
         this.permissions = member.permissions || null
         this.communication_disabled_until = member.communication_disabled_until || null
         this.bot_token = bot.discordjs.token
         this.guild_id = member.guild_id
-        this.vguild_id = this.guild ? this.guild.vguild_id : null
         this._bot = bot
     }
 
-    Modify_Datas(member){
+    __Modify_Datas(member){
         let tocheck = Object.entries(member)
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 

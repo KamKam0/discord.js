@@ -8,14 +8,15 @@ const EventHandler = require("@kamkam1_0/discord-eventhandler")
 const VoiceManager = require("./VoiceManager")
 const ORM = require("@kamkam1_0/sql-orm")
 class Bot extends EventEmitter{
-    constructor(elements){
+    constructor(intents, elements){
         super()
         this.langues = []
+        this.intents = this.#attributeintents(intents)
         this.default_language = null
         this.discordjs = {ws: null, lastEvent: null, interval: null, lastACK: null, session_id: null, HBinterval: null, dvdatas: null, lancement: null, guild_ids: [], available_ids: [], interval_state: null, token: null, lastPing: -1, reconnection_url: null}
         this.config = this.#GetDB()
         this.name = this.#checkName()
-        this.sql = String(elements) === "false" ? false : ((typeof elements === "object" || !elements) ? new ORM(elements || {host: "127.0.0.1", port: 3306, user: "root", database: this.name}) : process.exit())
+        this.sql = this.#attributeSQL(intents, elements)
         this.guilds = new Guilds(this)
         this.users = new Users(this)
         this.channels = new Channels(this)
@@ -30,53 +31,52 @@ class Bot extends EventEmitter{
         this.utils = require("../Utils/functions")
     }
 
+    #attributeintents(intents){
+        if(!intents || !Array.isArray(intents) || intents.filter(e => typeof e === "string").length !== intents.length) return require("../Utils/functions").get_intents_n("ALL")
+        return require("../Utils/functions").get_intents_n(intents)
+    }
+
+    #attributeSQL(intents, elements){
+        let toTreat = null
+        if(!elements && intents) toTreat = intents
+        else if(elements) toTreat = elements
+        if(!toTreat) return new ORM({host: "127.0.0.1", port: 3306, user: "root", database: this.name})
+        if(Array.isArray(toTreat) || typeof toTreat === "boolean"){
+            if(typeof toTreat === "boolean") return false
+            return new ORM(toTreat)
+        }
+        return new ORM({host: "127.0.0.1", port: 3306, user: "root", database: this.name})
+    }
+
     get database_state(){
         if(!this.sql) return false
         if(this.sql.connectionState) return "stable"
         return "unstable"
     }
 
-    vstatus(bot, VID){
+    __userStatus(ID){
         return new Promise(async (resolve, reject) => {
-            if(!bot.database_state || bot.database_state === "unstable") return reject(new Error("La connexion avec la BDD sql n'est pas initialisée - bot"))
-            if(!VID) return reject(new Error("Incorrect infos"))
-            if(VID === this.config.general["ID createur"]) return resolve("ALL")
-            else if(bot.sql){
-                let admin = await bot.sql.select("admin")
-                let vip = await bot.sql.select("vip")
-                if(admin && admin[0] && vip && vip[0]){
-                    if(admin.find(c => c.ID === VID) && vip.find(c => c.ID === VID)) return resolve("ALL")
-                    else{
-                        if(admin.find(c => c.ID === VID)) return resolve("Admin")
-                        else if(vip.find(c => c.ID === VID)) return resolve("VIP")
-                        else return resolve("User")
-                    }  
-                }else if(admin && admin[0]){
-                    if(admin.find(c => c.ID === VID)) return resolve("Admin")
-                    else return resolve("User")
-                }else if(vip && vip[0]){
-                    if(vip.find(c => c.ID === VID)) return resolve("VIP")
-                    else return resolve("User")
-                }else return resolve("User")
+            if(!this.database_state || this.database_state === "unstable") return reject(new Error("La connexion avec la BDD sql n'est pas initialisée - bot"))
+            if(!ID) return reject(new Error("Incorrect infos"))
+            let returnInfos = {0: "User", 1: "VIP", 2: "Admin", 3: "Admin & VIP", 4: "Owner"}
+            if(ID === this.config.general["ID createur"]) return resolve({...returnInfos, value: 4})
+            else if(this.sql){
+                let tables = await this.sql.show()
+                tables = tables.map(e => Object.values(e)[0])
+                let value = 0
+                let admin;
+                let vip;
+                if(tables.includes("admin")) admin = await this.sql.select("admin")
+                if(tables.includes("vip")) vip = await this.sql.select("vip")
+                if(admin && admin[0] && admin.find(e => Object.entries(e).find(c => c[0].toLowerCase() === "id")[1] === ID)) value += 2
+                if(vip && vip[0] && vip.find(e => Object.entries(e).find(c => c[0].toLowerCase() === "id")[1] === ID)) value += 1
+                return resolve({...returnInfos, value})
             }
+            return resolve({...returnInfos, value: 0})
         })
     }
 
-    ven(bot, ID){
-        return new Promise(async (resolve, reject) => {
-            if(bot.database_state === "stable"){
-                let result = await bot.sql.select("general")
-                let vid = result.find(re => re.ID === ID)
-                if(!vid || !vid.ID){
-                    vid = {ID, Language: this.default_language, guild_state: "enable"}
-                    bot.sql.insert("general", vid)
-                }
-                return resolve(vid)
-            }else return resolve({ID: ID, Language: this.default_language})
-        })
-    }
-
-    setCreator(datas){
+    __setCreator(datas){
         if(!datas || typeof datas !== "object" || !datas.id || !datas.channel_id) return "invalid"
         this.creator = datas
         return this
@@ -170,12 +170,12 @@ class Bot extends EventEmitter{
         })
     }
 
-    get_connection(presence){
+    __get_connection(presence){
         return {
             op: 2,
             d: {
                 token: this.discordjs.token,
-                intents: require("../Utils/functions").get_intents_n("ALL"),
+                intents: this.intents,
                 properties: {
                     os: require("os").platform(),
                     browser: "Darkness-Group_own-module",
@@ -223,7 +223,7 @@ class Bot extends EventEmitter{
         })
     }
 
-    Initiate(){
+    __Initiate(){
         let commands = this.handler.GetAllCommands()
         let error = []
         let SlashChecker = require("../Methods/interaction").VerifyInteraction
@@ -279,7 +279,7 @@ class Bot extends EventEmitter{
             if(!cmd) this.CreateSlashCommand(datas)
             else{
                 if(!datas.compare(cmd)) this.ModifySlashCommand(datas)
-                commands = commands.DeleteCommand(cmd.name)
+                commands = commands.__DeleteCommand(cmd.name)
             }
         })
         if(commands.length > 0) commands.container.forEach(cmd => this.DeleteSlashCommand(cmd.id))

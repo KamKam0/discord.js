@@ -5,17 +5,17 @@ class StageInstances extends Base{
         super(_bot, guildid)
     }
 
-    AddStage(stage){
+    __AddStage(stage){
         this.container.push(new StageInstance({...stage, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
-    AddStages(stages){
-        stages.map(sta => this.AddStage(sta))
+    __AddStages(stages){
+        stages.map(sta => this.__AddStage(sta))
         return this
     }
 
-    DeleteStage(ID){
+    __DeleteStage(ID){
         this.container.splice(this.container.indexOf(this.container.find(sta => sta.id === ID)), 1)
         return this
     }

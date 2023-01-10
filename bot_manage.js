@@ -8,11 +8,11 @@ module.exports.login = async (bot, presence) => {
             if(!us){
                 setTimeout(() => this.login(bot, (bot.presence || presence)), 5 * 1000 * 60)
                 return
-            }else bot.setCreator({id: us.recipients[0].id, channel_id: us.id})
+            }else bot.__setCreator({id: us.recipients[0].id, channel_id: us.id})
         }
 
         //checking constants
-        let checked = bot.Initiate()
+        let checked = bot.__Initiate()
         if(!checked.status){
             let erembed = new (require("./Classes/Embed"))()
             .setTitle("Command error")
@@ -64,7 +64,7 @@ module.exports.login = async (bot, presence) => {
         bot.discordjs.ws = WebSocket
         
         if(bot.state !== "reconnect"){
-            var body_login = body = bot.get_connection((bot.presence || presence))
+            var body_login = body = bot.__get_connection((bot.presence || presence))
             bot.presence = body_login.d.presence
         }
 

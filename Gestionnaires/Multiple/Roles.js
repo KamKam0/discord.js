@@ -5,17 +5,17 @@ class Roles extends Base{
         super(_bot, guildid)
     }
 
-    AddRole(role){
+    __AddRole(role){
         this.container.push(new Role({...role, token: this._bot.discordjs.token, guild_id: this.guild_id}, this._bot))
         return this
     }
 
-    AddRoles(Roles){
-        Roles.map(ro => this.AddRole(ro))
+    __AddRoles(Roles){
+        Roles.map(ro => this.__AddRole(ro))
         return this
     }
 
-    DeleteRole(ID){
+    __DeleteRole(ID){
         this.container.splice(this.container.indexOf(this.container.find(ro => ro.id === ID)), 1)
         return this
     }

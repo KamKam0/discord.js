@@ -1,6 +1,6 @@
 module.exports = async (bot, emoji) => {
     const guild = bot.guilds.get(emoji.guild_id)
-    guild.emojis.AddEmoji(emoji)
+    guild.emojis.__AddEmoji(emoji)
     if(bot.database_state !== "unstable") bot.emit(name(), bot, guild.emojis.get(emoji.id))
 }
 
