@@ -45,27 +45,45 @@ class Collector extends event{
 
     __handlePacket(bot, datas){
         if(this.type === "message" && this.message_id){
-            if(Array.isArray(this.message_id) && !this.message_id.includes(datas.id)) return
+            if(Array.isArray(this.message_id)){
+                if(!this.message_id.includes(datas.id)) return
+            } 
             else if(datas.id !== this.message_id) return
         }
         if(this.type === "interaction" && this.message_id){
-            if(Array.isArray(this.message_id) && !this.message_id.includes(datas.message.id)) return
+            if(Array.isArray(this.message_id)){
+                if(!this.message_id.includes(datas.message.id)) return
+            }
             else if(datas.message.id !== this.message_id) return
         }
         if(this.interaction_id){
-            if(Array.isArray(this.interaction_id) && !(this.interaction_id.includes(datas.id) || this.interaction_id.includes(datas.custom_id))) return
-            else if((datas.custom_id !== this.interaction_id) && (datas.id !== this.interaction_id)) return
+            console.log(2)
+            console.log(this.interaction_id)
+            console.log()
+            if(Array.isArray(this.interaction_id)) {
+                if(!(this.interaction_id.includes(datas.id) || this.interaction_id.includes(datas.custom_id))) return
+            }
+            else if((datas.custom_id !== this.interaction_id) && (datas.id !== this.interaction_id))  {
+                console.log(4)
+                return
+            }
         }
         if(this.channel_id){
-            if(Array.isArray(this.channel_id) && !this.channel_id.includes(datas.channel_id)) return
+            if(Array.isArray(this.channel_id)){
+                if(!this.channel_id.includes(datas.channel_id)) return
+            }
             else if(datas.channel_id !== this.channel_id) return
         }
         if(this.guild_id){
-            if(Array.isArray(this.guild_id) && !this.guild_id.includes(datas.guild_id)) return
+            if(Array.isArray(this.guild_id)){
+                if(!this.guild_id.includes(datas.guild_id)) return
+            } 
             else if(datas.guild_id !== this.guild_id) return
         }
         if(this.options.user_id){
-            if(Array.isArray(this.options.user_id) && !this.options.user_id.includes(datas.user_id)) return
+            if(Array.isArray(this.options.user_id)){
+                if(!this.options.user_id.includes(datas.user_id)) return
+            }
             else if(datas.user_id !== this.options.user_id) return
         }
         this.collection.push(datas)
