@@ -21,8 +21,9 @@ class Guilds extends Base{
     }
 
     __ReplaceGuild(guild){
+        let voice = this.get(guild.id).voice
         this.container.splice(this.container.indexOf(this.container.find(gu => gu.id === guild.id)), 1)
-        this.container.push(new Guild(this._bot, guild))
+        this.container.push(new Guild(this._bot, guild), voice)
         return this
     }
 }

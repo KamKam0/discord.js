@@ -6,8 +6,8 @@ class Voice{
         this.channel_id = voice.channel_id || null
         this.channel = this.channel_id ? bot.channels.get(this.channel_id) : null
         this.user_id = voice.user_id
-        this.member = voice.member ? this.guild.members.get(voice.member.user_id) : null
-        this.user = voice.user ? bot.users.get(voice.user.id) :  null
+        this.member = this.guild.members.get(voice.user_id) || null
+        this.user = bot.users.get(voice.user_id) || null
         this.session_id = voice.session_id
         this.deaf = voice.deaf ?? false
         this.mute = voice.mute ?? false

@@ -18,6 +18,7 @@ class Collector extends event{
     }
 
     #start(){
+        this.bot.setMaxListeners(this.bot.getMaxListeners() + 4)
         if(this.type === "message") this.bot.addListener("MESSAGE_CREATE", this.HandleFunction)
         if(this.type === "interaction") this.bot.addListener("INTERACTION_CREATE", this.HandleFunction)
         this.bot.addListener("CHANNEL_DELETE", this.UnHandleFunction)
@@ -33,6 +34,7 @@ class Collector extends event{
         if(this.type === "interaction") this.bot.removeListener("INTERACTION_CREATE", this.HandleFunction)
         this.bot.removeListener("CHANNEL_DELETE", this.UnHandleFunction)
         this.bot.removeListener("GUILD_DELETE", this.UnHandleFunction)
+        this.bot.setMaxListeners(this.bot.getMaxListeners() - 4)
         if(!argu){
             if((this.options.number || this.options.time) && this.collection.length === 0) this.emit("error")
             else if(this.type2 === 0) this.emit("done", this.collection)

@@ -105,7 +105,7 @@ class Bot extends EventEmitter{
 
     Login(presence){
         this.handler.Deploy()
-        this.events.Deploy()
+        this.events.Deploy(presence)
         this.cooldown.Deploy(["global", "commands", "verif", "mention"])
         return new Promise(async (resolve, reject) => {
             require("../bot_manage").login(this, presence)
@@ -188,15 +188,21 @@ class Bot extends EventEmitter{
     }
 
     SetStatus(options){
-        return require("../Methods/me").setstatus(this, options)
+        let presence = require("../Methods/me").setstatus(this, options)
+        this.events.presence = presence
+        return presence
     }
 
     SetActivity(options){
-        return require("../Methods/me").setactivity(this, options)
+        let presence = require("../Methods/me").setactivity(this, options)
+        this.events.presence = presence
+        return presence
     }
 
     SetPresence(options){
-        return require("../Methods/me").setpresence(this, options)
+        let presence =  require("../Methods/me").setpresence(this, options)
+        this.events.presence = presence
+        return presence
     }
     
     SendMessage(channelid, options){

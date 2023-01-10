@@ -53,16 +53,16 @@ module.exports.send = async (token, channelid, options, path, method, bot) => {/
                 body_files.append("payload_json", JSON.stringify(body))
             }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject({code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Message"})
             const basedatas = await fetch(url, {method: method ? method : "POST", headers: baseheaders, body: body_files ? body_files : JSON.stringify(body)}).catch(err => {})
-            console.log("message1d")
-            console.log(method)
-            console.log(url)
-            console.log(channelid)
-            console.log(options)
-            console.log("message1e")
-            const datas = await basedatas.json()
-            console.log("message2d")
-            console.log(datas)
-            console.log("message2e")
+
+            let datas;
+            try{
+                datas = await basedatas.json()
+            }catch(err){
+                this.send(token, channelid, options)
+                .catch(err => reject(err))
+                .then(datas => resolve(datas))
+            }
+  
             if(!datas || datas.code || datas.retry_after){
                 if(datas && datas.retry_after){
                     setTimeout(() => {

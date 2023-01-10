@@ -16,7 +16,7 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
         
         for (const num in args){
             if(!args[num].value && (String(args[num].required) === "true" || String(args[num].required) === "undefined")) return reject({code: errors["84"].code, message: errors["84"].message, file: name, variable: args[num].data_name})
-            if(args[num].value){
+            if(args[num].value && (!args[num].check || (args[num].check && typeof args[num].check === "boolean"))){
                 if(!args[num].type){
                     switch(args[num].data_name){
                         case("bot"):

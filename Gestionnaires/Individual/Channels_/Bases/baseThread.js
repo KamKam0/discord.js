@@ -20,7 +20,7 @@ class baseGuild extends BaseGuild{
      */
     removemember(memberid){
         return new Promise((resolve, reject) => {
-            require("../../Methods/threads").removethreadmember(this.bot_token, this.id, memberid, this._bot)
+            require("../../../../Methods/threads").removethreadmember(this.bot_token, this.id, memberid, this._bot)
             .then(datas => resolve(datas))
             .catch(err => reject(err))
         })
@@ -32,7 +32,7 @@ class baseGuild extends BaseGuild{
      */
     leave(){
         return new Promise((resolve, reject) => {
-            require("../../Methods/threads").leavethread(this.bot_token, this.id, memberid, this._bot)
+            require("../../../../Methods/threads").leavethread(this.bot_token, this.id, memberid, this._bot)
             .then(datas => resolve(datas))
             .catch(err => reject(err))
         })
@@ -45,7 +45,23 @@ class baseGuild extends BaseGuild{
      */
     addmember(memberid){
         return new Promise((resolve, reject) => {
-            require("../../Methods/threads").addthreadmember(this.bot_token, this.id, memberid, this._bot)
+            require("../../../../Methods/threads").addthreadmember(this.bot_token, this.id, memberid, this._bot)
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
+        })
+    }
+
+    getmember(memberid, withmember, limit, after){
+        return new Promise((resolve, reject) => {
+            require("../../../../Methods/threads").getthreadmember(this.bot_token, this.id, memberid, withmember, limit, after, this._bot)
+            .then(datas => resolve(datas))
+            .catch(err => reject(err))
+        })
+    }
+
+    getmembers(withmember, limit, after){
+        return new Promise((resolve, reject) => {
+            require("../../../../Methods/threads").getthreadmembers(this.bot_token, this.id, withmember, limit, after, this._bot)
             .then(datas => resolve(datas))
             .catch(err => reject(err))
         })

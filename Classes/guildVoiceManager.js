@@ -1,15 +1,54 @@
 const queueManager = require("./queueManager")
 class voiceManager{
+    #timeout;
+    #deployed;
     constructor(bot, guild_id){
         this.state = false
+        this.#deployed = false
         this.paused_since = null
         this.playing = false
         this.connection = null
         this.resource = null
         this.managing = false
+        this.#timeout = null
         this.queue = new queueManager(this)
         this._bot = bot
+        this.channel_id = null
         this.id = guild_id
+        this.__Handler = this.__handlepacket.bind(this)
+    }
+
+    __deploy(){
+        if(this.#deployed) return
+        this._bot.setMaxListeners(this._bot.getMaxListeners() + 3)
+        this._bot.addListener("VOICE_CREATE", this.__Handler)
+        this._bot.addListener("VOICE_DELETE", this.__Handler)
+        this._bot.addListener("VOICE_UPDATE", this.__Handler)
+        this.#deployed = true
+    }
+
+    __undeploy(){
+        if(!this.#deployed) return
+        this._bot.removeListener("VOICE_CREATE", this.__Handler)
+        this._bot.removeListener("VOICE_DELETE", this.__Handler)
+        this._bot.removeListener("VOICE_UPDATE", this.__Handler)
+        this._bot.setMaxListeners(this._bot.getMaxListeners() - 3)
+        this.#deployed = false
+        if(this.#timeout) clearTimeout(this.#timeout)
+    }
+
+    __handlepacket(bot, voice, newvoice){
+        if(this.state && voice.user_id !== bot.user.id && !voice.user.bot){
+            if(newvoice && (newvoice.channel_id === this.channel_id || voice.channel_id === this.channel_id)){
+                if(newvoice.channel_id === this.channel_id) clearTimeout(this.#timeout)
+                else if(bot.guilds.get(this.id).voice_states.filter(e => !e.user.bot && e.channel_id === this.channel_id).length === 0) this.#timeout = setTimeout(() => this.stop(), 10 * 1000)
+            }else if(bot.guilds.get(this.id).voice_states.find(e => e.channel_id === voice.channel_id && e.user_id === voice.user_id) && voice.channel_id === this.channel_id) if(this.#timeout) clearTimeout(this.#timeout)
+            else if(voice.channel_id === this.channel_id) if(bot.guilds.get(this.id).voice_states.filter(e => !e.user.bot && e.channel_id === this.channel_id).length === 0) this.#timeout = setTimeout(() => this.stop(), 10 * 1000)
+        }
+        if(this.state && voice.user_id === bot.user.id){
+            if(!newvoice && bot.guilds.get(this.id).voice_states.find(e => e.channel_id === voice.channel_id && e.user_id === voice.user_id) && voice.channel_id === this.channel_id) if(bot.guilds.get(this.id).voice_states.filter(e => !e.user.bot && e.channel_id === this.channel_id).length === 0) this.#timeout = setTimeout(() => this.stop(), 10 * 1000)
+            else if(voice.channel_id === this.channel_id && !newvoice && !bot.guilds.get(this.id).voice_states.find(e => e.channel_id === voice.channel_id && e.user_id === voice.user_id)) this.__undeploy()
+        }
     }
 
     end(){
@@ -19,20 +58,23 @@ class voiceManager{
     stop(){
         if(this.state){
             this.queue.reset()
-            this.connection.stop()
+            if(this.connection) this.connection.stop()
             const {getVoiceConnection} = require("@discordjs/voice")
             getVoiceConnection(this.id).disconnect()
-            this.reset()
         }
+        this.#reset()
     }
 
-    reset(){
+    #reset(){
         this.state = false
+        this.#deployed = false
         this.paused_since = null
         this.playing = false
         this.connection = null
         this.resource = null
         this.managing = false
+        this.channel_id = null
+        this.#timeout = null
     }
 
     check(){
@@ -97,7 +139,7 @@ class voiceManager{
             }
         })
         this.connection.on("stateChange", async (oldstate, newstate) => { 
-            if(newstate.status === "disconnected" || newstate.status === "autopaused") return this.reset() 
+            if(newstate.status === "disconnected" || newstate.status === "autopaused") return this.stop() 
         })
         this.connection.on("error", err =>{
             this.managing = false

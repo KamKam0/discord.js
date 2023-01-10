@@ -33,7 +33,7 @@ class Users extends Base{
         return this
     }
 
-    CheckUsers(guild){
+    __CheckUsers(guild){
         let tocheck = this.container.filter(us => us.guilds.includes(guild.id))
         let to1 = tocheck.filter(us => !guild.members.find(us2 => us2.user.id === us.id))
         let to2 = tocheck.filter(us => guild.members.find(us2 => us2.user.id === us.id))

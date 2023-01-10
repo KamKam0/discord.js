@@ -78,15 +78,10 @@ function GetApiURL(){
  * @param {object[]} permissions 
  * @returns 
  */
-function get_bitfield(permissions){
+function get_bitfield(permissions){//totest
     if(!Array.isArray(permissions)) return null
     if(!permissions[0]) return 0
-    let result = 0
-    permissions.forEach(perm => {
-        perm = String(perm).toUpperCase()
-        if(constants.permissions_bitfield[perm]) result += constants.permissions_bitfield[perm]
-    })
-    return result
+    permissions.map(perm => String(perm).toUpperCase()).reduce((a, b) => constants.permissions_bitfield[b] ? a+constants.permissions_bitfield[b] : a+0, 0)
 }
 
 /**
@@ -94,19 +89,10 @@ function get_bitfield(permissions){
  * @param {object[]} intents 
  * @returns 
  */
-function get_intents_n(intents){
+function get_intents_n(intents){//totest
     if(!Array.isArray(intents) && typeof intents !== "string" && intents !== "ALL") return "Incorrect Intents"
-    let result = 0
-    if(intents === "ALL"){
-        Object.values(constants.Intents).forEach(intent =>{
-            result += intent
-        })
-    }else{
-        intents.forEach(intent =>{
-            if(constants.Intents[intent]) result += constants.Intents[intent]
-        })
-    }
-    return result
+    if(intents === "ALL") return Object.values(constants.Intents).reduce((a, b) => a+b, 0)
+    return intents.reduce((a, b) => constants.Intents[b] ? a + constants.Intents[b] : a+0, 0)
 }
 
 /**
@@ -114,11 +100,9 @@ function get_intents_n(intents){
  * @param {number} bitfield 
  * @returns 
  */
-function get_badges(bitfield){
+function get_badges(bitfield){//totest
     if(!bitfield) return "Incorrect number"
-    const ACFlags = Object.entries(constants.badges).sort(function(a,b) {
-        return Number(b[1]) - Number(a[1]);
-    })
+    const ACFlags = Object.entries(constants.badges).sort((a, b) => Number(b[1]) - Number(a[1]))
     const final_p = []
     let processConvert = Number(bitfield)
     ACFlags.forEach(flag => {
@@ -146,11 +130,8 @@ function check_color(color){
  * @param {number} bitfield 
  * @returns 
  */
-function bietfieldpermission(bitfield){
-
-    const ACFlags = Object.entries(constants.permissions_bitfield).sort(function(a,b) {
-        return Number(b[1]) - Number(a[1]);
-    })
+function bietfieldpermission(bitfield){//totest
+    const ACFlags = Object.entries(constants.permissions_bitfield).sort((a, b) => Number(b[1]) - Number(a[1]))
     const final_p = []
     let processConvert = Number(bitfield)
     ACFlags.forEach(flag => {
@@ -167,10 +148,8 @@ function bietfieldpermission(bitfield){
  * @param {string} Id 
  * @returns 
  */
-function check_id(Id){
-    if(isNaN(Id)) return false
-    if(typeof Id !== "string") return false
-    if((Id.length !== 18) && (Id.length !== 19)) return false 
+function check_id(Id){//totest
+    if(isNaN(Id) || typeof Id !== "string" || Id.length > 22 || Id.length < 15) return false
     return true
 }
 

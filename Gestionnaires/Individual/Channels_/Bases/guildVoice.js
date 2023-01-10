@@ -17,8 +17,10 @@ class guildVoice extends Base{
     join(deaf, mute){
         const {joinVoiceChannel} = require("@discordjs/voice")
         let guild = this._bot.guilds.get(this.guild_id)
-        guild.voice.reset()
+        guild.voice.stop()
+        guild.voice.__deploy()
         guild.voice.state = true
+        guild.voice.channel_id = this.id
         joinVoiceChannel({
             channelId: this.id,
             guildId: this.guild_id,
@@ -32,7 +34,7 @@ class guildVoice extends Base{
         const {getVoiceConnection} = require("@discordjs/voice")
         let guild = this._bot.guilds.get(this.guild_id)
         if(guild.voice.state) getVoiceConnection(this.guild_id).disconnect()
-        if(guild.voice.state) guild.voice.reset()
+        if(guild.voice.state) guild.voice.stop()
     }
 }
 
