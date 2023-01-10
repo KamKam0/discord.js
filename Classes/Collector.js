@@ -57,16 +57,10 @@ class Collector extends event{
             else if(datas.message.id !== this.message_id) return
         }
         if(this.interaction_id){
-            console.log(2)
-            console.log(this.interaction_id)
-            console.log()
             if(Array.isArray(this.interaction_id)) {
                 if(!(this.interaction_id.includes(datas.id) || this.interaction_id.includes(datas.custom_id))) return
             }
-            else if((datas.custom_id !== this.interaction_id) && (datas.id !== this.interaction_id))  {
-                console.log(4)
-                return
-            }
+            else if((datas.custom_id !== this.interaction_id) && (datas.id !== this.interaction_id)) return
         }
         if(this.channel_id){
             if(Array.isArray(this.channel_id)){
