@@ -54,7 +54,7 @@ class User{
         })
     }
 
-    compareuser(user){
+    __compareuser(user){
         let tocheck = Object.entries(user)
         let errors = []
         tocheck.forEach(e => { 

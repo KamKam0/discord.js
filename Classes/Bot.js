@@ -313,18 +313,28 @@ class Bot extends EventEmitter{
             console.log("Pas de sections general dans votre config.json")
             process.exit()
         }
-        if(!config.general.language || typeof config.general.language !== "string") this.default_language = "en"
-        else this.default_language = config.general.language
+        const availableLanguages = require("../constants").languagesAvailable
+        if(!config.general.language || typeof config.general.language !== "string") this.default_language = "en-US"
+        else if (availableLanguages.find(da => da.id === config.general.language)) this.default_language = config.general.language
+        else this.default_language = "en-US"
+
         let languages = getCheck("langues", true)
+        
         languages[1] = languages[1].filter(e => e.endsWith(".json"))
         let toreturn = languages[1].map(e => JSON.parse(require("fs").readFileSync(process.cwd()+languages[0]+"langues"+languages[0]+e, 'utf-8')))
+
         if(!toreturn.find(e => e.Langue_Code === this.default_language)){
             console.log("Aucun fichier de langue ne correspond à votre language par défaut")
             process.exit()
         }
+
         toreturn.forEach(langue => {
             if(!langue["Langue_Code"]){
                 console.log("Aucun code de language présent dans un de vos fichiers langues")
+                process.exit()
+            }
+            if(!availableLanguages.find(da => da.id === langue["Langue_Code"])){
+                console.log(`Le Code de language dans votre fichier de langue ${langue["Langue_Code"]} est erroné`)
                 process.exit()
             }
             ["Help", "Options", "Choices"].forEach(opt => {
@@ -335,6 +345,7 @@ class Bot extends EventEmitter{
             })
         })
         this.langues = toreturn
+
         let dbtr = {"general": config.general, "Dependencies": {}}
         if(config.dependencies){
             if(Array.isArray(config.dependencies)){

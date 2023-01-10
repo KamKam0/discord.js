@@ -16,7 +16,7 @@ class Guilds extends Base{
     }
 
     __DeleteGuilds(IDS){
-        IDS.map(gu => this.__DeleteChannel(gu))
+        IDS.map(gu => this.__DeleteGuild(gu))
         return this
     }
 

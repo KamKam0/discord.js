@@ -213,4 +213,38 @@ const autoditTransforms = {
     "THREAD_DELETE":	112
 }
 
-module.exports =  {convert_channels, badges, Intents, channels_type, Colors, permissions_bitfield, autoditTransforms}
+const languagesAvailable = [
+    {id: "id", name: "Indonesian"},
+    {id: "da", name: "Danish"},
+    {id: "de", name: "German"},
+    {id: "en-GB", name: "English, UK"}, 
+    {id: "en-US", name: "English, US"}, 
+    {id: "es-ES", name: "Spanish"},
+    {id: "fr", name: "French"},
+    {id: "hr", name: "Croatian"},
+    {id: "it", name: "Italian"},
+    {id: "lt", name: "Lithuanian"},
+    {id: "hu", name: "Hungarian"},
+    {id: "nl", name: "Dutch"},
+    {id: "no", name: "Norwegian"},
+    {id: "pl", name: "Polish"},
+    {id: "pt-BR", name: "Portuguese, Brazilian"},
+    {id: "ro", name: "Romanian"},
+    {id: "fi", name: "Finnish"},
+    {id: "sv-SE", name: "Swedish"},
+    {id: "vi", name: "Vietnamese"},
+    {id: "tr", name: "Turkish"},
+    {id: "cs", name: "Czech"},
+    {id: "el", name: "Greek"},
+    {id: "bg", name: "Bulgarian"},
+    {id: "ru", name: "Russian"},
+    {id: "uk", name: "Ukrainian"},
+    {id: "hi", name: "Hindi"},
+    {id: "th", name: "Thai"},
+    {id: "zh-CN", name: "Chinese"},
+    {id: "ja", name: "Japanese"},
+    {id: "zh-TW", name: "Chinese, Taiwan"},
+    {id: "ko", name: "Korean"}
+]
+
+module.exports =  {convert_channels, badges, Intents, channels_type, Colors, permissions_bitfield, autoditTransforms, languagesAvailable}
