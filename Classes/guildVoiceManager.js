@@ -115,8 +115,22 @@ class voiceManager{
             this.resource = resource
             this.playing = true
             this.queue.__update(this)
+            this.#mamangeinter()
         }
 
+    }
+
+    #mamangeinter(){
+        this.connection.on("stateChange", async (oldstate, newstate) => {
+            if(oldstate.status === "playing" && newstate.status === "idle"){
+                this.playing = false
+                this.connection = null
+                this.resource = null
+            }
+        })
+        this.connection.on("stateChange", async (oldstate, newstate) => { 
+            if(newstate.status === "disconnected" || newstate.status === "autopaused") return this.stop() 
+        })
     }
 
     manageVoice(fonction){
@@ -137,9 +151,6 @@ class voiceManager{
                     fonction(this.queue.next, ...trueargs)
                 }
             }
-        })
-        this.connection.on("stateChange", async (oldstate, newstate) => { 
-            if(newstate.status === "disconnected" || newstate.status === "autopaused") return this.stop() 
         })
         this.connection.on("error", err =>{
             this.managing = false
