@@ -43,8 +43,9 @@ async function deployGuild(bot, datas){
         if(!vid || !vid.ID){
             vid = {ID, Language: this.default_language, guild_state: "enable"}
             bot.sql.insert("general", vid)
-            datas.db_language  = bot.default_lan
-        }else datas.db_language  = vid.Language
+            datas.db_language = bot.default_language
+        }else if(vid.Language && require("../constants").languagesAvailable.find(da => da.id === vid.Language)) datas.db_language  = vid.Language
+        else datas.db_language = bot.default_language
     }else datas.db_language  = bot.default_language
   }
   analysePresences(datas)
