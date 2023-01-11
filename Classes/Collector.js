@@ -36,7 +36,7 @@ class Collector extends event{
         this.bot.removeListener("GUILD_DELETE", this.UnHandleFunction)
         this.bot.setMaxListeners(this.bot.getMaxListeners() - 4)
         if(!argu){
-            if((this.options.number || this.options.time) && this.collection.length === 0) this.emit("error")
+            if((this.options.number || this.options.time) && this.collection.length === 0) this.emit("end")
             else if(this.type2 === 0) this.emit("done", this.collection)
             else if(this.type2 === 1) this.emit("end")
         }
@@ -88,12 +88,16 @@ class Collector extends event{
     __handleDeletePacket(bot, datas){
         let states = []
         if(this.channel_id){
-            if(Array.isArray(this.channel_id) && this.channel_id.includes(datas.channel_id)) states.push(true)
-            else if(datas.channel_id === this.channel_id) states.push(true)
+            if(Array.isArray(this.channel_id)){
+                if(!this.channel_id.includes(datas.channel_id)) states.push(true)
+            }
+            else if(datas.channel_id !== this.channel_id) states.push(true)
         }
         if(this.guild_id){
-            if(Array.isArray(this.guild_id) && this.guild_id.includes(datas.guild_id)) states.push(true)
-            else if(datas.guild_id === this.guild_id) states.push(true)
+            if(Array.isArray(this.guild_id)){
+                if(!this.guild_id.includes(datas.guild_id)) states.push(true)
+            } 
+            else if(datas.guild_id !== this.guild_id) states.push(true)
         }
         if(states.includes(true)){
             this.emit("error")
@@ -108,7 +112,7 @@ module.exports = async (bot, type, datas, options={}) => {
         if(test.error) return reject(test)
         let Collecotrinstance = new Collector(bot, type, 0, test)
         Collecotrinstance.once("done", collection => resolve(collection))
-        Collecotrinstance.once("end", () => resolve(null))
+        Collecotrinstance.once("end", () => resolve([]))
         Collecotrinstance.once("error", () => reject([]))
     })
 }
