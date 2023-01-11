@@ -41,7 +41,7 @@ class Users extends Base{
         if(to1[0]) this.__DeleteUsers(to1.map(us => us.id))
         if(to3[0]) this.__AddUsers(to1.map(us => { return {...us.user, guild_id: guild.id}}))
         to2.forEach(user => {
-            let comparaison = this.container.find(e => e.id === user.id).__CompareUser(guild.members.find(me => me.user.id === user.id))
+            let comparaison = this.container.find(e => e.id === user.id).__compareuser(guild.members.find(me => me.user.id === user.id))
             if(comparaison.state === false) this.container.find(e => e.id === user.id).__Modify_Datas(guild.members.find(me => me.user.id === user.id))
         })
         return this
