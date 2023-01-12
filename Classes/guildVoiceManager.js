@@ -60,7 +60,7 @@ class voiceManager{
             this.queue.reset()
             if(this.connection) this.connection.stop()
             const {getVoiceConnection} = require("@discordjs/voice")
-            getVoiceConnection(this.id).disconnect()
+            getVoiceConnection(this.id)?.disconnect()
         }
         this.#reset()
     }
