@@ -26,8 +26,9 @@ module.exports = async (bot, datas) => {
 function name(){ return "GUILD_CREATE" }
 
 function analyseGuild(bot, datas, state){
-  if(bot.discordjs.available_ids.find(id => id.id === datas.id)){
-    bot.discordjs.available_ids = bot.discordjs.available_ids.filter(id => id.id !== datas.id)
+  let tempoGuild = bot.discordjs.available_ids.find(id => id.id === datas.id)
+  if(tempoGuild){
+    bot.discordjs.available_ids.splice(bot.discordjs.available_ids.indexOf(tempoGuild), 1)
     if(bot.discordjs.available_ids.length === 0){
       bot.state = "ready"
       if(bot.database_state !== "unstable" && state) bot.emit("READY", bot)
@@ -41,7 +42,7 @@ async function deployGuild(bot, datas){
         let result = await bot.sql.select("general")
         let vid = result.find(re => re.ID === datas.id)
         if(!vid || !vid.ID){
-            vid = {ID, Language: this.default_language, guild_state: "enable"}
+            vid = {ID: datas.id, Language: this.default_language, guild_state: "enable"}
             bot.sql.insert("general", vid)
             datas.db_language = bot.default_language
         }else if(vid.Language && require("../constants").languagesAvailable.find(da => da.id === vid.Language)) datas.db_language  = vid.Language

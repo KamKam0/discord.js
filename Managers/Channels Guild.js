@@ -1,4 +1,4 @@
-const BaseChannel = require("../Gestionnaires/Multiple/Channels Guild")
+const BaseChannel = require("../Gestionnaires/Multiple/Channels")
 class Channels extends BaseChannel{
     constructor(bot, guild_id){
         super(bot, guild_id)

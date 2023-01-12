@@ -1,5 +1,7 @@
-class Emoji{
+const Base = require("./base")
+class Emoji extends Base{
     constructor(emoji, bot){
+        super(bot)
         this.id = emoji.id
         this.name = emoji.name
         this.roles_ids = emoji.roles || []
@@ -9,8 +11,6 @@ class Emoji{
         this.available = emoji.available ?? true
         this.guild_id = emoji.guild_id
         this.guild = emoji.guild || bot.guilds.get(this.guild_id) || null
-        this.bot_token = bot.discordjs.token
-        this._bot = bot
     }
 
     __Modify_Datas(emoji){
@@ -18,6 +18,7 @@ class Emoji{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
+        this.__Modify_Get_Datas()
         return this
     }
 

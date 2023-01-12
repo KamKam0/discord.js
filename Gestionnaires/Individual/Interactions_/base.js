@@ -1,7 +1,9 @@
 const Message = require("../Message")
 const User = require("../User")
-class base{
+const Base = require("../base")
+class base extends Base{
     constructor(interaction, bot){
+        super(bot)
         this.id = interaction.id
         this.application_id = interaction.application_id
         this._bot = bot
@@ -18,8 +20,6 @@ class base{
         this.version = interaction.version
         this.guild_locale = interaction.guild_locale
         this.locale = interaction.locale
-        this.bot_token = bot.discordjs.token
-        this.bot_id = interaction.bot_id
     }
 
     __Modify_Datas(inte){
@@ -27,6 +27,7 @@ class base{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
+        this.__Modify_Get_Datas()
         return this
     }
 

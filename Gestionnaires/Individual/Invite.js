@@ -1,6 +1,8 @@
 const User = require("../Individual/User")
-class Invite{
+const Base = require("./base")
+class Invite extends Base{
     constructor(invite, bot){
+        super(bot)
         this.code = invite.code
         this.guild_id = invite.guild_id
         this.channel_id = invite.channel_id
@@ -16,8 +18,6 @@ class Invite{
         this.max_age = invite.max_age
         this.created_at = invite.created_at
         this.guild = invite.guild || bot.guilds.get(this.guild_id) || null
-        this.bot_token = bot.discordjs.token
-        this._bot = bot
     }
 
     #type(type){
@@ -41,6 +41,7 @@ class Invite{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
+        this.__Modify_Get_Datas()
         return this
     }
 

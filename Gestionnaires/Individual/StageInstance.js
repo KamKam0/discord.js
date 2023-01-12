@@ -1,4 +1,5 @@
-class StageInstance{
+const Base = require("./base")
+class StageInstance extends Base{
     constructor(stage, bot){
         this.id = stage.id
         this.guild_id = stage.guild_id || null
@@ -17,6 +18,7 @@ class StageInstance{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
+        this.__Modify_Get_Datas()
         return this
     }
 

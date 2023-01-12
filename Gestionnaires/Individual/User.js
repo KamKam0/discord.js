@@ -1,5 +1,7 @@
-class User{
+const Base = require("./base")
+class User extends Base{
     constructor(user, bot){
+        super(bot)
         this.id = user.id
         this.username = user.username
         this.discriminator = user.discriminator
@@ -16,8 +18,6 @@ class User{
         this.public_flags = user.public_flags || null
         this.dm = null
         this.guilds = user.guild_id ? [user.guild_id] : []
-        this.bot_token = bot.discordjs.token
-        this._bot = bot
     }
 
     __Modify_Datas(user){
@@ -25,6 +25,7 @@ class User{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
+        this.__Modify_Get_Datas()
         return this
     }
 

@@ -1,5 +1,7 @@
-class Slash{
+const Base = require("./base")
+class Slash extends Base{
     constructor(slash, bot){
+        super(bot)
         this.id = slash.id
         this.application_id = slash.application_id
         this.version = slash.version
@@ -12,8 +14,6 @@ class Slash{
         this.nsfw = slash.nsfw
         this.options = slash.options ? slash.options.map(opt => new (require("../../Classes/Options"))(opt)) : []
         this.description = slash.description || null
-        this.bot_token = bot.discordjs.token
-        this._bot = bot
     }
 }
 module.exports = Slash

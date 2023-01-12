@@ -10,8 +10,10 @@ const Events = require("../../Managers/Events")
 const Presences = require("../../Managers/Presences")
 const Messages = require("../../Managers/Messages")
 const voiceManager = require("../../Classes/guildVoiceManager")
-class Guild{
+const Base = require("./base")
+class Guild extends Base{
     constructor(bot, guild){
+        super(bot)
         this.name = guild.name
         this.id = guild.id
         this.icon = guild.icon || null
@@ -51,6 +53,7 @@ class Guild{
         this.stage_instances = (new StageInstances(bot, this.id)).__AddStages(guild.stage_instances.map(el => { return {...el, guild: this}}))
         this.guild_scheduled_events = (new Events(bot, this.id)).__AddEvents(guild.guild_scheduled_events.map(el => { return {...el, guild: this}}))
         this.members = (new Members(bot, this.id)).__AddMembers(guild.members.map(el => { return {...el, guild: this}}))
+        this.owner = this.members.get(this.owner_id)
         this.threads = (new Threads(bot, this.id)).__AddThreads(guild.threads.map(el => { return {...el, guild: this}}))
         this.voice_states = (new Voices(bot, this.id)).__AddVoices(guild.voice_states.map(el => { return {...el, guild: this}}))
         this.voice_states.container.forEach(voi => {
@@ -62,8 +65,6 @@ class Guild{
         this.messages = new Messages(bot, this.id)
         this.me = this.members.get(bot.user.id)
         this.db_language = guild.db_language
-        this._bot = bot
-        this.bot_token = bot.discordjs.token
         this.voice = new voiceManager(this._bot, this.id)
     }
 
@@ -167,6 +168,7 @@ class Guild{
                 else if(this[e[0]] !== e[1] && !treatable.includes(e[0])) this[e[0]] = e[1] 
             } 
         })
+        this.__Modify_Get_Datas()
         return this
     }
 

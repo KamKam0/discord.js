@@ -1,5 +1,7 @@
-class Integration{
+const Base = require("./base")
+class Integration extends Base{
     constructor(int, bot){
+        super(bot)
         this.guild_id = int.guild_id
         this.id = int.id
         this.name = int.name
@@ -18,8 +20,6 @@ class Integration{
         this.subscriber_count = int.subscriber_count
         this.revoked = int.revoked ?? false
         this.guild = int.guild || bot.guilds.get(this.guild_id) || null
-        this.bot_token = bot.discordjs.token
-        this._bot = bot
     }
 
     #type(type){
@@ -43,6 +43,7 @@ class Integration{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
+        this.__Modify_Get_Datas()
         return this
     }
     

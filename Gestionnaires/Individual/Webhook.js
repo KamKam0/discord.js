@@ -1,8 +1,9 @@
-class Webhook{
+const Base = require("./base")
+class Webhook extends Base{
     constructor(webhook, bot){
+        super(bot)
         this.guild = webhook.guild || bot.guilds.get(webhook.guild_id) || null
         this.guild_id = webhook.guild_id || null
-        this.bot_token = bot.discordjs.token
         this.type = this.#type2(webhook.type)
         this.id = webhook.id
         this.channel_id = webhook.channel_id || null
@@ -14,7 +15,6 @@ class Webhook{
         this.token = webhook.token
         this.application_id = webhook.application_id
         this.url = webhook.url
-        this._bot = bot
     }
 
     #type2(type){
@@ -39,6 +39,7 @@ class Webhook{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
+        this.__Modify_Get_Datas()
         return this
     }
 

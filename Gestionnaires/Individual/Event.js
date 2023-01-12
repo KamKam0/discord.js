@@ -1,6 +1,8 @@
 const User = require("./User")
-class Event{
+const Base = require("./base")
+class Event extends Base{
     constructor(event, bot){
+        super(bot)
         this.id = event.id
         this.guild_id = event.guild_id
         this.creator_id = event.creator_id
@@ -16,8 +18,6 @@ class Event{
         this.entity_metadata = event.entity_metadata
         this.image = event.image || null
         this.guild = event.guild || bot.guilds.get(this.guild_id) || null
-        this.bot_token = bot.discordjs.token
-        this._bot = bot
     }
 
     __Modify_Datas(event){
@@ -36,6 +36,7 @@ class Event{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
+        this.__Modify_Get_Datas()
         return this
     }
 

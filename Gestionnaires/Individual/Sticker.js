@@ -1,5 +1,7 @@
-class Sticker{
+const Base = require("./base")
+class Sticker extends Base{
     constructor(sticker, bot){
+        super(bot)
         this.id = sticker.id
         this.pack_id = sticker.pack_id || null
         this.name = sticker.name
@@ -11,9 +13,7 @@ class Sticker{
         this.available = sticker.available ?? false
         this.guild = sticker.guild || bot.guilds.get(sticker.guild_id) || null
         this.guild_id = sticker.guild_id
-        this.bot_token = bot.discordjs.token
         this.sort_value = sticker.sort_value || null
-        this._bot = bot
     }
 
     __Modify_Datas(sticker){
@@ -21,6 +21,7 @@ class Sticker{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
+        this.__Modify_Get_Datas()
         return this
     }
 

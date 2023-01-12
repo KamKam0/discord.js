@@ -176,10 +176,11 @@ class Bot extends EventEmitter{
             d: {
                 token: this.discordjs.token,
                 intents: this.intents,
+                compress: false,
                 properties: {
                     os: require("os").platform(),
-                    browser: "Darkness-Group_own-module",
-                    device: "Darkness-Group_own-module"
+                    browser: `@kamkam1_0/discord.js v${require("../index").version}`,
+                    device: `@kamkam1_0/discord.js v${require("../index").version}`
                 },
                 shards: [ 0 ],
                 presence: require("../Utils/functions").presence(presence)

@@ -1,5 +1,7 @@
-class Role{
+const Base = require("./base")
+class Role extends Base{
     constructor(role, bot){
+        super(bot)
         this.id = role.id
         this.name = role.name
         this.color = role.color
@@ -13,8 +15,6 @@ class Role{
         this.tags = role.tags || null
         this.guild = role.guild || bot.guilds.get(role.guild_id) || null
         this.guild_id = role.guild_id
-        this.bot_token = bot.discordjs.token
-        this._bot = bot
     }
     
     __Modify_Datas(role){
@@ -22,6 +22,7 @@ class Role{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
+        this.__Modify_Get_Datas()
         return this
     }
     

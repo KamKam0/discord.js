@@ -1,5 +1,7 @@
-class Member{
+const Base = require("./base")
+class Member extends Base{
     constructor(member, bot){
+        super(bot)
         this.user_id = member.user.id
         this.user = this.user_id ? bot.users.get(this.user_id) : null
         this.nick = member.nick || null
@@ -9,14 +11,12 @@ class Member{
         this.joined_at = member.joined_at
         this.deaf = member.deaf ?? false
         this.mute = member.mute ?? false
-        this.guild = member.guild || bot.guilds.get(member.guild_id) || null
-        this.voice = {presence: member.voice_presence || this.guild?.voice_states?.get(this.user_id) || null, channel: member.voice_channel || this.guild?.voice_states?.get(this.user_id)?.channel || null}
+        this.guild = bot.guilds.get(member.guild_id) || null
+        this.voice = {presence: this.guild?.voice_states?.get(this.user_id) || null, channel: this.guild?.voice_states?.get(this.user_id)?.channel || null}
         this.pending = member.pending ?? false
         this.permissions = member.permissions || null
         this.communication_disabled_until = member.communication_disabled_until || null
-        this.bot_token = bot.discordjs.token
         this.guild_id = member.guild_id
-        this._bot = bot
     }
 
     __Modify_Datas(member){
@@ -24,6 +24,7 @@ class Member{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
+        this.__Modify_Get_Datas()
         return this
     }
 

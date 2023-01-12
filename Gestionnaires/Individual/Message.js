@@ -1,7 +1,8 @@
 const Mentions = require("../Multiple/Mentions")
-class Message{
+const Base = require("./base")
+class Message extends Base{
     constructor(message, bot){
-        this._bot = bot
+        super(bot)
         this.user_id = message.user ? message.user_id : message.author.id
         this.user = this.user_id ? (bot.users.get(this.user_id) ?? null) : null
         this.guild_id = message.guild_id || null
@@ -33,7 +34,6 @@ class Message{
         this.components = message.components || []
         this.sticker_items = message.sticker_items || []
         this.stickers = message.stickers || []
-        this.bot_token = bot.discordjs.token
         this.typee = "message"
     }
 
@@ -47,6 +47,7 @@ class Message{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
+        this.__Modify_Get_Datas()
         return this
     }
 
