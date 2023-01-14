@@ -67,12 +67,12 @@ class Guild extends Base{
             this.members.get(voi.user_id).voice.presence = voi
             this.members.get(voi.user_id).voice.channel = this.channels.get(voi.channel_id)
         })
-        this.afk_channel = this.channels.get(afk_channel_id) || null
-        this.system_channel = this.channels.get(system_channel_id) || null
-        this.widget_channel = this.channels.get(widget_channel_id) || null
-        this.rules_channel = this.channels.get(rules_channel_id) || null
-        this.safety_alerts_channel = this.channels.get(safety_alerts_channel_id) || null
-        this.public_updates_channel = this.channels.get(public_updates_channel_id) || null
+        this.afk_channel = this.channels.get(this.afk_channel_id) || null
+        this.system_channel = this.channels.get(this.system_channel_id) || null
+        this.widget_channel = this.channels.get(this.widget_channel_id) || null
+        this.rules_channel = this.channels.get(this.rules_channel_id) || null
+        this.safety_alerts_channel = this.channels.get(this.safety_alerts_channel_id) || null
+        this.public_updates_channel = this.channels.get(this.public_updates_channel_id) || null
         this.premium_progress_bar_enabled = guild.premium_progress_bar_enabled ?? false
         this.messages = new Messages(bot, this.id)
         this.me = this.members.get(bot.user.id)
