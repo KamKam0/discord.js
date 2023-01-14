@@ -8,29 +8,24 @@ class Integration extends Base{
         this.type = int.type
         this.enabled = int.enabled || null
         this.syncing = int.syncing ?? false
-        this.role_id = int.role_id
-        this.role = int.role || null        
+        this.role_id = int.role_id || null  
         this.enable_emoticons = int.enable_emoticons ?? false
         this.expire_behavior = this.#type(int.expire_behavior)
         this.expire_grace_period = int.expire_grace_period
         this.user_id = int.user ? int.user.id : null
-        this.user = this.user_id ? bot.users.get(this.user_id) : null
         this.account = int.account || null
         this.synced_at = int.synced_at || null
         this.subscriber_count = int.subscriber_count
         this.revoked = int.revoked ?? false
-        this.guild = int.guild || bot.guilds.get(this.guild_id) || null
+        this.application_id = int.application ? int.application.id : null
+        this.scopes = int.scopes || []
     }
 
     #type(type){
-        if(isNaN(type)) return type
-        else{
-            const convert = {
-                0: "Remove role",
-                1: "Kick"
-            }
-            return convert[type]
-        }
+        return this.__typechange({
+            0: "Remove role",
+            1: "Kick"
+        }, type)
     }
 
     __Modify_Datas(inte){

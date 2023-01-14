@@ -13,6 +13,7 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
         const errors = require("../DB/errors.json")
         const utils = require("./functions")
         const optionsVerify = require("./checkoptions")
+        const urlChecker = require("./urlcheck")
         
         for (const num in args){
             if(!args[num].value && (String(args[num].required) === "true" || String(args[num].required) === "undefined")) return reject({code: errors["84"].code, message: errors["84"].message, file: name, variable: args[num].data_name})
@@ -23,6 +24,9 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
                             args[num].type = ["function", "object"]
                         break
                         case("options"):
+                            args[num].type = "object"
+                        break
+                        case("infosURL"):
                             args[num].type = "object"
                         break
                         default:
@@ -43,7 +47,8 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
                 if(args[num].value_data === "overwrite" && !utils.check_overwrites(args[num].value)) return reject({code: errors["60"].code, message: errors["60"].message, file: name, variable: args[num].data_name})
                 if(args[num].data_name === "options" && args[num].checks && !optionsVerify(args[num])) return reject({code: errors["87"].code, message: errors["87"].message, file: name, variable: args[num].data_name}) 
             }
-            if(!args[num].order && args[num].data_name !== "options") args[num].order = num
+            if(!args[num].order && !["options", "infosURL"].includes(args[num].data_name)) args[num].order = num+1
+            else if(!["options", "infosURL"].includes(args[num].data_name) && args[num].order !== num+1) args[num].order = num+1
         }
 
         const fetch = require("node-fetch")
@@ -55,7 +60,7 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
         const baseurl = baseinfos["baseurl"]
         const headers = baseinfos["baseheaders"]
     
-        const url = `${baseurl}/${urlc}`
+        let url = urlChecker(baseurl, urlc, args.find(e => e.data_name === "infosURL"))
         let basedatas;
         if(["get", "delete"].includes(method.toLowerCase())) basedatas = await fetch(url, {method: method, headers}).catch(err => {})
         if(["post", "patch", "put"].includes(method.toLowerCase())){
@@ -73,7 +78,7 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
             if(!datas || (datas.code && !datas.retry_after)) reject(createError(name, datas))
             else if(datas.retry_after){
                 setTimeout(() => {
-                    fonction(...args.filter(arg => arg.data_name !== "options" || (arg.data_name === "options" && arg.order)).sort((a, b) => a.order - b.order).map(arg => arg.value))
+                    fonction(...args.filter(arg => arg.order).sort((a, b) => a.order - b.order).map(arg => arg.value))
                     .catch(err => reject(createError(name, err)))
                     .then(datas => resolve(datas))
                 }, datas.retry_after * 1000)

@@ -16,6 +16,11 @@ class base{
         if(this.voice && this.voice.presence && this.guild_id && this.user_id) this.voice.presence = this.guild.voice_states.get(this.user_id) || null
         if(this.voice && this.voice.channel && this.guild_id && this.channel_id) this.voice.channel = this.guild.channels.get(this.channel_id) || null
     }
+
+    __typechange(converter, data){
+        if(isNaN(data) || !converter[data]) return data
+        else return converter[data]
+    }
 }
 
 module.exports = base

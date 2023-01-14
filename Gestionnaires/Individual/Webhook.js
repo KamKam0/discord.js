@@ -18,15 +18,11 @@ class Webhook extends Base{
     }
 
     #type2(type){
-        if(isNaN(type)) return type
-        else{
-            let convert = {
-                1: "Incoming",
-                2: "Channel Follower",
-                3: "Application"
-            }
-            return convert[type]
-        }
+        return this.__typechange({
+            1: "Incoming",
+            2: "Channel Follower",
+            3: "Application"
+        }, type)
     }
 
     __Modify_Datas(webhook){

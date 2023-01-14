@@ -5,6 +5,10 @@ class baseMutliple{
         this.guild_id = guild_id || null
     }
 
+    push(da){
+        this.container.push(da)
+    }
+
     get(ID){
         return this.container.find(el => el.id === ID)
     }

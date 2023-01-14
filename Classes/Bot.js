@@ -13,7 +13,7 @@ class Bot extends EventEmitter{
         this.langues = []
         this.intents = this.#attributeintents(intents)
         this.default_language = null
-        this.discordjs = {ws: null, lastEvent: null, interval: null, lastACK: null, session_id: null, HBinterval: null, dvdatas: null, lancement: null, guild_ids: [], available_ids: [], interval_state: null, token: null, lastPing: -1, reconnection_url: null}
+        this.discordjs = {ws: null, lastEvent: null, interval: null, lastACK: null, session_id: null, HBinterval: null, dvdatas: null, lancement: null, guild_ids: [], available_ids: [], interval_state: null, token: null, lastPing: -1, reconnection_url: null, availableEvents: get_events()}
         this.config = this.#GetDB()
         this.name = this.#checkName()
         this.sql = this.#attributeSQL(intents, elements)
@@ -23,7 +23,7 @@ class Bot extends EventEmitter{
         this.state = "processing"
         this.cooldown = new Cooldown()
         this.handler = new CommandHandler.Handlers(this.name, this.langues)
-        this.events = new EventHandler.Events(this, get_events())
+        this.events = new EventHandler.Events(this, this.discordjs.availableEvents)
         this.presence = null
         this.user = null
         this.creator = null
@@ -282,7 +282,7 @@ class Bot extends EventEmitter{
             })
             
             let cmd = commands.find(cmd => cmd.name === commande.name)
-            let datas  = new commandClass({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_perm: commande.help.type, mem_perm: commande.help.autorisation})
+            let datas  = new commandClass({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_permission: commande.help.type, default_member_permissions: commande.help.autorisation})
             if(!cmd) this.CreateSlashCommand(datas)
             else{
                 if(!datas.compare(cmd)) this.ModifySlashCommand(datas)

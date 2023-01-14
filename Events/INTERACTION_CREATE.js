@@ -1,7 +1,6 @@
 module.exports = async (bot, datas) => {
     datas.bot_token = bot.discordjs.token
     datas.bot_id = bot.user.id
-    const guild = bot.guilds.get(datas.guild_id)
     let vtype = null
     if(datas.type === 3 && datas.data && datas.data.component_type && datas.data.component_type === 2) vtype = "Button"
     if(datas.type === 3 && datas.data && datas.data.component_type && datas.data.component_type === 3) vtype = "ContextMenu"

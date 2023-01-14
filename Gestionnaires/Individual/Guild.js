@@ -37,14 +37,20 @@ class Guild extends Base{
         this.joined_at = guild.joined_at
         this.unavailable = guild.unavailable ?? false
         this.vanity_url_code = guild.vanity_url_code|| null
+        this.safety_alerts_channel_id = guild.safety_alerts_channel_id || null
         this.description = guild.description || null
         this.banner = guild.banner || null
+        this.lazy = guild.lazy ?? false
+        this.large = guild.large ?? false
+        this.hub_type = guild.hub_type || null
         this.premium_tier = this.#typeprem(guild.premium_tier)
         this.premium_subscription_count = guild.premium_subscription_count || 0
         this.preferred_locale = guild.preferred_locale
         this.public_updates_channel_id = guild.public_updates_channel_id || null
         this.welcome_screen = guild.welcome_screen || null
         this.nsfw_level = this.#typensfw(guild.nsfw_level)
+        this.max_members = guild.max_members || null
+        this.nsfw = guild.nsfw ?? false
         this.roles = (new Roles(bot, this.id)).__AddRoles(guild.roles.map(el => { return {...el, guild: this}}))
         this.emojis = (new Emojis(bot, this.id)).__AddEmojis(guild.emojis.map(el => { return {...el, guild: this}}))
         this.stickers = (new Stickers(bot, this.id)).__AddStickers(guild.stickers.map(el => { return {...el, guild: this}}))
@@ -61,6 +67,12 @@ class Guild extends Base{
             this.members.get(voi.user_id).voice.presence = voi
             this.members.get(voi.user_id).voice.channel = this.channels.get(voi.channel_id)
         })
+        this.afk_channel = this.channels.get(afk_channel_id) || null
+        this.system_channel = this.channels.get(system_channel_id) || null
+        this.widget_channel = this.channels.get(widget_channel_id) || null
+        this.rules_channel = this.channels.get(rules_channel_id) || null
+        this.safety_alerts_channel = this.channels.get(safety_alerts_channel_id) || null
+        this.public_updates_channel = this.channels.get(public_updates_channel_id) || null
         this.premium_progress_bar_enabled = guild.premium_progress_bar_enabled ?? false
         this.messages = new Messages(bot, this.id)
         this.me = this.members.get(bot.user.id)
@@ -69,77 +81,53 @@ class Guild extends Base{
     }
 
     #typeverif(type){
-        if(isNaN(type)) return type
-        else{
-            const convert = {
-                0: "NONE",
-                1: "LOW",
-                2: "MEDIUM",
-                3: "HIGH",
-                4: "VERY_HIGH"
-            }
-            return convert[type]
-        }
+        return this.__typechange({
+            0: "NONE",
+            1: "LOW",
+            2: "MEDIUM",
+            3: "HIGH",
+            4: "VERY_HIGH"
+        }, type)
     }
 
     #typemesdef(type){
-        if(isNaN(type)) return type
-        else{
-            const convert = {
-                0: "ALL_MESSAGES",
-                1: "ONLY_MENTIONS"
-            }
-            return convert[type]
-        }
+        return this.__typechange({
+            0: "ALL_MESSAGES",
+            1: "ONLY_MENTIONS"
+        }, type)
     }
 
     #typeexpll(type){
-        if(isNaN(type)) return type
-        else{
-            const convert = {
-                0: "DISABLED",
-                1: "MEMBERS_WITHOUT_ROLES",
-                2: "ALL_MEMBERS"
-            }
-            return convert[type]
-        }
+        return this.__typechange({
+            0: "DISABLED",
+            1: "MEMBERS_WITHOUT_ROLES",
+            2: "ALL_MEMBERS"
+        }, type)
     }
 
     #typemfa(type){
-        if(isNaN(type)) return type
-        else{
-            const convert = {
-                0: "NONE",
-                1: "ELEVATED"
-            }
-            return convert[type]
-        }
+        return this.__typechange({
+            0: "NONE",
+            1: "ELEVATED"
+        }, type)
     }
 
     #typeprem(type){
-        if(isNaN(type)) return type
-        else{
-            const convert = {
-                0: "NONE",
-                1: "TIER_1",
-                2: "TIER_2",
-                3: "TIER_3"
-            }
-            return convert[type]
-        }
+        return this.__typechange({
+            0: "NONE",
+            1: "TIER_1",
+            2: "TIER_2",
+            3: "TIER_3"
+        }, type)
     }
 
     #typensfw(type){
-        if(isNaN(type)) return type
-        else{
-            const convert = {
-                0: "DEFAULT",
-                1: "EXPLICIT",
-                2: "SAFE",
-                3: "AGE_RESTRICTED"
-            }
-            return convert[type]
-        }
+        return this.__typechange({
+            0: "DEFAULT",
+            1: "EXPLICIT",
+            2: "SAFE",
+            3: "AGE_RESTRICTED"
+        }, type)
     }
 
     __Modify_Datas(guild){
@@ -201,9 +189,9 @@ class Guild extends Base{
      * 
      * @returns 
      */
-    fetchauditlogs(){
+    fetchauditlogs(infos){
         return new Promise((resolve, reject) => {
-            require("../../Methods/AuditLogs")(this.bot_token, this.id, this._bot)
+            require("../../Methods/AuditLogs")(this.bot_token, this.id, infos, this._bot)
             .then(datas => resolve(datas))
             .catch(err => reject(err))
         })

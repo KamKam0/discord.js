@@ -4,7 +4,7 @@ module.exports.login = async (bot, presence) => {
         if(!bot.name || bot.name === null || bot.name === '00#404e') return reject(new Error("No bot name or invalid"))
         if(bot.state === "processing"){
             bot.discordjs.lancement = Date.now()
-            var us = await require("./Methods/user").createDM(bot.discordjs.token, bot.config.general["ID createur"], bot).catch(err => {console.log(err)})
+            var us = await require("./Methods/user").createDM(bot.discordjs.token, bot.config.general["ID createur"], bot).catch(err => {})
             if(!us){
                 setTimeout(() => this.login(bot, (bot.presence || presence)), 5 * 1000 * 60)
                 return
@@ -124,7 +124,8 @@ module.exports.login = async (bot, presence) => {
             else if(message.op === 0){
                 if(!["GUILD_CREATE", "READY", "USER_UPDATE", "MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(message.t)) if(!bot.guilds.get(message.d.guild_id)) return
                 if(["MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE", "MESSAGE_DELETE", "MESSAGE_UPDATE"].includes(message.t) && message.d.guild_id && !bot.guilds.get(message.d.guild_id)) return
-                require(`./Events/${message.t}.js`)(bot, message.d)
+                if(bot.discordjs.availableEvents.includes(message.t)) require(`./Events/${message.t}.js`)(bot, message.d)
+                else console.log(`The Discord event ${message.t} is unavailable !`)
             } 
             else if(message.op === 9){
                 console.log(`Warning Session: invalid session at ${new Date(Date.now()).toLocaleString("fr")}`)

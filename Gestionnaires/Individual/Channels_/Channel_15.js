@@ -20,14 +20,10 @@ class Channel extends Base{
     }
 
     #type2(type){
-        if(isNaN(type)) return type
-        else{
-            let convert = {
-                0: "lastest_activity",
-                1: "creation_date"
-            }
-            return convert[type]
-        }
+        return this.__typechange({
+            0: "lastest_activity",
+            1: "creation_date"
+        }, type)
     }
 
     /**

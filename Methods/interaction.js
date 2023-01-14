@@ -100,7 +100,7 @@ module.exports.getcommands = async (token, ID,  trueid, bot) => {
         verify([{value: token, data_name: "token", order:1}, {value: ID, value_data: "id", data_name: "ID", order:2}, {value: trueid, value_data: "id", data_name: "trueid", required: false, order:3}, {value: bot, data_name: "bot", order: 4}], "GET", `applications/${ID}/commands?with_localizations=true`, this.getcommands, "getcommands interaction")
         .then(datas => {
             if(trueid){
-                if(datas.find(com => com.id === trueid)) return resolve(new (require("../Gestionnaires/Individual/SlashCommand")(datas.find(com => com.id === trueid), bot)))
+                if(datas.find(com => com.id === trueid)) return resolve(new (require("../Classes/ApplicationCommand")(datas.find(com => com.id === trueid), bot)))
                 else return reject("No command found")
             }else{
                 const commands = new (require("../Gestionnaires/Multiple/Commands"))(bot)

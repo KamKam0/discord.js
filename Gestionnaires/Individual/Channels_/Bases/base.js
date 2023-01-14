@@ -21,8 +21,7 @@ class base extends Base{
     }
 
     #type0(type){
-        if(isNaN(type)) return type
-        else return require("../../../../constants").convert_channels[type]
+        return this.__typechange(require("../../../../constants").convert_channels, type)
     }
 }
 

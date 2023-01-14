@@ -41,38 +41,26 @@ class Event extends Base{
     }
 
     #type(type){
-        if(isNaN(type)) return type
-        else{
-            let convert = {
-                1: "STAGE_INSTANCE",
-                2: "VOICE",
-                3: "EXTERNAL"
-            }
-            return convert[type]
-        }
+        return this.__typechange({
+            1: "STAGE_INSTANCE",
+            2: "VOICE",
+            3: "EXTERNAL"
+        }, type)
     }
 
     #status2(status){
-        if(isNaN(status)) return status
-        else{
-            let convert = {
-                1: "SCHEDULED",
-                2: "ACTIVE",
-                3: "COMPLETED",
-                4: "CANCELED"
-            }
-            return convert[status]
-        }
+        return this.__typechange({
+            1: "SCHEDULED",
+            2: "ACTIVE",
+            3: "COMPLETED",
+            4: "CANCELED"
+        }, status)
     }
 
     #privacy(privacy){
-        if(isNaN(privacy)) return privacy
-        else{
-            let convert = {
-                2: "GUILD_ONLY"
-            }
-            return convert[privacy]
-        }
+        return this.__typechange({
+            2: "GUILD_ONLY"
+        }, privacy)
     }
 
     /**

@@ -21,14 +21,10 @@ class Invite extends Base{
     }
 
     #type(type){
-        if(isNaN(type)) return type
-        else{
-            const convert = {
-                1: "STREAM",
-                2: "EMBEDDED_APPLICATION"
-            }
-            return convert[type]
-        }
+        return this.__typechange({
+            1: "STREAM",
+            2: "EMBEDDED_APPLICATION"
+        }, type)
     }
 
     __Modify_Datas(invite){

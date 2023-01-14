@@ -81,7 +81,7 @@ function GetApiURL(){
 function get_bitfield(permissions){//totest
     if(!Array.isArray(permissions)) return null
     if(!permissions[0]) return 0
-    permissions.map(perm => String(perm).toUpperCase()).reduce((a, b) => constants.permissions_bitfield[b] ? a+constants.permissions_bitfield[b] : a+0, 0)
+    return permissions.map(perm => String(perm).toUpperCase()).reduce((a, b) => constants.permissions_bitfield[b] ? a+constants.permissions_bitfield[b] : a+0, 0)
 }
 
 /**

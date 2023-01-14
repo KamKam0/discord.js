@@ -1,4 +1,4 @@
-const Slash = require("../Individual/SlashCommand")
+const Slash = require("../../Classes/ApplicationCommand")
 const Base = require("./baseMultiple")
 class Commands extends Base{
     constructor(_bot){
