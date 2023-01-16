@@ -7,8 +7,8 @@ module.exports = async (bot, datas) => {
         if(bot.database_state !== "unstable") return bot.emit(name(), bot, mess_u_p)
     }
     else{
-        const message_e = require(`../Gestionnaires/Individual/Message`)
-        oldmessage = new message_e({...oldmessage}, bot)
+        const Message = require(`../Gestionnaires/Individual/Message`)
+        oldmessage = new Message({...oldmessage}, bot)
         guild.messages.get(datas.id).__Modify_Datas(datas)
         const newmessage = guild.messages.get(datas.id)
     

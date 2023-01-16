@@ -3,7 +3,7 @@ const Base = require("./base")
 class Message extends Base{
     constructor(message, bot){
         super(bot)
-        this.user_id = message.user ? message.user_id : message.author.id
+        this.user_id = (message.user || message.user_id) ? message.user_id : message.author.id
         this.user = this.user_id ? (bot.users.get(this.user_id) ?? null) : null
         this.guild_id = message.guild_id || null
         this.guild = message.guild || bot.guilds.get(this.guild_id) || null
