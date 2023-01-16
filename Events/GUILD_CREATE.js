@@ -1,8 +1,7 @@
 module.exports = async (bot, datas) => {
   datas.token = bot.discordjs.token
   if(bot.state === "processing"){
-    deployGuild(bot, datas)
-    analyseGuild(bot, datas, true)
+    deployGuild(bot, datas, true)
   }
   else if(bot.state === "ready"){
     deployGuild(bot, datas)
@@ -19,7 +18,6 @@ module.exports = async (bot, datas) => {
       bot.channels.__AddChannels(datas.threads.map(ch => { return {...ch, guild_id: datas.id}}))
       bot.users.__CheckUsers(datas)
     }
-    analyseGuild(bot, datas)
   }
 }
 
@@ -36,7 +34,7 @@ function analyseGuild(bot, datas, state){
   }else if(bot.database_state !== "unstable") bot.emit(name(), bot, bot.guilds.get(datas.id))
 }
 
-async function deployGuild(bot, datas){
+async function deployGuild(bot, datas, state){
   if(datas.id){
     if(bot.database_state === "stable"){
         let result = await bot.sql.select("general")
@@ -50,10 +48,11 @@ async function deployGuild(bot, datas){
     }else datas.db_language  = bot.default_language
   }
   analysePresences(datas)
+  bot.guilds.__AddGuild(datas)
   bot.users.__AddUsers(datas.members.map(e => { return {...e.user, guild_id: datas.id}}))
   bot.channels.__AddChannels(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
   bot.channels.__AddChannels(datas.threads.map(ch => { return {...ch, guild_id: datas.id}}))
-  bot.guilds.__AddGuild(datas)
+  if(bot.state !== "ready") analyseGuild(bot, datas, state)
 }
 
 function analysePresences(datas){
