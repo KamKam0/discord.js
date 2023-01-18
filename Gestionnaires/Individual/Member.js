@@ -2,7 +2,7 @@ const Base = require("./base")
 class Member extends Base{
     constructor(member, bot){
         super(bot)
-        this.user_id = member.user.id
+        this.user_id = member.user_id || member.user.id
         this.user = this.user_id ? bot.users.get(this.user_id) : null
         this.nick = member.nick || null
         this.avatar = member.avatar || null
