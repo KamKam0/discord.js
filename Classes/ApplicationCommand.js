@@ -31,6 +31,14 @@ class Slash{
         return bit
     }
 
+    toJSON(){
+        let returnObject = {...this}
+        delete returnObject.id
+        delete returnObject.application_id
+        delete returnObject.version
+        return returnObject
+    }
+
     compare(slash){
         for (const point of Object.keys(this).filter(e => !["id", "version", "application_id"].includes(e))){
             let point2 = slash[point]

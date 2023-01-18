@@ -176,73 +176,6 @@ function check_overwrites(overwrites){
     return result_final
 }
 
-/**
- * 
- * @param {object} presence 
- * @returns 
- */
-function presence(presence){
-    if(presence && typeof presence === "object"){
-        let since = null
-        if(presence.since && typeof presence.since === "number") since = Number(presence.since)
-        else since = Date.now()
-        if(presence.status && typeof presence.status === "string" && (/(online|offline|dnd|idle|invisible)/gm).test(presence.status)){
-            if(presence.status === "offline" || presence.status === "invisible"){
-                presence.activities = undefined
-                since = null
-            }
-            if(presence.activities && Array.isArray(presence.activities)){
-                let def_act = []
-                presence.activities.forEach(act => {
-                    if(typeof act === "object" && act.name && typeof act.name === "string" && act.type){
-                        if(act.name.length < 200){
-                            if((/(playing|streaming|competing|listening|watching|custom)/gm).test(act.type)){
-                                const convert = {
-                                    playing: 0,
-                                    streaming: 1,
-                                    listening: 2,
-                                    watching: 3,
-                                    custom: 4,
-                                    competing: 5
-                                }
-                                act.type = convert[act.type]
-                                if(act.type === 4){
-                                    if(act.name.split(":").length >= 2) def_act.push({name: act.name, type: act.type})
-                                }else def_act.push({name: act.name, type: act.type})
-                            }
-                        }
-                    }
-                })
-                return {activities: def_act, afk: false, status: presence.status, since: since}
-            }else return {activities: [], afk: false, status: presence.status, since: since}
-        }else{
-            if(presence.activities && Array.isArray(presence.activities)){
-                let def_act = []
-                presence.activities.forEach(act => {
-                    if(typeof act === "object" && act.name && typeof act.name === "string" && act.type){
-                        if(act.name.length < 200){
-                            if((/(playing|streaming|competing|listening|watching|custom)/gm).test(act.type)){
-                                const convert = {
-                                    playing: 0,
-                                    streaming: 1,
-                                    listening: 2,
-                                    watching: 3,
-                                    custom: 4,
-                                    competing: 5
-                                }
-                                act.type = convert[act.type]
-                                if(act.type === 4){
-                                    if(act.name.split(":").length >= 2) def_act.push({name: act.name, type: act.type})
-                                }else def_act.push({name: act.name, type: act.type})
-                            }
-                        }
-                    }
-                })
-                return {activities: def_act, afk: false, status: "online", since: since}
-            }else return {activities: [], afk: false, status: "online", since: since}
-        }
-    }else return {activities: [], afk: false, status: "online", since: Date.now()}
-}
 
 /**
  * 
@@ -261,33 +194,6 @@ function channel_backup(id, token, bot){
     return new (require("../Gestionnaires/Individual/Channels_/Channel_1"))(channel, bot)
 }
 
-function check_options(structure, options){
-    let error = {count: 0, state: true}
-    return error
-    /*if(typeof options !== "object"){
-        error.count++
-        error[`error_${error.count}`] = "Invalid type of options"
-        error.state = false
-        return error
-    }
-    let object_s = Object.entries(structure)
-    let object_o = Object.entries(options)
-    object_s.forEach(obs => {
-        if(!object_o.find(obe => obe[0] === obs[0])){
-            error.count++
-            error[`error_${error.count}`] = `${obs[0]} not found in options`
-        }else if((typeof object_o.find(obe => obe[0] === obs[0])[1] !== obs[1]) && (Array.isArray(object_o.find(obe => obe[0] === obs[0])[1]) !== obs[1])){
-            error.count++
-            error[`error_${error.count}`] = `${obs[0]}, should be type: ${obs[1]}`
-        }
-    })
-    if(error.count === 0) return error
-    else{
-        error.state = false
-        return error
-    }*/
-}
-
 /**
  * 
  * @param {object} options 
@@ -303,6 +209,25 @@ function analyse_data(options){
     else if(typeof options === "object" && options.type) return {components: [options]}
     else if(typeof options === "object" && (options.content || options.embeds || options.files || options.modal || options.components || options.sticker_ids)) return options
     else return null
+}
+
+/**
+ * 
+ * @param {object} presence 
+ * @returns 
+ */
+function presence(presence){
+    let base = {activities: [], afk: false, status: "online", since: Date.now()}
+    const convert = { playing: 0, streaming: 1, listening: 2, watching: 3, custom: 4, competing: 5 }
+    if(typeof presence !== "object") return base
+    if(presence.since && typeof presence.since === "number") base.since = Number(presence.since)
+    if(typeof presence.status === "string" && (/(online|offline|dnd|idle|invisible)/gm).test(presence.status)) base.status = presence.status
+    if((/offline|dnd|invisible/gm).test(presence.status)) return base
+    if(Array.isArray(presence.activities)) presence.activities = presence.activities.map(activity => {
+        if(typeof activity === "object" && typeof activity.name === "string" && activity.name.length < 200 && ["string", "number"].includes(typeof activity.type) && (convert[activity.type] || Object.values(convert).includes(activity.type))) return {type: convert[activity.type] || activity.type, name: activity.name} }) 
+    else presence.activities = []
+    base.activities = presence.activities
+    return base
 }
 
 /**
@@ -414,5 +339,5 @@ function check_reference(reference){
     return reference
 }
 
-module.exports = {getbaseinfosre, getbaseinfosrecp, getbaseinfosre_xww, GetHeaders, GetApiURL, get_bitfield, get_intents_n, get_badges, check_color, check_id, check_overwrites, bietfieldpermission, presence, channel_backup, check_options, check_reference, check_files, check_components, check_stickers, check_content, check_embed, analyse_data}
+module.exports = {getbaseinfosre, getbaseinfosrecp, getbaseinfosre_xww, GetHeaders, GetApiURL, get_bitfield, get_intents_n, get_badges, check_color, check_id, check_overwrites, bietfieldpermission, presence, channel_backup, check_reference, check_files, check_components, check_stickers, check_content, check_embed, analyse_data}
 module.exports.constants = constants

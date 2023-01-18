@@ -283,7 +283,7 @@ class Bot extends EventEmitter{
             
             let cmd = commands.find(cmd => cmd.name === commande.name)
             let datas  = new commandClass({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_permission: commande.help.type, default_member_permissions: commande.help.autorisation})
-            if(!cmd) this.CreateSlashCommand(datas)
+            if(!cmd) this.CreateSlashCommand(datas.toJSON())
             else{
                 if(!datas.compare(cmd)) this.ModifySlashCommand(datas)
                 commands = commands.__DeleteCommand(cmd.name)

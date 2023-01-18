@@ -47,8 +47,8 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
                 if(args[num].value_data === "overwrite" && !utils.check_overwrites(args[num].value)) return reject({code: errors["60"].code, message: errors["60"].message, file: name, variable: args[num].data_name})
                 if(args[num].data_name === "options" && args[num].checks && !optionsVerify(args[num])) return reject({code: errors["87"].code, message: errors["87"].message, file: name, variable: args[num].data_name}) 
             }
-            if(!args[num].order && !["options", "infosURL"].includes(args[num].data_name)) args[num].order = num+1
-            else if(!["options", "infosURL"].includes(args[num].data_name) && args[num].order !== num+1) args[num].order = num+1
+            if(!args[num].order && !["options", "infosURL"].includes(args[num].data_name)) args[num].order = Number(num)+1
+            else if(!["options", "infosURL"].includes(args[num].data_name) && Number(args[num].order) !== Number(num)+1) args[num].order = Number(num)+1
         }
 
         const fetch = require("node-fetch")
@@ -62,11 +62,11 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
     
         let url = urlChecker(baseurl, urlc, args.find(e => e.data_name === "infosURL"))
         let basedatas;
-        if(["get", "delete"].includes(method.toLowerCase())) basedatas = await fetch(url, {method: method, headers}).catch(err => {})
+        if(["get", "delete"].includes(method.toLowerCase())) basedatas = await fetch(url, {method, headers}).catch(err => {})
         if(["post", "patch", "put"].includes(method.toLowerCase())){
             let options = args.find(e => e.data_name === "options")?.value
-            if(options) basedatas = await fetch(url, {method: method, headers, body: JSON.stringify(options)}).catch(err => {})
-            else basedatas = await fetch(url, {method: method, headers}).catch(err => {})
+            if(options) basedatas = await fetch(url, {method, headers, body: JSON.stringify(options)}).catch(err => {})
+            else basedatas = await fetch(url, {method, headers}).catch(err => {})
         }
         if(!basedatas) return reject(basedatas)
         else if(basedatas.status === 204) return resolve("Done Successfully")
@@ -75,7 +75,7 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
             resolve(datas)
         }else{
             const datas = await basedatas.json()
-            if(!datas || (datas.code && !datas.retry_after)) reject(createError(name, datas))
+            if(!datas || (datas.code && !datas.retry_after)) reject(createError(name, datas)) 
             else if(datas.retry_after){
                 setTimeout(() => {
                     fonction(...args.filter(arg => arg.order).sort((a, b) => a.order - b.order).map(arg => arg.value))
