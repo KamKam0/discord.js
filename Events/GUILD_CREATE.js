@@ -40,7 +40,7 @@ async function deployGuild(bot, datas, state){
         let result = await bot.sql.select("general")
         let vid = result.find(re => re.ID === datas.id)
         if(!vid || !vid.ID){
-            vid = {ID: datas.id, Language: this.default_language, guild_state: "enable"}
+            vid = {ID: datas.id, Language: bot.default_language, guild_state: "enable"}
             bot.sql.insert("general", vid)
             datas.db_language = bot.default_language
         }else if(vid.Language && require("../constants").languagesAvailable.find(da => da.id === vid.Language)) datas.db_language  = vid.Language
