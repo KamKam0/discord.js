@@ -51,17 +51,17 @@ class Guild extends Base{
         this.nsfw_level = this.#typensfw(guild.nsfw_level)
         this.max_members = guild.max_members || null
         this.nsfw = guild.nsfw ?? false
-        this.roles = (new Roles(bot, this.id)).__AddRoles(guild.roles.map(el => { return {...el, guild: this}}))
-        this.emojis = (new Emojis(bot, this.id)).__AddEmojis(guild.emojis.map(el => { return {...el, guild: this}}))
-        this.stickers = (new Stickers(bot, this.id)).__AddStickers(guild.stickers.map(el => { return {...el, guild: this}}))
-        this.presences = (new Presences(bot, this.id)).__AddPresences(guild.presences.map(el => { return {...el, guild: this}}))
-        this.channels = (new Channels(bot, this.id)).__AddChannels(guild.channels.map(el => { return {...el, guild: this}}))
-        this.stage_instances = (new StageInstances(bot, this.id)).__AddStages(guild.stage_instances.map(el => { return {...el, guild: this}}))
-        this.guild_scheduled_events = (new Events(bot, this.id)).__AddEvents(guild.guild_scheduled_events.map(el => { return {...el, guild: this}}))
-        this.members = (new Members(bot, this.id)).__AddMembers(guild.members.map(el => { return {...el, guild: this}}))
+        this.roles = (new Roles(bot, this.id)).__AddRoles(guild.roles.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.emojis = (new Emojis(bot, this.id)).__AddEmojis(guild.emojis.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.stickers = (new Stickers(bot, this.id)).__AddStickers(guild.stickers.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.presences = (new Presences(bot, this.id)).__AddPresences(guild.presences.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.channels = (new Channels(bot, this.id)).__AddChannels(guild.channels.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.stage_instances = (new StageInstances(bot, this.id)).__AddStages(guild.stage_instances.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.guild_scheduled_events = (new Events(bot, this.id)).__AddEvents(guild.guild_scheduled_events.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.members = (new Members(bot, this.id)).__AddMembers(guild.members.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.owner = this.members.get(this.owner_id)
-        this.threads = (new Threads(bot, this.id)).__AddThreads(guild.threads.map(el => { return {...el, guild: this}}))
-        this.voice_states = (new Voices(bot, this.id)).__AddVoices(guild.voice_states.map(el => { return {...el, guild: this}}))
+        this.threads = (new Threads(bot, this.id)).__AddThreads(guild.threads.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.voice_states = (new Voices(bot, this.id)).__AddVoices(guild.voice_states.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.voice_states.container.forEach(voi => {
             this.channels.get(voi.channel_id).members.container.push(voi.member)
             this.members.get(voi.user_id).voice.presence = voi
