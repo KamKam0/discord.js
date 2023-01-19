@@ -20,7 +20,7 @@ class Members extends Base{
     }
 
     __DeleteMember(ID){
-        this.container.splice(this.container.indexOf(this.container.find(me => me.user.id === ID)), 1)
+        this.container.splice(this.container.indexOf(this.container.find(me => me.user_id === ID)), 1)
         return this
     }
 }
