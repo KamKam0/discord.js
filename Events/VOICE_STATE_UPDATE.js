@@ -1,7 +1,7 @@
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     let member = guild.members.get(datas.user_id) 
-    if (member?.user.id === bot.user.id)bot.voice.onVoiceStateUpdate(datas);
+    if (member?.user_id === bot.user.id)bot.voice.onVoiceStateUpdate(datas);
 
     if(!datas.guild_id|| !guild) return
 
