@@ -38,6 +38,7 @@ class voiceManager{
     }
 
     __handlepacket(bot, voice, newvoice){
+        if(!voice.user) console.log(voice)
         if(this.state && voice.user_id !== bot.user.id && !voice.user.bot){
             if(newvoice && (newvoice.channel_id === this.channel_id || voice.channel_id === this.channel_id)){
                 if(newvoice.channel_id === this.channel_id) clearTimeout(this.#timeout)

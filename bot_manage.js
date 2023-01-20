@@ -76,10 +76,12 @@ module.exports.login = async (bot, presence) => {
             }else bot.discordjs.ws.send(JSON.stringify(body_login))
             setTimeout(() => {
                 if(!bot.discordjs.lastEvent){
-                    console.log("Le processus de connexion n'a pas pu aboutir")
-                    console.log("Pensez à vérifier qu'il n'est pas de boucle infinie")
-                    console.log("Pensez à vérifier les intents rentrés dans le bot")
-                    console.log("Pensez à vérifier les intents sur le portail développeur de Discord")
+                    console.group()
+                    console.warn("Le processus de connexion n'a pas pu aboutir")
+                    console.warn("Pensez à vérifier qu'il n'est pas de boucle infinie")
+                    console.warn("Pensez à vérifier les intents rentrés dans le bot")
+                    console.warn("Pensez à vérifier les intents sur le portail développeur de Discord")
+                    console.groupEnd()
                     process.exit()
                 }
             }, 20 * 1000)
@@ -125,7 +127,7 @@ module.exports.login = async (bot, presence) => {
                 if(!["GUILD_CREATE", "READY", "USER_UPDATE", "MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(message.t)) if(!bot.guilds.get(message.d.guild_id)) return
                 if(["MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE", "MESSAGE_DELETE", "MESSAGE_UPDATE"].includes(message.t) && message.d.guild_id && !bot.guilds.get(message.d.guild_id)) return
                 if(bot.discordjs.availableEvents.includes(message.t)) require(`./Events/${message.t}.js`)(bot, message.d)
-                else console.log(`The Discord event ${message.t} is unavailable !`)
+                else console.info(`The Discord event ${message.t} is unavailable !`)
             } 
             else if(message.op === 9){
                 console.log(`Warning Session: invalid session at ${new Date(Date.now()).toLocaleString("fr")}`)

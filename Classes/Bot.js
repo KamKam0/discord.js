@@ -301,17 +301,17 @@ class Bot extends EventEmitter{
     #GetDB(){
         let env = getCheck(".env")
         if(!env.token){
-            console.log("Pas de paramètre token dans votre .env")
+            console.warn("Pas de paramètre token dans votre .env")
             process.exit()
         }
         if(typeof env.token !== "string"){
-            console.log("Le token présente dans votre .env n'est pas un string")
+            console.warn("Le token présente dans votre .env n'est pas un string")
             process.exit()
         }
         this.#TreatToken(env)
         let config = getCheck("config.json")
         if(!config.general){
-            console.log("Pas de sections general dans votre config.json")
+            console.warn("Pas de sections general dans votre config.json")
             process.exit()
         }
         const availableLanguages = require("../constants").languagesAvailable
@@ -325,22 +325,22 @@ class Bot extends EventEmitter{
         let toreturn = languages[1].map(e => JSON.parse(require("fs").readFileSync(process.cwd()+languages[0]+"langues"+languages[0]+e, 'utf-8')))
 
         if(!toreturn.find(e => e.Langue_Code === this.default_language)){
-            console.log("Aucun fichier de langue ne correspond à votre language par défaut")
+            console.warn("Aucun fichier de langue ne correspond à votre language par défaut")
             process.exit()
         }
 
         toreturn.forEach(langue => {
             if(!langue["Langue_Code"]){
-                console.log("Aucun code de language présent dans un de vos fichiers langues")
+                console.warn("Aucun code de language présent dans un de vos fichiers langues")
                 process.exit()
             }
             if(!availableLanguages.find(da => da.id === langue["Langue_Code"])){
-                console.log(`Le Code de language dans votre fichier de langue ${langue["Langue_Code"]} est erroné`)
+                console.warn(`Le Code de language dans votre fichier de langue ${langue["Langue_Code"]} est erroné`)
                 process.exit()
             }
             ["Help", "Options", "Choices"].forEach(opt => {
                 if(!langue[opt]){
-                    console.log(`Aucun ${opt} dans votre fichier de langue ${langue["Langue_Code"]}`)
+                    console.warn(`Aucun ${opt} dans votre fichier de langue ${langue["Langue_Code"]}`)
                     process.exit()
                 }
             })
@@ -391,7 +391,7 @@ class Bot extends EventEmitter{
             else if (require("os").platform() === 'win32') symbol = "\\"
             let test = fs.existsSync(process.cwd()+symbol+name)
             if(!test){
-                state ? console.log(`Aucun dossier ${name} présent dans les fichiers du bot`) : console.log(`Aucun fichier ${name} présent dans les fichiers du bot`)
+                state ? console.warn(`Aucun dossier ${name} présent dans les fichiers du bot`) : console.warn(`Aucun fichier ${name} présent dans les fichiers du bot`)
                 process.exit()
             }
             if(!state){
@@ -399,7 +399,7 @@ class Bot extends EventEmitter{
                 try{
                     datas = JSON.parse(datas)
                 }catch(err){
-                    console.log(`une erreur est constatée dans votre fichier ${name}`)
+                    console.warn(`une erreur est constatée dans votre fichier ${name}`)
                     process.exit()
                 }
             }else return [symbol, fs.readdirSync(process.cwd()+symbol+name)]

@@ -4,9 +4,9 @@ class TextInput {
         this.custom_id = null
         this.label = null
         this.style = null
-        this.min_length = 0
+        this.min_length = 1
         this.value = null
-        this.max_length = 1
+        this.max_length = 50
         this.placeholder = null
         this.required = true
     }
