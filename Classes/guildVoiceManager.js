@@ -2,6 +2,8 @@ const queueManager = require("./queueManager")
 class voiceManager{
     #timeout;
     #deployed;
+    #buffering;
+    #oldBuffering;
     constructor(bot, guild_id){
         this.state = false
         this.#deployed = false
@@ -16,6 +18,8 @@ class voiceManager{
         this.channel_id = null
         this.id = guild_id
         this.__Handler = this.__handlepacket.bind(this)
+        this.#buffering = null
+        this.#oldBuffering = null
     }
 
     __deploy(){
@@ -60,13 +64,19 @@ class voiceManager{
     }
 
     end(){
-        if(this.state && (this.playing || this.paused_since)) this.connection.stop()
+        if(this.state && (this.playing || this.paused_since)) {
+            this.connection.stop()
+            this.connection = null
+        }
     }
 
     stop(){
         if(this.state){
             this.queue.reset()
-            if(this.connection) this.connection.stop()
+            if(this.connection) {
+                this.connection.stop()
+                this.connection = null
+            }
             const {getVoiceConnection} = require("@discordjs/voice")
             getVoiceConnection(this.id)?.disconnect()
         }
@@ -130,10 +140,16 @@ class voiceManager{
 
     #mamangeinter(){
         this.connection.on("stateChange", async (oldstate, newstate) => {
-            if(oldstate.status === "playing" && newstate.status === "idle"){
+            if(oldstate.status === "buffering" && newstate.status === "idle") this.end()
+            if(oldstate.status === "buffering") this.#buffering = Date.now()
+            if(newstate.status === "idle"){
+                this.#oldBuffering = Number(this.#buffering)
+                this.#buffering = null
                 this.playing = false
                 this.connection = null
+                this.managing = false
                 this.resource = null
+                this.queue.__update(this)
             }
         })
         this.connection.on("stateChange", async (oldstate, newstate) => { 
@@ -146,8 +162,8 @@ class voiceManager{
         let trueargs = Array(...arguments)
         trueargs.splice(0, 1)
         this.connection.on("stateChange", async (oldstate, newstate) => {
-            if(oldstate.status === "playing" && newstate.status === "idle"){
-                this.managing = false
+            if((oldstate.status === "buffering" && newstate.status === "idle") ||  (oldstate.status === "playing" && newstate.status === "idle")){
+                if((oldstate.status === "playing" && newstate.status === "idle") && Date.now() - this.#oldBuffering <250) return fonction(this.queue.np, ...trueargs)
                 if(this.queue.loopState) fonction(this.queue.np, ...trueargs)
                 else if(this.queue.queueloopState){
                     this.queue.addSong(this.queue.np)

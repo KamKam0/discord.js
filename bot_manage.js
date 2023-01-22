@@ -130,5 +130,6 @@ function stop(bot, op){
     bot.discordjs.ws.close()
     bot.discordjs.interval_state = null
     clearInterval(bot.discordjs.interval)
-    setTimeout(() => this.login(bot, (bot.presence || presence)), 5000)
+    this.login(bot, (bot.presence || presence))
 }
+
