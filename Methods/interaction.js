@@ -193,8 +193,8 @@ function check_command(object, state, languages){
         else if(object.description.length > 99) error.push({cmd: object.name, err: "description too long", taille: object.description.length})
         
     }
-    if(object.options) if(!Array.isArray(object.options)) error.push({err: "options invalid", cmd: object.name})
-    if(object.options) if(object.options.length > 25) error.push({err: "trop d'options", taille: object.options.length, cmd: object.name})
+    if(object.options && !Array.isArray(object.options)) error.push({err: "options invalid", cmd: object.name})
+    if(object.options && object.options.length > 25) error.push({err: "trop d'options", taille: object.options.length, cmd: object.name})
     return {type: "command", errors: error.length === 0 ? null : error, status: error.length === 0 ? true : false}
 }
 

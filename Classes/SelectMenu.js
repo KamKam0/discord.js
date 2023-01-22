@@ -53,13 +53,13 @@ class SelectMenu {
         if(!obj.label || !isNaN(obj.label) || obj.label.length < 1 || obj.label.length > 100) return this
         if(!obj.value || !isNaN(obj.value) || obj.value.length < 1 || obj.value.length > 100) return this
         let description = obj.description
-        if(description) if(!isNaN(description) || description.length < 1 || description.length > 100) description = null
+        if(description && !isNaN(description) || description.length < 1 || description.length > 100) description = null
         if(!description) description = null
         let defaulte = obj.default
-        if(defaulte) if(typeof defaulte !== "boolean") defaulte = null
+        if(defaulte && typeof defaulte !== "boolean") defaulte = null
         if(!defaulte) defaulte = null
         let emoji = obj.emoji
-        if(emoji) if(typeof emoji !== "string") emoji = null
+        if(emoji && typeof emoji !== "string") emoji = null
         if(!emoji) emoji = null
         this.options.push({label: obj.label, value: obj.value, description: description, default: defaulte, emoji: emoji})
         return this
@@ -76,16 +76,16 @@ class SelectMenu {
         array.forEach(obj => {
             let e;
             if(!obj || typeof obj !== "object" || !obj.label || !obj.value) e = "error"
-            if(!e) if(!obj.label || !isNaN(obj.label) || obj.label.length < 1 || obj.label.length > 100) e = "error"
-            if(!e) if(!obj.value || !isNaN(obj.value) || obj.value.length < 1 || obj.value.length > 100) e = "error"
+            if(!e && !obj.label || !isNaN(obj.label) || obj.label.length < 1 || obj.label.length > 100) e = "error"
+            if(!e && !obj.value || !isNaN(obj.value) || obj.value.length < 1 || obj.value.length > 100) e = "error"
             if(!e) var description = obj.description
-            if(!e) if(description) if(!isNaN(description) || description.length < 1 || description.length > 100) description = null
-            if(!e) if(!description) description = null
+            if(!e && description && !isNaN(description) || description.length < 1 || description.length > 100) description = null
+            if(!e && !description) description = null
             if(!e) var defaulte = obj.default
-            if(!e) if(defaulte) if(typeof defaulte !== "boolean") defaulte = null
-            if(!e) if(!defaulte) defaulte = null
+            if(!e && defaulte && typeof defaulte !== "boolean") defaulte = null
+            if(!e && !defaulte) defaulte = null
             if(!e) var emoji = obj.emoji
-            if(!e) if(emoji) if(typeof emoji !== "string") emoji = null
+            if(!e && emoji && typeof emoji !== "string") emoji = null
             if(!e)  if(!emoji) emoji = null
             if(!e) this.options.push({label: obj.label, value: obj.value, description: description, default: defaulte, emoji: emoji})
         })

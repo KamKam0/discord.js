@@ -130,8 +130,8 @@ module.exports.execute = async (token, webhook, options, bot) => {//cp
             if(options.content && typeof options.content === "string") body.content = options.content
             if(options.embeds && Array.isArray(options.embeds) === true){
                 options.embeds.forEach(embed => {
-                    if(embed.footer) if(!embed.footer.text) return
-                    if(embed.author) if(!embed.author.name) return
+                    if(embed.footer && !embed.footer.text) return
+                    if(embed.author && !embed.author.name) return
                     if(!embed.color || typeof embed.color !== "number") embed.color = 0x000000
                     if(!body.embeds) body.embeds = []
                     body.embeds.push(embed)

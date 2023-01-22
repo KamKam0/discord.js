@@ -5,10 +5,8 @@ module.exports.login = async (bot, presence) => {
         if(bot.state === "processing"){
             bot.discordjs.lancement = Date.now()
             var us = await require("./Methods/user").createDM(bot.discordjs.token, bot.config.general["ID createur"], bot).catch(err => {})
-            if(!us){
-                setTimeout(() => this.login(bot, (bot.presence || presence)), 5 * 1000 * 60)
-                return
-            }else bot.__setCreator({id: us.recipients[0].id, channel_id: us.id})
+            if(!us) return setTimeout(() => this.login(bot, (bot.presence || presence)), 5 * 1000 * 60)
+            else bot.__setCreator({id: us.recipients[0].id, channel_id: us.id})
         }
 
         //checking constants
@@ -52,9 +50,7 @@ module.exports.login = async (bot, presence) => {
             }
             const datas = await basedatas.json()
             var trueurl = `${datas.url}/?v=10&encoding=json`
-        }
-
-        if(bot.state === "reconnect") var trueurl = bot.discordjs.reconnection_url
+        }else var trueurl = bot.discordjs.reconnection_url
         
         const ws = require("ws")
 
@@ -71,7 +67,7 @@ module.exports.login = async (bot, presence) => {
         //setting gateaway
         WebSocket.on("open", async () => {
             if(bot.state === "reconnect"){
-                let body = {op: 6, d: {token: bot.discordjs.token, session_id: bot.discordjs.old_session, seq: (bot.discordjs.old_event - 1)}}
+                let body = {op: 6, d: {token: bot.discordjs.token, session_id: bot.discordjs.session_id, seq: (bot.discordjs.lastEvent)}}
                 bot.discordjs.ws.send(JSON.stringify(body))
             }else bot.discordjs.ws.send(JSON.stringify(body_login))
             setTimeout(() => {
@@ -95,18 +91,11 @@ module.exports.login = async (bot, presence) => {
                 bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": null}))
                 bot.discordjs.lastPing = Date.now()
                 bot.discordjs.HBinterval = message.d.heartbeat_interval
-                if(bot.discordjs.interval_state === "on") bot.state = "isession"
                 bot.discordjs.interval_state = "on"
                 bot.discordjs.interval = setInterval(() => {
                     if((Date.now() - bot.discordjs.lastACK) > (bot.discordjs.HBinterval * 1.1)){
                         console.log(`Warning Session: connection lost with gateaway at ${new Date(Date.now()).toLocaleString("fr")}`)
-                        bot.discordjs.interval_state = null
-                        clearInterval(bot.discordjs.interval)
-                        bot.discordjs.ws.close()
-                        bot.discordjs.old_session = bot.discordjs.session_id
-                        bot.discordjs.old_event = bot.discordjs.lastEvent
-                        bot.state = "isession"
-                        setTimeout(() => this.login(bot, (bot.presence || presence)), 5000)
+                        stop.bind(this)(bot, message.op)
                     }else{
                         bot.discordjs.lastPing = Date.now()
                         bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": bot.discordjs.lastEvent}))
@@ -115,16 +104,10 @@ module.exports.login = async (bot, presence) => {
             }
             else if(message.op === 7){
                 console.log(`Warning Session: reconnection asked at ${new Date(Date.now()).toLocaleString("fr")}`)
-                bot.discordjs.ws.close()
-                bot.discordjs.interval_state = null
-                clearInterval(bot.discordjs.interval)
-                bot.discordjs.old_session = bot.discordjs.session_id
-                bot.discordjs.old_event = bot.discordjs.lastEvent
-                bot.state = "reconnect"
-                setTimeout(() => this.login(bot, (bot.presence || presence)), 5000)
+                stop.bind(this)(bot, message.op)
             }
             else if(message.op === 0){
-                if(!["GUILD_CREATE", "READY", "USER_UPDATE", "MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(message.t)) if(!bot.guilds.get(message.d.guild_id)) return
+                if(!["GUILD_CREATE", "READY", "USER_UPDATE", "MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(message.t) && !bot.guilds.get(message.d.guild_id)) return
                 if(["MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE", "MESSAGE_DELETE", "MESSAGE_UPDATE"].includes(message.t) && message.d.guild_id && !bot.guilds.get(message.d.guild_id)) return
                 if(bot.discordjs.availableEvents.includes(message.t)) require(`./Events/${message.t}.js`)(bot, message.d)
                 else console.info(`The Discord event ${message.t} is unavailable !`)
@@ -132,15 +115,20 @@ module.exports.login = async (bot, presence) => {
             else if(message.op === 9){
                 console.log(`Warning Session: invalid session at ${new Date(Date.now()).toLocaleString("fr")}`)
                 require("./Events/INVALID_SESSION")(bot)
-                bot.discordjs.ws.close()
-                bot.discordjs.interval_state = null
-                clearInterval(bot.discordjs.interval)
-                bot.state = "isession"
-                setTimeout(() => this.login(bot, (bot.presence || presence)), 5000)
+                stop.bind(this)(bot, message.op)
             }
             else if(message.op === 1) bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": null}))
             else if(message.op === 11) bot.discordjs.lastACK = Date.now()
         })
         return resolve({result: bot, message: "Bot Launched"})
     })
+}
+
+function stop(bot, op){
+    if(op === 7) bot.state = "reconnect"
+    else bot.state = "isession"
+    bot.discordjs.ws.close()
+    bot.discordjs.interval_state = null
+    clearInterval(bot.discordjs.interval)
+    setTimeout(() => this.login(bot, (bot.presence || presence)), 5000)
 }

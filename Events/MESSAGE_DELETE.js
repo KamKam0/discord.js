@@ -5,8 +5,10 @@ module.exports = async (bot, datas) => {
     if(guild) oldmessage_v = guild.messages.get(datas.id)
     if(oldmessage_v) guild.messages.__DeleteMessage(oldmessage_v.id)
     
-    if(!guild) if(bot.database_state !== "unstable") bot.emit(name(), bot, (new Result(datas, bot)))
-    if(oldmessage_v) if(bot.database_state !== "unstable") bot.emit(name(), bot,oldmessage_v)
+    if(bot.database_state !== "unstable"){
+        if(!guild) bot.emit(name(), bot, (new Result(datas, bot)))
+        else if(oldmessage_v) bot.emit(name(), bot,oldmessage_v)
+    }
 }
 
 function name(){ return "MESSAGE_DELETE" }
