@@ -11,7 +11,7 @@ class Form {
     }
 
     AddTextInputs(obj){
-        this.components.push(...obj.map(e => { return {type: 1, components: [e]}}))
+        obj.forEach(e => this.AddTextInput(e))
         return this
     }
     

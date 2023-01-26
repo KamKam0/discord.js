@@ -1,10 +1,14 @@
 const queueManager = require("./queueManager")
 class voiceManager{
     #timeout;
+    #timeoutMusic;
     #deployed;
     #buffering;
     #oldBuffering;
+    #realDefaultTiemout;
     constructor(bot, guild_id){
+        this.defaultTimeout = 10
+        this.#realDefaultTiemout = this.defaultTimeout * 60 * 1000
         this.state = false
         this.#deployed = false
         this.paused_since = null
@@ -13,6 +17,7 @@ class voiceManager{
         this.resource = null
         this.managing = false
         this.#timeout = null
+        this.#timeoutMusic;
         this.queue = new queueManager(this)
         this._bot = bot
         this.channel_id = null
@@ -20,6 +25,10 @@ class voiceManager{
         this.__Handler = this.__handlepacket.bind(this)
         this.#buffering = null
         this.#oldBuffering = null
+    }
+
+    __setDefaultTiemout(time){
+        this.defaultTimeout = time
     }
 
     __deploy(){
@@ -38,23 +47,41 @@ class voiceManager{
         this._bot.removeListener("VOICE_UPDATE", this.__Handler)
         this._bot.setMaxListeners(this._bot.getMaxListeners() - 3)
         this.#deployed = false
-        if(this.#timeout) clearTimeout(this.#timeout)
+        if(this.#timeout) {
+            clearTimeout(this.#timeout)
+            this.#timeout = null
+        }
+        if(this.#timeoutMusic) {
+            clearTimeout(this.#timeoutMusic)
+            this.#timeoutMusic = null
+        }
     }
 
     __handlepacket(bot, voice, newvoice){
-        if(!voice.user) console.log(voice)
         if(this.state && voice.user_id !== bot.user.id && !voice.user.bot){
             if(newvoice && (newvoice.channel_id === this.channel_id || voice.channel_id === this.channel_id)){
-                if(newvoice.channel_id === this.channel_id) clearTimeout(this.#timeout)
-                else if(bot.guilds.get(this.id).voice_states.filter(e => !e.user.bot && e.channel_id === this.channel_id).length === 0) this.#timeout = setTimeout(() => this.stop(), 10 * 1000 * 60)
+                if(newvoice.channel_id === this.channel_id) {
+                    clearTimeout(this.#timeout)
+                    this.#timeout = null
+                }
+                else if(bot.guilds.get(this.id).voice_states.filter(e => !e.user.bot && e.channel_id === this.channel_id).length === 0){
+                    if(!this.#timeout) this.#timeout = setTimeout(() => this.stop(), this.#realDefaultTiemout)
+                }
             }else if(bot.guilds.get(this.id).voice_states.find(e => e.channel_id === voice.channel_id && e.user_id === voice.user_id) && voice.channel_id === this.channel_id){
-                if(this.#timeout) clearTimeout(this.#timeout)
+                if(this.#timeout) {
+                    clearTimeout(this.#timeout)
+                    this.#timeout = null
+                }
             } 
-            else if(voice.channel_id === this.channel_id && bot.guilds.get(this.id).voice_states.filter(e => !e.user.bot && e.channel_id === this.channel_id).length === 0) this.#timeout = setTimeout(() => this.stop(), 10 * 1000 * 60)
+            else if(voice.channel_id === this.channel_id && bot.guilds.get(this.id).voice_states.filter(e => !e.user.bot && e.channel_id === this.channel_id).length === 0){
+                    if(!this.#timeout) this.#timeout = setTimeout(() => this.stop(), this.#realDefaultTiemout)
+                }
         }
         if(this.state && voice.user_id === bot.user.id){
             if(!newvoice && bot.guilds.get(this.id).voice_states.find(e => e.channel_id === voice.channel_id && e.user_id === voice.user_id) && voice.channel_id === this.channel_id){
-                if(bot.guilds.get(this.id).voice_states.filter(e => !e.user.bot && e.channel_id === this.channel_id).length === 0) this.#timeout = setTimeout(() => this.stop(), 10 * 1000 * 60)
+                if(bot.guilds.get(this.id).voice_states.filter(e => !e.user.bot && e.channel_id === this.channel_id).length === 0) {
+                    if(!this.#timeout) this.#timeout = setTimeout(() => this.stop(), this.#realDefaultTiemout)
+                }
             } 
             else if(voice.channel_id === this.channel_id && !newvoice && !bot.guilds.get(this.id).voice_states.find(e => e.channel_id === voice.channel_id && e.user_id === voice.user_id)){
                 this.__undeploy()
@@ -92,7 +119,10 @@ class voiceManager{
         this.resource = null
         this.managing = false
         this.channel_id = null
+        if(this.#timeout) clearTimeout(this.#timeout)
         this.#timeout = null
+        if(this.#timeoutMusic) clearTimeout(this.#timeoutMusic)
+        this.#timeoutMusic = null
     }
 
     check(){
@@ -140,6 +170,10 @@ class voiceManager{
 
     #mamangeinter(){
         this.connection.on("stateChange", async (oldstate, newstate) => {
+            if(newstate.status === "playing" && this.#timeoutMusic){
+                clearTimeout(this.#timeoutMusic)
+                this.#timeoutMusic = null
+            }
             if(oldstate.status === "buffering" && newstate.status === "idle") this.end()
             if(oldstate.status === "buffering") this.#buffering = Date.now()
             if(newstate.status === "idle"){
@@ -149,6 +183,7 @@ class voiceManager{
                 this.connection = null
                 this.managing = false
                 this.resource = null
+                if(!this.#timeoutMusic) this.#timeoutMusic = setTimeout(() => this.stop(), this.#realDefaultTiemout)
                 this.queue.__update(this)
             }
         })

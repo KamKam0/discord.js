@@ -13,8 +13,8 @@ class Bot extends EventEmitter{
         this.langues = []
         this.intents = this.#attributeintents(intents)
         this.default_language = null
-        this.discordjs = {ws: null, lastEvent: null, interval: null, lastACK: null, session_id: null, HBinterval: null, dvdatas: null, lancement: null, guild_ids: [], available_ids: [], interval_state: null, token: null, lastPing: -1, reconnection_url: null, availableEvents: get_events()}
-        this.config = this.#GetDB()
+        this.discordjs = {}
+        this.config = this.#getInfos()
         this.name = this.#checkName()
         this.sql = this.#attributeSQL(intents, elements)
         this.guilds = new Guilds(this)
@@ -29,6 +29,33 @@ class Bot extends EventEmitter{
         this.creator = null
         this.voice = new VoiceManager(this)
         this.utils = require("../Utils/functions")
+    }
+
+    __resetDjs(init){
+        this.discordjs.ws = null
+        this.discordjs.commandsChecked = null
+        this.discordjs.lastEvent = null
+        this.discordjs.interval = null
+        this.discordjs.lastACK = null
+        this.discordjs.session_id = null
+        this.discordjs.HBinterval = null
+        this.discordjs.dvdatas = null
+        this.discordjs.lancement = null
+        this.discordjs.guild_ids = []
+        this.discordjs.available_ids = []
+        this.discordjs.interval_state = null
+        this.discordjs.lastPing = -1
+        this.discordjs.reconnection_url = null
+        if(init){
+            this.discordjs.availableEvents = get_events()
+            this.discordjs.token = null
+            this.discordjs.lancementError = null
+            this.discordjs.connectionInfos = {
+                connection_url: null,
+                connection_number: null,
+                shard_advised: null
+            }
+        }
     }
 
     #attributeintents(intents){
@@ -241,8 +268,14 @@ class Bot extends EventEmitter{
                 if(!verif.status) error.push({...verif, cmd: cmd.name})
             }
         })
-        if(error.length !== 0) return {status: false, errors: error}
-        else return {status: true}
+        if(error.length !== 0){
+            this.discordjs.commandsChecked = false
+            return {status: false, errors: error}
+        } 
+        else {
+            this.discordjs.commandsChecked = true
+            return {status: true}
+        }
     }
 
     
@@ -298,53 +331,34 @@ class Bot extends EventEmitter{
         else this.discordjs.token = env.token
     }
     
-    #GetDB(){
-        let env = getCheck(".env")
-        if(!env.token){
-            console.warn("Pas de paramètre token dans votre .env")
-            process.exit()
-        }
-        if(typeof env.token !== "string"){
-            console.warn("Le token présente dans votre .env n'est pas un string")
-            process.exit()
-        }
+    #getInfos(){
+        this.__resetDjs(true)
+        let env = getCheck.bind(this)(".env")
+        if(this.discordjs.lancementError) return
+        if(!env.token) return this.discordjs.lancementError = "No token parameter in the .env file"
+        if(typeof env.token !== "string") return this.discordjs.lancementError = "The token parameter in the .env file is not a string"
         this.#TreatToken(env)
-        let config = getCheck("config.json")
-        if(!config.general){
-            console.warn("Pas de sections general dans votre config.json")
-            process.exit()
-        }
+        let config = getCheck.bind(this)("config.json")
+        if(this.discordjs.lancementError) return
+        if(!config.general) return this.discordjs.lancementError = "No general section in your config.json file"
         const availableLanguages = require("../constants").languagesAvailable
         if(!config.general.language || typeof config.general.language !== "string") this.default_language = "en-US"
         else if (availableLanguages.find(da => da.id === config.general.language)) this.default_language = config.general.language
         else this.default_language = "en-US"
 
-        let languages = getCheck("langues", true)
+        let languages = getCheck.bind(this)("langues", true)
+        if(this.discordjs.lancementError) return
         
         languages[1] = languages[1].filter(e => e.endsWith(".json"))
         let toreturn = languages[1].map(e => JSON.parse(require("fs").readFileSync(process.cwd()+languages[0]+"langues"+languages[0]+e, 'utf-8')))
 
-        if(!toreturn.find(e => e.Langue_Code === this.default_language)){
-            console.warn("Aucun fichier de langue ne correspond à votre language par défaut")
-            process.exit()
-        }
+        if(!toreturn.find(e => e.Langue_Code === this.default_language)) return this.discordjs.lancementError = "There is no language file corresponding to your default language"
 
-        toreturn.forEach(langue => {
-            if(!langue["Langue_Code"]){
-                console.warn("Aucun code de language présent dans un de vos fichiers langues")
-                process.exit()
-            }
-            if(!availableLanguages.find(da => da.id === langue["Langue_Code"])){
-                console.warn(`Le Code de language dans votre fichier de langue ${langue["Langue_Code"]} est erroné`)
-                process.exit()
-            }
-            ["Help", "Options", "Choices"].forEach(opt => {
-                if(!langue[opt]){
-                    console.warn(`Aucun ${opt} dans votre fichier de langue ${langue["Langue_Code"]}`)
-                    process.exit()
-                }
-            })
-        })
+        for (const langue of toreturn){
+            if(!langue["Langue_Code"]) return this.discordjs.lancementError = "In one of your language files, there is no code."
+            if(!availableLanguages.find(da => da.id === langue["Langue_Code"]))  return this.discordjs.lancementError = `The code in ${langue["Langue_Code"]} file is wrong`
+            for (const opt of ["Help", "Options", "Choices"]) if(!langue[opt]) return this.discordjs.lancementError = `No ${opt} in your ${langue["Langue_Code"]} file`
+        }
         this.langues = toreturn
 
         let dbtr = {"general": config.general, "Dependencies": {}}
@@ -391,16 +405,16 @@ class Bot extends EventEmitter{
             else if (require("os").platform() === 'win32') symbol = "\\"
             let test = fs.existsSync(process.cwd()+symbol+name)
             if(!test){
-                state ? console.warn(`Aucun dossier ${name} présent dans les fichiers du bot`) : console.warn(`Aucun fichier ${name} présent dans les fichiers du bot`)
-                process.exit()
+                state ? this.discordjs.lancementError = `No folder ${name} in the files of the bot` : this.discordjs.lancementError = `No file ${name} in the files of the bot`
+                return 
             }
             if(!state){
                 var datas = fs.readFileSync(process.cwd()+symbol+name, "utf-8")
                 try{
                     datas = JSON.parse(datas)
                 }catch(err){
-                    console.warn(`une erreur est constatée dans votre fichier ${name}`)
-                    process.exit()
+                    this.discordjs.lancementError = `There is an error in your folder ${name}`
+                    return
                 }
             }else return [symbol, fs.readdirSync(process.cwd()+symbol+name)]
             return datas

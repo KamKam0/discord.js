@@ -33,7 +33,7 @@ module.exports.disconnect = async (bot, datas) =>{
     })
 }
 module.exports.manage = async (bot, guild_id) =>{
-    return
+    /*
     let guild = bot.guilds.get(guild_id).voice
     const ws = require("ws")
     const WebSocket = new ws("wss://" + guild.server.endpoint + "/?v=4")
@@ -68,7 +68,7 @@ module.exports.manage = async (bot, guild_id) =>{
                     "data": {
                         "address": message.d.ip,
                         "port": message.d.port,
-                        "mode": "xsalsa20_poly1305_lite"/*message.d.modes[0]*/
+                        "mode": "xsalsa20_poly1305_lite"message.d.modes[0]
                     }
                 }
             }
@@ -79,12 +79,12 @@ module.exports.manage = async (bot, guild_id) =>{
             const server = dgram.createSocket("udp4")
 
             server.on("message", (msg, rinfo) => {
-                console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+                (`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
             })
 
             server.on('listening', () => {
                 const address = server.address();
-                console.log(`server listening ${address.address}:${address.port}`);
+                (`server listening ${address.address}:${address.port}`);
             });
 
             server.send()
@@ -101,7 +101,7 @@ module.exports.manage = async (bot, guild_id) =>{
         }else if(message.op === 13){
             //Client disocnnected
         }
-    })
+    })*/
 }
 module.exports.speaking = (bot, guild_id, state) =>{
     if(!state) state = true

@@ -4,10 +4,10 @@ class baseGuild extends BaseGuild{
         super(channel, bot)
         this.owner_id = channel.owner_id
         this.member_count = channel.member_count
-        this.archived = channel.thread_metadata.archived
-        this.auto_archive_duration =  channel.thread_metadata.auto_archive_duration,
-        this.archive_timestamp = channel.thread_metadata.archive_timestamp
-        this.locked = channel.thread_metadata.locked
+        this.archived = channel.thread_metadata?.archived
+        this.auto_archive_duration =  channel.thread_metadata?.auto_archive_duration,
+        this.archive_timestamp = channel.thread_metadata?.archive_timestamp
+        this.locked = channel.thread_metadata?.locked
         this.owner = channel.owner_id && this.guild ? this.guild.members.get(channel.owner_id).user : null
         this.flags = channel.flags || 0
         this.last_message_id = channel.last_message_id || null

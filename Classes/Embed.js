@@ -165,12 +165,7 @@ class Embed {
     * @returns {Embed}
     */
     addFields(fields){
-        fields.forEach(field => {
-            if(String(field.name) !== "undefined" && String(field.value) !== "undefined" && this.fields.length < 25){
-                field = {name: field.name, value: field.value, inline: field.inline ? field.inline : false}
-                this.fields.push(field)
-            }
-        })
+        fields.filter(e => typeof e === "object").forEach(field => this.addField(field.name, field.value, field.inline))
         return this
     }
 

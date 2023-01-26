@@ -73,22 +73,7 @@ class SelectMenu {
 
     addOptions(array){
         if(!array || !Array.isArray(array) || !array[0]) return this
-        array.forEach(obj => {
-            let e;
-            if(!obj || typeof obj !== "object" || !obj.label || !obj.value) e = "error"
-            if(!e && !obj.label || !isNaN(obj.label) || obj.label.length < 1 || obj.label.length > 100) e = "error"
-            if(!e && !obj.value || !isNaN(obj.value) || obj.value.length < 1 || obj.value.length > 100) e = "error"
-            if(!e) var description = obj.description
-            if(!e && description && !isNaN(description) || description.length < 1 || description.length > 100) description = null
-            if(!e && !description) description = null
-            if(!e) var defaulte = obj.default
-            if(!e && defaulte && typeof defaulte !== "boolean") defaulte = null
-            if(!e && !defaulte) defaulte = null
-            if(!e) var emoji = obj.emoji
-            if(!e && emoji && typeof emoji !== "string") emoji = null
-            if(!e)  if(!emoji) emoji = null
-            if(!e) this.options.push({label: obj.label, value: obj.value, description: description, default: defaulte, emoji: emoji})
-        })
+        array.forEach(obj => this.addOption(obj))
         return this
     }
 }

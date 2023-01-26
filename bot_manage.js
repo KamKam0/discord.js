@@ -1,8 +1,10 @@
 module.exports.login = async (bot, presence) => {
     return new Promise(async (resolve, reject) => {
+        if(bot.discordjs.lancement) return reject({state: false, error: "Cannot start the bot twice", message: "You already started the bot once at " + new Date(bot.discordjs.lancement).toDateString()})
+        if(bot.discordjs.lancementError) return reject({state: false, error: "Error with configuration", message: bot.discordjs.lancementError})
         //check and constants
         if(!bot.name || bot.name === null || bot.name === '00#404e') return reject(new Error("No bot name or invalid"))
-        if(bot.state === "processing"){
+        if(bot.state === "processing" && !bot.creator){
             bot.discordjs.lancement = Date.now()
             var us = await require("./Methods/user").createDM(bot.discordjs.token, bot.config.general["ID createur"], bot).catch(err => {})
             if(!us) return setTimeout(() => this.login(bot, (bot.presence || presence)), 5 * 1000 * 60)
@@ -27,13 +29,11 @@ module.exports.login = async (bot, presence) => {
                 erembed.addField(che.errors[0].cmd, errtexte + "```", true)
             })
                 
-            bot.SendMessage(bot.creator.channel_id, {embeds: [erembed]})
-            .then(() => process.exit())
-            .catch(err => {})
-            return
+            return bot.SendMessage(bot.creator.channel_id, {embeds: [erembed]}) .catch(err => {})
         }
         bot.CheckCommands()
 
+        if(!bot.discordjs.commandsChecked) return reject({state: false, error: "Could not start", message: "Errors are detcted in your commands.\nPlease correct them and retry."})
         //constants connecting gateaway
         const fetch = require("node-fetch")
         let baseinfos = require("./Utils/functions").getbaseinfosre(bot.discordjs.token)
@@ -41,7 +41,7 @@ module.exports.login = async (bot, presence) => {
         const baseheaders = baseinfos["baseheaders"]
         
         //settings gateaway
-        if(bot.state !== "reconnect"){
+        if(bot.state === "processing" && !bot.discordjs.connectionInfos.connection_url){
             const url = `${baseurl}/gateway/bot`
             const basedatas = await fetch(url, {headers: baseheaders, method: "GET"}).catch(err => {})
             if(!basedatas){
@@ -49,8 +49,15 @@ module.exports.login = async (bot, presence) => {
                 return
             }
             const datas = await basedatas.json()
-            var trueurl = `${datas.url}/?v=10&encoding=json`
+            bot.discordjs.connectionInfos = {
+                connection_url: `${datas.url}/?v=10&encoding=json`,
+                connection_number: datas.session_start_limit.remaining,
+                shard_advised: datas.shards
+            }
+            var trueurl = bot.discordjs.connectionInfos.connection_url
         }else var trueurl = bot.discordjs.reconnection_url
+
+        if(bot.discordjs.connectionInfos.connection_number === 0) return reject({state: false, error: "Could not log in", message: "You reached the maximum of daily connection"})
         
         const ws = require("ws")
 
@@ -72,39 +79,29 @@ module.exports.login = async (bot, presence) => {
             }else bot.discordjs.ws.send(JSON.stringify(body_login))
             setTimeout(() => {
                 if(!bot.discordjs.lastEvent){
-                    console.group()
-                    console.warn("Le processus de connexion n'a pas pu aboutir")
-                    console.warn("Pensez à vérifier qu'il n'est pas de boucle infinie")
-                    console.warn("Pensez à vérifier les intents rentrés dans le bot")
-                    console.warn("Pensez à vérifier les intents sur le portail développeur de Discord")
-                    console.groupEnd()
-                    process.exit()
+                    WebSocket.close()
+                    bot.__resetDjs()
+                    return reject({state: false, error: "Could not log in", message: "Connection process failed.\n Try to check if there is any infinite loop.\n Try to check if the intents you gave correspond to the ones in the developer portal."})
                 }
             }, 20 * 1000)
         })
+        
+        let stopFunction = stop.bind(this)
         
         //starting gateaway
         WebSocket.on("message", async message => {
             message = JSON.parse(Buffer.from(message).toString("utf-8"))
             if(message.s) bot.discordjs.lastEvent = message.s
             if(message.op === 10){
-                bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": null}))
+                sendHeartBeat(bot)
                 bot.discordjs.lastPing = Date.now()
                 bot.discordjs.HBinterval = message.d.heartbeat_interval
                 bot.discordjs.interval_state = "on"
-                bot.discordjs.interval = setInterval(() => {
-                    if((Date.now() - bot.discordjs.lastACK) > (bot.discordjs.HBinterval * 1.1)){
-                        console.log(`Warning Session: connection lost with gateaway at ${new Date(Date.now()).toLocaleString("fr")}`)
-                        stop.bind(this)(bot, message.op)
-                    }else{
-                        bot.discordjs.lastPing = Date.now()
-                        bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": bot.discordjs.lastEvent}))
-                    }
-                }, bot.discordjs.HBinterval)
+                handleHeartbeats(bot, message, stopFunction)
             }
             else if(message.op === 7){
-                console.log(`Warning Session: reconnection asked at ${new Date(Date.now()).toLocaleString("fr")}`)
-                stop.bind(this)(bot, message.op)
+                console.warn(`Warning Session: reconnection asked at ${new Date(Date.now()).toLocaleString("fr")}`)
+                stopFunction(bot, message.op)
             }
             else if(message.op === 0){
                 if(!["GUILD_CREATE", "READY", "USER_UPDATE", "MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(message.t) && !bot.guilds.get(message.d.guild_id)) return
@@ -113,14 +110,14 @@ module.exports.login = async (bot, presence) => {
                 else console.info(`The Discord event ${message.t} is unavailable !`)
             } 
             else if(message.op === 9){
-                console.log(`Warning Session: invalid session at ${new Date(Date.now()).toLocaleString("fr")}`)
+                console.warn(`Warning Session: invalid session at ${new Date(Date.now()).toLocaleString("fr")}`)
                 require("./Events/INVALID_SESSION")(bot)
-                stop.bind(this)(bot, message.op)
+                stopFunction(bot, message.op)
             }
-            else if(message.op === 1) bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": null}))
+            else if(message.op === 1) sendHeartBeat(bot)
             else if(message.op === 11) bot.discordjs.lastACK = Date.now()
         })
-        return resolve({result: bot, message: "Bot Launched"})
+        return resolve({result: bot, message: "Bot Launched", state: true})
     })
 }
 
@@ -133,3 +130,18 @@ function stop(bot, op){
     this.login(bot, (bot.presence || presence))
 }
 
+function handleHeartbeats(bot, message, stopFunction){
+    bot.discordjs.interval = setInterval(() => {
+        if((Date.now() - bot.discordjs.lastACK) > (bot.discordjs.HBinterval * 1.1)){
+            console.warn(`Warning Session: connection lost with gateaway at ${new Date(Date.now()).toLocaleString("fr")}`)
+            stopFunction(bot, message.op)
+        }else{
+            bot.discordjs.lastPing = Date.now()
+            bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": bot.discordjs.lastEvent}))
+        }
+    }, bot.discordjs.HBinterval)
+}
+
+function sendHeartBeat(bot){
+    bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": bot.discordjs.lastEvent || null}))
+}

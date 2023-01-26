@@ -10,23 +10,30 @@ class guildVoice extends Base{
     }
 
     /**
-     * 
-     * @param {boolean} deaf 
-     * @param {boolean} mute 
+     * @param {object} parameters
+     * @param {boolean} [parameters.mute]
+     * @param {boolean} [parameters.deaf]
+     * @param {number} [parameters.timeout]
      */
-    join(deaf, mute){
+    join(parameters={}){
+        if(parameters && typeof parameters === "object" ){
+            if(parameters.mute && typeof parameters.mute !== "boolean") parameters.mute = false
+            if(parameters.deaf && typeof parameters.deaf !== "boolean") parameters.deaf = false
+            if(parameters.timeout && typeof parameters.timeout !== "number") delete parameters.timeout
+        }else parameters = {}
         const {joinVoiceChannel} = require("@discordjs/voice")
         let guild = this._bot.guilds.get(this.guild_id)
         guild.voice.stop()
         guild.voice.__deploy()
         guild.voice.state = true
         guild.voice.channel_id = this.id
+        if(parameters.timeout) guild.voice.__setDefaultTiemout(parameters.timeout)
         joinVoiceChannel({
             channelId: this.id,
             guildId: this.guild_id,
             adapterCreator: guild.voice.voiceAdapterCreator,
-            selfDeaf: deaf ?? false,
-            selfMute: mute ?? false
+            selfDeaf: parameters.deaf ?? false,
+            selfMute: parameters.mute ?? false
         })
     }
 

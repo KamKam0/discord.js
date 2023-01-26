@@ -58,7 +58,7 @@ module.exports.send = async (token, channelid, options, path, method, bot) => {/
             try{
                 datas = await basedatas.json()
             }catch(err){
-                this.send(token, channelid, options)
+                this.send(token, channelid, options, path, method, bot)
                 .catch(err => reject(err))
                 .then(datas => resolve(datas))
             }
@@ -66,7 +66,7 @@ module.exports.send = async (token, channelid, options, path, method, bot) => {/
             if(!datas || datas.code || datas.retry_after){
                 if(datas && datas.retry_after){
                     setTimeout(() => {
-                        this.send(token, channelid, options)
+                        this.send(token, channelid, options, path, method, bot)
                         .catch(err => reject(err))
                         .then(datas => resolve(datas))
                     }, datas.retry_after * 1000)
