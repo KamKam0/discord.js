@@ -10,7 +10,6 @@
  */
 module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
     return new Promise(async (resolve, reject) => {
-        const createError = require("../Utils/functions").createError
         const errors = require("../DB/errors.json")
         const utils = require("./functions")
         const createError = utils.createError
