@@ -339,5 +339,18 @@ function check_reference(reference){
     return reference
 }
 
-module.exports = {getbaseinfosre, getbaseinfosrecp, getbaseinfosre_xww, GetHeaders, GetApiURL, get_bitfield, get_intents_n, get_badges, check_color, check_id, check_overwrites, bietfieldpermission, presence, channel_backup, check_reference, check_files, check_components, check_stickers, check_content, check_embed, analyse_data}
+/**
+ * 
+ * @param {string} name 
+ * @param {*} error 
+ * @returns {Error}
+ */
+function createError(name, error){
+    if(!name || typeof name !== "string") return new Error()
+    let er = new Error(`Une erreur s'est produite lors de la requête - ${name}`)
+    er.content = error || null
+    return er
+}
+
+module.exports = {getbaseinfosre, getbaseinfosrecp, getbaseinfosre_xww, GetHeaders, GetApiURL, get_bitfield, get_intents_n, get_badges, check_color, check_id, check_overwrites, bietfieldpermission, presence, channel_backup, check_reference, check_files, check_components, check_stickers, check_content, check_embed, analyse_data, createError}
 module.exports.constants = constants

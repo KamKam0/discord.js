@@ -48,10 +48,10 @@ async function deployGuild(bot, datas, state){
     }else datas.db_language  = bot.default_language
   }
   analysePresences(datas)
-  bot.guilds.__AddGuild(datas)
   bot.users.__AddUsers(datas.members.map(e => { return {...e.user, guild_id: datas.id}}))
   bot.channels.__AddChannels(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
   bot.channels.__AddChannels(datas.threads.map(ch => { return {...ch, guild_id: datas.id}}))
+  bot.guilds.__AddGuild(datas)
   if(bot.state !== "ready") analyseGuild(bot, datas, state)
 }
 

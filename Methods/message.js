@@ -1,4 +1,5 @@
 const verify = require("../Utils/verify")
+const createError = require("../Utils/functions").createError
 
 /**
  * 
@@ -16,18 +17,18 @@ module.exports.send = async (token, channelid, options, path, method, bot) => {/
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
         const baseurl = baseinfos["baseurl"]
         let baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Message"})
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
+        if(!token) return reject(createError("An error happened", {code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"}))
+        if(!channelid) return reject(createError("An error happened", {code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"}))
+        if(!require("../Utils/functions").check_id(channelid)) return reject(createError("An error happened", {code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"}))
+        if(!options) return reject(createError("An error happened", {code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Message"}))
+        if(!token) return reject(createError("An error happened", {code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"}))
 
         let url = path ? path : `${baseurl}/channels/${channelid}/messages`
         const fun = require("../Utils/functions")
         options = fun.analyse_data(options)
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Message"})
+        if(!options) return reject(createError("An error happened", {code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Message"}))
         
-        if(typeof options !== "object") return reject({code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Message"})
+        if(typeof options !== "object") return reject(createError("An error happened", {code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Message"}))
         else{
             let body = {}
             let body_files;
@@ -51,7 +52,7 @@ module.exports.send = async (token, channelid, options, path, method, bot) => {/
                 baseheaders = require("../Utils/functions").getbaseinfosrecp(token).baseheaders
                 baseheaders["Content-Type"] += body_files.getBoundary()
                 body_files.append("payload_json", JSON.stringify(body))
-            }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject({code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Message"})
+            }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject(createError("An error happened", {code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Message"}))
             const basedatas = await fetch(url, {method: method ? method : "POST", headers: baseheaders, body: body_files ? body_files : JSON.stringify(body)}).catch(err => {})
 
             let datas;
@@ -67,14 +68,10 @@ module.exports.send = async (token, channelid, options, path, method, bot) => {/
                 if(datas && datas.retry_after){
                     setTimeout(() => {
                         this.send(token, channelid, options, path, method, bot)
-                        .catch(err => reject(err))
+                        .catch(err => reject(createError("An error happened", err)))
                         .then(datas => resolve(datas))
                     }, datas.retry_after * 1000)
-                }else{
-                    let er = new Error("Une erreur s'est produite lors de la requête")
-                    er.content = datas
-                    return reject(er)
-                }
+                }else return reject(createError("Une erreur s'est produite lors de la requête", datas))
             }
             else return resolve(new (require("../Gestionnaires/Individual/Message"))({...datas, token: token}, bot))
         }
@@ -92,8 +89,8 @@ module.exports.send = async (token, channelid, options, path, method, bot) => {/
  */
 module.exports.modify = async (token, channelid, messageid, options, bot) => {
     return new Promise(async (resolve, reject) => {
-        if(!messageid) return reject({code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
+        if(!messageid) return reject(createError("An error happened", {code: require("../DB/errors.json")["3"].code, message: require("../DB/errors.json")["3"].message, file: "Message"}))
+        if(!require("../Utils/functions").check_id(channelid)) return reject(createError("An error happened", {code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"}))
         
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
         const baseurl = baseinfos["baseurl"]
@@ -118,9 +115,9 @@ module.exports.fetch_messages = async (token, channelid, limit, bot) => {
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
         const baseurl = baseinfos["baseurl"]
         const baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"})
-        if(!channelid) return reject({code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"})
-        if(!require("../Utils/functions").check_id(channelid)) return reject({code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"})
+        if(!token) return reject(createError("An error happened", {code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Message"}))
+        if(!channelid) return reject(createError("An error happened", {code: require("../DB/errors.json")["2"].code, message: require("../DB/errors.json")["2"].message, file: "Message"}))
+        if(!require("../Utils/functions").check_id(channelid)) return reject(createError("An error happened", {code: require("../DB/errors.json")["57"].code, message: require("../DB/errors.json")["57"].message, file: "Message"}))
         if(!limit || isNaN(limit) || Number(limit) < 1 || Number(limit) > 100){
             if(!isNaN(limit) && limit.length >= 22) limit = {type: "sfetch", id: limit}
             else limit = {type: "gfetch", number: limit}

@@ -1,4 +1,5 @@
 const verify = require("../Utils/verify")
+const createError = require("../Utils/functions").createError
 
 /**
  * 
@@ -13,13 +14,13 @@ const verify = require("../Utils/verify")
  */
 module.exports.create = async (token, guildid, name, file, tags, description, bot) => {//Cp
     return new Promise(async (resolve, reject) => {
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Stickers"})
-        if(!guildid) return reject({code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Stickers"})
-        if(!name) return reject({code: require("../DB/errors.json")["19"].code, message: require("../DB/errors.json")["19"].message, file: "Stickers"})
-        if(!file) return reject({code: require("../DB/errors.json")["27"].code, message: require("../DB/errors.json")["27"].message, file: "Stickers"})
-        if(!tags) return reject({code: require("../DB/errors.json")["28"].code, message: require("../DB/errors.json")["28"].message, file: "Stickers"})
-        if(!description) return reject({code: require("../DB/errors.json")["29"].code, message: require("../DB/errors.json")["29"].message, file: "Stickers"})
-        if(!require("../Utils/functions").check_id(guildid)) return reject({code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Stickers"})
+        if(!token) return reject(createError("An error happened", {code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Stickers"}))
+        if(!guildid) return reject(createError("An error happened", {code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Stickers"}))
+        if(!name) return reject(createError("An error happened", {code: require("../DB/errors.json")["19"].code, message: require("../DB/errors.json")["19"].message, file: "Stickers"}))
+        if(!file) return reject(createError("An error happened", {code: require("../DB/errors.json")["27"].code, message: require("../DB/errors.json")["27"].message, file: "Stickers"}))
+        if(!tags) return reject(createError("An error happened", {code: require("../DB/errors.json")["28"].code, message: require("../DB/errors.json")["28"].message, file: "Stickers"}))
+        if(!description) return reject(createError("An error happened", {code: require("../DB/errors.json")["29"].code, message: require("../DB/errors.json")["29"].message, file: "Stickers"}))
+        if(!require("../Utils/functions").check_id(guildid)) return reject(createError("An error happened", {code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Stickers"}))
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
         const baseurl = baseinfos["baseurl"]
@@ -37,14 +38,10 @@ module.exports.create = async (token, guildid, name, file, tags, description, bo
             if(datas && datas.retry_after){
                 setTimeout(() => {
                     this.create(token, guildid, name, file, tags, description)
-                    .catch(err => reject(err))
+                    .catch(err => reject(createError("An error happened", err)))
                     .then(datas => resolve(datas))
                 }, datas.retry_after * 1000)
-            }else{
-                let er = new Error("Une erreur s'est produite lors de la requête")
-                er.content = datas
-                return reject(er)
-            }
+            }else return reject(createError("Une erreur s'est produite lors de la requête", datas))
         }
         else return resolve(new (require("../Gestionnaires/Individual/Sticker"))({...datas, token: token, guild_id: guildid}, bot))
     })

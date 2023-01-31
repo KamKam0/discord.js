@@ -6,7 +6,7 @@ class Ban extends Base{
         super(bot)
         this.id = automod.id
         this.guild_id = automod.guild_id || null
-        this.guild = bot.guilds.get(this.guild_id) || null
+        this.guild = automod.guild || bot.guilds.get(this.guild_id) || null
         this.name = automod.name
         this.creator_id = automod.creator_id
         this.creator = bot.users.get(this.creator_id) || null

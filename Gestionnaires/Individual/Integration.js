@@ -3,6 +3,7 @@ class Integration extends Base{
     constructor(int, bot){
         super(bot)
         this.guild_id = int.guild_id
+        this.guild = int.guild || bot.guilds.get(this.guild_id) || null
         this.id = int.id
         this.name = int.name
         this.type = int.type

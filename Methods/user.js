@@ -40,9 +40,10 @@ module.exports.createGroup = async (token, accesses, nicks, bot) => {
  */
 module.exports.send = async (bot, userid, options) => {
     return new Promise(async (resolve, reject) => {
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "User"})
-        if(!user) return reject({code: require("../DB/errors.json")["7"].code, message: require("../DB/errors.json")["7"].message, file: "User"})
-        if(!bot) return reject({code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "User"})
+        const createError = require("../Utils/functions").createError
+        if(!options) return reject(createError("An error happened", {code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "User"}))
+        if(!user) return reject(createError("An error happened", {code: require("../DB/errors.json")["7"].code, message: require("../DB/errors.json")["7"].message, file: "User"}))
+        if(!bot) return reject(createError("An error happened", {code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "User"}))
         
         this.createDM(bot, userid)
         .catch(err => reject(err))

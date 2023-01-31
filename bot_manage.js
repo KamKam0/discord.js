@@ -1,9 +1,10 @@
 module.exports.login = async (bot, presence) => {
     return new Promise(async (resolve, reject) => {
-        if(bot.discordjs.lancement) return reject({state: false, error: "Cannot start the bot twice", message: "You already started the bot once at " + new Date(bot.discordjs.lancement).toDateString()})
-        if(bot.discordjs.lancementError) return reject({state: false, error: "Error with configuration", message: bot.discordjs.lancementError})
+        const createError = require("./Utils/functions").createError
+        if(bot.discordjs.lancement && bot.state === "processing") return reject(createError("Cannot start the bot twice", {state: false, message: "You already started the bot once at " + new Date(bot.discordjs.lancement).toDateString()}))
+        if(bot.discordjs.lancementError) return reject(createError("Error with configuration", {state: false, message: bot.discordjs.lancementError}))
         //check and constants
-        if(!bot.name || bot.name === null || bot.name === '00#404e') return reject(new Error("No bot name or invalid"))
+        if(!bot.name || bot.name === null || bot.name === '00#404e') return reject(createError("No bot name or invalid"))
         if(bot.state === "processing" && !bot.creator){
             bot.discordjs.lancement = Date.now()
             var us = await require("./Methods/user").createDM(bot.discordjs.token, bot.config.general["ID createur"], bot).catch(err => {})
@@ -33,7 +34,7 @@ module.exports.login = async (bot, presence) => {
         }
         bot.CheckCommands()
 
-        if(!bot.discordjs.commandsChecked) return reject({state: false, error: "Could not start", message: "Errors are detcted in your commands.\nPlease correct them and retry."})
+        if(!bot.discordjs.commandsChecked) return reject(createError("Could not start", {state: false, message: "Errors are detcted in your commands.\nPlease correct them and retry."}))
         //constants connecting gateaway
         const fetch = require("node-fetch")
         let baseinfos = require("./Utils/functions").getbaseinfosre(bot.discordjs.token)
@@ -57,13 +58,13 @@ module.exports.login = async (bot, presence) => {
             var trueurl = bot.discordjs.connectionInfos.connection_url
         }else var trueurl = bot.discordjs.reconnection_url
 
-        if(bot.discordjs.connectionInfos.connection_number === 0) return reject({state: false, error: "Could not log in", message: "You reached the maximum of daily connection"})
+        if(bot.discordjs.connectionInfos.connection_number === 0) return reject(createError("Could not log in", {state: false, message: "You reached the maximum of daily connection"}))
         
         const ws = require("ws")
 
         //connecting gateaway
         const WebSocket = new ws(trueurl)
-        if(!WebSocket) return reject(new Error("Incorrect Infos"))
+        if(!WebSocket) return reject(createError("Incorrect Infos"))
         bot.discordjs.ws = WebSocket
         
         if(bot.state !== "reconnect"){
@@ -81,7 +82,7 @@ module.exports.login = async (bot, presence) => {
                 if(!bot.discordjs.lastEvent){
                     WebSocket.close()
                     bot.__resetDjs()
-                    return reject({state: false, error: "Could not log in", message: "Connection process failed.\n Try to check if there is any infinite loop.\n Try to check if the intents you gave correspond to the ones in the developer portal."})
+                    return reject(createError("Could not log in", {state: false, message: "Connection process failed.\n Try to check if there is any infinite loop.\n Try to check if the intents you gave correspond to the ones in the developer portal."}))
                 }
             }, 20 * 1000)
         })

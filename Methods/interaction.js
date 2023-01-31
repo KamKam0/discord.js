@@ -1,22 +1,23 @@
 const verify = require("../Utils/verify")
 module.exports.reply = async (token, interaction, response, path, method, bot) => {//cp
     return new Promise(async (resolve, reject) => {
+        const createError = require("../Utils/functions").createError
         const fetch = require("node-fetch")
         let baseinfos = require("../Utils/functions").getbaseinfosre(token)
         let baseurl = baseinfos["baseurl"]
         let baseheaders = baseinfos["baseheaders"]
-        if(!token) return reject({code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Interaction"})
-        if(!interaction) return reject({code: require("../DB/errors.json")["43"].code, message: require("../DB/errors.json")["43"].message, file: "Interaction"})
-        if(!response) return reject({code: require("../DB/errors.json")["44"].code, message: require("../DB/errors.json")["44"].message, file: "Interaction"})
-        if(!interaction.id) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
-        if(!interaction.token) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
-        if(typeof response !== "object") return reject({code: require("../DB/errors.json")["24"].code, message: require("../DB/errors.json")["24"].message, file: "Interaction"})
+        if(!token) return reject(createError("An error happened", {code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Interaction"}))
+        if(!interaction) return reject(createError("An error happened", {code: require("../DB/errors.json")["43"].code, message: require("../DB/errors.json")["43"].message, file: "Interaction"}))
+        if(!response) return reject(createError("An error happened", {code: require("../DB/errors.json")["44"].code, message: require("../DB/errors.json")["44"].message, file: "Interaction"}))
+        if(!interaction.id) return reject(createError("An error happened", {code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"}))
+        if(!interaction.token) return reject(createError("An error happened", {code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"}))
+        if(typeof response !== "object") return reject(createError("An error happened", {code: require("../DB/errors.json")["24"].code, message: require("../DB/errors.json")["24"].message, file: "Interaction"}))
 
         const url = (method && path) ? `${baseurl}/webhooks/${ID}/${interaction.token}/messages/@original` : `${baseurl}/interactions/${interaction.id}/${interaction.token}/callback`
         const fun = require("../Utils/functions")
         let options = fun.analyse_data(response)
-        if(!options) return reject({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Interaction"})
-        if(1 === 2) return reject({code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"})//typeof options !== "object"
+        if(!options) return reject(createError("An error happened", {code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Interaction"}))
+        if(1 === 2) return reject(createError("An error happened", {code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"}))//typeof options !== "object"
         else{
             if(response.modal && !method) var basedatas = await fetch(url, {method: "POST", headers: baseheaders, body: JSON.stringify({type: 9, data: response.modal})})
             else{
@@ -48,7 +49,7 @@ module.exports.reply = async (token, interaction, response, path, method, bot) =
                     if(method) body_files.append("payload_json", JSON.stringify({type: type, data: body_files}))
                     else body_files.append("payload_json", JSON.stringify(body_files))
                     var basedatas = await fetch(url, {method: method || "POST", headers: baseheaders, body: JSON.stringify(body)}).catch(err => {})
-                }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject({code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"})
+                }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject(createError("An error happened", {code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"}))
                 if(!checkfiles || !Array.isArray(checkfiles) === true || !checkfiles[0]) var basedatas = await fetch(url, {method: method || "POST", headers: baseheaders, body: JSON.stringify({type: 4, data: body})}).catch(err => {})
             }
             if(basedatas.status === 204) return resolve("Done Successfully")
@@ -57,10 +58,10 @@ module.exports.reply = async (token, interaction, response, path, method, bot) =
                 if(datas && datas.retry_after){
                     setTimeout(() => {
                         this.reply(token, interaction, response, path, method)
-                        .catch(err => { return reject(err)})
+                        .catch(err => reject(createError("An error happened", err)))
                         .then(datas => resolve(datas))
                     }, datas.retry_after * 1000)
-                }else return reject(datas)
+                }else return reject(createError("Une erreur s'est produite lors de la requête", datas))
             }
         }
     })
@@ -78,13 +79,14 @@ module.exports.modifyreply = async (token, ID, interaction, response, bot) => {
     })
 }
 module.exports.deletereply = async (token, ID, interaction, bot) => {
+    const createError = require("../Utils/functions").createError
     return new Promise(async (resolve, reject) => {
         if(!ID){
             let user = await require("../Methods/me").getuser(token, bot)
             ID = user.id
         }
-        if(!interaction.id) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
-        if(!interaction.token) return reject({code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"})
+        if(!interaction.id) return reject(createError("An error happened", {code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"}))
+        if(!interaction.token) return reject(createError("An error happened", {code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"}))
         verify([{value: token, data_name: "token", order:1}, {value: ID, value_data: "id", data_name: "ID", order:2}, {value: interaction, type: "object", data_name: "interaction", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `webhooks/${ID}/${interaction.token}/messages/@original`, this.deletereply, "deletereply interaction")
         .then(datas => resolve(datas))
         .catch(err => reject(err))

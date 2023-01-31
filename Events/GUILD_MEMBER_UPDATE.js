@@ -15,10 +15,10 @@ module.exports = async (bot, datas) => {
         if(!filter.includes(da[0])){
             let comparaison = newdatas.find(e => e[0] === da[0])[1]
             if(da[0] === "roles"){
-                let t1 = comparaison.filter(role => !da[1].includes(role))
+                let t1 = comparaison.map(e => e.id).filter(role => !da[1].map(e => e.id).includes(role))
                 if(t1[0]) modifications.push("roles")
             
-                let t2 = da[1].filter(role => !comparaison.includes(role))
+                let t2 = da[1].map(e => e.id).filter(role => !comparaison.map(e => e.id).includes(role))
                 if(t2[0]) modifications.push("roles")
             }
             else if(comparaison !== da[1]) modifications.push(da[0])

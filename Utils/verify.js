@@ -10,13 +10,15 @@
  */
 module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
     return new Promise(async (resolve, reject) => {
+        const createError = require("../Utils/functions").createError
         const errors = require("../DB/errors.json")
         const utils = require("./functions")
+        const createError = utils.createError
         const optionsVerify = require("./checkoptions")
         const urlChecker = require("./urlcheck")
         
         for (const num in args){
-            if(!args[num].value && (String(args[num].required) === "true" || String(args[num].required) === "undefined")) return reject({code: errors["84"].code, message: errors["84"].message, file: name, variable: args[num].data_name})
+            if(!args[num].value && (String(args[num].required) === "true" || String(args[num].required) === "undefined")) return reject(createError("An error happened", {code: errors["84"].code, message: errors["84"].message, file: name, variable: args[num].data_name}))
             if(args[num].value && (!args[num].check || (args[num].check && typeof args[num].check === "boolean"))){
                 if(!args[num].type){
                     switch(args[num].data_name){
@@ -36,16 +38,16 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
                 }
                 if(Array.isArray(args[num].type)){
                     if(!args[num].type.includes("array")){
-                        if(!args[num].type.includes(typeof args[num].value)) return reject({code: errors["85"].code, message: errors["85"].message+args[num].type, file: name, variable: args[num].data_name})
-                    }else if(!args[num].type.includes(typeof args[num].value) && !Array.isArray(args[num].value)) return reject({code: errors["85"].code, message: errors["85"].message+args[num].type, file: name, variable: args[num].data_name})
+                        if(!args[num].type.includes(typeof args[num].value)) return reject(createError("An error happened", {code: errors["85"].code, message: errors["85"].message+args[num].type, file: name, variable: args[num].data_name}))
+                    }else if(!args[num].type.includes(typeof args[num].value) && !Array.isArray(args[num].value)) return reject(createError("An error happened", {code: errors["85"].code, message: errors["85"].message+args[num].type, file: name, variable: args[num].data_name}))
                 }else{
                     if(args[num].type !== "array"){
-                        if(typeof args[num].value !== args[num].type) return reject({code: errors["85"].code, message: errors["85"].message+args[num].type, file: name, variable: args[num].data_name})
-                    }else if(!Array.isArray(args[num].value)) return reject({code: errors["85"].code, message: errors["85"].message+args[num].type, file: name, variable: args[num].data_name})
+                        if(typeof args[num].value !== args[num].type) return reject(createError("An error happened", {code: errors["85"].code, message: errors["85"].message+args[num].type, file: name, variable: args[num].data_name}))
+                    }else if(!Array.isArray(args[num].value)) return reject(createError("An error happened", {code: errors["85"].code, message: errors["85"].message+args[num].type, file: name, variable: args[num].data_name}))
                 }
-                if(args[num].value_data === "id" && !utils.check_id(args[num].value)) return reject({code: errors["86"].code, message: errors["86"].message, file: name, variable: args[num].data_name})
-                if(args[num].value_data === "overwrite" && !utils.check_overwrites(args[num].value)) return reject({code: errors["60"].code, message: errors["60"].message, file: name, variable: args[num].data_name})
-                if(args[num].data_name === "options" && args[num].checks && !optionsVerify(args[num])) return reject({code: errors["87"].code, message: errors["87"].message, file: name, variable: args[num].data_name}) 
+                if(args[num].value_data === "id" && !utils.check_id(args[num].value)) return reject(createError("An error happened", {code: errors["86"].code, message: errors["86"].message, file: name, variable: args[num].data_name}))
+                if(args[num].value_data === "overwrite" && !utils.check_overwrites(args[num].value)) return reject(createError("An error happened", {code: errors["60"].code, message: errors["60"].message, file: name, variable: args[num].data_name}))
+                if(args[num].data_name === "options" && args[num].checks && !optionsVerify(args[num])) return reject(createError("An error happened", {code: errors["87"].code, message: errors["87"].message, file: name, variable: args[num].data_name})) 
             }
             if(!args[num].order && !["options", "infosURL"].includes(args[num].data_name)) args[num].order = Number(num)+1
             else if(!["options", "infosURL"].includes(args[num].data_name) && Number(args[num].order) !== Number(num)+1) args[num].order = Number(num)+1
@@ -68,7 +70,7 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
             if(options) basedatas = await fetch(url, {method, headers, body: JSON.stringify(options)}).catch(err => {})
             else basedatas = await fetch(url, {method, headers}).catch(err => {})
         }
-        if(!basedatas) return reject(basedatas)
+        if(!basedatas) return reject(createError("An error happened with the requests", basedatas))
         else if(basedatas.status === 204) return resolve("Done Successfully")
         else if(basedatas.status === 200 || basedatas.status === 201){
             const datas = await basedatas.json()
@@ -85,10 +87,4 @@ module.exports = async (args, method, urlc, fonction, name, baseinfo) => {
             }
         }
     })
-}
-
-function createError(name, error){
-    let er = new Error(`Une erreur s'est produite lors de la requête - ${name}`)
-    er.content = error
-    return er
 }

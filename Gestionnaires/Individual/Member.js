@@ -1,28 +1,43 @@
 const Base = require("./base")
+const Roles = require("../Multiple/Roles")
 class Member extends Base{
     constructor(member, bot){
         super(bot)
-        this.user_id = member.user_id || member.user.id
+        this.user_id = member.user.id
         this.user = this.user_id ? bot.users.get(this.user_id) : null
         this.nick = member.nick || null
         this.avatar = member.avatar || null
-        this.roles = member.roles || []
         this.premium_since = member.premium_since || null
         this.joined_at = member.joined_at
         this.deaf = member.deaf ?? false
         this.mute = member.mute ?? false
-        this.guild = bot.guilds.get(member.guild_id) || null
+        this.guild_id = member.guild_id
+        this.guild = member.guild || bot.guilds.get(this.guild_id) || null
+        this.roles = new Roles(bot, this.guild_id)
+        this.#handleRoles(member.roles)
         this.voice = {presence: this.guild?.voice_states?.get(this.user_id) || null, channel: this.guild?.voice_states?.get(this.user_id)?.channel || null}
         this.pending = member.pending ?? false
         this.permissions = member.permissions || null
         this.communication_disabled_until = member.communication_disabled_until || null
-        this.guild_id = member.guild_id
+    }
+
+    #handleRoles(roles){
+        if(!roles) return
+        if(!Array.isArray(roles)) return
+        if(typeof roles[0] !== "string") return this.roles.container = roles
+        let trueroles = roles.map(id => this.guild.roles.get(id))
+        roles.container = trueroles
     }
 
     __Modify_Datas(member){
         let tocheck = Object.entries(member)
         tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
+            if(e[0] === "roles"){
+                let t1 = this.roles.map(e => e.id).filter(role => !e[1].map(e => e.id).includes(role))
+                let t2 = e[1].map(e => e.id).filter(role => !this.roles.map(e => e.id).includes(role))
+                if(t1 || t2) this.#handleRoles(member.roles)
+            }
+            else if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
         this.__Modify_Get_Datas()
         return this
