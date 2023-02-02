@@ -21,7 +21,7 @@ class Messages extends Base{
     }
 
     __DeleteMessages(IDS){
-        IDS.map(msg => this.__DeleteChannel(msg))
+        IDS.map(msg => this.__DeleteMessage(msg))
         return this
     }
 }

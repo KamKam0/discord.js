@@ -40,32 +40,19 @@ function getbaseinfosre_xww(token){
  * @returns 
  */
 function GetHeaders(token, type){
-    const version = require("../index").version
+    let base = {
+        Authorization: `Bot ${token}`,
+        'User-Agent': `DiscordBot (@kamkam1_0/discord.js - https://www.npmjs.com/package/@kamkam1_0/discord.js, ${require("../index").version})`
+    }
     switch(type){
         case("url"):
-            return {
-                Authorization: `Bot ${token}`,
-                "Content-Type": "application/x-www-form-urlencoded",
-                'User-Agent': `DiscordBot (Darkness Group - No URL, ${version})`
-            }
-        break;
+            return {...base, "Content-Type": "application/x-www-form-urlencoded"}
         case("file"):
-            return {
-                Authorization: `Bot ${token}`,
-                "Content-Type": "multipart/form-data; boundary=",
-                'User-Agent': `DiscordBot (Darkness Group - No URL, ${version})`
-            }
-        break;
+            return {...base, "Content-Type": "multipart/form-data; boundary="}
         case("basic"):
-            return {
-                Authorization: `Bot ${token}`,
-                "Content-Type": "application/json",
-                'User-Agent': `DiscordBot (Darkness Group - No URL, ${version})`
-            }
-        break;
+            return {...base, "Content-Type": "application/json"}
         default:
             return "Error"
-        break;
     }
 }
 

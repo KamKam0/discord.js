@@ -10,7 +10,7 @@ class Message extends Base{
         this.member = message.guild_id ? (this.guild.members.get(this.user_id) ?? null) : null
         this.id = message.id
         this.channel_id = message.channel_id
-        this.channel = this.channel_id ? bot.channels.get(this.channel_id) : null
+        this.channel = bot.channels.get(this.channel_id) || null
         this.content = message.content === "" ? null : message.content
         this.timestamp = message.timestamp
         this.edited_timestamp = message.edited_timestamp || null        

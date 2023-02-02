@@ -26,7 +26,7 @@ module.exports.modify = (token, channelid, options, bot) => {
  */
 module.exports.bulkdelete = (token, channelid, ids, bot) => {
     return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order: 1}, {value: channelid, value_data: "id", data_name: "channelid", order: 2}, {value: {messages: ids}, data_name: "options"}, {value: ids, type: "array", data_name: "ids", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `channels/${channelid}/messages/bulk-delete`, this.bulkdelete, "bulkdelete channel")
+        verify([{value: token, data_name: "token", order: 1}, {value: channelid, value_data: "id", data_name: "channelid", order: 2}, {value: {messages: ids}, data_name: "options"}, {value: ids, type: "array", data_name: "ids", order: 3}, {value: bot, data_name: "bot", order: 4}], "POST", `channels/${channelid}/messages/bulk-delete`, this.bulkdelete, "bulkdelete channel")
         .then(datas => resolve(datas))
         .catch(err => reject(err))
     })

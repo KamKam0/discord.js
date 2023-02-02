@@ -12,7 +12,7 @@ class base extends Base{
         this.guild = interaction.guild || bot.guilds.get(this.guild_id) || null
         this.channel_id = interaction.channel_id
         this.message = interaction.message ? (new Message({...interaction.message, guild_id: interaction.guild_id, channel_id: interaction.channel_id}, bot)) : null
-        this.channel = interaction.channel ? bot.channels.get(this.channel_id) : require("../../../Utils/functions").channel_backup(interaction.channel_id, interaction.bot_token, bot)
+        this.channel = bot.channels.get(this.channel_id) || require("../../../Utils/functions").channel_backup(interaction.channel_id, interaction.bot_token, bot)
         this.user_id = interaction.user ? interaction.user.id : interaction.member.user.id
         this.user = bot.users.get(this.user_id) ?? new User(interaction.user, bot)
         this.member = interaction.member && this.guild ? this.guild.members.get(this.user_id) : null
