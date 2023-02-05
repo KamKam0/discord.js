@@ -12,23 +12,23 @@ class Channels extends Base{
         }
     }
 
-    __AddChannel(Channel){
+    __add(Channel){
         this.container.push(new (require(`../Individual/Channels_/Channel_${this.#type0(Channel.type)}`))({...Channel, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 
-    __AddChannels(Channels){
-        Channels.map(ch => this.__AddChannel(ch))
+    __addMultiple(Channels){
+        Channels.map(ch => this.__add(ch))
         return this
     }
 
-    __DeleteChannel(ID){
+    __delete(ID){
         this.container.splice(this.container.indexOf(this.container.find(ch => ch.id === ID)), 1)
         return this
     }
 
-    __DeleteChannels(IDS){
-        IDS.map(ch => this.__DeleteChannel(ch))
+    _deleteMultiple(IDS){
+        IDS.map(ch => this.__delete(ch))
         return this
     }
 }

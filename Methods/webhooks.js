@@ -27,7 +27,7 @@ module.exports.get = async (token, channelid, bot) => {
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `channels/${channelid}/webhooks`, this.get, "get webhook")
         .then(datas => {
             const webhooks = new (require("../Gestionnaires/Multiple/Webhooks"))(bot)
-            webhooks.__AddWebhooks(datas.map(da => { return {...da, token: token}}))
+            webhooks.__addMultiple(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
         })
         .catch(err => reject(err))

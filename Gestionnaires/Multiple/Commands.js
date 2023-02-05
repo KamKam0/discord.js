@@ -5,17 +5,7 @@ class Commands extends Base{
         super(_bot)
     }
 
-    __AddCommand(int){
-        this.container.push(new Slash(int, this._bot))
-        return this
-    }
-
-    __AddCommands(commands){
-        commands.map(int => this.__AddCommand(int))
-        return this
-    }
-
-    __DeleteCommand(name){
+    __delete(name){
         this.container.splice(this.container.indexOf(this.container.find(cmd => cmd.name === name)), 1)
         return this
     }

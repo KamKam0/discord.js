@@ -5,7 +5,7 @@ class Mentions extends baseMutliple{
         this.type = type || "member"
     }
 
-    __AddMention(mention){
+    __add(mention){
         let datas;
         switch(this.type){
             case("role"):
@@ -19,16 +19,6 @@ class Mentions extends baseMutliple{
             break;
         }
         if(datas) this.container.push(datas)
-        return this
-    }
-
-    __AddMentions(mentions){
-        mentions.map(me => this.__AddMention(me))
-        return this
-    }
-
-    __DeleteMember(ID){
-        this.container.splice(this.container.indexOf(this.container.find(me => me.id === ID)), 1)
         return this
     }
 

@@ -5,21 +5,21 @@ class Users extends Base{
         super(_bot)
     }
 
-    __AddUser(user){
+    __add(user){
         if(this.container.find(us => us.id === user.id)) this.container.find(us => us.id === user.id).guilds.push(user.guild_id)
         else this.container.push(new User({...user, token: this._bot.discordjs.token}, this._bot))
         return this
     }
 
-    __AddUsers(users){
+    __addMultiple(users){
         let topush = users.filter(us1 => !this.container.find(us2 => us2.id === us1.id))
         let tomodif = users.filter(us1 => this.container.find(us2 => us2.id === us1.id))
-        if(topush[0]) topush.map(sti => this.__AddUser(sti))
+        if(topush[0]) topush.map(sti => this.__add(sti))
         if(tomodif[0]) users.forEach(us2 => this.container.find(us => us.id === us2.id).guilds.push(us2.guild_id))
         return this
     }
 
-    __DeleteUser(ID){
+    __delete(ID){
         let user_i = ID.user
         let guild_i = ID.guild
         let u = this.container.find(sti => sti.id === user_i)
@@ -28,7 +28,7 @@ class Users extends Base{
         return this
     }
 
-    __DeleteUsers(IDS){
+    __deleteMultiple(IDS){
         IDS.map(us => this.__DeleteChannel(us))
         return this
     }
@@ -38,8 +38,8 @@ class Users extends Base{
         let to1 = tocheck.filter(us => !guild.members.find(us2 => us2.user.id === us.id))
         let to2 = tocheck.filter(us => guild.members.find(us2 => us2.user.id === us.id))
         let to3 = guild.members.filter(us => !tocheck.find(us2 => us2.id === us.user.id))
-        if(to1[0]) this.__DeleteUsers(to1.map(us => us.id))
-        if(to3[0]) this.__AddUsers(to1.map(us => { return {...us.user, guild_id: guild.id}}))
+        if(to1[0]) this.__deleteMultiple(to1.map(us => us.id))
+        if(to3[0]) this.__addMultiple(to1.map(us => { return {...us.user, guild_id: guild.id}}))
         to2.forEach(user => {
             let comparaison = this.container.find(e => e.id === user.id).__compareuser(guild.members.find(me => me.user.id === user.id))
             if(comparaison.state === false) this.container.find(e => e.id === user.id).__Modify_Datas(guild.members.find(me => me.user.id === user.id))

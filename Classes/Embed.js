@@ -161,10 +161,11 @@ class Embed {
     }
 
     /**
-    * @param {array} fields
+    * @param {object} fields
     * @returns {Embed}
     */
-    addFields(fields){
+    addFields(){
+        let fields = [...arguments]
         fields.filter(e => typeof e === "object").forEach(field => this.addField(field.name, field.value, field.inline))
         return this
     }

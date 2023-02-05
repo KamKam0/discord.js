@@ -16,9 +16,9 @@ class Message extends Base{
         this.edited_timestamp = message.edited_timestamp || null        
         this.tts = message.tts ? message.tts : false
         this.mention_everyone = message.mention_everyone ?? false
-        this.mention_roles = (message.mention_roles && message.mention_roles[0]) ? (new Mentions(bot, this.guild_id, "role")).__AddMentions(message.mention_roles) :  new Mentions(bot, this.guild_id, "role")
+        this.mention_roles = (message.mention_roles && message.mention_roles[0]) ? (new Mentions(bot, this.guild_id, "role")).__addMultiple(message.mention_roles) :  new Mentions(bot, this.guild_id, "role")
         this.mention_channels = this.#treatMentionsChannels(this.content)
-        this.mention_members = (message.mentions && message.mentions.filter(e => e.member)[0]) ? (new Mentions(bot, this.guild_id, "member")).__AddMentions(message.mentions.filter(e => e.member).map(e => e.id)) :  new Mentions(bot, this.guild_id, "member")
+        this.mention_members = (message.mentions && message.mentions.filter(e => e.member)[0]) ? (new Mentions(bot, this.guild_id, "member")).__addMultiple(message.mentions.filter(e => e.member).map(e => e.id)) :  new Mentions(bot, this.guild_id, "member")
         this.attachments = message.attachments || []
         this.embeds = message.embeds || []
         this.reactions = message.reactions || []

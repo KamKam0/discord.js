@@ -11,7 +11,7 @@ module.exports.create = async (token, guildid, options, bot) => {
 module.exports.getall = async (token, guildid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order: 1}, {value: guildid, value_data: "id", data_name: "guildid", order: 2}, {value: bot, data_name: "bot", order: 3}], "GET", `/guilds/${guildid}/auto-moderation/rules`, this.getall, "getall automod")
-        .then(datas => resolve((new AutoModerations(bot)).__AddAutoModeations(datas)))
+        .then(datas => resolve((new AutoModerations(bot)).__addMultiple(datas)))
         .catch(err => reject(err))
     })
 }

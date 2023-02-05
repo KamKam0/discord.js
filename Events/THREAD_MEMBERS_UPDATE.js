@@ -15,8 +15,8 @@ module.exports = async (bot, datas) => {
         removed_member: null,
         member_count: datas.member_count
     }
-    if(datas.added_members) to_transmit.added_members = (new Members(bot)).__AddMembers(datas.added_members)
-    if(datas.removed_member) to_transmit.removed_member = (new Members(bot)).__AddMembers(datas.removed_member)
+    if(datas.added_members) to_transmit.added_members = (new Members(bot)).__addMultiple(datas.added_members)
+    if(datas.removed_member) to_transmit.removed_member = (new Members(bot)).__addMultiple(datas.removed_member)
 
     if(bot.database_state !== "unstable") bot.emit(name(), bot, new ThreadUpdate(to_transmit, bot))
 }

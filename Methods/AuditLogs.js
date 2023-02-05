@@ -17,12 +17,12 @@ module.exports = async (token, guildid, infosURL, bot) => {
         .then(datas => {
             let transformac_type = require("../constants").autoditTransforms
             datas.audit_log_entries = datas.audit_log_entries.map(each => {return {...each, action_type: Object.entries(transformac_type).find(e => e[1] === each.action_type)}})
-            datas.threads = (new Threads(bot)).__AddChannels(datas.threads)
-            datas.users = (new Users(bot)).__AddUsers(datas.users)
-            datas.integrations = (new Integrations(bot)).__AddIntegrations(datas.integrations)
-            datas.webhooks = (new Webhooks(bot)).__AddWebhooks(datas.webhooks)
-            datas.guild_scheduled_events = (new Events(bot)).__AddEvents(datas.guild_scheduled_events)
-            datas.application_commands = (new ApplicationCommands(bot)).__AddCommands(datas.application_commands)
+            datas.threads = (new Threads(bot)).__addMultiple(datas.threads)
+            datas.users = (new Users(bot)).__addMultiple(datas.users)
+            datas.integrations = (new Integrations(bot)).__addMultiple(datas.integrations)
+            datas.webhooks = (new Webhooks(bot)).__addMultiple(datas.webhooks)
+            datas.guild_scheduled_events = (new Events(bot)).__addMultiple(datas.guild_scheduled_events)
+            datas.application_commands = (new ApplicationCommands(bot)).__addMultiple(datas.application_commands)
             datas.auto_moderation_rules = datas.auto_moderation_rules.map(us => us)
             return resolve(datas)
         })

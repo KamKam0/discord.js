@@ -44,7 +44,7 @@ module.exports.fetch = async (token, guildid, bot) => {
         verify([{value: token, data_name: "token", order: 1}, {value: guildid, value_data: "id", data_name: "guildid", order: 2}, {value: bot, data_name: "bot", order: 4}], "get", `guilds/${guildid}/bans`, this.fetch, "fetchbans")
         .then(datas => {
             const Bans = new (require("../Gestionnaires/Multiple/Bans"))(bot)
-            Bans.__AddBans(datas.map(da => { return {...da, guild_id: guildid, token: token}}))
+            Bans.__addMultiple(datas.map(da => { return {...da, guild_id: guildid, token: token}}))
             return resolve(Bans)
         })
         .catch(err => reject(err))

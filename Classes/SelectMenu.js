@@ -71,9 +71,9 @@ class SelectMenu {
         return this
     }
 
-    addOptions(array){
-        if(!array || !Array.isArray(array) || !array[0]) return this
-        array.forEach(obj => this.addOption(obj))
+    addOptions(){
+        let options = [...arguments]
+        options.forEach(obj => this.addOption(obj))
         return this
     }
 }

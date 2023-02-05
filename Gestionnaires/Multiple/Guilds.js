@@ -5,21 +5,6 @@ class Guilds extends Base{
         super(_bot)
     }
 
-    __AddGuild(guild){
-        this.container.push(new Guild(this._bot, guild))
-        return this
-    }
-
-    __DeleteGuild(ID){
-        this.container.splice(this.container.indexOf(this.container.find(gu => gu.id === ID)), 1)
-        return this
-    }
-
-    __DeleteGuilds(IDS){
-        IDS.map(gu => this.__DeleteGuild(gu))
-        return this
-    }
-
     __ReplaceGuild(guild){
         let voice = this.get(guild.id).voice
         this.container.splice(this.container.indexOf(this.container.find(gu => gu.id === guild.id)), 1)

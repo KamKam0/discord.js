@@ -133,7 +133,7 @@ module.exports.fetch_messages = async (token, channelid, limit, bot) => {
                         .catch(err => reject(err))
                         .then(datas => { 
                             const messages = new (require("../Gestionnaires/Multiple/Messages"))(bot)
-                            messages.__AddMessages(datas)
+                            messages.__addMultiple(datas)
                             return resolve(messages)
                         })
                     }, datas.retry_after * 1000)
@@ -145,7 +145,7 @@ module.exports.fetch_messages = async (token, channelid, limit, bot) => {
             }
             else{
                 const messages = new (require("../Gestionnaires/Individual/Messages"))(bot)
-                messages.__AddMessages(datas.map(da => { return {...da, token: token}}))
+                messages.__addMultiple(datas.map(da => { return {...da, token: token}}))
                 return resolve(messages)
             }
         }else{
@@ -159,7 +159,7 @@ module.exports.fetch_messages = async (token, channelid, limit, bot) => {
                         .catch(err => reject(err))
                         .then(datas => { 
                             const messages = new (require("../Gestionnaires/Individual/Messages"))(bot)
-                            messages.__AddMessages(datas)
+                            messages.__addMultiple(datas)
                             return resolve(messages)
                         })
                     }, datas.retry_after * 1000)
@@ -171,7 +171,7 @@ module.exports.fetch_messages = async (token, channelid, limit, bot) => {
             }
             else{
                 const messages = new (require("../Gestionnaires/Multiple/Messages"))(bot)
-                messages.__AddMessages(datas.map(da => { return {...da, token: token}}))
+                messages.__addMultiple(datas.map(da => { return {...da, token: token}}))
                 return resolve(messages)
             }
         }
@@ -358,7 +358,7 @@ module.exports.fetch_reaction = async (token, channelid, messageid, emoji, bot) 
         verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: emoji, data_name: "emoji", order:4}, {value: bot, data_name: "bot", order: 5}], "GET", `channels/${channelid}/messages/${messageid}/reactions/${encodeURIComponent(emoji)}`, this.fetch_reaction, "fetch_reaction message")
         .then(datas => {
             const messages = new (require("../Gestionnaires/Multiple/Messages"))(bot)
-            messages.__AddMessages(datas.map(da => { return {...da, token: token}}))
+            messages.__addMultiple(datas.map(da => { return {...da, token: token}}))
             return resolve(messages)
         })
         .catch(err => reject(err))

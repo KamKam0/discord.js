@@ -10,8 +10,9 @@ class Form {
         return this
     }
 
-    AddTextInputs(obj){
-        obj.forEach(e => this.AddTextInput(e))
+    AddTextInputs(){
+        let texts = [...arguments]
+        texts.forEach(e => this.AddTextInput(e))
         return this
     }
     

@@ -3,8 +3,8 @@ const Roles = require("../Multiple/Roles")
 class Member extends Base{
     constructor(member, bot){
         super(bot)
-        this.user_id = member.user.id
-        this.user = this.user_id ? bot.users.get(this.user_id) : null
+        this.user_id = member.user?.id || member.user_id
+        this.user = bot.users.get(this.user_id) || null
         this.nick = member.nick || null
         this.avatar = member.avatar || null
         this.premium_since = member.premium_since || null

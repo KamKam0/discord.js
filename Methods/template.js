@@ -59,7 +59,7 @@ module.exports.getall = (token, guildid, bot) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/templates`, this.getall, "getall template")
         .then(datas => {
             const templates = new (require("../Gestionnaires/Multiple/Templates"))(bot)
-            templates.__AddTemplates(datas.map(da => { return {...da, token: token}}))
+            templates.__addMultiple(datas.map(da => { return {...da, token: token}}))
             return resolve(datas)
         })
         .catch(err => reject(err))

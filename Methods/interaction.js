@@ -106,7 +106,7 @@ module.exports.getcommands = async (token, ID,  trueid, bot) => {
                 else return reject("No command found")
             }else{
                 const commands = new (require("../Gestionnaires/Multiple/Commands"))(bot)
-                commands.__AddCommands(datas.map(da => { return {...da, token: token}}))
+                commands.__addMultiple(datas.map(da => { return {...da, token: token}}))
                 return resolve(commands)
             }
         })

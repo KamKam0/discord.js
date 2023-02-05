@@ -3,7 +3,7 @@ module.exports = async (bot, datas) => {
     
     if(!datas.guild_id || !guild) return
   
-    guild.roles.__AddRole({...datas.role, guild_id: guild.id})
+    guild.roles.__add({...datas.role, guild_id: guild.id})
     
     if(bot.database_state !== "unstable") bot.emit(name(), bot, guild.roles.get(datas.role.id))
 }
