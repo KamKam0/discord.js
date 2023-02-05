@@ -12,6 +12,6 @@ module.exports = async (bot, datas) => {
     bot.discordjs.reconnection_url = datas.resume_gateway_url
     if(bot.state === "isession"){
         let gu = bot.guilds.filter(g => !bot.discordjs.guild_ids.includes(g.id))
-        if(gu[0]) bot.guilds.__DeleteGuilds(gu.map(g => g.id))
+        if(gu[0]) bot.guilds.__deleteMultiple(gu.map(g => g.id))
     }
 }

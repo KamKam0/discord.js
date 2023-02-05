@@ -7,7 +7,7 @@ module.exports = async (bot, oldvoice, newvoice) => {
     const newvoice2 = guild.voice_states.get(newvoice.user_id)
     guild.members.get(newvoice.user_id).voice = {presence: newvoice2, channel: newvoice2?.channel || null}
     
-    guild.channels.get(oldvoice.channel_id).members.__DeleteMember(newvoice.user_id)
+    guild.channels.get(oldvoice.channel_id).members.__delete(newvoice.user_id)
     guild.channels.get(newvoice.channel_id).members.container.push(guild.members.get(newvoice.user_id))
 
 

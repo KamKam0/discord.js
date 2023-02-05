@@ -1,7 +1,7 @@
 const MessageBulk = require("../Event Result/MessageBulk")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
-    if(guild) guild.messages.__DeleteMessages(datas.ids)
+    if(guild) guild.messages.__deleteMultiple(datas.ids)
     if(bot.database_state !== "unstable") bot.emit(name(), bot, (new MessageBulk({...datas}, bot)))
 }
 
