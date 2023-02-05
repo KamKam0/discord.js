@@ -12,7 +12,7 @@ const Messages = require("../../Managers/Messages")
 const voiceManager = require("../../Classes/guildVoiceManager")
 const Base = require("./base")
 class Guild extends Base{
-    constructor(bot, guild){
+    constructor(guild, bot){
         super(bot)
         this.name = guild.name
         this.id = guild.id

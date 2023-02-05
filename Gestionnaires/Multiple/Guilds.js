@@ -2,7 +2,7 @@ const Guild = require("../Individual/Guild")
 const Base = require("./baseMultiple")
 class Guilds extends Base{
     constructor(_bot){
-        super(_bot)
+        super(_bot, null, "guild")
     }
 
     __ReplaceGuild(guild){

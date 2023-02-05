@@ -1,8 +1,7 @@
-const Presence = require("../Individual/Presence")
 const Base = require("./baseMultiple")
 class Presences extends Base{
     constructor(_bot, guildid){
-        super(_bot, guildid)
+        super(_bot, guildid, "presence")
     }
 
     __Treat(presence){

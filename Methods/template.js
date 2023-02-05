@@ -78,7 +78,7 @@ module.exports.getall = (token, guildid, bot) => {
 module.exports.createguild = (token, guildid, templatecode, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: templatecode, data_name: "templatecode", order:3}, {value: options, data_name: "options", order: 4}, {value: bot, data_name: "bot", order: 5}], "POST", `guilds/${guildid}/templates/${templatecode}`, this.createguild, "createguild template")
-        .then(datas => resolve(new (require("../Gestionnaires/Individual/Guild"))(bot, {...datas, token: token})))
+        .then(datas => resolve(new (require("../Gestionnaires/Individual/Guild"))({...datas, token: token}, bot)))
         .catch(err => reject(err))
     })
 }

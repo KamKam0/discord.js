@@ -1,8 +1,7 @@
-const Slash = require("../../Classes/ApplicationCommand")
 const Base = require("./baseMultiple")
 class Commands extends Base{
     constructor(_bot){
-        super(_bot)
+        super(_bot, null, "command")
     }
 
     __delete(name){

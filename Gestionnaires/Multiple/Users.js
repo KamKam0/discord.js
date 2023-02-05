@@ -2,7 +2,7 @@ const User = require("../Individual/User")
 const Base = require("./baseMultiple")
 class Users extends Base{
     constructor(_bot){
-        super(_bot)
+        super(_bot, null, "user")
     }
 
     __add(user){

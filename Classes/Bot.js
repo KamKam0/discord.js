@@ -319,7 +319,7 @@ class Bot extends EventEmitter{
             if(!cmd) this.CreateSlashCommand(datas.toJSON())
             else{
                 if(!datas.compare(cmd)) this.ModifySlashCommand(datas)
-                commands = commands.__DeleteCommand(cmd.name)
+                commands = commands.__delete(cmd.name)
             }
         })
         if(commands.length > 0) commands.container.forEach(cmd => this.DeleteSlashCommand(cmd.id))

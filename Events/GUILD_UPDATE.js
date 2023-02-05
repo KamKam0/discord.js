@@ -1,7 +1,7 @@
 module.exports = async (bot, datas) => {
     const guild_e = require("../Gestionnaires/Individual/Guild")
     let oldguild = bot.guilds.get(datas.id)
-    oldguild = new guild_e(bot, {...oldguild})
+    oldguild = new guild_e({...oldguild}, bot)
 
     if(!datas.id|| !oldguild) return
   

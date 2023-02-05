@@ -1,8 +1,7 @@
-const Voice = require("../Individual/Voice")
 const Base = require("./baseMultiple")
 class Voices extends Base{
     constructor(bot, guildid){
-        super(bot, guildid)
+        super(bot, guildid, "voice")
     }
 
     __delete(ID){

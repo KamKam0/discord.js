@@ -1,7 +1,7 @@
 const baseMutliple = require("./baseMultiple")
 class Mentions extends baseMutliple{
     constructor(_bot, guild_id, type){
-        super(_bot, guild_id)
+        super(_bot, guild_id, "member")
         this.type = type || "member"
     }
 

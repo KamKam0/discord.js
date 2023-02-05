@@ -1,8 +1,7 @@
-const Member = require("../Individual/Member")
 const Base = require("./baseMultiple")
 class Members extends Base{
     constructor(_bot, guildid){
-        super(_bot, guildid)
+        super(_bot, guildid, "member")
     }
 
     get(ID){

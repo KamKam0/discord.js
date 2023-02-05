@@ -95,9 +95,6 @@ class baseMutliple{
             case("thread"):
                 clas = require("../Individual/Channels_/Channel_11")
             break;
-            case("user"):
-                clas = require("../Individual/User")
-            break;
             case("voice"):
                 clas = require("../Individual/Voice")
             break;
