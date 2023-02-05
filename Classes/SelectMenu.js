@@ -53,7 +53,7 @@ class SelectMenu {
         if(!obj.label || !isNaN(obj.label) || obj.label.length < 1 || obj.label.length > 100) return this
         if(!obj.value || !isNaN(obj.value) || obj.value.length < 1 || obj.value.length > 100) return this
         let description = obj.description
-        if(description && !isNaN(description) || description.length < 1 || description.length > 100) description = null
+        if(description && (!isNaN(description) || description.length < 1 || description.length > 100)) description = null
         if(!description) description = null
         let defaulte = obj.default
         if(defaulte && typeof defaulte !== "boolean") defaulte = null
