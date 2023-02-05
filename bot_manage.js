@@ -102,7 +102,7 @@ module.exports.login = async (bot, presence) => {
             }
             else if(message.op === 7){
                 console.warn(`Warning Session: reconnection asked at ${new Date(Date.now()).toLocaleString("fr")}`)
-                stopFunction(bot, message.op)
+                stopFunction(bot, message)
             }
             else if(message.op === 0){
                 if(!["GUILD_CREATE", "READY", "USER_UPDATE", "MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(message.t) && !bot.guilds.get(message.d.guild_id)) return
@@ -113,7 +113,7 @@ module.exports.login = async (bot, presence) => {
             else if(message.op === 9){
                 console.warn(`Warning Session: invalid session at ${new Date(Date.now()).toLocaleString("fr")}`)
                 require("./Events/INVALID_SESSION")(bot)
-                stopFunction(bot, message.op)
+                stopFunction(bot, message)
             }
             else if(message.op === 1) sendHeartBeat(bot)
             else if(message.op === 11) bot.discordjs.lastACK = Date.now()
@@ -122,8 +122,8 @@ module.exports.login = async (bot, presence) => {
     })
 }
 
-function stop(bot, op){
-    if(op === 7) bot.state = "reconnect"
+function stop(bot, message){
+    if(message.op === 7 || (message.op === 9 && String(message.d) === "true")) bot.state = "reconnect"
     else bot.state = "isession"
     bot.discordjs.ws.close()
     bot.discordjs.interval_state = null
@@ -135,7 +135,7 @@ function handleHeartbeats(bot, message, stopFunction){
     bot.discordjs.interval = setInterval(() => {
         if((Date.now() - bot.discordjs.lastACK) > (bot.discordjs.HBinterval * 1.1)){
             console.warn(`Warning Session: connection lost with gateaway at ${new Date(Date.now()).toLocaleString("fr")}`)
-            stopFunction(bot, message.op)
+            stopFunction(bot, message)
         }else{
             bot.discordjs.lastPing = Date.now()
             bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": bot.discordjs.lastEvent}))
