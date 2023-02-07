@@ -29,7 +29,7 @@ class Users extends Base{
     }
 
     __deleteMultiple(IDS){
-        IDS.map(us => this.__DeleteChannel(us))
+        IDS.map(us => this.__delete(us))
         return this
     }
 

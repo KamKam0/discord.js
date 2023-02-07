@@ -1,5 +1,5 @@
-const baseMutliple = require("./baseMultiple")
-class Mentions extends baseMutliple{
+const baseMultiple = require("./baseMultiple")
+class Mentions extends baseMultiple{
     constructor(_bot, guild_id, type){
         super(_bot, guild_id, "member")
         this.type = type || "member"

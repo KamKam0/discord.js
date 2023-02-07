@@ -56,7 +56,7 @@ class Message extends Base{
         if(!content) return clas
         if(content.includes("<#")){
             let splitted = content.split("<#").filter(e => e.includes(">")).map(e => e.split(">")[0]).filter(e => !isNaN(e))
-            if(splitted && splitted[0]) clas.__AddMentions(splitted)
+            if(splitted && splitted[0]) clas.__add(splitted)
         }
         return clas
     }

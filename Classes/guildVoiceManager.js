@@ -147,24 +147,29 @@ class voiceManager{
         }
     }
 
-    play(stream, volume){
+    play(stream, options){
         const {StreamType, createAudioResource, createAudioPlayer, getVoiceConnection} = require("@discordjs/voice")
-        if(this.state){
-            volume = this.#trvolume(volume)
-            const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary, inlineVolume: true});
-            resource.volume.setVolume(volume)
-            const player = createAudioPlayer();
-        
-            
-            player.play(resource);
-            getVoiceConnection(this.id).subscribe(player)
-        
-            this.connection = player
-            this.resource = resource
-            this.playing = true
-            this.queue.__update(this)
-            this.#mamangeinter()
+        if(!this.state || (options && typeof options !== "object") || this.playing) return
+        let volume = this.#trvolume(options.volume)
+        if(options.seek && typeof options.seek === "number"){
+            const ffmpeg = require("fluent-ffmpeg")
+            const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg")
+            ffmpeg.setFfmpegPath(ffmpegInstaller.path)
+            stream = ffmpeg({source: stream}).toFormat("mp3").setStartTime(options.seek)
         }
+        const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary, inlineVolume: true});
+        resource.volume.setVolume(volume)
+        const player = createAudioPlayer();
+    
+        
+        player.play(resource);
+        getVoiceConnection(this.id).subscribe(player)
+    
+        this.connection = player
+        this.resource = resource
+        this.playing = true
+        this.queue.__update(this)
+        this.#mamangeinter()
 
     }
 
@@ -194,11 +199,11 @@ class voiceManager{
 
     manageVoice(fonction){
         if(this.managing) return
+        this.managing = true
         let trueargs = Array(...arguments)
         trueargs.splice(0, 1)
         this.connection.on("stateChange", async (oldstate, newstate) => {
-            if((oldstate.status === "buffering" && newstate.status === "idle") ||  (oldstate.status === "playing" && newstate.status === "idle")){
-                if((oldstate.status === "playing" && newstate.status === "idle") && Date.now() - this.#oldBuffering <250) return fonction(this.queue.np, ...trueargs)
+            if( (oldstate.status === "playing" && newstate.status === "idle")){
                 if(this.queue.loopState) fonction(this.queue.np, ...trueargs)
                 else if(this.queue.queueloopState){
                     this.queue.addSong(this.queue.np)

@@ -1,4 +1,4 @@
-class baseMutliple{
+class baseMultiple{
     constructor(_bot, guild_id, name){
         this.container = []
         this._bot = _bot
@@ -116,4 +116,4 @@ class baseMutliple{
     }
 }
 
-module.exports = baseMutliple
+module.exports = baseMultiple

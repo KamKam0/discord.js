@@ -61,6 +61,8 @@ class Queue{
     }
 
     setNP(song){
+        if(typeof song !== "object" || typeof song.time !== "number" || typeof song.name !== "string") return
+        if(typeof song.seek === "number" && song.time < song.seek) return
         this.np = song
         return song
     }
@@ -83,22 +85,23 @@ class Queue{
     }
 
     get totalTime(){
-        if(!this.#voiceInfos.playing) return
+        if(!this.#voiceInfos.playing || !this.np) return
         let time = this.container.reduce((a, b) => a + b.time, 0) - this.np.time
-        time += (Number(this.np.time) - (this.#voiceInfos.connection._state.playbackDuration / 1000).toFixed(0))
+        time += this.ongoingTime
         return time
     }
 
     get timeBeforeLast(){
-        if(!this.#voiceInfos.playing) return
+        if(!this.#voiceInfos.playing || !this.np) return
         let time = this.container.slice(0, (this.container.length - 1)).reduce((a, b) => a + b.time, 0) - this.np.time
-        time += (Number(this.np.time) - (this.#voiceInfos.connection._state.playbackDuration / 1000).toFixed(0))
+        time += this.ongoingTime
         return time
     }
 
     get ongoingTime(){
-        if(!this.#voiceInfos.playing) return
-        let played = (this.#voiceInfos.connection._state.playbackDuration / 1000).toFixed(0)
+        if(!this.#voiceInfos.playing || !this.np) return
+        let played = Number((this.#voiceInfos.connection.state.playbackDuration / 1000).toFixed(0))
+        if(this.np.seek && typeof this.np.seek === "number") played += this.np.seek
         let remaining = Number(this.np.time) - played
        return {total: Number(this.np.time), remaining, played}
     }
