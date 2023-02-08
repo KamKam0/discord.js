@@ -4,7 +4,6 @@ class voiceManager{
     #timeoutMusic;
     #deployed;
     #buffering;
-    #oldBuffering;
     #realDefaultTiemout;
     constructor(bot, guild_id){
         this.defaultTimeout = 10
@@ -24,7 +23,6 @@ class voiceManager{
         this.id = guild_id
         this.__Handler = this.__handlepacket.bind(this)
         this.#buffering = null
-        this.#oldBuffering = null
     }
 
     __setDefaultTiemout(time){
@@ -148,28 +146,32 @@ class voiceManager{
     }
 
     play(stream, options){
-        const {StreamType, createAudioResource, createAudioPlayer, getVoiceConnection} = require("@discordjs/voice")
-        if(!this.state || (options && typeof options !== "object") || this.playing) return
-        let volume = this.#trvolume(options.volume)
-        const ffmpeg = require("fluent-ffmpeg")
-        const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg")
-        ffmpeg.setFfmpegPath(ffmpegInstaller.path)
-        stream = ffmpeg({source: stream}).toFormat("mp3")
-        if(options.seek && typeof options.seek === "number") stream = stream.setStartTime(options.seek)
-        const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary, inlineVolume: true});
-        resource.volume.setVolume(volume)
-        const player = createAudioPlayer();
-    
+        return new Promise((resolve, reject) => {
+            if(!this.state || (options && typeof options !== "object") || this.playing) return reject(null)
+            const {StreamType, createAudioResource, createAudioPlayer, getVoiceConnection} = require("@discordjs/voice")
+            let volume = this.#trvolume(options.volume)
+            const ffmpeg = require("fluent-ffmpeg")
+            const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg")
+            ffmpeg.setFfmpegPath(ffmpegInstaller.path)
+            stream = ffmpeg({source: stream}).toFormat("mp3")
+            if(options.seek && typeof options.seek === "number") stream = stream.setStartTime(options.seek)
+            const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary, inlineVolume: true});
+            resource.volume.setVolume(volume)
+            const player = createAudioPlayer();
         
-        player.play(resource);
-        getVoiceConnection(this.id).subscribe(player)
-    
-        this.connection = player
-        this.resource = resource
-        this.playing = true
-        this.queue.__update(this)
-        this.#mamangeinter()
-
+            
+            player.play(resource);
+            getVoiceConnection(this.id).subscribe(player)
+        
+            this.connection = player
+            this.resource = resource
+            this.playing = true
+            this.queue.__update(this)
+            this.#mamangeinter()
+            setTimeout(() => {
+                return resolve(null)
+            }, 1000)
+        })
     }
 
     #mamangeinter(){
@@ -181,11 +183,9 @@ class voiceManager{
             if(oldstate.status === "buffering" && newstate.status === "idle") this.end()
             if(oldstate.status === "buffering") this.#buffering = Date.now()
             if(newstate.status === "idle"){
-                this.#oldBuffering = Number(this.#buffering)
                 this.#buffering = null
                 this.playing = false
                 this.connection = null
-                this.managing = false
                 this.resource = null
                 if(!this.#timeoutMusic) this.#timeoutMusic = setTimeout(() => this.stop(), this.#realDefaultTiemout)
                 this.queue.__update(this)
@@ -197,15 +197,21 @@ class voiceManager{
     }
 
     manageVoice(fonction){
-        if(this.managing) return
+        if(this.managing || typeof fonction !== "function") return
         this.managing = true
         let trueargs = Array(...arguments)
         trueargs.splice(0, 1)
         this.connection.on("stateChange", async (oldstate, newstate) => {
-            if( (oldstate.status === "playing" && newstate.status === "idle")){
-                if(this.queue.loopState) fonction(this.queue.np, ...trueargs)
+            if(!this.managing) return
+            if(newstate.status !== "playing") this.managing = false
+            if( (oldstate.status === "buffering" && newstate.status === "idle")){
+                this.queue.removeSong()
+                fonction(this.queue.next, ...trueargs)
+            }
+            else if( (oldstate.status === "playing" && newstate.status === "idle")){
+                if(this.queue.loopState) fonction(this.queue.get(0), ...trueargs)
                 else if(this.queue.queueloopState){
-                    this.queue.addSong(this.queue.np)
+                    this.queue.addSong(this.queue.get(0))
                     this.queue.removeSong()
                     fonction(this.queue.next, ...trueargs)
                 }
@@ -216,9 +222,26 @@ class voiceManager{
             }
         })
         this.connection.on("error", err =>{
+            if(!this.managing) return
             this.managing = false
             console.log(err)
         }) 
+    }
+
+    seek(stream, options){
+        return new Promise((resolve, reject) => {
+            if(!this.playing || !this.queue.np || !options || typeof options !== "object" || !options.seek || (typeof options.seek !== "number" && isNaN(options.seek))) return reject(null)
+            if(typeof options.seek !== "number") options.seek = Number(options.seek)
+            this.managing = false
+            this.queue.setNP({...this.queue.np, seek: options.seek})
+            this.end()
+            setTimeout(() => {
+                this.play(stream, options)
+                setTimeout(() => {
+                    return resolve(null)
+                }, 1000)
+            }, 1000)
+        })
     }
 
     setvolume(volume){
