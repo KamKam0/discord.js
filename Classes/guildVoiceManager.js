@@ -151,12 +151,11 @@ class voiceManager{
         const {StreamType, createAudioResource, createAudioPlayer, getVoiceConnection} = require("@discordjs/voice")
         if(!this.state || (options && typeof options !== "object") || this.playing) return
         let volume = this.#trvolume(options.volume)
-        if(options.seek && typeof options.seek === "number"){
-            const ffmpeg = require("fluent-ffmpeg")
-            const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg")
-            ffmpeg.setFfmpegPath(ffmpegInstaller.path)
-            stream = ffmpeg({source: stream}).toFormat("mp3").setStartTime(options.seek)
-        }
+        const ffmpeg = require("fluent-ffmpeg")
+        const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg")
+        ffmpeg.setFfmpegPath(ffmpegInstaller.path)
+        stream = ffmpeg({source: stream}).toFormat("mp3")
+        if(options.seek && typeof options.seek === "number") stream = stream.setStartTime(options.seek)
         const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary, inlineVolume: true});
         resource.volume.setVolume(volume)
         const player = createAudioPlayer();
