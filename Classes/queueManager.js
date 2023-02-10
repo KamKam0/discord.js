@@ -61,7 +61,7 @@ class Queue{
     }
 
     setNP(song){
-        if(typeof song !== "object" || typeof song.time !== "number" || typeof song.name !== "string") return
+        if(typeof song !== "object" || typeof song.time !== "number" || typeof song.title !== "string") return
         if(typeof song.seek === "number" && song.time < song.seek) return
         this.np = song
         return song

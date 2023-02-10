@@ -100,10 +100,7 @@ module.exports.login = async (bot, presence) => {
                 bot.discordjs.interval_state = "on"
                 handleHeartbeats(bot, message, stopFunction)
             }
-            else if(message.op === 7){
-                console.warn(`Warning Session: reconnection asked at ${new Date(Date.now()).toLocaleString("fr")}`)
-                stopFunction(bot, message)
-            }
+            else if(message.op === 7) stopFunction(bot, message)
             else if(message.op === 0){
                 if(!["GUILD_CREATE", "READY", "USER_UPDATE", "MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(message.t) && !bot.guilds.get(message.d.guild_id)) return
                 if(["MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE", "MESSAGE_DELETE", "MESSAGE_UPDATE"].includes(message.t) && message.d.guild_id && !bot.guilds.get(message.d.guild_id)) return
@@ -111,7 +108,6 @@ module.exports.login = async (bot, presence) => {
                 else console.info(`The Discord event ${message.t} is unavailable !`)
             } 
             else if(message.op === 9){
-                console.warn(`Warning Session: invalid session at ${new Date(Date.now()).toLocaleString("fr")}`)
                 require("./Events/INVALID_SESSION")(bot)
                 stopFunction(bot, message)
             }
@@ -123,7 +119,7 @@ module.exports.login = async (bot, presence) => {
 }
 
 function stop(bot, message){
-    if(message.op === 7 || (message.op === 9 && String(message.d) === "true")) bot.state = "reconnect"
+    if(message.op === 7 || (message.op === 9 && message.d)) bot.state = "reconnect"
     else bot.state = "isession"
     bot.discordjs.ws.close()
     bot.discordjs.interval_state = null
@@ -133,10 +129,8 @@ function stop(bot, message){
 
 function handleHeartbeats(bot, message, stopFunction){
     bot.discordjs.interval = setInterval(() => {
-        if((Date.now() - bot.discordjs.lastACK) > (bot.discordjs.HBinterval * 1.1)){
-            console.warn(`Warning Session: connection lost with gateaway at ${new Date(Date.now()).toLocaleString("fr")}`)
-            stopFunction(bot, message)
-        }else{
+        if((Date.now() - bot.discordjs.lastACK) > (bot.discordjs.HBinterval * 1.1)) stopFunction(bot, message)
+        else{
             bot.discordjs.lastPing = Date.now()
             bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": bot.discordjs.lastEvent}))
         }
