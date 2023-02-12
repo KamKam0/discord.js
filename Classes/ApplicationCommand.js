@@ -57,6 +57,7 @@ class Slash{
                     if(!point2.find(opt => opt.name === option.name)) return false
                     if(!option.compare(point2.find(opt => opt.name === option.name))) return false
                 }
+                for(const option of slash.options) if(!this.options.find(opt => opt.name === option.name)) return false
             }else if(this[point] !== point2) return false
         }
         return true

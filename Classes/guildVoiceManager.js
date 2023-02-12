@@ -269,7 +269,7 @@ class voiceManager{
           this._bot.voice.adapters.set(this.id, methods);
           return {
             sendPayload: data => {
-              if (this._bot.state !== "ready") return false;
+              //if (this._bot.state !== "ready") return false;
               this._bot.discordjs.ws.send(JSON.stringify(data));
               return true;
             },

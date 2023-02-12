@@ -32,6 +32,7 @@ class Option{
                     if(!point2.find(opt => opt.name === choice.name)) return false
                     if(!choice.compare(point2.find(opt => opt.name === choice.name))) return false
                 }
+                for(const choice of slash.choices) if(!this.choices.find(opt => opt.name === choice.name)) return false
             }else if(this[point] !== point2) return false
         }
         return true
