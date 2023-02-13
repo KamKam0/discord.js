@@ -5,6 +5,7 @@ module.exports = async (bot, datas) => {
     bot.discordjs.guild_ids = datas.guilds.map(g => { return {id: g.id}})
     if(bot.discordjs.guild_ids.length === 0){
         bot.state = "ready"
+        console.log("Bot ready")
         if(bot.database_state !== "unstable") bot.emit("READY", bot)
     }
     bot.discordjs.available_ids = datas.guilds
