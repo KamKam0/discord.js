@@ -197,7 +197,7 @@ class voiceManager{
     }
 
     manageVoice(fonction){
-        if(this.managing || typeof fonction !== "function") return
+        if(this.managing || typeof fonction !== "function" || !this.connection) return
         this.managing = true
         let trueargs = Array(...arguments)
         trueargs.splice(0, 1)
@@ -269,7 +269,7 @@ class voiceManager{
           this._bot.voice.adapters.set(this.id, methods);
           return {
             sendPayload: data => {
-              //if (this._bot.state !== "ready") return false;
+              if (this._bot.state !== "ready") return false;
               this._bot.discordjs.ws.send(JSON.stringify(data));
               return true;
             },

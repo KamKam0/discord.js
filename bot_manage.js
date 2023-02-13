@@ -93,26 +93,32 @@ module.exports.login = async (bot, presence) => {
         WebSocket.on("message", async message => {
             message = JSON.parse(Buffer.from(message).toString("utf-8"))
             if(message.s) bot.discordjs.lastEvent = message.s
-            if(message.op === 10){
-                sendHeartBeat(bot)
-                bot.discordjs.lastPing = Date.now()
-                bot.discordjs.HBinterval = message.d.heartbeat_interval
-                bot.discordjs.interval_state = "on"
-                handleHeartbeats(bot, message, stopFunction)
+            switch(message.op){
+                case(10):
+                    sendHeartBeat(bot)
+                    bot.discordjs.lastPing = Date.now()
+                    bot.discordjs.HBinterval = message.d.heartbeat_interval
+                    bot.discordjs.interval_state = "on"
+                    handleHeartbeats(bot, message, stopFunction)
+                break;
+                case(7):
+                    stopFunction(bot, message)
+                break;
+                case(9):
+                    stopFunction(bot, message)
+                break;
+                case(0):
+                    if(message.d.guild_id && !bot.guilds.get(message.d.guild_id)) return
+                    if(bot.discordjs.availableEvents.includes(message.t)) return require(`./Events/${message.t}.js`)(bot, message.d)
+                    console.info(`The Discord event ${message.t} is unavailable !`)
+                break;
+                case(1):
+                    sendHeartBeat(bot)
+                break;
+                case(11):
+                    bot.discordjs.lastACK = Date.now()
+                break;
             }
-            else if(message.op === 7) stopFunction(bot, message)
-            else if(message.op === 0){
-                if(!["GUILD_CREATE", "READY", "USER_UPDATE", "MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE"].includes(message.t) && !bot.guilds.get(message.d.guild_id)) return
-                if(["MESSAGE_CREATE", "INTERACTION_CREATE", "MESSAGE_REACTION_ADD", "MESSAGE_REACTION_REMOVE", "MESSAGE_DELETE", "MESSAGE_UPDATE"].includes(message.t) && message.d.guild_id && !bot.guilds.get(message.d.guild_id)) return
-                if(bot.discordjs.availableEvents.includes(message.t)) require(`./Events/${message.t}.js`)(bot, message.d)
-                else console.info(`The Discord event ${message.t} is unavailable !`)
-            } 
-            else if(message.op === 9){
-                require("./Events/INVALID_SESSION")(bot)
-                stopFunction(bot, message)
-            }
-            else if(message.op === 1) sendHeartBeat(bot)
-            else if(message.op === 11) bot.discordjs.lastACK = Date.now()
         })
         return resolve({result: bot, message: "Bot Launched", state: true})
     })
@@ -120,7 +126,10 @@ module.exports.login = async (bot, presence) => {
 
 function stop(bot, message){
     if(message.op === 7 || (message.op === 9 && message.d)) bot.state = "reconnect"
-    else bot.state = "isession"
+    else {
+        require("./Events/INVALID_SESSION")(bot)
+        bot.state = "isession"
+    }
     bot.discordjs.ws.close()
     bot.discordjs.interval_state = null
     clearInterval(bot.discordjs.interval)
