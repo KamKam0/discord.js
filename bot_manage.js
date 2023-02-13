@@ -132,7 +132,7 @@ function stop(bot, event){
     this.login(bot, (bot.presence || presence))
 }
 
-function handleHeartbeats(bot, message, stopFunction){
+function handleHeartbeats(bot, stopFunction){
     bot.discordjs.interval = setInterval(() => {
         if((Date.now() - bot.discordjs.lastACK) > (bot.discordjs.HBinterval * 1.1)) stopFunction(bot, "SESSION_CONNECTION_LOST")
         else{
