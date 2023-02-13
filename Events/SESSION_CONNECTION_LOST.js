@@ -1,5 +1,6 @@
 module.exports = async (bot) => {
-    bot.state = "ready"
+    bot.state = "isession"
     if(bot.database_state !== "unstable") bot.emit(name(), bot)
 }
-function name(){ return "RESUMED" }
+
+function name(){ return "SESSION_CONNECTION_LOST" }

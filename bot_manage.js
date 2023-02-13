@@ -99,13 +99,13 @@ module.exports.login = async (bot, presence) => {
                     bot.discordjs.lastPing = Date.now()
                     bot.discordjs.HBinterval = message.d.heartbeat_interval
                     bot.discordjs.interval_state = "on"
-                    handleHeartbeats(bot, message, stopFunction)
+                    handleHeartbeats(bot, stopFunction)
                 break;
                 case(7):
-                    stopFunction(bot, message)
+                    stopFunction(bot, "RECONNECT")
                 break;
                 case(9):
-                    stopFunction(bot, message)
+                    stopFunction(bot, "INVALID_SESSION")
                 break;
                 case(0):
                     if(message.d.guild_id && !bot.guilds.get(message.d.guild_id)) return
@@ -124,12 +124,8 @@ module.exports.login = async (bot, presence) => {
     })
 }
 
-function stop(bot, message){
-    if(message.op === 7 || (message.op === 9 && message.d)) bot.state = "reconnect"
-    else {
-        require("./Events/INVALID_SESSION")(bot)
-        bot.state = "isession"
-    }
+function stop(bot, event){
+    require(`./Events/${event}`)(bot)
     bot.discordjs.ws.close()
     bot.discordjs.interval_state = null
     clearInterval(bot.discordjs.interval)
@@ -138,7 +134,7 @@ function stop(bot, message){
 
 function handleHeartbeats(bot, message, stopFunction){
     bot.discordjs.interval = setInterval(() => {
-        if((Date.now() - bot.discordjs.lastACK) > (bot.discordjs.HBinterval * 1.1)) stopFunction(bot, message)
+        if((Date.now() - bot.discordjs.lastACK) > (bot.discordjs.HBinterval * 1.1)) stopFunction(bot, "SESSION_CONNECTION_LOST")
         else{
             bot.discordjs.lastPing = Date.now()
             bot.discordjs.ws.send(JSON.stringify({"op": 1, "d": bot.discordjs.lastEvent}))
