@@ -3,7 +3,7 @@ class MessageReactionRemove{
         this.user_id = message_add.user_id || null
         this.user = this.user_id ? bot.users.get(this.user_id) : null
         this.channel_id = message_add.channel_id || null
-        this.channel = bot.channels.get(this.channel_id) || require("../Utils/functions").channel_backup(this.channel_id, this.bot_token)
+        this.channel = bot.channels.get(this.channel_id) || require("../Utils/functions").channel_backup(this.channel_id, bot)
         this.member = this.guild && this.user_id ? this.guild.users.get(this.user_id) : null
         this.guild_id = message_add.guild_id || null
         this.guild = message_add.guild || bot.guilds.get(this.guild_id) || null

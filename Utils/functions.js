@@ -167,15 +167,14 @@ function check_overwrites(overwrites){
 /**
  * 
  * @param {string} id 
- * @param {string} token 
  * @param {object} bot 
  * @returns 
  */
-function channel_backup(id, token, bot){
+function channel_backup(id, bot){
     let channel = {
         id,
         type: 1,
-        token
+        token: bot.discordjs.token
     }
 
     return new (require("../Gestionnaires/Individual/Channels_/Channel_1"))(channel, bot)

@@ -4,7 +4,7 @@ class MessageReactionAdd{
         this.user = this.user_id ? bot.users.get(this.user_id) : null
         this.channel_id = message_add.channel_id || null
         this.bot_token = bot.discordjs.token
-        this.channel = bot.channels.get(this.channel_id) || require("../Utils/functions").channel_backup(this.channel_id, this.bot_token)
+        this.channel = bot.channels.get(this.channel_id) || require("../Utils/functions").channel_backup(this.channel_id, bot)
         this.message_id = message_add.message_id
         this.emoji = message_add.emoji
         this.guild_id = message_add.guild_id || null
