@@ -32,7 +32,7 @@ module.exports.login = async (bot, presence) => {
                 
             return bot.SendMessage(bot.creator.channel_id, {embeds: [erembed]}) .catch(err => {})
         }
-        bot.CheckCommands()
+        bot.checkCommands()
 
         if(!bot.discordjs.commandsChecked) return reject(createError("Could not start", {state: false, message: "Errors are detcted in your commands.\nPlease correct them and retry."}))
         //constants connecting gateaway

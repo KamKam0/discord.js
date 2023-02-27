@@ -6,6 +6,7 @@ const Cooldown = require("@kamkam1_0/cooldown")
 const CommandHandler = require("@kamkam1_0/discord-commandhandler")
 const EventHandler = require("@kamkam1_0/discord-eventhandler")
 const VoiceManager = require("./VoiceManager")
+const ApplicationCommands = require("../Managers/Commands")
 const ORM = require("@kamkam1_0/sql-orm")
 class Bot extends EventEmitter{
     constructor(intents, elements){
@@ -20,6 +21,7 @@ class Bot extends EventEmitter{
         this.guilds = new Guilds(this)
         this.users = new Users(this)
         this.channels = new Channels(this)
+        this.commands = new ApplicationCommands(this)
         this.state = "processing"
         this.cooldown = new Cooldown()
         this.handler = new CommandHandler.Handlers(this.name, this.langues)
@@ -124,8 +126,8 @@ class Bot extends EventEmitter{
     #checkName(){
         let link = process.cwd()
         let symbol;
-        if(require("os").platform() === "darwin") symbol = "/"
-        else if (require("os").platform() === 'win32') symbol = "\\"
+        if(require("node:os").platform() === "darwin") symbol = "/"
+        else if (require("node:os").platform() === 'win32') symbol = "\\"
         link = link.split(symbol).filter(e => e.length > 0)
         return link[link.length - 1]
     }
@@ -141,55 +143,7 @@ class Bot extends EventEmitter{
         })
     }
 
-    DeleteSlashCommand(options){
-        return new Promise(async (resolve, reject) => {
-            if(!this.user){
-                let ID2 = await this.GetMe()
-                this.user = ID2
-            }
-            require("../Methods/interaction").deletecommand(this.discordjs.token, this.user.id, options, this)
-            .catch(err => reject(err))
-            .then(datas => resolve(datas))
-        })
-    }
-
-    CreateSlashCommand(options){
-        return new Promise(async (resolve, reject) => {
-            if(!this.user){
-                let ID2 = await this.GetMe()
-                this.user = ID2
-            }
-            require("../Methods/interaction").createcommand(this.discordjs.token, this.user.id, options, this)
-            .catch(err => reject(err))
-            .then(datas => resolve(datas))
-        })
-    }
-
-    ModifySlashCommand(options){
-        return new Promise(async (resolve, reject) => {
-            if(!this.user){
-                let ID2 = await this.GetMe()
-                this.user = ID2
-            }
-            require("../Methods/interaction").modifycommand(this.discordjs.token, this.user.id, options, this)
-            .catch(err => reject(err))
-            .then(datas => resolve(datas))
-        })
-    }
-
-    GetSlashCommands(ID){
-        return new Promise(async (resolve, reject) => {
-            if(!this.user){
-                let ID2 = await this.GetMe()
-                this.user = ID2
-            }
-            require("../Methods/interaction").getcommands(this.discordjs.token, this.user.id, ID, this)
-            .catch(err => reject(err))
-            .then(datas => resolve(datas))
-        })
-    }
-
-    GetMe(){
+    getMe(){
         return new Promise(async (resolve, reject) => {
             require("../Methods/me").getuser(this.discordjs.token, this)
             .catch(err => reject(err))
@@ -205,7 +159,7 @@ class Bot extends EventEmitter{
                 intents: this.intents,
                 compress: false,
                 properties: {
-                    os: require("os").platform(),
+                    os: require("node:os").platform(),
                     browser: `@kamkam1_0/discord.js v${require("../index").version}`,
                     device: `@kamkam1_0/discord.js v${require("../index").version}`
                 },
@@ -215,19 +169,19 @@ class Bot extends EventEmitter{
         }
     }
 
-    SetStatus(options){
+    setStatus(options){
         let presence = require("../Methods/me").setstatus(this, options)
         this.events.presence = presence
         return presence
     }
 
-    SetActivity(options){
+    setActivity(options){
         let presence = require("../Methods/me").setactivity(this, options)
         this.events.presence = presence
         return presence
     }
 
-    SetPresence(options){
+    setPresence(options){
         let presence =  require("../Methods/me").setpresence(this, options)
         this.events.presence = presence
         return presence
@@ -279,8 +233,8 @@ class Bot extends EventEmitter{
     }
 
     
-    async CheckCommands(){
-        let commands = await this.GetSlashCommands()
+    async checkCommands(){
+        let commands = await this.commands.fetchAll()
         const commandClass = require("../Classes/ApplicationCommand")
 
         this.handler.GetAllCommandsfi().filter(cmd => !cmd.help.unclass).forEach(commande => {
@@ -315,14 +269,20 @@ class Bot extends EventEmitter{
             })
             
             let cmd = commands.find(cmd => cmd.name === commande.name)
-            let datas  = new commandClass({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_permission: commande.help.type, default_member_permissions: commande.help.autorisation})
-            if(!cmd) this.CreateSlashCommand(datas.toJSON())
+            let datas  = new commandClass({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_permission: commande.help.dm, default_member_permissions: commande.help.autorisation, id: cmd?.id, application_id: cmd?.application_id, version: cmd?.version})
+            
+            if(!cmd) this.commands.create(datas.toJSON())
             else{
-                if(!datas.compare(cmd)) this.ModifySlashCommand(datas)
+                if(!datas.compare(cmd)) this.commands.modify(datas)
+                else if(!this.commands.get(datas.id)) this.commands.__add(datas)
+                else{
+                    this.commands.__delete(datas.id)
+                    this.commands.__add(datas)
+                }
                 commands = commands.__delete(cmd.name)
             }
         })
-        if(commands.length > 0) commands.container.forEach(cmd => this.DeleteSlashCommand(cmd.id))
+        if(commands.length > 0) commands.container.forEach(cmd => this.commands.delete(cmd.id))
 
     }
 
@@ -350,7 +310,7 @@ class Bot extends EventEmitter{
         if(this.discordjs.lancementError) return
         
         languages[1] = languages[1].filter(e => e.endsWith(".json"))
-        let toreturn = languages[1].map(e => JSON.parse(require("fs").readFileSync(process.cwd()+languages[0]+"langues"+languages[0]+e, 'utf-8')))
+        let toreturn = languages[1].map(e => JSON.parse(require("node:fs").readFileSync(process.cwd()+languages[0]+"langues"+languages[0]+e, 'utf-8')))
 
         if(!toreturn.find(e => e.Langue_Code === this.default_language)) return this.discordjs.lancementError = "There is no language file corresponding to your default language"
 
@@ -399,10 +359,10 @@ class Bot extends EventEmitter{
         return dbtr
 
         function getCheck(name, state){
-            const fs = require("fs")
+            const fs = require("node:fs")
             let symbol;
-            if(require("os").platform() === "darwin") symbol = "/"
-            else if (require("os").platform() === 'win32') symbol = "\\"
+            if(require("node:os").platform() === "darwin") symbol = "/"
+            else if (require("node:os").platform() === 'win32') symbol = "\\"
             let test = fs.existsSync(process.cwd()+symbol+name)
             if(!test){
                 state ? this.discordjs.lancementError = `No folder ${name} in the files of the bot` : this.discordjs.lancementError = `No file ${name} in the files of the bot`
@@ -431,7 +391,7 @@ function get_events(){
         if(e === "") return elementOS
         return e
     }).join(elementOS)
-    const fs = require("fs")
+    const fs = require("node:fs")
     return fs.readdirSync(truePath).filter(e => e.endsWith(".js")).map(e => e.split(".js")[0])
 }
 

@@ -11,13 +11,13 @@ module.exports.reply = async (token, interaction, response, path, method, bot) =
         if(!response) return reject(createError("An error happened", {code: require("../DB/errors.json")["44"].code, message: require("../DB/errors.json")["44"].message, file: "Interaction"}))
         if(!interaction.id) return reject(createError("An error happened", {code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"}))
         if(!interaction.token) return reject(createError("An error happened", {code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"}))
-        if(typeof response !== "object") return reject(createError("An error happened", {code: require("../DB/errors.json")["24"].code, message: require("../DB/errors.json")["24"].message, file: "Interaction"}))
-
-        const url = (method && path) ? `${baseurl}/webhooks/${ID}/${interaction.token}/messages/@original` : `${baseurl}/interactions/${interaction.id}/${interaction.token}/callback`
+        
+        let  url = (method && path) ? path : `baseurl/interactions/${interaction.id}/${interaction.token}/callback`
+        url = url.replace("baseurl", baseurl)
         const fun = require("../Utils/functions")
         let options = fun.analyse_data(response)
         if(!options) return reject(createError("An error happened", {code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Interaction"}))
-        if(1 === 2) return reject(createError("An error happened", {code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"}))//typeof options !== "object"
+        if(typeof options !== "object") return reject(createError("An error happened", {code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"}))
         else{
             if(response.modal && !method) var basedatas = await fetch(url, {method: "POST", headers: baseheaders, body: JSON.stringify({type: 9, data: response.modal})})
             else{
@@ -43,21 +43,27 @@ module.exports.reply = async (token, interaction, response, path, method, bot) =
                     }
                     baseheaders = require("../Utils/functions").getbaseinfosrecp(token).baseheaders
                     baseheaders["Content-Type"] += body_files.getBoundary()
-                    let type
-                    if(response.modifymessage) type = 7
-                    else type = 9
-                    if(method) body_files.append("payload_json", JSON.stringify({type: type, data: body_files}))
-                    else body_files.append("payload_json", JSON.stringify(body_files))
-                    var basedatas = await fetch(url, {method: method || "POST", headers: baseheaders, body: JSON.stringify(body)}).catch(err => {})
+                    if(method !== "PATCH") body_files.append("payload_json", JSON.stringify({type: 4, data: body}));
+                    else body_files.append("payload_json", JSON.stringify(body));
+                    var basedatas = await fetch(url, {method: method || "POST", headers: baseheaders, body: body_files}).catch(err => {})
                 }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject(createError("An error happened", {code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"}))
-                if(!checkfiles || !Array.isArray(checkfiles) === true || !checkfiles[0]) var basedatas = await fetch(url, {method: method || "POST", headers: baseheaders, body: JSON.stringify({type: 4, data: body})}).catch(err => {})
+                if(!checkfiles || !Array.isArray(checkfiles) === true || !checkfiles[0]) {
+                    if(method === "PATCH") var  basedatas = await fetch(url, {method: method || "POST", headers: baseheaders, body: JSON.stringify(body)}).catch(err => {})
+                    else if (method === "POST" || !method) var basedatas = await fetch(url, {method: method || "POST", headers: baseheaders, body: JSON.stringify({type: 4, data: body})}).catch(err => {})
+                }
             }
             if(basedatas.status === 204) return resolve("Done Successfully")
+            else if (basedatas.status === 200){
+                const datas = await basedatas.json()
+                let messageClass = require("../Gestionnaires/Individual/Message")
+                let message = new messageClass(datas, bot)
+                return resolve(message)
+            }
             else{
                 const datas = await basedatas.json()
                 if(datas && datas.retry_after){
                     setTimeout(() => {
-                        this.reply(token, interaction, response, path, method)
+                        this.reply(token, interaction, response, path, method, bot)
                         .catch(err => reject(createError("An error happened", err)))
                         .then(datas => resolve(datas))
                     }, datas.retry_after * 1000)
@@ -72,8 +78,9 @@ module.exports.modifyreply = async (token, ID, interaction, response, bot) => {
             let user = await require("../Methods/me").getuser(token, bot)
             ID = user.id
         }
-        this.reply(token, interaction, response, ID, `${baseurl}/webhooks/${ID}/${interaction.token}/messages/@original`, "PATCH")
-        .catch(err => { return reject(err)})
+
+        this.reply(token, interaction, response, `baseurl/webhooks/${ID}/${interaction.token}/messages/@original`, "PATCH", bot)
+        .catch(err => reject(err))
         .then(datas => resolve(datas))
         
     })

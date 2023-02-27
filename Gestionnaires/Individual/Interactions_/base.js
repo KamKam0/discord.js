@@ -38,7 +38,7 @@ class base extends Base{
      */
     reply(options){
         return new Promise((resolve, reject) => {
-            require("../../../Methods/interaction").reply(this.bot_token, this, options, this._bot)
+            require("../../../Methods/interaction").reply(this.bot_token, this, options, null, null, this._bot)
             .then(datas => resolve(datas))
             .catch(err => reject(err))
         })
@@ -108,12 +108,12 @@ class base extends Base{
                 break;
             }
             if(type === "reply"){
-                require("../../../Methods/interaction").reply(this.bot_token, this, {embeds: [embed]}, this._bot)
+                require("../../../Methods/interaction").reply(this.bot_token, this, embed, null, null, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => reject(err))
             } 
             if(type === "send"){
-                require("../../../Methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]}, undefined, undefined, this._bot)
+                require("../../../Methods/message").send(this.bot_token, this.channel_id, embed, null, null, this._bot)
                 .then(obj => { if(obj !== undefined) resolve(obj) })
                 .catch(err => reject(err))
             }

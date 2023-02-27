@@ -12,7 +12,8 @@ class Role extends Base{
         this.permissions = role.permissions
         this.managed = role.managed || null
         this.mentionable = role.mentionable
-        this.tags = role.tags || null
+        this.tags = role.tags || {}
+        this.flags = role.flags || 0
         this.guild = role.guild || bot.guilds.get(role.guild_id) || null
         this.guild_id = role.guild_id
     }

@@ -8,17 +8,24 @@ class Slash{
         this.description = slash.description ? slash.description : null
         this.description_localizations = slash.description_localizations ? slash.description_localizations : {}
         this.default_member_permissions = this.#analyseDefaultMember(slash.default_member_permissions)
-        this.dm_permission = this.#analyseDMPerm(slash.dm_permission)
+        this.onlydm = slash.onlydm ?? false
+        this.dm_permission = this.#analyseDMPerm(slash)
         this.options = slash.options ? slash.options.map(opt => new (require("./Options"))(opt)) : []
         this.type = slash.type ? slash.type : 1
         this.nsfw = slash.nsfw ?? false
     }
 
-    #analyseDMPerm(dm_perm){
-        if(!dm_perm) return false
-        else if(typeof dm_perm === "boolean") return dm_perm
-        else if(typeof dm_perm === "string" &&dm_perm.includes("PV")) return true
-        else return false
+    #analyseDMPerm(slash){
+        let dm_perm;
+        if(String(slash.dm_permission) !== "undefined") dm_perm = slash.dm_permission
+        else if(String(slash.dm) !== "undefined") dm_perm = slash.dm
+        if(dm_perm === undefined) return false
+        if(typeof dm_perm === "boolean") return dm_perm
+        if(dm_perm === null){
+            this.onlydm = true
+            return true
+        }
+        return false
     }
 
     #analyseDefaultMember(mem_perm){
@@ -40,7 +47,7 @@ class Slash{
     }
 
     compare(slash){
-        for (const point of Object.keys(this).filter(e => !["id", "version", "application_id"].includes(e))){
+        for (const point of Object.keys(this).filter(e => !["id", "version", "application_id", "onlydm"].includes(e))){
             let point2 = slash[point]
             if(point === "description_localizations" || point === "name_localizations"){
                 let ppoint = Object.entries(this[point])
