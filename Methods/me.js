@@ -1,17 +1,20 @@
-const verify = require("../Utils/verify")
+const handler = require("../api/requests/handler")
+const apiPath = require("../api/v10/user")
 
-/**
- * 
- * @param {string} token 
- * @param {object} bot 
- * @returns 
- */
-module.exports.getuser = async (token, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, type: "string", data_name: "token", order:1}, {value: bot, data_name: "bot", order: 2}], "GET", `users/@me`, this.getuser, "getuser me")
-        .then(datas => resolve(new (require("../Gestionnaires/Individual/User"))({...datas, token: token}, bot)))
-        .catch(err => reject(err))
-    })
+module.exports.getuser = async (informations) => {
+    let passedOptions = {
+        method: apiPath.get.current.method,
+        token: informations.botToken,
+        url: apiPath.get.current.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/user")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
 /**
@@ -78,16 +81,13 @@ module.exports.setpresence = async (bot, options) => {
     return presence
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @returns 
- */
-module.exports.leave = async (token, guildid) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, type: "string", data_name: "token"}, {value: guildid, value_data: "id", type: "string", data_name: "guildid"}], "DELETE", `users/@me/guilds/${guildid}`, this.leave, "leave me")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.leave = async (informations) => {
+    let passedOptions = {
+        method: apiPath.leave.method,
+        token: informations.botToken,
+        url: apiPath.leave.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null, null)
 }

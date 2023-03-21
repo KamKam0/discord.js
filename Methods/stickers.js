@@ -1,17 +1,6 @@
-const verify = require("../Utils/verify")
-const createError = require("../Utils/functions").createError
+const handler = require("../api/requests/handler")
+const apiPath = require("../api/v10/sticker")
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {string} name 
- * @param {buffer} file 
- * @param {object[]} tags 
- * @param {string} description 
- * @param {object} bot 
- * @returns 
- */
 module.exports.create = async (token, guildid, name, file, tags, description, bot) => {//Cp
     return new Promise(async (resolve, reject) => {
         if(!token) return reject(createError("An error happened", {code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Stickers"}))
@@ -47,35 +36,26 @@ module.exports.create = async (token, guildid, name, file, tags, description, bo
     })
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {string} stickerid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.delete = async (token, guildid, stickerid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: stickerid, value_data: "id", data_name: "stickerid", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/stickers/${stickerid}`, this.delete, "delete sticker")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.delete = async (informations) => {
+    let passedOptions = {
+        method: apiPath.delete.method,
+        token: informations.botToken,
+        url: apiPath.delete.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {string} stickerid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.modify = async (token, guildid, stickerid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: stickerid, value_data: "id", data_name: "stickerid", order:3}, {value: options, data_name: "options", order: 4}, {value: bot, data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/stickers/${stickerid}`, this.modify, "modify sticker")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.modify = async (informations, options) => {
+    let passedOptions = {
+        method: apiPath.modify.method,
+        token: informations.botToken,
+        url: apiPath.modify.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    return handler(args, passedOptions, null, null)
 }

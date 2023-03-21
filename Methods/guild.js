@@ -1,307 +1,328 @@
-const verify = require("../Utils/verify")
+const handler = require("../api/requests/handler")
+const apiPath = require("../api/v10/guild")
+const inviteApiPath = require("../api/v10/invite")
+const memberApiPath = require("../api/v10/member")
 
-/**
- * 
- * @param {string} token 
- * @param {string} inviteid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.deleteinvite = async (token, inviteid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: inviteid, value_data: "id", data_name: "inviteid", order:2}, {value: bot, data_name: "bot", order: 3}], "DELETE", `invites/${inviteid}`, this.deleteinvite, "deleteinvite guild")
-        .then(datas => resolve(new (require("../Gestionnaires/Individual/Invite"))({...datas, token: token}, bot)))
-        .catch(err => reject(err))
-    })
+const Threads = require("../structures/managers/channels")
+const Users = require("../structures/managers/users")
+const Integrations = require("../structures/managers/integrations")
+const Webhooks = require("../structures/managers/webhooks")
+const Events = require("../structures/managers/events")
+const ApplicationCommands = require("../structures/managers/applicationcommands")
+
+module.exports.deleteinvite = async (informations) => {
+    let passedOptions = {
+        method: inviteApiPath.delete.method,
+        token: informations.botToken,
+        url: inviteApiPath.delete.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/invite")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.modify = (token, guildid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}`, this.modify, "modify guild")
-        .then(datas => resolve(new (require("../Gestionnaires/Individual/Guild"))({...datas, token: token}, bot)))
-        .catch(err => reject(err))
-    })
+module.exports.modify = (informations, options) => {
+    let passedOptions = {
+        method: apiPath.modify.method,
+        token: informations.botToken,
+        url: apiPath.modify.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/guild")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.delete = (token, guildid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "DELETE", `guilds/${guildid}`, this.delete, "delete guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.delete = (informations) => {
+    let passedOptions = {
+        method: apiPath.delete.method,
+        token: informations.botToken,
+        url: apiPath.delete.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.changechposition = (token, guildid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/channels`, this.changechposition, "changechposition guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.changechannelposition = (informations, options) => {
+    let passedOptions = {
+        method: apiPath.modify.channelPosition.method,
+        token: informations.botToken,
+        url: apiPath.modify.channelPosition.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {string} userid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.addmember = (token, guildid, userid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: userid, value_data: "id", data_name: "userid", order:3}, {value: options, data_name: "options", order: 4}, {value: bot, data_name: "bot", order: 5}], "PUT", `guilds/${guildid}/members/${userid}`, this.addmember, "addmember guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.addmember = (informations, options) => {
+    let passedOptions = {
+        method: apiPath.create.method,
+        token: informations.botToken,
+        url: apiPath.create.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {string} userid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.modifymember = (token, guildid, userid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: userid, value_data: "id", data_name: "userid", order:3}, {value: options, data_name: "options", order: 4}, {value: bot, data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/members/${userid}`, this.modifymember, "modifymember guild")
-        .then(datas => resolve(new (require("../Gestionnaires/Individual/Member"))({...datas, token: token, guild_id: guildid}, bot)))
-        .catch(err => reject(err))
-    })
+module.exports.modifymember = (informations, options) => {
+    let passedOptions = {
+        method: memberApiPath.modify.method,
+        token: informations.botToken,
+        url: memberApiPath.modify.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/member")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {string} nick 
- * @param {object} bot 
- * @returns 
- */
-module.exports.modifycurrentmember = (token, guildid, nick, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: nick, data_name: "nick", value_data: "id", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/members/@me`, this.modifycurrentmember, "modifycurrentmember guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.modifycurrentmember = (informations, nick) => {
+    let passedOptions = {
+        method: memberApiPath.modify.current.method,
+        token: informations.botToken,
+        url: memberApiPath.modify.current.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: {nick}, data_name: "options", order: 3}
+    ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.prune = (token, guildid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "POST", `guilds/${guildid}/prune`, this.prune, "prune guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.prune = (informations, options) => {
+    let passedOptions = {
+        method: apiPath.create.prune.current.method,
+        token: informations.botToken,
+        url: apiPath.create.prune.current.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.getinvites = (token, guildid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/invites`, this.getinvites, "getinvites guild")
-        .then(datas => {
-            const invites = new (require("../Gestionnaires/Multiple/Invites"))(bot)
-            invites.__addMultiple(datas.map(da => { return {...da, token: token}}))
-            return resolve(datas)
-        })
-        .catch(err => reject(err))
-    })
+module.exports.getinvites = (informations) => {
+    let passedOptions = {
+        method: apiPath.get.invites.method,
+        token: informations.botToken,
+        url: apiPath.get.invites.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/managers/invites")
+        let newData = new single(informations.bot)
+        newData._addMultiple(data)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.getintegrations = (token, guildid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/integrations`, this.getintegrations, "getintegrations guild")
-        .then(datas => {
-            const intergations = new (require("../Gestionnaires/Multiple/Integrations"))(guildid, bot)
-            intergations.__addMultiple(datas.map(da => { return {...da, token: token}}))
-            return resolve(datas)
-        })
-        .catch(err => reject(err))
-    })
+module.exports.getintegrations = (informations) => {
+    let passedOptions = {
+        method: apiPath.get.integrations.method,
+        token: informations.botToken,
+        url: apiPath.get.integrations.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/managers/integrations")
+        let newData = new single(informations.bot)
+        newData._addMultiple(data)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {string} integrationid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.deleteintegration = (token, guildid, integrationid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: integrationid, value_data: "id", data_name: "integrationid", order: 3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `guilds/${guildid}/integrations/${integrationid}`, this.deleteintegration, "deleteintegration guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.deleteintegration = (informations) => {
+    let passedOptions = {
+        method: apiPath.delete.integration.method,
+        token: informations.botToken,
+        url: apiPath.delete.integration.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.getwidgetsttings = (token, guildid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/widget`, this.getwidgetsttings, "getwidgetsttings guild")
-        .then(datas => resolve(new (require("../Event Result/WidgetSettings"))({...datas, token: token}, bot)))
-        .catch(err => reject(err))
-    })
+module.exports.getwidgetsttings = (informations) => {
+    let passedOptions = {
+        method: apiPath.get.widgetSettings.method,
+        token: informations.botToken,
+        url: apiPath.get.widgetSettings.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/eventresult/widgetsettings")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.getwidget = (token, guildid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: integrationid, value_data: "id", data_name: "integrationid", order: 3}, {value: bot, data_name: "bot", order: 4}], "GET", `guilds/${guildid}/widget.json`, this.getwidget, "getwidget guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.getwidget = (informations) => {
+    let passedOptions = {
+        method: apiPath.get.widget.method,
+        token: informations.botToken,
+        url: apiPath.get.widget.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.getwidgetpng = (token, guildid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: integrationid, value_data: "id", data_name: "integrationid", order: 3}, {value: bot, data_name: "bot", order: 4}], "GET", `guilds/${guildid}/widget.png`, this.getwidgetpng, "getwidgetpng guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.getwidgetpng = (informations) => {
+    let passedOptions = {
+        method: apiPath.get.widgetImage.method,
+        token: informations.botToken,
+        url: apiPath.get.widgetImage.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.modifywidget = (token, guildid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/widget`, this.modifywidget, "modifywidget guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.modifywidget = (informations, options) => {
+    let passedOptions = {
+        method: apiPath.modify.widget.method,
+        token: informations.botToken,
+        url: apiPath.modify.widget.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.getvanity = (token, guildid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/vanity-url`, this.getvanity, "getvanity guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.getvanity = (informations) => {
+    let passedOptions = {
+        method: apiPath.get.vanity.method,
+        token: informations.botToken,
+        url: apiPath.get.vanity.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.getwelcomescreen = (token, guildid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `guilds/${guildid}/welcome-screen`, this.getwelcomescreen, "getwelcomescreen guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.getwelcomescreen = (informations) => {
+    let passedOptions = {
+        method: apiPath.get.welcomeScreen.method,
+        token: informations.botToken,
+        url: apiPath.get.welcomeScreen.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.modifywelcomescreen = (token, guildid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `guilds/${guildid}/welcome-screen`, this.modifywelcomescreen, "modifywelcomescreen guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.modifywelcomescreen = (informations, options) => {
+    let passedOptions = {
+        method: apiPath.modify.welcomeScreen.method,
+        token: informations.botToken,
+        url: apiPath.modify.welcomeScreen.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} guildid 
- * @param {string} userid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.modifyuservoice = (token, guildid, userid,  options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: guildid, value_data: "id", data_name: "guildid", order:2}, {value: userid, value_data: "id", data_name: "userid", order:3}, {value: options, data_name: "options", order: 4}, {value: bot, data_name: "bot", order: 5}], "PATCH", `guilds/${guildid}/voice-states/${userid}`, this.modifyuservoice, "modifyuservoice guild")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.modifyuservoice = (informations, options) => {
+    let passedOptions = {
+        method: apiPath.modify.userVoice.method,
+        token: informations.botToken,
+        url: apiPath.modify.userVoice.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    return handler(args, passedOptions, null, null)
+}
+
+module.exports.fetchauditlogs = async (informations, infosURL) => {
+    
+    let passedOptions = {
+        method: apiPath.modify.userVoice.method,
+        token: informations.botToken,
+        url: apiPath.modify.userVoice.url,
+        urlIDS: informations
+    }
+    let args = [
+        {
+            value: infosURL, 
+            data_name: "infosURL", 
+            order: 3, 
+            required: false, 
+            check: [
+                {name: "user_id", type: "string", data_type: "id"}, 
+                {name: "after", type: "string", data_type: "id"}, 
+                {name: "before", type: "string", data_type: "id"}, 
+                {name: "limit", type: "number", limit: 100}, 
+                {name: "action_type", type: "number", filter: Object.values(require("../constants").autoditTransforms).includes(infosURL?.action_type)}
+            ]
+        }
+    ]
+    let callBackSuccess = function (data){
+        let transformac_type = require("../constants").autoditTransforms
+        data.audit_log_entries = data.audit_log_entries.map(each => {return {...each, action_type: Object.entries(transformac_type).find(e => e[1] === each.action_type)}})
+        if(data.threads) {
+            let threads = new Threads(informations.bot)
+            data.threads = threads._addMultiple(data.threads)
+        }
+        if(data.users){
+            let users = new Users(informations.bot)
+            data.users = users._addMultiple(data.users)
+        }
+        if(data.integrations){
+            let integrations = new Integrations(informations.bot)
+            data.integrations = integrations._addMultiple(data.integrations)
+        }
+        if(data.webhooks){
+            let webhooks = new Webhooks(informations.bot)
+            data.webhooks = webhooks._addMultiple(data.webhooks)
+        }
+        if(data.guild_scheduled_events){
+            let events = new Events(informations.bot)
+            data.guild_scheduled_events = events._addMultiple(data.guild_scheduled_events)
+        }
+        if(data.application_commands){
+            let applicationcommands = new ApplicationCommands(informations.bot)
+            data.application_commands = applicationcommands._addMultiple(data.application_commands)
+        }
+        if(data.auto_moderation_rules){
+            data.auto_moderation_rules = data.auto_moderation_rules.map(us => us)
+        }
+        return data
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }

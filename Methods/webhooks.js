@@ -1,47 +1,41 @@
-const verify = require("../Utils/verify")
-/**
- * 
- * @param {string} token 
- * @param {string} channelid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.create = async (token, channelid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "POST", `channels/${channelid}/webhooks`, this.create, "create webhook")
-        .then(datas => resolve(new (require("../Gestionnaires/Individual/Webhook"))({...datas, token: token}, bot)))
-        .catch(err => reject(err))
-    })
+const handler = require("../api/requests/handler")
+const apiPath = require("../api/v10/webhook")
+
+module.exports.create = async (informations, options) => {
+    let passedOptions = {
+        method: apiPath.create.method,
+        token: informations.botToken,
+        url: apiPath.create.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/webhook")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} channelid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.get = async (token, channelid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: bot, data_name: "bot", order: 3}], "GET", `channels/${channelid}/webhooks`, this.get, "get webhook")
-        .then(datas => {
-            const webhooks = new (require("../Gestionnaires/Multiple/Webhooks"))(bot)
-            webhooks.__addMultiple(datas.map(da => { return {...da, token: token}}))
-            return resolve(datas)
-        })
-        .catch(err => reject(err))
-    })
+module.exports.get = async (informations) => {
+    let passedOptions = {
+        method: apiPath.get.channelWebhooks.method,
+        token: informations.botToken,
+        url: apiPath.get.channelWebhooks.url,
+        urlIDS: informations
+    }
+    let args = []
+    let callBackSuccess = function (data){
+        const manager = require("../structures/managers/webhooks")
+        let newManager = new manager(informations.bot)
+        newManager._addMultiple(data)
+        return newManager
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} webhookid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
 module.exports.modify = async (token, webhookid, options, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: webhookid, value_data: "id", data_name: "webhookid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "PATCH", `webhooks/${webhookid}`, this.modify, "modify webhook")
@@ -50,13 +44,6 @@ module.exports.modify = async (token, webhookid, options, bot) => {
     })
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} webhookid 
- * @param {object} bot 
- * @returns 
- */
 module.exports.delete = async (token, webhookid, bot) => {
     return new Promise(async (resolve, reject) => {
         verify([{value: token, data_name: "token", order:1}, {value: webhookid, value_data: "id", data_name: "webhookid", order:2}, {value: bot, data_name: "bot", order: 3}], "DELETE", `webhooks/${webhookid}`, this.delete, "delete webhook")
@@ -65,14 +52,6 @@ module.exports.delete = async (token, webhookid, bot) => {
     })
 }
 
-/**
- * 
- * @param {string} token 
- * @param {object} webhook 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
 module.exports.execute = async (token, webhook, options, bot) => {//cp
     return new Promise(async (resolve, reject) => {
         const createError = require("../Utils/functions").createError

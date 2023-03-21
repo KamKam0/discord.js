@@ -1,4 +1,5 @@
-const verify = require("../Utils/verify")
+const handler = require("../api/requests/handler")
+const apiPath = require("../api/v10/member")
 module.exports.reply = async (token, interaction, response, path, method, bot) => {//cp
     return new Promise(async (resolve, reject) => {
         const createError = require("../Utils/functions").createError
@@ -75,7 +76,7 @@ module.exports.reply = async (token, interaction, response, path, method, bot) =
 module.exports.modifyreply = async (token, ID, interaction, response, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token, bot)
+            let user = await require("../methods/me").getuser(token, bot)
             ID = user.id
         }
 
@@ -89,7 +90,7 @@ module.exports.deletereply = async (token, ID, interaction, bot) => {
     const createError = require("../Utils/functions").createError
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token, bot)
+            let user = await require("../methods/me").getuser(token, bot)
             ID = user.id
         }
         if(!interaction.id) return reject(createError("An error happened", {code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"}))
@@ -103,7 +104,7 @@ module.exports.deletereply = async (token, ID, interaction, bot) => {
 module.exports.getcommands = async (token, ID,  trueid, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token, bot)
+            let user = await require("../methods/me").getuser(token, bot)
             ID = user.id
         }
         verify([{value: token, data_name: "token", order:1}, {value: ID, value_data: "id", data_name: "ID", order:2}, {value: trueid, value_data: "id", data_name: "trueid", required: false, order:3}, {value: bot, data_name: "bot", order: 4}], "GET", `applications/${ID}/commands?with_localizations=true`, this.getcommands, "getcommands interaction")
@@ -113,7 +114,7 @@ module.exports.getcommands = async (token, ID,  trueid, bot) => {
                 else return reject("No command found")
             }else{
                 const commands = new (require("../Gestionnaires/Multiple/Commands"))(bot)
-                commands.__addMultiple(datas.map(da => { return {...da, token: token}}))
+                commands._addMultiple(datas.map(da => { return {...da, token: token}}))
                 return resolve(commands)
             }
         })
@@ -123,7 +124,7 @@ module.exports.getcommands = async (token, ID,  trueid, bot) => {
 module.exports.deletecommand = async (token, ID,  interaction, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token, bot)
+            let user = await require("../methods/me").getuser(token, bot)
             ID = user.id
         }
         verify([{value: token, data_name: "token", order:1}, {value: ID, value_data: "id", data_name: "ID", order:2}, {value: interaction, value_data: "id", data_name: "interaction", order: 3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `applications/${ID}/commands/${interaction}`, this.deletecommand, "deletecommand interaction")
@@ -134,7 +135,7 @@ module.exports.deletecommand = async (token, ID,  interaction, bot) => {
 module.exports.createcommand = async (token, ID,  options, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token, bot)
+            let user = await require("../methods/me").getuser(token, bot)
             ID = user.id
         }
         let check = this.VerifyInteraction(options)
@@ -147,7 +148,7 @@ module.exports.createcommand = async (token, ID,  options, bot) => {
 module.exports.modifycommand = async (token, ID,  options, bot) => {
     return new Promise(async (resolve, reject) => {
         if(!ID){
-            let user = await require("../Methods/me").getuser(token, bot)
+            let user = await require("../methods/me").getuser(token, bot)
             ID = user.id
         }
         let check = this.VerifyInteraction(options)

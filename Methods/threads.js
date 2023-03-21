@@ -1,166 +1,175 @@
-const verify = require("../Utils/verify")
+const handler = require("../api/requests/handler")
+const apiPath = require("../api/v10/threads")
 
-/**
- * 
- * @param {string} token 
- * @param {string} channelid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.create_withoutm = async (token, channelid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: options, data_name: "options", order: 3}, {value: bot, data_name: "bot", order: 4}], "POST", `channels/${channelid}/threads`, this.create_withoutm, "create_withoutm threads")
-        .then(datas => resolve(new (require("../Gestionnaires/Individual/Channels_/Channel_11"))({...datas, token: token}, bot)))
-        .catch(err => reject(err))
-    })
+module.exports.create_withoutm = async (informations, options) => {
+    let passedOptions = {
+        method: apiPath.create.withoutMessage.method,
+        token: informations.botToken,
+        url: apiPath.create.withoutMessage.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/channels/channelguildpublicthread")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} channelid 
- * @param {string} messageid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
-module.exports.create_withm = async (token, channelid, messageid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: channelid, value_data: "id", data_name: "channelid", order:2}, {value: messageid, value_data: "id", data_name: "messageid", order:3}, {value: options, data_name: "options", order: 4}, {value: bot, data_name: "bot", order: 5}], "POST", `channels/${channelid}/messages/${messageid}/threads`, this.create_withm, "create_withm threads")
-        .then(datas => resolve(new (require("../Gestionnaires/Individual/ThChannels_/Channel_11read"))({...datas, token: token}, bot)))
-        .catch(err => reject(err))
-    })
+module.exports.create_withm = async (informations, options) => {
+    let passedOptions = {
+        method: apiPath.create.method,
+        token: informations.botToken,
+        url: apiPath.create.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/channels/channelguildpublicthread")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} threadid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.jointhread = async (token, threadid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: threadid, value_data: "id", data_name: "threadid", order:2}, {value: bot, data_name: "bot", order: 3}], "PUT", `channels/${threadid}/thread-members/@me`, this.jointhread, "jointhread threads")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.jointhread = async (informations) => {
+    let passedOptions = {
+        method: apiPath.join.method,
+        token: informations.botToken,
+        url: apiPath.join.url,
+        urlIDS: informations
+    }
+    let args = []
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} threadid 
- * @param {string} memberid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.addthreadmember = async (token, threadid, memberid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: threadid, value_data: "id", data_name: "threadid", order:2}, {value: memberid, value_data: "id", data_name: "memberid", order:3}, {value: bot, data_name: "bot", order: 4}], "PUT", `channels/${threadid}/thread-members/${memberid}`, this.addthreadmember, "addthreadmember threads")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.addthreadmember = async (informations) => {
+    let passedOptions = {
+        method: apiPath.add.method,
+        token: informations.botToken,
+        url: apiPath.add.url,
+        urlIDS: informations
+    }
+    let args = []
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} threadid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.leavethread = async (token, threadid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: threadid, value_data: "id", data_name: "threadid", order:2}, {value: bot, data_name: "bot", order: 3}], "DELETE", `channels/${threadid}/thread-members/@me`, this.leavethread, "leavethread threads")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.leavethread = async (informations) => {
+    let passedOptions = {
+        method: apiPath.leave.method,
+        token: informations.botToken,
+        url: apiPath.leave.url,
+        urlIDS: informations
+    }
+    let args = []
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} threadid 
- * @param {string} memberid 
- * @param {object} bot 
- * @returns 
- */
-module.exports.removethreadmember = async (token, threadid, memberid, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: threadid, value_data: "id", data_name: "threadid", order:2}, {value: memberid, value_data: "id", data_name: "memberid", order:3}, {value: bot, data_name: "bot", order: 4}], "DELETE", `channels/${threadid}/thread-members/${memberid}`, this.removethreadmember, "removethreadmember threads")
-        .then(datas => resolve(datas))
-        .catch(err => reject(err))
-    })
+module.exports.removethreadmember = async (informations) => {
+    let passedOptions = {
+        method: apiPath.remove.method,
+        token: informations.botToken,
+        url: apiPath.remove.url,
+        urlIDS: informations
+    }
+    let args = []
+    return handler(args, passedOptions, null, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} channelid 
- * @param {object} options 
- * @param {object} bot 
- * @returns 
- */
 module.exports.create_tforum = (token, channelid, options, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: threadid, value_data: "id", data_name: "threadid", order:2}, {value: options, data_name: "options", order:3}, {value: bot, data_name: "bot", order: 4}], "POST", `channels/${channelid}/threads`, this.create_tforum, "create_tforum threads")
-        .then(datas => resolve(new (require("../Gestionnaires/Individual/Channels_/Channel_11"))({...datas, token: token}, bot)))
-        .catch(err => reject(err))
-    })
+    let passedOptions = {
+        method: apiPath.create.forum.method,
+        token: informations.botToken,
+        url: apiPath.create.forum.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/channels/channelguildpublicthread")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
 
-/**
- * 
- * @param {string} token 
- * @param {string} threadid 
- * @param {string} memberid 
- * @param {boolean} withm 
- * @param {number} limit 
- * @param {string} after 
- * @param {object} bot 
- * @returns 
- */
-module.exports.getthreadmember = async (token, threadid, memberid, withm, limit, after, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: threadid, value_data: "id", data_name: "threadid", order:2}, {value: memberid, value_data: "id", data_name: "memberid", order:3}, {value: withm, required: false, check: false, type: "boolean", order: 4}, {value: limit, required: false, check: false, type: "number", order: 5}, {value: after, check: false, required: false, value_data: "id", order: 6}, {value: bot, data_name: "bot", order: 7}, {value: {with_member: withm, after, limit}, data_name: "infosURL",required: false,  check: [{name: "with_member", type: "boolean"}, {name: "after", type: "string", data_type: "id"}, {name: "limit", type: "number", limit: 100}]}], "GET", `channels/${threadid}/thread-members/${memberid}`, this.getthreadmember, "getthreadmember threads")
-        .then(datas => {
-            let guild = bot.guilds.get(bot.channels.get(threadid).guild_id)
+module.exports.getthreadmember = async (informations, withm, limit, after) => {
+    let passedOptions = {
+        method: apiPath.get.member.method,
+        token: informations.botToken,
+        url: apiPath.get.member.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3},
+        {value: withm, required: false, check: false, type: "boolean", order: 4}, 
+        {value: limit, required: false, check: false, type: "number", order: 5}, 
+        {value: after, check: false, required: false, value_data: "id", order: 6}, 
+        {
+            value: {
+                with_member: withm, after, limit
+            }, 
+            data_name: "infosURL",
+            required: false,  
+            check: [
+                {name: "with_member", type: "boolean"}, 
+                {name: "after", type: "string", data_type: "id"}, 
+                {name: "limit", type: "number", limit: 100}
+            ]
+        }
+    ]
+    let callBackSuccess = function (data){
+        let guild = informations.bot.guilds.get(informations.bot.channels.get(informations.thread_id).guild_id)
+        let member;
+        if(guild) member = guild.members.get(informations.member_id)
+        if(member) data.member = member
+        data.user = informations.bot.users.get(data.user_id)
+        return data
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
+}
+
+module.exports.getthreadmembers = async (informations, withm, limit, after) => {
+    let passedOptions = {
+        method: apiPath.get.members.method,
+        token: informations.botToken,
+        url: apiPath.get.members.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3},
+        {value: withm, required: false, check: false, type: "boolean", order: 4}, 
+        {value: limit, required: false, check: false, type: "number", order: 5}, 
+        {value: after, check: false, required: false, value_data: "id", order: 6}, 
+        {
+            value: {
+                with_member: withm, after, limit
+            }, 
+            data_name: "infosURL",
+            required: false,  
+            check: [
+                {name: "with_member", type: "boolean"}, 
+                {name: "after", type: "string", data_type: "id"}, 
+                {name: "limit", type: "number", limit: 100}
+            ]
+        }
+    ]
+    let callBackSuccess = function (data){
+        let guild = informations.bot.guilds.get(informations.bot.channels.get(informations.thread_id).guild_id)
+        data.map(e => {
             let member;
-            if(guild) member = guild.members.get(memberid)
-            if(member) datas.member = member
-            datas.user = bot.users.get(datas.user_id)
-            resolve(datas)
+            if(guild) member = guild.members.get(e.user_id)
+            if(member) e.member = member
+            e.user = informations.bot.users.get(e.user_id)
+            return member
         })
-        .catch(err => reject(err))
-    })
-}
-
-/**
- * 
- * @param {string} token 
- * @param {string} threadid 
- * @param {boolean} withm 
- * @param {number} limit 
- * @param {string} after 
- * @param {object} bot 
- * @returns 
- */
-module.exports.getthreadmembers = async (token, threadid, withm, limit, after, bot) => {
-    return new Promise(async (resolve, reject) => {
-        verify([{value: token, data_name: "token", order:1}, {value: threadid, value_data: "id", data_name: "threadid", order:2}, {value: withm, required: false, check: false, type: "boolean", order: 4}, {value: limit, required: false, check: false, type: "number", order: 5}, {value: after, check: false, required: false, value_data: "id", order: 6}, {value: bot, data_name: "bot", order: 7}, {value: {with_member: withm, after, limit}, data_name: "infosURL",required: false,  check: [{name: "with_member", type: "boolean"}, {name: "after", type: "string", data_type: "id"}, {name: "limit", type: "number", limit: 100}]}], "GET", `channels/${threadid}/thread-members`, this.getthreadmembers, "getthreadmembers threads")
-        .then(datas => {
-            let guild = bot.guilds.get(bot.channels.get(threadid).guild_id)
-            datas.map(e => {
-                let member;
-                if(guild) member = guild.members.get(e.user_id)
-                if(member) e.member = member
-                e.user = bot.users.get(e.user_id)
-                return member
-            })
-            resolve(datas)
-        })
-        .catch(err => reject(err))
-    })
+        return data
+    }
+    return handler(args, passedOptions, callBackSuccess, null)
 }
