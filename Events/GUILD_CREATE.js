@@ -11,12 +11,12 @@ module.exports = async (bot, datas) => {
     if(!bot.guilds.get(datas.id)) deployGuild(bot, datas)
     else{
       analysePresences(datas)
-      bot.guilds.__ReplaceGuild(datas)
-      bot.channels.__deleteMultiple(datas.channels.map(ch => ch.id))
-      bot.channels.__deleteMultiple(datas.threads.map(ch => ch.id))
-      bot.channels.__addMultiple(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
-      bot.channels.__addMultiple(datas.threads.map(ch => { return {...ch, guild_id: datas.id}}))
-      bot.users.__CheckUsers(datas)
+      bot.guilds._ReplaceGuild(datas)
+      bot.channels._deleteMultiple(datas.channels.map(ch => ch.id))
+      bot.channels._deleteMultiple(datas.threads.map(ch => ch.id))
+      bot.channels._addMultiple(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
+      bot.channels._addMultiple(datas.threads.map(ch => { return {...ch, guild_id: datas.id}}))
+      bot.users._CheckUsers(datas)
     }
   }
 }
@@ -48,10 +48,10 @@ async function deployGuild(bot, datas, state){
     }else datas.db_language  = bot.default_language
   }
   analysePresences(datas)
-  bot.users.__addMultiple(datas.members.map(e => { return {...e.user, guild_id: datas.id}}))
-  bot.channels.__addMultiple(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
-  bot.channels.__addMultiple(datas.threads.map(ch => { return {...ch, guild_id: datas.id}}))
-  bot.guilds.__add(datas)
+  bot.users._addMultiple(datas.members.map(e => { return {...e.user, guild_id: datas.id}}))
+  bot.channels._addMultiple(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
+  bot.channels._addMultiple(datas.threads.map(ch => { return {...ch, guild_id: datas.id}}))
+  bot.guilds._add(datas)
   if(bot.state !== "ready") analyseGuild(bot, datas, state)
 }
 

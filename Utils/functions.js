@@ -1,95 +1,22 @@
-const constants = require("../constants")
+const constants = require("./constants")
+const intentsConstance = require("../types/intents")
+const userBadges = require("../types/userbadges")
 
-/**
- * 
- * @param {*} token 
- * @returns 
- */
-function getbaseinfosre(token){
-    const baseurl = GetApiURL()
-    const baseheaders = GetHeaders(token, "basic")
-    return {baseurl, baseheaders}
-}
-
-/**
- * 
- * @param {string} token 
- * @returns 
- */
-function getbaseinfosrecp(token){
-    const baseurl = GetApiURL()
-    const baseheaders = GetHeaders(token, "file")
-    return {baseurl, baseheaders}
-}
-
-/**
- * 
- * @param {string} token 
- * @returns 
- */
-function getbaseinfosre_xww(token){
-    const baseurl = GetApiURL()
-    const baseheaders = GetHeaders(token, "url")
-    return {baseurl, baseheaders}
-}
-
-/**
- * 
- * @param {string} token 
- * @param {string} type 
- * @returns 
- */
-function GetHeaders(token, type){
-    let base = {
-        Authorization: `Bot ${token}`,
-        'User-Agent': `DiscordBot (@kamkam1_0/discord.js - https://www.npmjs.com/package/@kamkam1_0/discord.js, ${require("../index").version})`
-    }
-    switch(type){
-        case("url"):
-            return {...base, "Content-Type": "application/x-www-form-urlencoded"}
-        case("file"):
-            return {...base, "Content-Type": "multipart/form-data; boundary="}
-        case("basic"):
-            return {...base, "Content-Type": "application/json"}
-        default:
-            return "Error"
-    }
-}
-
-function GetApiURL(){
-    return "https://discord.com/api/v10"
-}
-
-/**
- * 
- * @param {object[]} permissions 
- * @returns 
- */
-function get_bitfield(permissions){//totest
+function getBietfielfFromPermissions(permissions){
     if(!Array.isArray(permissions)) return null
     if(!permissions[0]) return 0
-    return permissions.map(perm => String(perm).toUpperCase()).reduce((a, b) => constants.permissions_bitfield[b] ? a+constants.permissions_bitfield[b] : a+0, 0)
+    return permissions.map(perm => String(perm).toUpperCase()).reduce((a, b) => constants.permissionsBitfield[b] ? a+constants.permissionsBitfield[b] : a+0, 0)
 }
 
-/**
- * 
- * @param {object[]} intents 
- * @returns 
- */
-function get_intents_n(intents){//totest
+function getIntentsFromNames(intents){
     if(!Array.isArray(intents) && typeof intents !== "string" && intents !== "ALL") return "Incorrect Intents"
-    if(intents === "ALL") return Object.values(constants.Intents).reduce((a, b) => a+b, 0)
-    return intents.reduce((a, b) => constants.Intents[b] ? a + constants.Intents[b] : a+0, 0)
+    if(intents === "ALL") return Object.values(intentsConstance).reduce((a, b) => a+b, 0)
+    return intents.reduce((a, b) => intents[b] ? a + intents[b] : a+0, 0)
 }
 
-/**
- * 
- * @param {number} bitfield 
- * @returns 
- */
-function get_badges(bitfield){//totest
+function getBadges(bitfield){
     if(!bitfield) return "Incorrect number"
-    const ACFlags = Object.entries(constants.badges).sort((a, b) => Number(b[1]) - Number(a[1]))
+    const ACFlags = Object.entries(userBadges).sort((a, b) => Number(b[1]) - Number(a[1]))
     const final_p = []
     let processConvert = Number(bitfield)
     ACFlags.forEach(flag => {
@@ -101,24 +28,14 @@ function get_badges(bitfield){//totest
     return final_p
 }
 
-/**
- * 
- * @param {string} color 
- * @returns 
- */
-function check_color(color){
+function checkColor(color){
     let check = String(color).match(/^#([a-f0-9]{6}|[a-f0-9]{3})\b$/i)
     if(String(check) !== "null") return true
     else return false
 }
 
-/**
- * 
- * @param {number} bitfield 
- * @returns 
- */
-function bietfieldpermission(bitfield){//totest
-    const ACFlags = Object.entries(constants.permissions_bitfield).sort((a, b) => Number(b[1]) - Number(a[1]))
+function getPermissionsFromBitfields(bitfield){
+    const ACFlags = Object.entries(constants.permissionsBitfield).sort((a, b) => Number(b[1]) - Number(a[1]))
     const final_p = []
     let processConvert = Number(bitfield)
     ACFlags.forEach(flag => {
@@ -130,22 +47,12 @@ function bietfieldpermission(bitfield){//totest
     return final_p
 }
 
-/**
- * 
- * @param {string} Id 
- * @returns 
- */
-function check_id(Id){//totest
+function checkId(Id){
     if(isNaN(Id) || typeof Id !== "string" || Id.length > 22 || Id.length < 15) return false
     return true
 }
 
-/**
- * 
- * @param {object} overwrites 
- * @returns 
- */
-function check_overwrites(overwrites){
+function checkOverwrites(overwrites){
     if(!Array.isArray(overwrites)) return false
     if(overwrites.length === 0) return false
     let result_final;
@@ -153,7 +60,7 @@ function check_overwrites(overwrites){
         if(result_final !== false){
             if(typeof overwrite !== "object") result_final = false
             else if(!overwrite.id || !overwrite.type || !overwrite.allow || !overwrite.deny) result_final = false
-            else if(!check_id(overwrite.id)) result_final = false
+            else if(!checkId(overwrite.id)) result_final = false
             else if(typeof overwrite.type !== "number") result_final = false
             else if(typeof overwrite.allow !== "string" || isNaN(overwrite.allow)) result_final = false
             else if(typeof overwrite.deny !== "string" || isNaN(overwrite.deny)) result_final = false
@@ -163,30 +70,17 @@ function check_overwrites(overwrites){
     return result_final
 }
 
-
-/**
- * 
- * @param {string} id 
- * @param {object} bot 
- * @returns 
- */
-function channel_backup(id, bot){
+function channelBackup(id, bot){
     let channel = {
         id,
         type: 1,
         token: bot.discordjs.token
     }
-
-    return new (require("../Gestionnaires/Individual/Channels_/Channel_1"))(channel, bot)
+    const channelClass = require("../structures/singles/channels/channeldm")
+    return new channelClass(channel, bot)
 }
 
-/**
- * 
- * @param {object} options 
- * @returns 
- */
-
-function analyse_data(options){
+function correctMessageData(options){
     if(!options) return null
     if(options && options.modal) return options
     if(typeof options !== "object" && typeof options === "string") return {content: options}
@@ -197,11 +91,6 @@ function analyse_data(options){
     else return null
 }
 
-/**
- * 
- * @param {object} presence 
- * @returns 
- */
 function presence(presence){
     let base = {activities: [], afk: false, status: "online", since: Date.now()}
     const convert = { playing: 0, streaming: 1, listening: 2, watching: 3, custom: 4, competing: 5 }
@@ -216,12 +105,7 @@ function presence(presence){
     return base
 }
 
-/**
- * 
- * @param {object[]} embeds 
- * @returns 
- */
-function check_embed(embeds){
+function checkEmbed(embeds){
     if(!embeds) return []
     if(!Array.isArray(embeds)){
         if(typeof embeds === "object" && (embeds.description || embeds.title || embeds.fields)) embeds = [embeds]
@@ -243,35 +127,20 @@ function check_embed(embeds){
     return trueembeds
 }
 
-/**
- * 
- * @param {string} content 
- * @returns 
- */
-function check_content(content){
+function checkContent(content){
     if(!content) return null
     if(typeof content !== "string") return null
     if(content.length < 1 || content.length > 2000) return null
     return content
 }
 
-/**
- * 
- * @param {object[]} stickers 
- * @returns 
- */
-function check_stickers(stickers){
+function checkStickers(stickers){
     if(!stickers) return []
     if(!Array.isArray(stickers)) return []
     return stickers
 }
 
-/**
- * 
- * @param {object[]} components 
- * @returns 
- */
-function check_components(components){
+function checkComponents(components){
     if(!components) return []
     let defcompo = [
         {
@@ -290,12 +159,7 @@ function check_components(components){
     return defcompo
 }
 
-/**
- * 
- * @param {object[]} files 
- * @returns 
- */
-function check_files(files){
+function checkFiles(files){
     if(!files) return []
     if(!Array.isArray(files)){
         if(typeof files === "object" && (files.name || files.buffer || files.extension)) files = [files]
@@ -311,12 +175,7 @@ function check_files(files){
     return truefiles
 }
 
-/**
- * 
- * @param {object} reference 
- * @returns 
- */
-function check_reference(reference){
+function checkReference(reference){
     if(typeof reference !== "object") return null
     if(!reference.channel_id || !reference.message_id) return null
     if(!require("../Utils/functions").check_id(reference.channel_id)) return null
@@ -325,12 +184,6 @@ function check_reference(reference){
     return reference
 }
 
-/**
- * 
- * @param {string} name 
- * @param {*} error 
- * @returns {Error}
- */
 function createError(name, error){
     if(!name || typeof name !== "string") return new Error()
     let er = new Error(`Une erreur s'est produite lors de la requête - ${name}`)
@@ -338,5 +191,39 @@ function createError(name, error){
     return er
 }
 
-module.exports = {getbaseinfosre, getbaseinfosrecp, getbaseinfosre_xww, GetHeaders, GetApiURL, get_bitfield, get_intents_n, get_badges, check_color, check_id, check_overwrites, bietfieldpermission, presence, channel_backup, check_reference, check_files, check_components, check_stickers, check_content, check_embed, analyse_data, createError}
-module.exports.constants = constants
+function revertTypes(object){
+    let objectArray = Object.entries(object)
+    let newJSONObject = {}
+    objectArray.forEach(objType => newJSONObject[objType[1]] = objType[0])
+    return newJSONObject
+}
+
+
+module.exports.gets = {
+    getBadges,
+    getBietfielfFromPermissions,
+    getIntentsFromNames,
+    getPermissionsFromBitfields,
+    getComputedStyle,
+    getSelection
+}
+
+module.exports.checks = {
+    checkColor,
+    checkComponents,
+    checkContent,
+    checkEmbed,
+    checkFiles,
+    checkId,
+    checkOverwrites,
+    checkReference,
+    checkStickers
+}
+
+module.exports.general = {
+    channelBackup,
+    createError,
+    revertTypes,
+    presence,
+    correctMessageData
+}

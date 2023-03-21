@@ -3,11 +3,11 @@ module.exports = async (bot, oldvoice, newvoice) => {
     let oldvoice2 = guild.voice_states.get(newvoice.user_id)
     const voice_e = require(`../Gestionnaires/Individual/Voice`)
     oldvoice2 = new voice_e({...oldvoice2}, bot)
-    guild.voice_states.get(newvoice.user_id).__Modify_Datas(newvoice)
+    guild.voice_states.get(newvoice.user_id)._Modify_Datas(newvoice)
     const newvoice2 = guild.voice_states.get(newvoice.user_id)
     guild.members.get(newvoice.user_id).voice = {presence: newvoice2, channel: newvoice2?.channel || null}
     
-    guild.channels.get(oldvoice.channel_id).members.__delete(newvoice.user_id)
+    guild.channels.get(oldvoice.channel_id).members._delete(newvoice.user_id)
     guild.channels.get(newvoice.channel_id).members.container.push(guild.members.get(newvoice.user_id))
 
 

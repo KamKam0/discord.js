@@ -9,7 +9,7 @@ module.exports = async (bot, datas) => {
     const role_e = require(`../Gestionnaires/Individual/Role`)
     oldrole = new role_e({...oldrole}, bot)
 
-    guild.roles.get(datas.role.id).__Modify_Datas(datas.role)
+    guild.roles.get(datas.role.id)._Modify_Datas(datas.role)
     const newrole = guild.roles.get(datas.role.id)
 
     let modifications = []

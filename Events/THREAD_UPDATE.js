@@ -5,7 +5,7 @@ module.exports = async (bot, datas) => {
     let oldthread = guild.threads.get(datas.id)
 
     if(!oldthread){
-        guild.threads.__add(datas)
+        guild.threads._add(datas)
         const newthread2 = guild.threads.get(datas.id)
         if(bot.database_state !== "unstable") bot.emit(name(), bot, null, newthread2)
         return
@@ -14,7 +14,7 @@ module.exports = async (bot, datas) => {
     const thread_e = require(`../Gestionnaires/Individual/Channels_/Channel_11`)
     oldthread = new thread_e({...oldthread}, bot)
 
-    guild.threads.get(datas.id).__Modify_Datas(datas)
+    guild.threads.get(datas.id)._Modify_Datas(datas)
 
     const newthread = guild.threads.get(datas.id)
 

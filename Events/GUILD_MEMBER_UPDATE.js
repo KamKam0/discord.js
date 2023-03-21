@@ -29,7 +29,7 @@ module.exports = async (bot, datas) => {
     else{
         const member_e = require(`../Gestionnaires/Individual/Member`)
         oldmember = new member_e({...oldmember}, bot)
-        guild.members.get(datas.user.id).__Modify_Datas(datas)
+        guild.members.get(datas.user.id)._Modify_Datas(datas)
         const newmember = guild.members.get(datas.user.id)
         oldmember.modifications = modifications
         if(bot.database_state !== "unstable") bot.emit(name(), bot, oldmember, newmember)
