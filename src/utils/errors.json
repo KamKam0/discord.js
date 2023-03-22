@@ -1,0 +1,358 @@
+{
+    "1": {
+        "code": "#001",
+        "message": "No Guild ID"
+    },
+    "2": {
+        "code": "#002",
+        "message": "No Channel ID"
+    },
+    "3": {
+        "code": "#003",
+        "message": "No Message ID"
+    },
+    "4": {
+        "code": "#004",
+        "message": "No Member ID"
+    },
+    "5": {
+        "code": "#005",
+        "message": "No Role ID"
+    },
+    "6": {
+        "code": "#006",
+        "message": "No Thread ID"
+    },
+    "7": {
+        "code": "#007",
+        "message": "No User ID"
+    },
+    "8": {
+        "code": "#008",
+        "message": "No Options"
+    },
+    "9": {
+        "code": "#009",
+        "message": "No Sticker ID"
+    },
+    "10": {
+        "code": "#0010",
+        "message": "No Emoji ID"
+    },
+    "11": {
+        "code": "#0011",
+        "message": "No Event ID"
+    },
+    "12": {
+        "code": "#0012",
+        "message": "No Token"
+    },
+    "13": {
+        "code": "#0013",
+        "message": "No IDS"
+    },
+    "14": {
+        "code": "#0014",
+        "message": "No New Overwrites"
+    },
+    "15": {
+        "code": "#0015",
+        "message": "No Overwrites"
+    },
+    "16": {
+        "code": "#0016",
+        "message": "No Target ID"
+    },
+    "17": {
+        "code": "#0017",
+        "message": "No Acess Token"
+    },
+    "18": {
+        "code": "#0018",
+        "message": "No Nickname"
+    },
+    "19": {
+        "code": "#0019",
+        "message": "No Name"
+    },
+    "20": {
+        "code": "#0020",
+        "message": "No Image Data"
+    },
+    "21": {
+        "code": "#0021",
+        "message": "No Roles"
+    },
+    "22": {
+        "code": "#0022",
+        "message": "No Invite ID"
+    },
+    "23": {
+        "code": "#0023",
+        "message": "No Integration ID"
+    },
+    "24": {
+        "code": "#0024",
+        "message": "Options Type Incorrect (not object)"
+    },
+    "25": {
+        "code": "#0025",
+        "message": "No Emoji"
+    },
+    "26": {
+        "code": "#0026",
+        "message": "No Time"
+    },
+    "27": {
+        "code": "#0027",
+        "message": "No File"
+    },
+    "28": {
+        "code": "#0028",
+        "message": "No Tags"
+    },
+    "29": {
+        "code": "#0029",
+        "message": "No Description"
+    },
+    "31": {
+        "code": "#0031",
+        "message": "No Template Code"
+    },
+    "32": {
+        "code": "#0032",
+        "message": "No Accesses"
+    },
+    "33": {
+        "code": "#0033",
+        "message": "No Nicknames"
+    },
+    "34": {
+        "code": "#0034",
+        "message": "No Bot"
+    },
+    "35": {
+        "code": "#0035",
+        "message": "No Webhook"
+    },
+    "36": {
+        "code": "#0036",
+        "message": "No Webhook ID"
+    },
+    "37": {
+        "code": "#0037",
+        "message": "No Guild"
+    },
+    "38": {
+        "code": "#0024-2",
+        "message": "Options Type Incorrect (not string)"
+    },
+    "39": {
+        "code": "#0039",
+        "message": "Bot State Is Not Eqal To Ready"
+    },
+    "40": {
+        "code": "#0024-3",
+        "message": "Options Type Incorrect (not array)"
+    },
+    "41": {
+        "code": "#0041",
+        "message": "No Status Found In The Options"
+    },
+    "42": {
+        "code": "#0042",
+        "message": "No Activities Found In The Options"
+    },
+    "43": {
+        "code": "#0043",
+        "message": "No Reply"
+    },
+    "44": {
+        "code": "#0044",
+        "message": "No Interaction"
+    },
+    "45": {
+        "code": "#0045",
+        "message": "Interaction Incorrect"
+    },
+    "46": {
+        "code": "#0046",
+        "message": "No ID"
+    },
+    "47": {
+        "code": "#0047",
+        "message": "User ID Incorrect"
+    },
+    "48": {
+        "code": "#0048",
+        "message": "No Link"
+    },
+    "49": {
+        "code": "#0049",
+        "message": "Guild ID Incorrect"
+    },
+    "50": {
+        "code": "#0050",
+        "message": "Guild Not Found"
+    },
+    "51": {
+        "code": "#0051",
+        "message": "Interaction ID Incorrect"
+    },
+    "52": {
+        "code": "#0052",
+        "message": "Options Incorrect - No Time"
+    },
+    "53": {
+        "code": "#0052-2",
+        "message": "Options Incorrect - No Number"
+    },
+    "54": {
+        "code": "#0052-3",
+        "message": "Options Incorrect - No Command Name"
+    },
+    "55": {
+        "code": "#0052-4",
+        "message": "Options Incorrect - No Category Name"
+    },
+    "56": {
+        "code": "#0056",
+        "message": "Member ID Incorrect"
+    },
+    "57": {
+        "code": "#0057",
+        "message": "Channel ID Incorrect"
+    },
+    "58": {
+        "code": "#0058",
+        "message": "IDs provided are not in an Array"
+    },
+    "59": {
+        "code": "#0059",
+        "message": "Overwrites provided are not in an Array"
+    },
+    "60": {
+        "code": "#0060",
+        "message": "Overwrites provided are not in an Array"
+    },
+    "61": {
+        "code": "#0061",
+        "message": "Target ID is invalid"
+    },
+    "62": {
+        "code": "#0062",
+        "message": "The nickname is not a string"
+    },
+    "63": {
+        "code": "#0063",
+        "message": "The access token is not a string"
+    },
+    "64": {
+        "code": "#0064",
+        "message": "Emoji ID incorrect"
+    },
+    "65": {
+        "code": "#0065",
+        "message": "Event ID incorrect"
+    },
+    "66": {
+        "code": "#0066",
+        "message": "Invite ID incorrect"
+    },
+    "67": {
+        "code": "#0067",
+        "message": "Integration ID incorrect"
+    },
+    "68": {
+        "code": "#0068",
+        "message": "Interaction ID incorrect"
+    },
+    "69": {
+        "code": "#0069",
+        "message": "Message ID incorrect"
+    },
+    "70": {
+        "code": "#0070",
+        "message": "Role ID incorrect"
+    },
+    "71": {
+        "code": "#0071",
+        "message": "Sticker ID incorrect"
+    },
+    "72": {
+        "code": "#0072",
+        "message": "Webhook ID incorrect"
+    },
+    "73": {
+        "code": "#0073",
+        "message": "Thread ID incorrect"
+    },
+    "74": {
+        "code": "#0074",
+        "message": "Incorrect Options"
+    },
+    "75": {
+        "code": "#0075",
+        "message": "Incorrect Reason (Should be string)"
+    },
+    "76": {
+        "code": "#0076",
+        "message": "Error in options"
+    },
+    "77": {
+        "code": "#0077",
+        "message": "No type provided"
+    },
+    "78": {
+        "code": "#0078",
+        "message": "The provided type is not supported"
+    },
+    "79": {
+        "code": "#0079",
+        "message": "The provided id is not a string"
+    },
+    "80": {
+        "code": "#0080",
+        "message": "The provided id is not an object"
+    },
+    "81": {
+        "code": "#0081",
+        "message": "The provided id is incorrect"
+    },
+    "82": {
+        "code": "#0082",
+        "message": "The provided extension is not a string"
+    },
+    "83": {
+        "code": "#0083",
+        "message": "extension is not valid"
+    },
+    "84": {
+        "code": "#0084",
+        "message": "The value of the element is undefined"
+    },
+    "85": {
+        "code": "#0085",
+        "message": "The type of the value is not a "
+    },
+    "86": {
+        "code": "#0086",
+        "message": "The provided id is not correct"
+    },
+    "87": {
+        "code": "#0087",
+        "message": "Provided options are incorrect"
+    },
+    "88": {
+        "code": "#0088",
+        "message": "Provided arguments are not an array"
+    },
+    "89": {
+        "code": "#0089",
+        "message": "Provided content-type is incorrect"
+    },
+    "90": {
+        "code": "#0090",
+        "message": "Provided callback is not a function"
+    }
+}
