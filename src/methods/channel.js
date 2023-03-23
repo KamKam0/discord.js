@@ -18,7 +18,7 @@ module.exports.modify = (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.bulkdelete = (informations, ids) => {
@@ -32,7 +32,7 @@ module.exports.bulkdelete = (informations, ids) => {
         {value: {messages: ids}, data_name: "options"}, 
         {value: ids, type: "array", data_name: "ids", order: 3}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.getinvites = (informations) => {
@@ -49,7 +49,7 @@ module.exports.getinvites = (informations) => {
         newData._addMultiple(data)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.createinvite = (informations) => {
@@ -65,7 +65,7 @@ module.exports.createinvite = (informations) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.editpermissions = (informations, newoverwrite) => {
@@ -78,7 +78,7 @@ module.exports.editpermissions = (informations, newoverwrite) => {
     let args = [
         {value: newoverwrite, value_data: "newoverwrite", type: "array", data_name: "options", order:3}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.deletepermission = (informations) => {
@@ -89,7 +89,7 @@ module.exports.deletepermission = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.follownews = (informations, targetid) => {
@@ -103,7 +103,7 @@ module.exports.follownews = (informations, targetid) => {
         {value: targetid, value_data: "id", data_name: "targetid", order:3}, 
         {value: {webhook_channel_id: targetid}, data_name: "options"}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.getpins = (informations) => {
@@ -120,7 +120,7 @@ module.exports.getpins = (informations) => {
         newData._addMultiple(data)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.triggertyping = (informations) => {
@@ -131,7 +131,7 @@ module.exports.triggertyping = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.create = (informations, options) => {
@@ -150,5 +150,5 @@ module.exports.create = (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }

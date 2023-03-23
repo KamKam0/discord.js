@@ -1,9 +1,10 @@
 const Base = require("./base")
+const overWriteAdministrator = require("../../administrators/channelpermissions")
 class baseGuild extends Base{
     constructor(channel, bot){
         super(channel, bot)
         this.position = channel.position
-        this.permission_overwrites = channel.permission_overwrites
+        this.permission_overwrites = new overWriteAdministrator(channel.permission_overwrites, bot)
         this.name = channel.name
         this.nsfw = channel.nsfw ?? false
         this.parent_id = channel.parent_id || null

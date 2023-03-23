@@ -1,10 +1,10 @@
 class baseForAll {
     constructor(bot){
         this._bot = bot
-        this._token = bot.discordjs?.token
+        this._token = bot.token
     }
 
-    _Modify_Get_Datas(){
+    _modifyGetDatas(){
         if(this.guild_id) this.guild = this._bot.guilds.get(this.guild_id) || null
         if(this.channel_id) this.channel = this._bot.channels.get(this.channel_id) || null
         if(this.member_id && this.guild_id) this.member = this.guild.members.get(this.member_id) || null

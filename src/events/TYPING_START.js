@@ -1,4 +1,4 @@
-const Typing = require("../Event Result/Typing")
+const Typing = require("./results/typing")
 module.exports = async (bot, datas) => {
     if(bot.database_state !== "unstable") bot.emit(name(), bot, new Typing(datas, bot))
 }

@@ -1,4 +1,4 @@
-const User = require("../Gestionnaires/Individual/User")
+const User = require("../structures/singles/user")
 module.exports = async (bot, datas) => {
     bot.user = new User({...datas.user, token: bot.discordjs.token}, bot)
     bot.discordjs.dvdatas = datas.v

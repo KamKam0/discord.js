@@ -3,7 +3,7 @@ module.exports = async (bot, oldsticker, newsticker) => {
     if(!guild) return
     let oldsticker2 = guild.stickers.get(newsticker.id)
     if(!oldsticker2) return
-    const sticker_e = require(`../Gestionnaires/Individual/Sticker`)
+    const sticker_e = require("../structures/singles/sticker")
     oldsticker2 = new sticker_e({...oldsticker2}, bot)
     guild.stickers.get(newsticker.id)._Modify_Datas(newsticker)
     const newsticker2 = guild.stickers.get(newsticker.id)

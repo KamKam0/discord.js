@@ -86,7 +86,7 @@ class Slash extends Base{
     addOptions(array){
         if(!Array.isArray(array)) array = undefined
         let choices = array || [...arguments]
-        choices.filter(e => typeof e === "object").forEach(choice => this.addChoice(choice))
+        choices.filter(e => typeof e === "object").forEach(choice => this.addOption(choice))
         return this
     }
 }

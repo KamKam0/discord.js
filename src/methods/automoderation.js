@@ -16,7 +16,7 @@ module.exports.create = async (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.getall = async (informations) => {
@@ -35,7 +35,7 @@ module.exports.getall = async (informations) => {
         newData._addMultiple(data)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.get = async (informations) => {
@@ -51,7 +51,7 @@ module.exports.get = async (informations) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.modify = async (informations, options) => {
@@ -69,7 +69,7 @@ module.exports.modify = async (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.delete = async (informations) => {
@@ -80,5 +80,5 @@ module.exports.delete = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }

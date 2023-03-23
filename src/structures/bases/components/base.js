@@ -1,9 +1,6 @@
-const origin = require("./origin")
-
-class componentBase extends origin{
+class componentBase{
     
     constructor(){
-        super()
         this.custom_id = null
     }
     

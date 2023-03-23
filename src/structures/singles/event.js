@@ -1,5 +1,9 @@
 const User = require("./user")
 const Base = require("../bases/baseguild")
+const eventMethod = require("../../methods/event")
+const generalMethod = require("../../methods/general")
+const eventTypes = require("../../types/event")
+
 class Event extends Base{
     constructor(event, bot){
         super(event, bot)
@@ -34,31 +38,20 @@ class Event extends Base{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
 
     #type(type){
-        return this._typechange({
-            1: "STAGE_INSTANCE",
-            2: "VOICE",
-            3: "EXTERNAL"
-        }, type)
+        return this._typechange(eventTypes.revert.entityType(), type)
     }
 
     #status2(status){
-        return this._typechange({
-            1: "SCHEDULED",
-            2: "ACTIVE",
-            3: "COMPLETED",
-            4: "CANCELED"
-        }, status)
+        return this._typechange(eventTypes.revert.status(), status)
     }
 
     #privacy(privacy){
-        return this._typechange({
-            2: "GUILD_ONLY"
-        }, privacy)
+        return this._typechange(eventTypes.revert.privacyLevel(), privacy)
     }
 
     /**
@@ -73,7 +66,7 @@ class Event extends Base{
             id: this.id,
             guild_id: this.guild_id
         }
-        return require("../../methods/events").modify(informations, options)
+        return eventMethod.modify(informations, options)
     }
 
     /**
@@ -87,11 +80,11 @@ class Event extends Base{
             id: this.id,
             guild_id: this.guild_id
         }
-        return require("../../methods/events").delete(informations)
+        return eventMethod.delete(informations)
     }
 
     get iconURL(){
-        return require("../../methods/general").iconURL(this.id, this.image, "event")
+        return generalMethod.iconURL(this.id, this.image, "event")
     }
 
     /**
@@ -100,7 +93,7 @@ class Event extends Base{
      * @returns 
      */
     displayIconURL(extension){
-        return require("../../methods/general").iconURL(this.id, this.image, "event", extension)
+        return generalMethod.iconURL(this.id, this.image, "event", extension)
     }
 }
 module.exports = Event

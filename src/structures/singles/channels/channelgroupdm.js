@@ -1,4 +1,6 @@
 const TetxBase = require("../../bases/channels/textbase")
+const dmMethod = require("../../../methods/dm")
+
 class Channel extends TetxBase{
     constructor(channel, bot){
         super(channel, bot)
@@ -22,7 +24,7 @@ class Channel extends TetxBase{
             id: this.id,
             user_id: userid
         }
-        return require("../../../methods/dm").adduser(informations, nick, accesstoken)
+        return dmMethod.adduser(informations, nick, accesstoken)
     }
 
     /**
@@ -37,7 +39,7 @@ class Channel extends TetxBase{
             id: this.id,
             user_id: userid
         }
-        return require("../../../methods/dm").removeuser(informations)
+        return dmMethod.removeuser(informations)
     }
 }
 module.exports = Channel

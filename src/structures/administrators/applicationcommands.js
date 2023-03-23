@@ -1,5 +1,7 @@
 const BaseCommands = require("../managers/applicationcommands")
 const Command = require("../applicationscommands/command")
+const interactionMethod = require("../../methods/interaction")
+
 class Commands extends BaseCommands{
     constructor(bot){
         super(bot)
@@ -33,13 +35,12 @@ class Commands extends BaseCommands{
     }
 
     fetchAll(){
-        return new Promise(async (resolve, reject) => {
-            let ID = this._bot?.user?.id
-            if(!ID) ID = (await this._bot.getMe())?.id
-            require("../methods/interaction").getcommands(this._bot.discordjs.token, ID, null, this._bot)
-            .catch(err => reject(err))
-            .then(datas => resolve(datas))
-        })
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            application_id: this._bot.user?.id
+        }
+        return interactionMethod.getcommands(informations)
     }
 
     fetchById(ID){

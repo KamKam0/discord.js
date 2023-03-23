@@ -1,7 +1,7 @@
 module.exports = async (bot, oldvoice, newvoice) => {
     const guild = bot.guilds.get(oldvoice.guild_id)
     let oldvoice2 = guild.voice_states.get(newvoice.user_id)
-    const voice_e = require(`../Gestionnaires/Individual/Voice`)
+    const voice_e = require("../structures/singles/voice")
     oldvoice2 = new voice_e({...oldvoice2}, bot)
     guild.voice_states.get(newvoice.user_id)._Modify_Datas(newvoice)
     const newvoice2 = guild.voice_states.get(newvoice.user_id)

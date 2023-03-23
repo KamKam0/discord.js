@@ -1,7 +1,10 @@
 const Base = require("../bases/baseguild")
-const Channels = require("../Multiple/Channels")
-const Roles = require("../Multiple/Roles")
-class Ban extends Base{
+const Channels = require("../managers/channels")
+const Roles = require("../managers/roles")
+const automoderationMethod = require("../../methods/automoderation")
+const automoderationTypes = require("../../types/automoderation")
+
+class AutoModeration extends Base{
     constructor(automod, bot){
         super(automod, bot)
         this.id = automod.id
@@ -18,26 +21,15 @@ class Ban extends Base{
     }
 
     #eventtyep(type){
-        return this._typechange({
-            1: "MESSAGE_SEND"
-        }, type)
+        return this._typechange(automoderationTypes.revert.eventType(), type)
     }
 
     #triggertyep(type){
-        return this._typechange({
-            1: "KEYWORD",
-            3: "SPAM",
-            4: "KEYWORD_PRESET",
-            5: "MENTION_SPAM"
-        }, type)
+        return this._typechange(automoderationTypes.revert.triggerType(), type)
     }
 
     #actiontype(type){
-        return this._typechange({
-            1: "BLOCK_MESSAGE",
-            2: "SEND_ALERT_MESSAGE",
-            3: "TIMEOUT"
-        }, type)
+        return this._typechange(automoderationTypes.revert.actionType(), type)
     }
 
     _Modify_Datas(automod){
@@ -53,7 +45,7 @@ class Ban extends Base{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         if(this.actions.metadata.channel) this.actions.metadata.channel = bot.channels.get(this.actions.metadata.channel_id)
         return this
     }
@@ -65,7 +57,7 @@ class Ban extends Base{
             id: this.id,
             guild_id: this.guild_id
         }
-        return require("../../methods/automoderation").modify(informations, options)
+        return automoderationMethod.modify(informations, options)
     }
 
     async delete(){
@@ -75,8 +67,8 @@ class Ban extends Base{
             user_id: this.user_id,
             guild_id: this.guild_id
         }
-        return require("../../methods/automoderation").delete(informations)
+        return automoderationMethod.delete(informations)
     }
 
 }
-module.exports = Ban
+module.exports = AutoModeration

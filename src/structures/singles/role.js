@@ -1,4 +1,7 @@
 const BaseGuild = require("../bases/baseguild")
+const roleMethod = require("../../methods/role")
+const generalMethod = require("../../methods/general")
+
 class Role extends BaseGuild{
     constructor(role, bot){
         super(role, bot)
@@ -22,7 +25,7 @@ class Role extends BaseGuild{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
     
@@ -33,7 +36,7 @@ class Role extends BaseGuild{
             id: this.id,
             guild_id: this.guild_id
         }
-        return require("../../methods/roles").delete(informations)
+        return roleMethod.delete(informations)
     }
     
     async modify(options){
@@ -43,15 +46,15 @@ class Role extends BaseGuild{
             id: this.id,
             guild_id: this.guild_id
         }
-        return require("../../methods/roles").modify(informations, options)
+        return roleMethod.modify(informations, options)
     }
 
     get iconURL(){
-        return require("../../methods/general").iconURL(this.id, this.icon, "role")
+        return generalMethod.iconURL(this.id, this.icon, "role")
     }
 
     displayIconURL(extension){
-        return require("../../methods/general").iconURL(this.id, this.icon, "role", extension)
+        return generalMethod.iconURL(this.id, this.icon, "role", extension)
     }
 }
 module.exports = Role

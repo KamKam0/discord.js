@@ -16,7 +16,7 @@ module.exports.create = (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.modify = (informations, options) => {
@@ -34,7 +34,7 @@ module.exports.modify = (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.delete = (informations) => {
@@ -45,5 +45,5 @@ module.exports.delete = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }

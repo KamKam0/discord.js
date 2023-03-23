@@ -1,12 +1,11 @@
-const User = require("../Gestionnaires/Individual/User")
-class Unban{
+const User = require("../../structures/singles/user")
+const guildBase = require("../../structures/bases/baseguild")
+
+class Unban extends guildBase{
     constructor(ban, bot){
-        this.guild_id = ban.guild_id || null
-        this.guild = ban.guild || bot.guilds.get(this.guild_id) || null
-        this.bot_token = bot.discordjs.token
-        this.user = new User({...ban.user, token: this.bot_token}, bot)
+        super(ban, bot)
+        this.user = new User(ban.user, bot)
         this.user_id = ban.user.id || null
-        this._bot = bot
     }
 
     _Modify_Datas(ban){
@@ -18,11 +17,13 @@ class Unban{
     }
 
     ban(options){
-        return new Promise((resolve, reject) => {
-            require("../methods/ban").ban(this.bot_token, this.guild.id, this.user.id, options)
-            .then(datas => resolve(datas))
-            .catch(err => reject(err))
-        })
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            user_id: this.user_id,
+            guild_id: this.guild_id
+        }
+        return require("../../methods/ban").ban(informations, options)
     }
 }
 module.exports = Unban

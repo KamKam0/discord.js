@@ -1,5 +1,5 @@
 module.exports = {
-    url: {"Content-Type": "application/x-www-form-urlencoded"},
-    file: {"Content-Type": "multipart/form-data; boundary="},
-    basic: {"Content-Type": "application/json"}
+    url: "application/x-www-form-urlencoded",
+    file: "multipart/form-data; boundary=",
+    basic: "application/json"
 }

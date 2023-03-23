@@ -1,8 +1,10 @@
 module.exports = async (bot, datas) => {
   const guild = bot.guilds.get(datas.guild_id)
-  if(!datas.guild_id || !guild) return
-  const oldchannel = guild.channels.get(datas.id)
-  guild.channels._delete(datas.id)
+  let oldchannel;
+  if(guild){
+    oldchannel = guild.channels.get(datas.id)
+    guild.channels._delete(datas.id)
+  }else oldchannel = bot.channels.get(datas.id)
   bot.channels._delete(datas.id)
   if(bot.database_state !== "unstable") bot.emit(name(), bot, oldchannel)
 }

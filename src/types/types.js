@@ -13,5 +13,6 @@ module.exports = {
     button: require("./button"),
     textInput: require("./textinput"),
     option: require("./option"),
-    intents: require("./intents")
+    intents: require("./intents"),
+    forum: require("./forum")
 }

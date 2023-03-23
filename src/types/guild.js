@@ -56,5 +56,5 @@ module.exports.revert = {
 }
 
 function revert(){
-    return require("../utils/functions").general.revertTypess(types)
+    return require("../utils/functions").general.revertTypes(types)
 }

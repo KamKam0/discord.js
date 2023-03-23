@@ -15,7 +15,7 @@ module.exports.getuser = async (informations) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 /**
@@ -90,15 +90,16 @@ module.exports.leave = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
-module.exports.getGateway = async () => {
+module.exports.getGateway = async (token) => {
     let passedOptions = {
         method: gateawayApiPath.get.bot.method,
         url: gateawayApiPath.get.bot.url,
-        urlIDS: {}
+        urlIDS: {},
+        token
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }

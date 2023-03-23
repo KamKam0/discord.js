@@ -1,4 +1,7 @@
 const GuildVoice = require("../../bases/channels/guildvoice")
+const messageMethod = require("../../../methods/message")
+const channelMethod = require("../../../methods/channel")
+
 class Channel extends GuildVoice{
     constructor(channel, bot){
         super(channel, bot)
@@ -15,7 +18,7 @@ class Channel extends GuildVoice{
             bot: this._bot,
             id: this.id
         }
-        return require("../../../methods/message").send(informations, options)
+        return messageMethod.send(informations, options)
     }
 
     /**
@@ -29,7 +32,7 @@ class Channel extends GuildVoice{
             bot: this._bot,
             id: this.id
         }
-        return require("../../../../methods/message").fetch_messages(informations, limit)
+        return messageMethod.fetch_messages(informations, limit)
     }
     
     /**
@@ -44,7 +47,7 @@ class Channel extends GuildVoice{
             id: this.id,
             message_id: ID
         }
-        return require("../../../../methods/message").fetch_messages(informations)
+        return messageMethod.fetch_messages(informations)
     }
     
     /**
@@ -59,12 +62,12 @@ class Channel extends GuildVoice{
             id: this.id
         }
         return new Promise(async (resolve, reject) => {
-            require("../../../../methods/message").fetch_messages(informations, number)
+            messageMethod.fetch_messages(informations, number)
             .catch(err => reject(err))
             .then(datas => {
-                require("../../../../methods/channel").bulkdelete(informations, datas.map(msg => msg.id))
+                channelMethod.bulkdelete(informations, datas.map(msg => msg.id))
                 .catch(err => reject(err))
-                .then(vdatas => { return resolve(vdatas)})
+                .then(vdatas => resolve(vdatas))
             })
         })
     }

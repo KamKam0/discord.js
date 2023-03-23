@@ -16,7 +16,7 @@ module.exports.create = (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.delete = (informations) => {
@@ -32,7 +32,7 @@ module.exports.delete = (informations) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.get = (informations) => {
@@ -48,7 +48,7 @@ module.exports.get = (informations) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.getall = (informations) => {
@@ -65,7 +65,7 @@ module.exports.getall = (informations) => {
         multiple._addMultiple(data)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.createguild = (informations, options) => {
@@ -83,7 +83,7 @@ module.exports.createguild = (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.sync = (informations) => {
@@ -99,7 +99,7 @@ module.exports.sync = (informations) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.modify = (informations, options) => {
@@ -117,5 +117,5 @@ module.exports.modify = (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }

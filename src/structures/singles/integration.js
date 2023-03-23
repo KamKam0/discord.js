@@ -1,4 +1,7 @@
 const Base = require("../bases/baseguild")
+const guildMethod = require("../../methods/guild")
+const integrationTypes = require("../../types/integration")
+
 class Integration extends Base{
     constructor(integration, bot){
         super(integration, bot)
@@ -21,10 +24,7 @@ class Integration extends Base{
     }
 
     #type(type){
-        return this._typechange({
-            0: "Remove role",
-            1: "Kick"
-        }, type)
+        return this._typechange(integrationTypes.reverse(), type)
     }
 
     _Modify_Datas(inte){
@@ -37,7 +37,7 @@ class Integration extends Base{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
     
@@ -52,7 +52,7 @@ class Integration extends Base{
             id: this.id,
             guild_id: this.guild_id
         }
-        return require("../../methods/guild").deleteintegration(informations)
+        return guildMethod.deleteintegration(informations)
     }
 }
 module.exports = Integration

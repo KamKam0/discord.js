@@ -1,7 +1,7 @@
 const Base = require("../bases/basemultiple")
 class Commands extends Base{
-    constructor(_bot){
-        super(_bot, null, "command")
+    constructor(bot){
+        super(bot, null, "command")
     }
 
     _delete(name){

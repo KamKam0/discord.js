@@ -1,5 +1,8 @@
 const User = require("./user")
 const Base = require("../bases/baseguild")
+const guildMethod = require("../../methods/guild")
+const inviteTypes = require("../../types/invite")
+
 class Invite extends Base{
     constructor(invite, bot){
         super(invite, bot)
@@ -20,10 +23,7 @@ class Invite extends Base{
     }
 
     #type(type){
-        return this._typechange({
-            1: "STREAM",
-            2: "EMBEDDED_APPLICATION"
-        }, type)
+        return this._typechange(inviteTypes.reverse(), type)
     }
 
     _Modify_Datas(invite){
@@ -36,7 +36,7 @@ class Invite extends Base{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
 
@@ -50,7 +50,7 @@ class Invite extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").deleteinvite(informations)
+        return guildMethod.deleteinvite(informations)
     }
 }
 module.exports = Invite

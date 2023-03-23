@@ -6,7 +6,7 @@ module.exports = async (bot, datas) => {
     let oldrole = guild.roles.get(datas.role.id)
     
     if(!oldrole) return
-    const role_e = require(`../Gestionnaires/Individual/Role`)
+    const role_e = require("../structures/singles/role")
     oldrole = new role_e({...oldrole}, bot)
 
     guild.roles.get(datas.role.id)._Modify_Datas(datas.role)

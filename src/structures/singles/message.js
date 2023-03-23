@@ -1,6 +1,10 @@
-const Mentions = require("../Multiple/Mentions")
+const Mentions = require("../managers/mentions")
 const Base = require("../bases/basereplying")
 const Embed = require("../components/embed")
+const messageMethod = require("../../methods/message")
+const utils = require("../../utils/functions")
+const messageTypes = require("../../types/message")
+
 class Message extends Base{
     constructor(message, bot){
         super(message, bot)
@@ -45,7 +49,7 @@ class Message extends Base{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
 
@@ -60,7 +64,7 @@ class Message extends Base{
     }
 
     #type2(type){
-        return this._typechange(require("../../constants").messageTypes, type)
+        return this._typechange(messageTypes.reverse(), type)
     }
 
     /**
@@ -74,7 +78,7 @@ class Message extends Base{
             id: this.id,
             channel_id: this.channel_id
         }
-        return require("../../methods/message").delete(informations)
+        return messageMethod.delete(informations)
     }
 
     /**
@@ -89,7 +93,7 @@ class Message extends Base{
             id: this.id,
             channel_id: this.channel_id
         }
-        return require("../../methods/message").modify(informations, options)
+        return messageMethod.modify(informations, options)
     }
 
     /**
@@ -105,7 +109,7 @@ class Message extends Base{
             channel_id: this.channel_id,
             emoji
         }
-        return require("../../methods/message").addreaction(informations)
+        return messageMethod.addreaction(informations)
     }
 
     /**
@@ -121,7 +125,7 @@ class Message extends Base{
             channel_id: this.channel_id,
             emoji
         }
-        return require("../../methods/message").removereaction(informations)
+        return messageMethod.removereaction(informations)
     }
 
     /**
@@ -139,7 +143,7 @@ class Message extends Base{
             user_id: userid,
             emoji
         }
-        return require("../../methods/message").removeuserreaction(informations)
+        return messageMethod.removeuserreaction(informations)
     }
 
     /**
@@ -154,7 +158,7 @@ class Message extends Base{
             id: this.id,
             channel_id: this.channel_id
         }
-        return require("../../methods/message").removeallreactionemoji(informations, emoji)
+        return messageMethod.removeallreactionemoji(informations, emoji)
     }
 
     /**
@@ -168,7 +172,7 @@ class Message extends Base{
             id: this.id,
             channel_id: this.channel_id
         }
-        return require("../../methods/message").removeallreactions(informations)
+        return messageMethod.removeallreactions(informations)
     }
 
     /**
@@ -182,13 +186,13 @@ class Message extends Base{
             bot: this._bot,
             channel_id: this.channel_id
         }
-        options = require("../../utils/functions").analyse_data(options)
+        options = utils.general.correctMessageData(options)
         if(options) options.message_reference = {
             message_id: this.id,
             channel_id: this.channel_id,
             guild_id: this.guild_id
         }
-        return require("../../methods/message").send(informations, options)
+        return messageMethod.send(informations, options)
     }
 
     /**
@@ -202,7 +206,7 @@ class Message extends Base{
             id: this.id,
             channel_id: this.channel_id
         }
-        return require("../../methods/message").pin(informations)
+        return messageMethod.pin(informations)
     }
 
     /**
@@ -216,7 +220,7 @@ class Message extends Base{
             id: this.id,
             channel_id: this.channel_id
         }
-        return require("../../methods/message").unpin(informations)
+        return messageMethod.unpin(informations)
     }
 
     /**
@@ -230,7 +234,7 @@ class Message extends Base{
             id: this.id,
             channel_id: this.channel_id
         }
-        return require("../../methods/message").fetch_reactions(informations)
+        return messageMethod.fetch_reactions(informations)
     }
 
     /**
@@ -245,7 +249,7 @@ class Message extends Base{
             id: this.id,
             channel_id: this.channel_id
         }
-        return require("../../methods/message").fetch_reaction(informations, reaction)
+        return messageMethod.fetch_reaction(informations, reaction)
     }
 
     /**
@@ -259,7 +263,7 @@ class Message extends Base{
             id: this.id,
             channel_id: this.channel_id
         }
-        return require("../../methods/message").crosspost(informations)
+        return messageMethod.crosspost(informations)
     }
 
     

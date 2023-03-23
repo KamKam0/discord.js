@@ -1,4 +1,6 @@
 const Base = require("../../bases/channels/base")
+const channelMethod = require("../../../methods/channel")
+
 class Channel extends Base{
     constructor(channel, bot){
         super(channel, bot)
@@ -19,7 +21,7 @@ class Channel extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../../../methods/channel").modify(informations, options)
+        return channelMethod.modify(informations, options)
     }
 }
 module.exports = Channel

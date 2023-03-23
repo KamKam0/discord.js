@@ -1,5 +1,5 @@
 module.exports = async (bot, datas) => {
-    const guild_e = require("../Gestionnaires/Individual/Guild")
+    const guild_e = require("../structures/singles/guild")
     let oldguild = bot.guilds.get(datas.id)
     oldguild = new guild_e({...oldguild}, bot)
 

@@ -6,7 +6,7 @@ const Cooldown = require("@kamkam1_0/cooldown")
 const CommandHandler = require("@kamkam1_0/discord-commandhandler")
 const EventHandler = require("@kamkam1_0/discord-eventhandler")
 const VoiceManager = require("../../handlers/voice/voicemanager")
-const ApplicationCommands = require("../applicationscommands/command")
+const ApplicationCommands = require("../administrators/applicationcommands")
 const ORM = require("@kamkam1_0/sql-orm")
 const WebSocketHandler = require('../../handlers/websocket')
 const collector = require("../../handlers/collector")
@@ -16,6 +16,9 @@ if(os.platform() === "win32") elementOS = '\\'
 const methodMe = require("../../methods/me")
 const methodMessage = require("../../methods/message")
 const fs = require("node:fs")
+const constants = require("../../utils/constants")
+const utils = require("../../utils/functions")
+const index = require("../../index")
 
 class Bot extends EventEmitter{
     /**
@@ -27,32 +30,34 @@ class Bot extends EventEmitter{
     constructor(data={}){
         super()
 
+        this.state = "processing"
+        this.presence = null
+        this.user = null
+        this.creator = null
+        this.voice = new VoiceManager(this)
+        this.utils = utils
         this.langues = []
-        this.intents = this.#attributeintents(data.intents)
         this.default_language = null
-        this.ws.discordSide = {}
+        this.token = null
+        this.launchError = null
+        this.availableEvents = this.#getEvents(),
+        this.intents = this.#attributeintents(data.intents)
         this.config = this.#getInfos()
         this.name = this.#checkName()
         this.sql = this.#attributeSQL(data.database)
         this.guilds = new Guilds(this)
         this.users = new Users(this)
         this.channels = new Channels(this)
-        this.commands = new ApplicationCommands(this)
-        this.state = "processing"
         this.cooldown = new Cooldown()
         this.handler = new CommandHandler.Handlers(this.name, this.langues)
-        this.events = new EventHandler.Events(this, this.ws.discordSide.availableEvents)
-        this.presence = null
-        this.user = null
-        this.creator = null
-        this.voice = new VoiceManager(this)
-        this.utils = require("../../utils/functions")
+        this.events = new EventHandler.Events(this, this.availableEvents)
+        this.commands = new ApplicationCommands(this)
         this.ws = new WebSocketHandler(this)
     }
 
     #attributeintents(intents){
-        if(!intents || !Array.isArray(intents) || intents.filter(e => typeof e === "string").length !== intents.length) return require("../../utils/functions").get_intents_n("ALL")
-        return require("../../utils/functions").get_intents_n(intents)
+        if(!intents || !Array.isArray(intents) || intents.filter(e => typeof e === "string").length !== intents.length) return utils.gets.getIntentsFromNames("ALL")
+        return utils.gets.getIntentsFromNames(intents)
     }
 
     #attributeSQL(database){
@@ -123,7 +128,7 @@ class Bot extends EventEmitter{
     getMe(){
         let informations = {
             bot: this,
-            token: this.ws.discordSide.token
+            token: this.token
         }
         return methodMe.getuser(informations)
     }
@@ -132,16 +137,16 @@ class Bot extends EventEmitter{
         return {
             op: 2,
             d: {
-                token: this.ws.discordSide.token,
+                token: this.token,
                 intents: this.intents,
                 compress: false,
                 properties: {
                     os: os.platform(),
-                    browser: `@kamkam1_0/discord.js v${require("../index").version}`,
-                    device: `@kamkam1_0/discord.js v${require("../index").version}`
+                    browser: `@kamkam1_0/discord.js v${index.version}`,
+                    device: `@kamkam1_0/discord.js v${index.version}`
                 },
                 shards: [ 0 ],
-                presence: this.utils.presence(presence)
+                presence: this.utils.general.presence(presence)
             }
         }
     }
@@ -167,7 +172,7 @@ class Bot extends EventEmitter{
     sendMessage(channelid, options){
         let informations = {
             bot: this,
-            token: this.ws.discordSide.token,
+            token: this.token,
             channel_id: channelid
         }
         return methodMessage.send(informations, options)
@@ -176,7 +181,7 @@ class Bot extends EventEmitter{
     modifyMessage(channelid, messageid, options){
         let informations = {
             bot: this,
-            token: this.ws.discordSide.token,
+            token: this.token,
             channel_id: channelid,
             message_id: messageid
         }
@@ -186,7 +191,7 @@ class Bot extends EventEmitter{
     deleteMessage(channelid, messageid, options){
         let informations = {
             bot: this,
-            token: this.ws.discordSide.token,
+            token: this.token,
             channel_id: channelid,
             message_id: messageid
         }
@@ -194,37 +199,37 @@ class Bot extends EventEmitter{
     }
 
     #TreatToken(env){
-        if(env.token && env.token_beta && typeof env.token_beta === "string" && process.argv.includes("-t")) this.ws.discordSide.token = env.token_beta
-        else this.ws.discordSide.token = env.token
+        if(env.token && env.token_beta && typeof env.token_beta === "string" && process.argv.includes("-t")) this.token = env.token_beta
+        else this.token = env.token
     }
     
     #getInfos(){
-        this.ws.resetDiscordSide()
+        if(this.launchError) return
         let env = getCheck.bind(this)(".env")
-        if(this.ws.discordSide.lancementError) return
-        if(!env.token) return this.ws.discordSide.lancementError = "No token parameter in the .env file"
-        if(typeof env.token !== "string") return this.ws.discordSide.lancementError = "The token parameter in the .env file is not a string"
+        if(this.launchError) return
+        if(!env.token) return this.launchError = "No token parameter in the .env file"
+        if(typeof env.token !== "string") return this.launchError = "The token parameter in the .env file is not a string"
         this.#TreatToken(env)
         let config = getCheck.bind(this)("config.json")
-        if(this.ws.discordSide.lancementError) return
-        if(!config.general) return this.ws.discordSide.lancementError = "No general section in your config.json file"
-        const availableLanguages = require("../../utils/constants").languagesAvailable
+        if(this.launchError) return
+        if(!config.general) return this.launchError = "No general section in your config.json file"
+        const availableLanguages = constants.languagesAvailable
         if(!config.general.language || typeof config.general.language !== "string") this.default_language = "en-US"
         else if (availableLanguages.find(da => da.id === config.general.language)) this.default_language = config.general.language
         else this.default_language = "en-US"
 
         let languages = getCheck.bind(this)("langues", true)
-        if(this.ws.discordSide.lancementError) return
+        if(this.launchError) return
         
         languages = languages.filter(e => e.endsWith(".json"))
         let toreturn = languages.map(e => JSON.parse(fs.readFileSync(process.cwd()+elementOS+"langues"+elementOS+e, 'utf-8')))
 
-        if(!toreturn.find(e => e.Langue_Code === this.default_language)) return this.ws.discordSide.lancementError = "There is no language file corresponding to your default language"
+        if(!toreturn.find(e => e.Langue_Code === this.default_language)) return this.launchError = "There is no language file corresponding to your default language"
 
         for (const langue of toreturn){
-            if(!langue["Langue_Code"]) return this.ws.discordSide.lancementError = "In one of your language files, there is no code."
-            if(!availableLanguages.find(da => da.id === langue["Langue_Code"]))  return this.ws.discordSide.lancementError = `The code in ${langue["Langue_Code"]} file is wrong`
-            for (const opt of ["Help", "Options", "Choices"]) if(!langue[opt]) return this.ws.discordSide.lancementError = `No ${opt} in your ${langue["Langue_Code"]} file`
+            if(!langue["Langue_Code"]) return this.launchError = "In one of your language files, there is no code."
+            if(!availableLanguages.find(da => da.id === langue["Langue_Code"]))  return this.launchError = `The code in ${langue["Langue_Code"]} file is wrong`
+            for (const opt of ["Help", "Options", "Choices"]) if(!langue[opt]) return this.launchError = `No ${opt} in your ${langue["Langue_Code"]} file`
         }
         this.langues = toreturn
 
@@ -262,7 +267,7 @@ class Bot extends EventEmitter{
         function getCheck(name, state){
             let test = fs.existsSync(process.cwd()+elementOS+name)
             if(!test){
-                state ? this.ws.discordSide.lancementError = `No folder ${name} in the files of the bot` : this.ws.discordSide.lancementError = `No file ${name} in the files of the bot`
+                state ? this.launchError = `No folder ${name} in the files of the bot` : this.launchError = `No file ${name} in the files of the bot`
                 return 
             }
             if(!state){
@@ -270,12 +275,24 @@ class Bot extends EventEmitter{
                 try{
                     datas = JSON.parse(datas)
                 }catch(err){
-                    this.ws.discordSide.lancementError = `There is an error in your folder ${name}`
+                    this.launchError = `There is an error in your folder ${name}`
                     return
                 }
             }else return fs.readdirSync(process.cwd()+elementOS+name)
             return datas
         }
+    }
+
+    #getEvents(){
+        let path = require.resolve("../../events/CHANNEL_CREATE")
+        let splitPath = path.split(elementOS)
+        splitPath.pop()
+        let truePath = splitPath.map(e => {
+            if(e === "") return elementOS
+            return e
+        }).join(elementOS)
+        const fs = require("node:fs")
+        return fs.readdirSync(truePath).filter(e => e.endsWith(".js")).map(e => e.split(".js")[0])
     }
 }
 

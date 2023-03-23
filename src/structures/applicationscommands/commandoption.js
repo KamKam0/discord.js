@@ -32,7 +32,7 @@ class Option extends Base{
     }
        
     setType(type){
-        const types = require("../../types")
+        const types = require("../../types/option")
         if(types[type] || types.revert()[type]) this.type = types[type] || types.revert()[type]
         return this
     }

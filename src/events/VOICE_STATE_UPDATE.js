@@ -7,7 +7,7 @@ module.exports = async (bot, datas) => {
 
     if(String(datas) !== "null" && datas.user_id === bot.user.id){
         guild.voice.channel = datas
-        if(guild.voice.server) require("../Discord.js - Voice").manage(bot, guild.id)
+        // if(guild.voice.server) require("../Discord.js - Voice").manage(bot, guild.id)
     }
 
     const oldvoice = guild.voice_states.get(datas.user_id)

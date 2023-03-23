@@ -1,3 +1,5 @@
+const constances = require("../../../utils/constants")
+
 class commandBase {
     constructor(){
         this.name = null
@@ -11,7 +13,7 @@ class commandBase {
     }
 
     setNameLocalization(object){
-        let check = _setLocalisation(object, 32)
+        let check = this._setLocalisation(object, 32)
         if(check) this.name_localizations = object
         return this
     }
@@ -21,7 +23,7 @@ class commandBase {
     }
 
     setDescriptionLocalizations(object){
-        let check = _setLocalisation(object, 100)
+        let check = this._setLocalisation(object, 100)
         if(check) this.name_localizations = object
         return this
     }
@@ -29,7 +31,7 @@ class commandBase {
     _handleInitiationData(data){
         if(typeof data !== "object") return this
         let methods = Object.getOwnPropertyNames(Object.getPrototypeOf(this)).filter(method => method !== "constructor")
-        methods.push(...Object.getOwnPropertyNames(base.prototype).filter(method => !["constructor", "handleInitiationData"].includes(method)))
+        methods.push(...Object.getOwnPropertyNames(commandBase.prototype).filter(method => !["constructor", "handleInitiationData"].includes(method)))
 
         let modifiedData = Object.entries(data)
         .map(element => { 
@@ -53,7 +55,7 @@ class commandBase {
 
     _setLocalisation(object, length){
         if(typeof object !== "object" || Object.entries(object).length < 1) return false
-        const languages = require("../../../constants").languagesAvailable
+        const languages = constances.languagesAvailable
         let filteredObject = Object.entries(object).filter(correspondance => {
             let language = languages.find(langue => langue.name === correspondance[0])
             let description = (typeof correspondance[1] !== "string" || correspondance[1].length > length || correspondance[1].length < 1)

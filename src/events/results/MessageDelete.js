@@ -1,12 +1,11 @@
-class MessageDelete{
+const guildBase = require("../../structures/bases/baseguild")
+class MessageDelete extends guildBase{
     constructor(message, bot){
+        super(message, bot)
+
         this.id = message.id
         this.channel_id = message.channel_id || null
-        this.channel = bot.channels.get(this.channel_id) || require("../utils/functions").channel_backup(this.channel_id, bot)
-        this.guild_id = message.guild_id || null
-        this.guild = message.guild || bot.guilds.get(this.guild_id) || null
-        this.bot_token = bot.discordjs.token
-        this._bot = bot
+        this.channel = bot.channels.get(this.channel_id) || require("../../utils/functions").general.channelBackup(this.channel_id, bot)
     }
 }
 module.exports = MessageDelete

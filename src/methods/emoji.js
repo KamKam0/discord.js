@@ -1,38 +1,41 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/emoji")
+const utils = require("../utils/functions")
 
-module.exports.create = async (token, guildid, name, imagedata, roles, bot) => {//cp
+module.exports.create = async (informations, name, imagedata, roles) => {
     return new Promise(async (resolve, reject) => {
-        const createError = require("../utils/functions").createError
-        if(!token) return reject(createError("An error happened", {code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Emoji"}))
-        if(!guildid) return reject(createError("An error happened", {code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Emoji"}))
-        if(!require("../utils/functions").check_id(guildid)) return reject(createError("An error happened", {code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Emoji"}))
-        if(!name) return reject(createError("An error happened", {code: require("../DB/errors.json")["19"].code, message: require("../DB/errors.json")["19"].message, file: "Emoji"}))
-        if(!imagedata) return reject(createError("An error happened", {code: require("../DB/errors.json")["20"].code, message: require("../DB/errors.json")["20"].message, file: "Emoji"}))
-        if(!roles) return reject(createError("An error happened", {code: require("../DB/errors.json")["21"].code, message: require("../DB/errors.json")["21"].message, file: "Emoji"}))
-        const fetch = require("node-fetch")
-        let baseinfos = require("../utils/functions").getbaseinfosre(token)
-        const baseurl = baseinfos["baseurl"]
+        if(!token) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Emoji"}))
+        if(!guildid) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Emoji"}))
+        if(!utils.checks.checkId(guildid)) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Emoji"}))
+        if(!name) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["19"].code, message: require("../DB/errors.json")["19"].message, file: "Emoji"}))
+        if(!imagedata) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["20"].code, message: require("../DB/errors.json")["20"].message, file: "Emoji"}))
+        if(!roles) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["21"].code, message: require("../DB/errors.json")["21"].message, file: "Emoji"}))
+        
         const FormData = require("form-data")
-        body = new FormData()
+        let body = new FormData()
         body.append(`files[0]`, imagedata.buffer, `${imagedata.name}.${imagedata.extension}`);
-        let vody = {name: name, roles: roles}
-        body.append("payload_json", JSON.stringify(vody))
-        let headers = require("../utils/functions").getbaseinfosrecp(token).baseheaders
-        headers["Content-Type"] += body.getBoundary()
-        const url = `${baseurl}/guilds/${guildid}/emojis`
-        const basedatas = await fetch(url, {method: "POST", headers: headers, body: body}).catch(err => {})
-        const datas = await basedatas.json()
-        if(!datas || datas.code || datas.retry_after){
-            if(datas && datas.retry_after){
-                setTimeout(() => {
-                    this.create(token, guildid, name, imagedata, roles)
-                    .catch(err => reject(createError("An error happened", err)))
-                    .then(datas => resolve(datas))
-                }, datas.retry_after * 1000)
-            }else return reject(createError("Une erreur s'est produite lors de la requête", datas))
+        let bodyAdding = {name: name, roles: roles}
+        body.append("payload_json", JSON.stringify(bodyAdding))
+
+        let passedOptions = {
+            method: apiPath.create.method,
+            url: apiPath.create.url,
+            token: informations.botToken,
+            contentType: "file",
+            urlIDS: informations,
+            boundary: body.getBoundary()
         }
-        else return resolve(new (require("../Gestionnaires/Individual/Emoji")({...datas, guild_id: guildid, token: token}, bot)))
+        let args = [
+            {value: body, data_name: "options", order: 3}
+        ]
+        let callBackSuccess = function(data){
+            const single = require("../structures/singles/emoji")
+            let newData = new single(data, informations.bot)
+            return newData
+        }
+        handler(args, passedOptions, callBackSuccess)
+        .then(answer => resolve(answer))
+        .catch(err => reject(err))
     })
 }
 
@@ -44,7 +47,7 @@ module.exports.delete = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.modify = async (informations, options) => {
@@ -62,5 +65,5 @@ module.exports.modify = async (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }

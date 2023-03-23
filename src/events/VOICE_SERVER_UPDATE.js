@@ -4,5 +4,5 @@ module.exports = async (bot, datas) => {
     if(!datas.guild_id|| !guild) return
 
     guild.voice.server = datas
-    if(guild.voice.channel) require("../Discord.js - Voice").manage(bot, guild.id)
+    // if(guild.voice.channel) require("../Discord.js - Voice").manage(bot, guild.id)
 }

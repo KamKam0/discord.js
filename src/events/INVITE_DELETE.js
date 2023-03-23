@@ -1,6 +1,5 @@
-const Invite = require("../Event Result/Invite")
+const Invite = require('../structures/singles/invite')
 module.exports = async (bot, datas) => {
-    datas.token = bot.discordjs.token
     if(bot.database_state !== "unstable") bot.emit(name(), bot, (new Invite(datas, bot)))
 }
 

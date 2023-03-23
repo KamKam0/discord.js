@@ -23,7 +23,7 @@ module.exports.deleteinvite = async (informations) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.modify = (informations, options) => {
@@ -41,7 +41,7 @@ module.exports.modify = (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.delete = (informations) => {
@@ -52,7 +52,7 @@ module.exports.delete = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.changechannelposition = (informations, options) => {
@@ -65,7 +65,7 @@ module.exports.changechannelposition = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.addmember = (informations, options) => {
@@ -78,7 +78,7 @@ module.exports.addmember = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.modifymember = (informations, options) => {
@@ -96,7 +96,7 @@ module.exports.modifymember = (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.modifycurrentmember = (informations, nick) => {
@@ -109,7 +109,7 @@ module.exports.modifycurrentmember = (informations, nick) => {
     let args = [
         {value: {nick}, data_name: "options", order: 3}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.prune = (informations, options) => {
@@ -122,7 +122,7 @@ module.exports.prune = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.getinvites = (informations) => {
@@ -139,7 +139,7 @@ module.exports.getinvites = (informations) => {
         newData._addMultiple(data)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.getintegrations = (informations) => {
@@ -156,7 +156,7 @@ module.exports.getintegrations = (informations) => {
         newData._addMultiple(data)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.deleteintegration = (informations) => {
@@ -167,7 +167,7 @@ module.exports.deleteintegration = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.getwidgetsttings = (informations) => {
@@ -183,7 +183,7 @@ module.exports.getwidgetsttings = (informations) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.getwidget = (informations) => {
@@ -194,7 +194,7 @@ module.exports.getwidget = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.getwidgetpng = (informations) => {
@@ -205,7 +205,7 @@ module.exports.getwidgetpng = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.modifywidget = (informations, options) => {
@@ -218,7 +218,7 @@ module.exports.modifywidget = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.getvanity = (informations) => {
@@ -229,7 +229,7 @@ module.exports.getvanity = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.getwelcomescreen = (informations) => {
@@ -240,7 +240,7 @@ module.exports.getwelcomescreen = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.modifywelcomescreen = (informations, options) => {
@@ -253,7 +253,7 @@ module.exports.modifywelcomescreen = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.modifyuservoice = (informations, options) => {
@@ -266,7 +266,7 @@ module.exports.modifyuservoice = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.fetchauditlogs = async (informations, infosURL) => {
@@ -324,5 +324,5 @@ module.exports.fetchauditlogs = async (informations, infosURL) => {
         }
         return data
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }

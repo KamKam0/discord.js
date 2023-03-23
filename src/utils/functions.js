@@ -1,6 +1,7 @@
 const constants = require("./constants")
 const intentsConstance = require("../types/intents")
 const userBadges = require("../types/userbadges")
+const channelClass = require("../structures/singles/channels/channeldm")
 
 function getBietfielfFromPermissions(permissions){
     if(!Array.isArray(permissions)) return null
@@ -76,7 +77,6 @@ function channelBackup(id, bot){
         type: 1,
         token: bot.discordjs.token
     }
-    const channelClass = require("../structures/singles/channels/channeldm")
     return new channelClass(channel, bot)
 }
 
@@ -308,9 +308,7 @@ module.exports.gets = {
     getBadges,
     getBietfielfFromPermissions,
     getIntentsFromNames,
-    getPermissionsFromBitfields,
-    getComputedStyle,
-    getSelection
+    getPermissionsFromBitfields
 }
 
 module.exports.checks = {

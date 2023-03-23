@@ -1,6 +1,7 @@
-const pins = require("../Event Result/PinUpdate")
+const pins = require("./results/pinupdate")
 module.exports = async (bot, datas) => {
-    if(bot.database_state !== "unstable") bot.emit(name(), bot, (new pins({...datas}, bot)))
+    let result = new pins(datas, bot)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, result)
 }
 
 function name(){ return "CHANNEL_PINS_UPDATE" }

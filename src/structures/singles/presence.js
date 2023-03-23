@@ -14,7 +14,7 @@ class Presence extends BaseGuild{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
 }

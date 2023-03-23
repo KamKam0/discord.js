@@ -2,9 +2,25 @@ class baseMultiple{
     constructor(_bot, guild_id, name){
         this.container = []
         this._bot = _bot
-        this._token = _bot.discordjs?.token
+        this._token = _bot.token
         this.guild_id = guild_id || null
         this.name = name
+        this.modifyConstants = []
+    }
+
+    _modifyDatas(){
+        let tocheck = Object.entries(automod)
+        tocheck.forEach(e => { 
+            if(String(this[e[0]]) !== "undefined"){
+                let comparison = this.modifyConstants.find(element => element.name === e[0])
+                if(comparison){
+                    if(this[e[0]] !== this[comparison].function(e[1])) this[e[0]] = this[comparison].function(e[1])
+                }else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
+            }
+        })
+        this._modifyGetDatas()
+        if(this.actions.metadata.channel) this.actions.metadata.channel = bot.channels.get(this.actions.metadata.channel_id)
+        return this
     }
 
     push(da){
@@ -101,6 +117,12 @@ class baseMultiple{
             break;
             case("webhook"):
                 clas = require("../singles/webhook")
+            break;
+            case("cpermissions"):
+                clas = require("../singles/permissions/channel")
+            break;
+            case("apermissions"):
+                clas = require("../singles/permissions/application")
             break;
             default:
                 clas = null

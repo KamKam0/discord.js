@@ -1,16 +1,28 @@
-const Channels = require('../../Managers/Channels Guild')
-const Roles = require("../../Managers/Roles")
-const Members = require("../../Managers/Members")
-const Emojis = require("../../Managers/Emojis")
-const Stickers = require("../../Managers/Stickers")
-const StageInstances = require("../../Managers/StageInstances")
-const Voices = require("../../Managers/Voices")
-const Threads = require("../../Managers/Threads")
-const Events = require("../../Managers/Events")
-const Presences = require("../../Managers/Presences")
-const Messages = require("../../Managers/Messages")
-const voiceManager = require("../../Classes/guildVoiceManager")
 const Base = require("../bases/base")
+const methods = {
+    guildMethod:  require("../../methods/guild"),
+    guildTypes:  require("../../types/guild"),
+    generalMethod:  require("../../methods/general"),
+    templateMethod:  require("../../methods/template"),
+    meMethod:  require("../../methods/me"),
+    banMethod:  require("../../methods/ban"),
+    webhookMethod:  require("../../methods/webhooks")
+}
+const managers = {
+    Channels: require('../administrators/channels'),
+    Roles: require("../administrators/roles"),
+    Members: require("../administrators/members"),
+    Emojis: require("../administrators/emojis"),
+    Stickers: require("../administrators/stickers"),
+    StageInstances: require("../administrators/stageinstances"),
+    Voices: require("../administrators/voices"),
+    Threads: require("../administrators/threads"),
+    Events: require("../administrators/events"),
+    Presences: require("../administrators/presences"),
+    Messages: require("../administrators/messages"),
+    voiceManager: require("../../handlers/voice/guildvoicemanager")
+}
+const guildTypes = require("../../types/guild")
 
 class Guild extends Base{
     constructor(guild, bot){
@@ -52,17 +64,17 @@ class Guild extends Base{
         this.nsfw_level = this.#typensfw(guild.nsfw_level)
         this.max_members = guild.max_members || null
         this.nsfw = guild.nsfw ?? false
-        this.roles = (new Roles(bot, this.id))._addMultiple(guild.roles.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.emojis = (new Emojis(bot, this.id))._addMultiple(guild.emojis.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.stickers = (new Stickers(bot, this.id))._addMultiple(guild.stickers.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.presences = (new Presences(bot, this.id))._addMultiple(guild.presences.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.channels = (new Channels(bot, this.id))._addMultiple(guild.channels.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.stage_instances = (new StageInstances(bot, this.id))._addMultiple(guild.stage_instances.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.guild_scheduled_events = (new Events(bot, this.id))._addMultiple(guild.guild_scheduled_events.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.members = (new Members(bot, this.id))._addMultiple(guild.members.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.roles = (new managers.Roles(bot, this.id))._addMultiple(guild.roles.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.emojis = (new managers.Emojis(bot, this.id))._addMultiple(guild.emojis.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.stickers = (new managers.Stickers(bot, this.id))._addMultiple(guild.stickers.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.presences = (new managers.Presences(bot, this.id))._addMultiple(guild.presences.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.channels = (new managers.Channels(bot, this.id))._addMultiple(guild.channels.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.stage_instances = (new managers.StageInstances(bot, this.id))._addMultiple(guild.stage_instances.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.guild_scheduled_events = (new managers.Events(bot, this.id))._addMultiple(guild.guild_scheduled_events.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.members = (new managers.Members(bot, this.id))._addMultiple(guild.members.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.owner = this.members.get(this.owner_id)
-        this.threads = (new Threads(bot, this.id))._addMultiple(guild.threads.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.voice_states = (new Voices(bot, this.id))._addMultiple(guild.voice_states.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.threads = (new managers.Threads(bot, this.id))._addMultiple(guild.threads.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.voice_states = (new managers.Voices(bot, this.id))._addMultiple(guild.voice_states.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.voice_states.container.forEach(voi => {
             this.channels.get(voi.channel_id).members.container.push(voi.member)
             this.members.get(voi.user_id).voice.presence = voi
@@ -82,53 +94,27 @@ class Guild extends Base{
     }
 
     #typeverif(type){
-        return this._typechange({
-            0: "NONE",
-            1: "LOW",
-            2: "MEDIUM",
-            3: "HIGH",
-            4: "VERY_HIGH"
-        }, type)
+        return this._typechange(guildTypes.revert.verificationLevel(), type)
     }
 
     #typemesdef(type){
-        return this._typechange({
-            0: "ALL_MESSAGES",
-            1: "ONLY_MENTIONS"
-        }, type)
+        return this._typechange(guildTypes.revert.defaultMessageNotifications(), type)
     }
 
     #typeexpll(type){
-        return this._typechange({
-            0: "DISABLED",
-            1: "MEMBERS_WITHOUT_ROLES",
-            2: "ALL_MEMBERS"
-        }, type)
+        return this._typechange(guildTypes.revert.explicitContentFilter(), type)
     }
 
     #typemfa(type){
-        return this._typechange({
-            0: "NONE",
-            1: "ELEVATED"
-        }, type)
+        return this._typechange(guildTypes.revert.mfaLevel(), type)
     }
 
     #typeprem(type){
-        return this._typechange({
-            0: "NONE",
-            1: "TIER_1",
-            2: "TIER_2",
-            3: "TIER_3"
-        }, type)
+        return this._typechange(guildTypes.revert.premiumTier(), type)
     }
 
     #typensfw(type){
-        return this._typechange({
-            0: "DEFAULT",
-            1: "EXPLICIT",
-            2: "SAFE",
-            3: "AGE_RESTRICTED"
-        }, type)
+        return this._typechange(guildTypes.revert.nsfwLevel(), type)
     }
 
     _Modify_Datas(guild){
@@ -157,7 +143,7 @@ class Guild extends Base{
                 else if(this[e[0]] !== e[1] && !treatable.includes(e[0])) this[e[0]] = e[1] 
             } 
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
 
@@ -171,7 +157,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/ban").fetch(informations)
+        return methods.banMethod.fetch(informations)
     }
 
     /**
@@ -186,7 +172,7 @@ class Guild extends Base{
             id: this.id,
             user_id: ID
         }
-        return require("../../methods/ban").fetchspe(informations)
+        return methods.banMethod.fetchspe(informations)
     }
 
     /**
@@ -199,7 +185,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/AuditLogs")(informations, infos)
+        return methods.guildMethod.fetchauditlogs(informations, infos)
     }
 
     /**
@@ -212,7 +198,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/me").leave(informations)
+        return methods.meMethod.leave(informations)
     }
 
     /**
@@ -225,7 +211,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/template").create(informations)
+        return methods.templateMethod.create(informations)
     }
 
     /**
@@ -240,7 +226,7 @@ class Guild extends Base{
             id: this.id,
             template_code: templatecode
         }
-        return require("../../methods/template").get(informations)
+        return methods.templateMethod.get(informations)
     }
 
     /**
@@ -253,7 +239,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        returnrequire("../../methods/template").getall(informations)
+        return methods.templateMethod.getall(informations)
     }
 
     /**
@@ -269,7 +255,7 @@ class Guild extends Base{
             id: this.id,
             channel_id: channelid
         }
-        return require("../../methods/webhooks").create(informations, options)
+        return methods.webhookMethod.create(informations, options)
     }
 
     /**
@@ -283,7 +269,7 @@ class Guild extends Base{
             bot: this._bot,
             channel_id: channelid
         }
-        return require("../../methods/webhooks").get(informations)
+        return methods.webhookMethod.get(informations)
     }
 
     /**
@@ -296,7 +282,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").getinvites(informations)
+        return methods.guildMethod.getinvites(informations)
     }
 
     /**
@@ -310,7 +296,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").modify(informations, options)
+        return methods.guildMethod.modify(informations, options)
     }
 
     /**
@@ -323,7 +309,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").delete(informations)
+        return methods.guildMethod.delete(informations)
     }
 
     /**
@@ -339,7 +325,7 @@ class Guild extends Base{
             id: this.id,
             user_id: userid
         }
-        return require("../../methods/guild").addmember(informations, options)
+        return methods.guildMethod.addmember(informations, options)
     }
 
     /**
@@ -354,7 +340,7 @@ class Guild extends Base{
             id: this.id,
             user_id: this._bot.user.id
         }
-        return require("../../methods/guild").modifycurrentmember(informations, options)
+        return methods.guildMethod.modifycurrentmember(informations, options)
     }
 
     /**
@@ -368,7 +354,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").prune(informations, options)
+        return methods.guildMethod.prune(informations, options)
     }
 
     /**
@@ -381,7 +367,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").getintegrations(informations)
+        return methods.guildMethod.getintegrations(informations)
     }
 
     /**
@@ -394,7 +380,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").getwidgetsttings(informations)
+        return methods.guildMethod.getwidgetsttings(informations)
     }
 
     /**
@@ -407,7 +393,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").getwidgetpng(informations)
+        return methods.guildMethod.getwidgetpng(informations)
     }
 
     /**
@@ -420,7 +406,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").getwidget(informations)
+        return methods.guildMethod.getwidget(informations)
     }
 
     /**
@@ -434,7 +420,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").modifywidget(informations, options)
+        return methods.guildMethod.modifywidget(informations, options)
     }
 
     /**
@@ -447,7 +433,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").getvanity(informations)
+        return methods.guildMethod.getvanity(informations)
     }
 
     /**
@@ -460,7 +446,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").getwelcomescreen(informations)
+        return methods.guildMethod.getwelcomescreen(informations)
     }
 
     /**
@@ -474,7 +460,7 @@ class Guild extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../methods/guild").modifywelcomescreen(informations, options)
+        return methods.guildMethod.modifywelcomescreen(informations, options)
     }
 
     /**
@@ -490,23 +476,23 @@ class Guild extends Base{
             id: this.id,
             user_id: userid
         }
-        return require("../../methods/guild").modifyuservoice(informations, options)
+        return methods.guildMethod.modifyuservoice(informations, options)
     }
 
     get iconURL(){
-        return require("../../methods/general").iconURL(this.id, this.icon, "guild")
+        return methods.generalMethod.iconURL(this.id, this.icon, "guild")
     }
 
     get bannerURL(){
-        return require("../../methods/general").iconURL(this.id, this.icon, "gbanner")
+        return methods.generalMethod.iconURL(this.id, this.icon, "gbanner")
     }
 
     get splashURL(){
-        return require("../../methods/general").iconURL(this.id, this.icon, "splash")
+        return methods.generalMethod.iconURL(this.id, this.icon, "splash")
     }
 
     get createdAt(){
-        return require("../../methods/general").createdAt(this.id, "guild")
+        return methods.generalMethod.createdAt(this.id, "guild")
     }
 
     /**
@@ -515,7 +501,7 @@ class Guild extends Base{
      * @returns 
      */
     displayIconURL(extension){
-        return require("../../methods/general").iconURL(this.id, this.icon, "guild", extension)
+        return methods.generalMethod.iconURL(this.id, this.icon, "guild", extension)
     }
 
     /**
@@ -524,7 +510,7 @@ class Guild extends Base{
      * @returns 
      */
     displayBannerURL(extension){
-        return require("../../methods/general").iconURL(this.id, this.icon, "gbanner", extension)
+        return methods.generalMethod.iconURL(this.id, this.icon, "gbanner", extension)
     }
 
     /**
@@ -533,7 +519,7 @@ class Guild extends Base{
      * @returns 
      */
     displaySplashURL(extension){
-        return require("../../methods/general").iconURL(this.id, this.icon, "splash", extension)
+        return methods.generalMethod.iconURL(this.id, this.icon, "splash", extension)
     }
 
     get memberCount(){

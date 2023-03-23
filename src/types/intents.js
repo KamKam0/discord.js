@@ -23,5 +23,5 @@ let types = {
 module.exports = types
 
 module.exports.revert = () => {
-    return require("../utils/functions").general.revertTypess(types)
+    return require("../utils/functions").general.revertTypes(types)
 }

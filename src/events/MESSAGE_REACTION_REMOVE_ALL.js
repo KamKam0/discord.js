@@ -1,4 +1,4 @@
-const reactinremoveall = require("../Event Result/MessageReactionRemoveAll")
+const reactinremoveall = require("./results/messagereactionremoveall")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     if(!guild) return

@@ -3,7 +3,7 @@ module.exports = async (bot, datas) => {
     if(!datas.guild_id || !guild) return
     let oldmessage = guild.messages.get(datas.id)
     if(!oldmessage){
-        const mess_u_p = new (require("../Event Result/MessageDelete"))(datas, bot)
+        const mess_u_p = new (require('../structures/singles/message'))(datas, bot)
         if(bot.database_state !== "unstable") return bot.emit(name(), bot, mess_u_p)
     }
     else{

@@ -1,5 +1,7 @@
 const User = require("./user")
 const Base = require("../bases/base")
+const templateMethod = require("../../methods/template")
+
 class Template extends Base{
     constructor(template, bot){
         super(bot)
@@ -22,7 +24,7 @@ class Template extends Base{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
 
@@ -38,7 +40,7 @@ class Template extends Base{
             code: this.code,
             guild_id: this.guild_id
         }
-        return require("../../methods/template").createguild(informations, options)
+        return templateMethod.createguild(informations, options)
     }
 
     /**
@@ -52,7 +54,7 @@ class Template extends Base{
             code: this.code,
             guild_id: this.guild_id
         }
-        return require("../../methods/template").sync(informations)
+        return templateMethod.sync(informations)
     }
 
     /**
@@ -67,7 +69,7 @@ class Template extends Base{
             code: this.code,
             guild_id: this.guild_id
         }
-        return require("../../methods/template").modify(informations, options)
+        return templateMethod.modify(informations, options)
     }
 
     /**
@@ -81,7 +83,7 @@ class Template extends Base{
             code: this.code,
             guild_id: this.guild_id
         }
-        return require("../../methods/template").delete(informations)
+        return templateMethod.delete(informations)
     }
 }
 module.exports = Template

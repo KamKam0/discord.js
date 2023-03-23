@@ -9,7 +9,7 @@ module.exports.add = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.remove = async (informations) => {
@@ -20,7 +20,7 @@ module.exports.remove = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.delete = async (informations) => {
@@ -31,7 +31,7 @@ module.exports.delete = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.create = async (informations, options) => {
@@ -49,7 +49,7 @@ module.exports.create = async (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.changepositions = async (informations, options) => {
@@ -62,7 +62,7 @@ module.exports.changepositions = async (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.modify = async (informations, options) => {
@@ -80,5 +80,5 @@ module.exports.modify = async (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }

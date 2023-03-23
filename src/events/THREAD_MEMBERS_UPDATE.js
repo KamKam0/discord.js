@@ -1,5 +1,5 @@
-const ThreadUpdate = require("../Event Result/ThreadMembersUpdate")
-const Members = require("../Gestionnaires/Multiple/Members")
+const ThreadUpdate = require("./results/threadmembersupdate")
+const Members = require("../structures/managers/members")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     if(!guild) return

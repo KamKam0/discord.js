@@ -8,16 +8,14 @@ class Initiate{
     }
 
     async init(){
-        return new Promise((resolve, reject) => {
-            this.#checkCommandsErrors()
-            if(!this._bot.ws.discordSide.commandsChecked) return reject(null)
-            return this.#manageCommands()
-        })
+        this.#checkCommandsErrors()
+        if(!this._bot.ws.discordSide.commandsChecked) return reject(null)
+        return this.#manageCommands()
     }
 
     async #manageCommands(){
         return new Promise(async (resolve, reject) => {
-            let commands = await this._bot.commands.fetchAll()
+            let commands = await this._bot.commands.fetchAll().catch(err => console.log(err))
     
             this._bot.handler.GetAllCommandsfi().filter(cmd => !cmd.help.unclass).forEach(commande => {
                 let descriptions_cmd, names_cmd, descriptions_opt, names_opt, names_cho;
@@ -55,7 +53,7 @@ class Initiate{
                 
                 if(!cmd) this._bot.commands.create(data.toJSON())
                 else{
-                    if(!data.compare(cmd)) this._bot.commands.modify(data)
+                    if(!data.compare(cmd)) ""// this._bot.commands.modify(data)
                     else if(!this._bot.commands.get(data.id)) this._bot.commands._add(data)
                     else{
                         this._bot.commands._delete(cmd.id)
@@ -94,14 +92,14 @@ class Initiate{
         }
     }
 
-    async #checkCommands(){
+    #checkCommands(){
         let commands = this._bot.handler.GetAllCommands()
         let error = []
         let slashChecker = Utils.checks.checkApplicationCommand
         commands.forEach(cmd => {
             if(!cmd.help) error.push({cmd: cmd.name, err: "no help"})
             else{
-                let verif = slashChecker({...cmd.help, name: cmd.name}, true, ((cmd.help.langues && cmd.help.langues[0]) ? cmd.help.langues : this.langues))
+                let verif = slashChecker({...cmd.help, name: cmd.name}, true, ((cmd.help.langues && cmd.help.langues[0]) ? cmd.help.langues : this._bot.langues))
                 if(!verif.status) error.push({...verif, cmd: cmd.name})
             }
         })

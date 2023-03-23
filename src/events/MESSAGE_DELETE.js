@@ -1,4 +1,4 @@
-const Result = require("../Event Result/MessageDelete")
+const Result = require("./results/messagedelete")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     var oldmessage_v

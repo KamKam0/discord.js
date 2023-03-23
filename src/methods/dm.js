@@ -13,7 +13,7 @@ module.exports.adduser = (informations, nick, accesstoken) => {
         {value: accesstoken, data_name: "accesstoken", order:5},
         {value: {access_token: accesstoken, nick: nick}, data_name: "options"}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.removeuser = (informations) => {
@@ -28,5 +28,5 @@ module.exports.removeuser = (informations) => {
         {value: accesstoken, data_name: "accesstoken", order:5},
         {value: {access_token: accesstoken, nick: nick}, data_name: "options"}
     ]
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }

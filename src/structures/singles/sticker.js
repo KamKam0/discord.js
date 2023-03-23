@@ -1,4 +1,6 @@
 const BaseGuild = require("../bases/baseguild")
+const stickerMethod = require("../../methods/sticker")
+
 class Sticker extends BaseGuild{
     constructor(sticker, bot){
         super(sticker, bot)
@@ -19,7 +21,7 @@ class Sticker extends BaseGuild{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
     
@@ -30,7 +32,7 @@ class Sticker extends BaseGuild{
             id: this.id,
             guild_id: this.guild_id
         }
-        return require("../../methods/stickers").modify(informations, options)
+        return stickerMethod.modify(informations, options)
     }
     
     async delete(){
@@ -40,7 +42,7 @@ class Sticker extends BaseGuild{
             id: this.id,
             guild_id: this.guild_id
         }
-        return require("../../methods/stickers").delete(informations)
+        return stickerMethod.delete(informations)
     }
 }
 module.exports = Sticker

@@ -1,5 +1,17 @@
 const Base = require("../bases/baseGuild")
 const Roles = require("../managers/roles")
+const methods = {
+    user: require("../../methods/user"),
+    message: require("../../methods/message"),
+    kick: require("../../methods/kick"),
+    ban: require("../../methods/ban"),
+    mute: require("../../methods/mute"),
+    permissions: require("../../methods/permissions"),
+    role: require("../../methods/role"),
+    guild: require("../../methods/guild"),
+    general: require("../../methods/general")
+}
+
 class Member extends Base{
     constructor(member, bot){
         super(member, bot)
@@ -37,7 +49,7 @@ class Member extends Base{
             }
             else if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
 
@@ -51,9 +63,9 @@ class Member extends Base{
             botToken: this._token,
             bot: this._bot,
             user_id: this.user_id,
-            channel_id: this.channel_id
+            guild_id: this.guild_id
         }
-        return require("../../methods/kick")(informations, options)
+        return methods.kick(informations, options)
     }
 
     /**
@@ -66,9 +78,9 @@ class Member extends Base{
             botToken: this._token,
             bot: this._bot,
             user_id: this.user_id,
-            channel_id: this.channel_id
+            guild_id: this.guild_id
         }
-        return require("../../methods/ban").ban(informations, options)
+        return methods.ban.ban(informations, options)
     }
 
     /**
@@ -85,13 +97,13 @@ class Member extends Base{
         }
         return new Promise(async (resolve, reject) => {
             if(this.user.dm){
-                return require("../../methods/message").send(informations, options)
+                return methods.message.send(informations, options)
             }else{
-                require("../../methods/user").createDM({bot: this._bot, botToken: this._token}, this.id)
+               methods.user.createDM({bot: this._bot, botToken: this._token}, this.id)
                 .then(datas => { 
                     if(datas){
                         this.user.SetDM(datas.id)
-                        return require("../../methods/message").send(informations, options)
+                        return methods.message.send(informations, options)
                     }
                 })
                 .catch(err => reject(err))
@@ -109,9 +121,9 @@ class Member extends Base{
             botToken: this._token,
             bot: this._bot,
             user_id: this.user_id,
-            channel_id: this.channel_id
+            guild_id: this.guild_id
         }
-        return require("../../methods/mute").mute(informations, time)
+        return methods.mute.mute(informations, time)
     }
     
     /**
@@ -123,9 +135,9 @@ class Member extends Base{
             botToken: this._token,
             bot: this._bot,
             user_id: this.user_id,
-            channel_id: this.channel_id
+            guild_id: this.guild_id
         }
-        return require("../../methods/mute").unmute(informations)
+        return methods.mute.unmute(informations)
     }
 
     /**
@@ -134,7 +146,7 @@ class Member extends Base{
      * @returns 
      */
     hasPermission(permission){
-        return require("../../methods/permissions").wawper(this.guild, this.user_id, permission, this._bot)
+        return methods.permissions(this.guild, this.user_id, permission, this._bot)
     }
 
     /**
@@ -157,10 +169,10 @@ class Member extends Base{
             botToken: this._token,
             bot: this._bot,
             user_id: this.user_id,
-            channel_id: this.channel_id,
+            guild_id: this.guild_id,
             role_id: roleid
         }
-        return require("../../methods/roles").add(informations)
+        return methods.role.add(informations)
     }
 
     /**
@@ -173,10 +185,10 @@ class Member extends Base{
             botToken: this._token,
             bot: this._bot,
             user_id: this.user_id,
-            channel_id: this.channel_id,
+            guild_id: this.guild_id,
             role_id: roleid
         }
-        return require("../../methods/roles").remove(informations)
+        return methods.role.remove(informations)
     }
 
     /**
@@ -189,14 +201,14 @@ class Member extends Base{
             botToken: this._token,
             bot: this._bot,
             user_id: this.user_id,
-            channel_id: this.channel_id
+            guild_id: this.guild_id
         }
-        return require("../../methods/guild").modifymember(informations, options)
+        return methods.guild.modifymember(informations, options)
     }
 
 
     get avatarURL(){
-        return require("../../methods/general").iconURL({guild_id: this.guild_id, user_id: this.user_id}, this.avatar, "member")
+        return methods.general.iconURL({guild_id: this.guild_id, user_id: this.user_id}, this.avatar, "member")
     }
 
     /**
@@ -205,7 +217,7 @@ class Member extends Base{
      * @returns 
      */
     displayAvatarURL(extension){
-        return require("../../methods/general").iconURL({guild_id: this.guild_id, user_id: this.user_id}, this.avatar, "member", extension)
+        return methods.general.iconURL({guild_id: this.guild_id, user_id: this.user_id}, this.avatar, "member", extension)
     }
 }
 module.exports = Member

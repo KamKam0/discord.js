@@ -1,8 +1,7 @@
+const LogEntry = require("./results/logentry")
 module.exports = async (bot, datas) => {
-    datas.action_type = Object.entries(require("../constants").autoditTransforms).find(e => e[1] === datas.action_type)
-    datas.guild = bot.guilds.get(datas.guild_id)
-    datas.user = bot.users.get(datas.user_id)
-    if(bot.database_state !== "unstable") bot.emit(name(), bot, datas)
+    let result = new LogEntry(datas, bot)
+    if(bot.database_state !== "unstable") bot.emit(name(), bot, result)
 }
 
 function name(){ return "GUILD_AUDIT_LOG_ENTRY_CREATE" }

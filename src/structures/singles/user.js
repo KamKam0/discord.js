@@ -1,4 +1,9 @@
 const Base = require("../bases/base")
+const userMethod = require("../../methods/user")
+const generalMethod = require("../../methods/general")
+const messageMethod = require("../../methods/message")
+const utils = require("../../utils/functions")
+
 class User extends Base{
     constructor(user, bot){
         super(bot)
@@ -25,7 +30,7 @@ class User extends Base{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
 
@@ -42,13 +47,15 @@ class User extends Base{
         }
         return new Promise(async (resolve, reject) => {
             if(this.dm){
-                return require("../../methods/message").send(informations, options)
+                return messageMethod.send(informations, options)
             }else{
-                require("../../methods/user").createDM({bot: this._bot, botToken: this._token}, this.id)
+                userMethod.createDM({bot: this._bot, botToken: this._token}, this.id)
                 .then(datas => { 
                     if(datas){
                         this.dm = datas.id
-                        return require("../../methods/message").send(informations, options)
+                        messageMethod.send(informations, options)
+                        .then(result => resolve(result))
+                        .catch(err => reject(err))
                     }
                 })
                 .catch(err => reject(err))
@@ -72,20 +79,20 @@ class User extends Base{
      */
     displayPublicFlags(){
         if(this.public_flags === 0) return []
-        let badges = require("../../utils/functions").get_badges(this.public_flags)
+        let badges = utils.gets.getBadges(this.public_flags)
         return badges
     }
 
     get createdAt(){
-        return require("../../methods/general").createdAt(this.id, "user")
+        return generalMethod.createdAt(this.id, "user")
     }
 
     get avatarURL(){
-        return require("../../methods/general").iconURL(this.id, this.avatar, "user")
+        return generalMethod.iconURL(this.id, this.avatar, "user")
     }
 
     get bannerURL(){
-        return require("../../methods/general").iconURL(this.id, this.banner, "ubanner")
+        return generalMethod.iconURL(this.id, this.banner, "ubanner")
     }
 
     /**
@@ -94,7 +101,7 @@ class User extends Base{
      * @returns 
      */
     displayAvatarURL(extension){
-        return require("../../methods/general").iconURL(this.id, this.avatar, "user", extension)
+        return generalMethod.iconURL(this.id, this.avatar, "user", extension)
     }
 
     /**
@@ -103,7 +110,7 @@ class User extends Base{
      * @returns 
      */
     displayBannerURL(extension){
-        return require("../../methods/general").iconURL(this.id, this.banner, "ubanner", extension)
+        return generalMethod.iconURL(this.id, this.banner, "ubanner", extension)
     }
 
     get tag(){

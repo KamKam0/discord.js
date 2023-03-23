@@ -1,4 +1,6 @@
 const Base = require("../baseguild")
+const channelTypes = require("../../../types/channels")
+
 class base extends Base{
     constructor(channel, bot){
         super(channel, bot)
@@ -16,12 +18,12 @@ class base extends Base{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
 
     #type(type){
-        return this._typechange(require("../../../../constants").convert_channels, type)
+        return this._typechange(channelTypes.revert(), type)
     }
 }
 

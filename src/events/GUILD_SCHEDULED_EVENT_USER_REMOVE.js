@@ -1,9 +1,9 @@
-const eventupdate = require("../Event Result/EventUserUpdate")
+const eventupdate = require("./results/eventuserupdate")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     if(!guild) return
-    let event = guild.guild_scheduled_events.get(datas.guild_scheduled_event_id)
-    event = new eventupdate({...event, user: bot.users.get(datas.user_id)}, bot)
+    datas.type = "remove"
+    let event = new eventupdate(datas, bot)
     if(bot.database_state !== "unstable") bot.emit(name(), bot, event)
 }
 

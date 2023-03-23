@@ -16,7 +16,7 @@ module.exports.create_withoutm = async (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.create_withm = async (informations, options) => {
@@ -34,7 +34,7 @@ module.exports.create_withm = async (informations, options) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.jointhread = async (informations) => {
@@ -45,7 +45,7 @@ module.exports.jointhread = async (informations) => {
         urlIDS: informations
     }
     let args = []
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.addthreadmember = async (informations) => {
@@ -56,7 +56,7 @@ module.exports.addthreadmember = async (informations) => {
         urlIDS: informations
     }
     let args = []
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.leavethread = async (informations) => {
@@ -67,7 +67,7 @@ module.exports.leavethread = async (informations) => {
         urlIDS: informations
     }
     let args = []
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.removethreadmember = async (informations) => {
@@ -78,7 +78,7 @@ module.exports.removethreadmember = async (informations) => {
         urlIDS: informations
     }
     let args = []
-    return handler(args, passedOptions, null, null)
+    return handler(args, passedOptions, null)
 }
 
 module.exports.create_tforum = (token, channelid, options, bot) => {
@@ -96,7 +96,7 @@ module.exports.create_tforum = (token, channelid, options, bot) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.getthreadmember = async (informations, withm, limit, after) => {
@@ -132,7 +132,7 @@ module.exports.getthreadmember = async (informations, withm, limit, after) => {
         data.user = informations.bot.users.get(data.user_id)
         return data
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.getthreadmembers = async (informations, withm, limit, after) => {
@@ -171,5 +171,5 @@ module.exports.getthreadmembers = async (informations, withm, limit, after) => {
         })
         return data
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }

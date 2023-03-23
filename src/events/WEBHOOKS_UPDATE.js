@@ -1,4 +1,4 @@
-const webhook = require("../Event Result/WebhookUpdate")
+const webhook = require("./results/webhookupdate")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     datas.token = bot.discordjs.token

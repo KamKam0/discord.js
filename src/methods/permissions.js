@@ -5,7 +5,7 @@
  * @param {string} permission 
  * @returns 
  */
-module.exports.wawper = (guild, memberid, permission) => {
+module.exports = (guild, memberid, permission) => {
     if(!memberid) return ({code: require("../DB/errors.json")["4"].code, message: require("../DB/errors.json")["4"].message, file: "Permissions"})
     if(!guild) return ({code: require("../DB/errors.json")["37"].code, message: require("../DB/errors.json")["37"].message, file: "Permissions"})
     if(!require("../utils/functions").check_id(memberid)) return ({code: require("../DB/errors.json")["56"].code, message: require("../DB/errors.json")["56"].message, file: "Permissions"})

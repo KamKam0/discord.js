@@ -1,22 +1,12 @@
+let channelTypes = require("../types/channels")
+
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     if(!datas.guild_id || !guild) return
     let oldchannel = guild.channels.get(datas.id)
     if(!oldchannel) return
-    const convert = {
-        "GUILD_TEXT": 0,
-        "DM": 1,
-        "GUILD_VOICE": 2,
-        "GROUP_DM": 3,
-        "GUILD_CATEGORY": 4,
-        "GUILD_NEWS": 5,
-        "GUILD_NEWS_THREAD": 10,
-        "GUILD_PUBLIC_THREAD": 11,
-        "GUILD_PRIVATE_THREAD": 12,
-        "GUILD_STAGE_VOICE": 13,
-        "GUILD_DIRECTORY": 14
-    }
-    const channel_e = require(`../Gestionnaires/Individual/Channels_/Channel_${convert[oldchannel.type]}`)
+    let textType = channelTypes.reverse()[datas.type]
+    const channel_e = require(`../structures/singles/channel${textType.toLowerCase()}`)
     oldchannel = new channel_e({...oldchannel}, bot)
     guild.channels.get(datas.id)._Modify_Datas(datas)
     bot.channels.get(datas.id)._Modify_Datas(datas)

@@ -1,11 +1,8 @@
 const Initiate = require("./initiate")
-const createError = require("./utils/functions").createError
+const createError = require("../utils/functions").createError
 const ws = require("ws")
 const { getGateway } = require("../methods/me")
 const { createDM } = require("../methods/user")
-const os = require('node:os')
-let elementOS = '/'
-if(os.platform() === "win32") elementOS = '\\'
 
 class WebsocketHandler{
     constructor(bot){
@@ -25,7 +22,6 @@ class WebsocketHandler{
             intervalState: null,
             lastPing: -1,
             reconnectionUrl: null,
-            availableEvents: this.#getEvents(),
             token: null,
             lancementError: null,
             connectionInfos: {
@@ -41,7 +37,7 @@ class WebsocketHandler{
         return new Promise(async (resolve, reject) => {
             let trueurl;
             if(this._bot.state === "processing" && !this.discordSide.connectionInfos.connectionUrl){
-                const basedatas = await getGateway().catch(err => {})
+                const basedatas = await getGateway(this._bot.token).catch(err => {})
                 if(!basedatas){
                     setTimeout(() => {
                         this.#connectionURL()
@@ -49,11 +45,10 @@ class WebsocketHandler{
                         .then(datas => resolve(datas))
                     }, 5 * 1000 * 60)
                 }
-                const datas = await basedatas.json()
                 this.discordSide.connectionInfos = {
-                    connectionUrl: `${datas.url}/?v=10&encoding=json`,
-                    connectionNumber: datas.session_start_limit.remaining,
-                    shardAdvised: datas.shards
+                    connectionUrl: `${basedatas.url}/?v=10&encoding=json`,
+                    connectionNumber: basedatas.session_start_limit.remaining,
+                    shardAdvised: basedatas.shards
                 }
                 trueurl = this.discordSide.connectionInfos.connectionUrl
             }else trueurl = this.discordSide.reconnectionUrl
@@ -67,10 +62,10 @@ class WebsocketHandler{
             if(this._bot.state === "processing" && !this._bot.creator){
                 this.discordSide.lancement = Date.now()
                 let sentInformation = {
-                    token: this.discordSide.token,
+                    botToken: this._bot.token,
                     bot: this._bot
                 }
-                var us = await createDM(sentInformation, this._bot.config.general["ID createur"]).catch(err => {})
+                var us = await createDM(sentInformation, this._bot.config.general["ID createur"]).catch(err => {console.log(err)})
                 if(!us){
                     setTimeout(() => {
                         this.#handleCreator()
@@ -80,18 +75,21 @@ class WebsocketHandler{
                 }
                 else this._bot._setCreator({id: us.recipients[0].id, channel_id: us.id})
             }
+
+            return resolve(null)
         })
     }
 
     async login(presence){
         return new Promise(async (resolve, reject) => {
             if(this.discordSide.lancement && bot.state === "processing") return reject(createError("Cannot start the bot twice", {state: false, message: "You already started the bot once at " + new Date(this.discordSide.lancement).toDateString()}))
-            if(this.discordSide.lancementError) return reject(createError("Error with configuration", {state: false, message: this.discordSide.lancementError}))
+            if(this._bot.launchError) return reject(createError("Error with configuration", {state: false, message: this._bot.launchError}))
             
             this.#handleCreator()
             .then(() => {
                 this.initiate.init()
                 .then(() => {
+                    console.log("reached")
                     if(this.discordSide.connectionInfos.connectionNumber === 0) return reject(createError("Could not log in", {state: false, message: "You reached the maximum of daily connection"}))
                     this.#connectionURL()
                     .then(connectionURL => {
@@ -100,8 +98,9 @@ class WebsocketHandler{
 
                         this.discordSide.ws = WebSocket
                         let bodyLogin;
+
                         if(this._bot.state !== "reconnect"){
-                            bodyLogin = body = bot._getConnection((this._bot.presence || presence))
+                            bodyLogin = this._bot._getConnection((this._bot.presence || presence))
                             this._bot.presence = bodyLogin.d.presence
                         }
 
@@ -123,7 +122,7 @@ class WebsocketHandler{
         //setting gateaway
         WebSocket.on("open", async () => {
             if(this._bot.state === "reconnect"){
-                let body = {op: 6, d: {token: this.discordSide.token, session_id: this.discordSide.session_id, seq: (this.discordSide.lastEvent)}}
+                let body = {op: 6, d: {token: this._bot.token, session_id: this.discordSide.session_id, seq: (this.discordSide.lastEvent)}}
                 this.discordSide.ws.send(JSON.stringify(body))
             }else this.discordSide.ws.send(JSON.stringify(bodyLogin))
             setTimeout(() => {
@@ -138,6 +137,7 @@ class WebsocketHandler{
         //starting gateaway
         WebSocket.on("message", async message => {
             message = JSON.parse(Buffer.from(message).toString("utf-8"))
+            console.log(message)
             if(message.s) this.discordSide.lastEvent = message.s
             switch(message.op){
                 case(10):
@@ -155,7 +155,7 @@ class WebsocketHandler{
                 break;
                 case(0):
                     if(message.d.guild_id && !this._bot.guilds.get(message.d.guild_id)) return
-                    if(this.discordSide.availableEvents.includes(message.t)) return require(`../events/${message.t}`)(this._bot, message.d)
+                    if(this._bot.availableEvents.includes(message.t)) return require(`../events/${message.t}`)(this._bot, message.d)
                     console.info(`The Discord event ${message.t} is unavailable !`)
                 break;
                 case(1):
@@ -177,13 +177,13 @@ class WebsocketHandler{
             if((Date.now() - this.discordSide.lastACK) > (this.discordSide.HBinterval * 1.1)) this.#stopWS("SESSION_CONNECTION_LOST")
             else{
                 this.discordSide.lastPing = Date.now()
-                this.discordSide.ws.send(JSON.stringify({"op": 1, "d": this.discordSide.lastEvent}))
+                this.discordSide.ws.send(JSON.stringify({"op": 1, "d": this.discordSide.lastEvent || null}))
             }
         }, this.discordSide.HBinterval)
     }
 
     #stopWS(event){
-        require(`./Events/${event}`)(bot)
+        require(`../events/${event}`)(this._bot)
         this.discordSide.ws.close()
         this.discordSide.intervalState = null
         clearInterval(this.discordSide.interval)
@@ -206,8 +206,8 @@ class WebsocketHandler{
             intervalState: null,
             lastPing: -1,
             reconnectionUrl: null,
-            availableEvents: this.discordSide.availableEvents,
-            token: this.discordSide.token,
+            availableEvents: this._bot.availableEvents,
+            token: this._bot.token,
             lancementError: null,
             connectionInfos: {
                 connectionUrl: this.discordSide.connectionInfos.connectionUrl,
@@ -215,18 +215,6 @@ class WebsocketHandler{
                 shardAdvised: this.discordSide.connectionInfos.shardAdvised
             }
         }
-    }
-
-    #getEvents(){
-        let path = require.resolve("../Events/CHANNEL_CREATE")
-        let splitPath = path.split(elementOS)
-        splitPath.pop()
-        let truePath = splitPath.map(e => {
-            if(e === "") return elementOS
-            return e
-        }).join(elementOS)
-        const fs = require("node:fs")
-        return fs.readdirSync(truePath).filter(e => e.endsWith(".js")).map(e => e.split(".js")[0])
     }
 }
 

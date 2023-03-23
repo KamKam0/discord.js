@@ -10,7 +10,6 @@ module.exports.createDM = async (informations, user) => {
     }
     let args = [
         {value: user, value_data: "id", data_name: "user", order:2},
-        {value: options, data_name: "options", order: 3},
         {value: {recipient_id: user}, data_name: "options"}
     ]
     let callBackSuccess = function (data){
@@ -18,7 +17,7 @@ module.exports.createDM = async (informations, user) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.createGroup = async (informations, accesses, nicks) => {
@@ -38,7 +37,7 @@ module.exports.createGroup = async (informations, accesses, nicks) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.createGroup = async (informations, accesses, nicks) => {
@@ -58,7 +57,7 @@ module.exports.createGroup = async (informations, accesses, nicks) => {
         let newData = new single(data, informations.bot)
         return newData
     }
-    return handler(args, passedOptions, callBackSuccess, null)
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.send = async (bot, userid, options) => {

@@ -1,11 +1,10 @@
-class WebhookUpdate{
+const guildBase = require("../../structures/bases/baseguild")
+class WebhookUpdate extends guildBase{
     constructor(webhook, bot){
+        super(webhook, bot)
+
         this.channel_id = webhook.channel_id || null
-        this.channel = this.channel_id ? bot.channels.get(this.channel_id) : null
-        this.guild_id = webhook.guild_id || null
-        this.guild = webhook.guild || bot.guilds.get(this.guild_id) || null
-        this.bot_token = bot.discordjs.token
-        this._bot = bot
+        this.channel = this.channel_id ? this._bot.channels.get(this.channel_id) : null
     }
 }
 module.exports = WebhookUpdate

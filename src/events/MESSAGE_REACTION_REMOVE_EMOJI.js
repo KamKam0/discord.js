@@ -1,4 +1,4 @@
-const reactinremoveemoji = require("../Event Result/MessageReactionRemoveEmoji")
+const reactinremoveemoji = require("./results/messagereactionremoveemoji")
 module.exports = async (bot, datas) => { 
     const guild = bot.guilds.get(datas.guild_id)
     if(!guild) return

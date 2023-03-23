@@ -1,4 +1,7 @@
 const Base = require("../bases/baseguild")
+const webhookTypes = require("../../types/webhook")
+const webhookMethod = require("../../methods/webhooks")
+
 class Webhook extends Base{
     constructor(webhook, bot){
         super(webhook, bot)
@@ -16,11 +19,7 @@ class Webhook extends Base{
     }
 
     #type2(type){
-        return this._typechange({
-            1: "Incoming",
-            2: "Channel Follower",
-            3: "Application"
-        }, type)
+        return this._typechange(webhookTypes.reverse(), type)
     }
 
     _Modify_Datas(webhook){
@@ -33,7 +32,7 @@ class Webhook extends Base{
                 else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
             }
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
 
@@ -49,7 +48,7 @@ class Webhook extends Base{
             token: this.token,
             id: this.id
         }
-        return require("../../methods/webhooks").create(informations, options)
+        return webhookMethod.create(informations, options)
     }
 
     /**
@@ -63,7 +62,7 @@ class Webhook extends Base{
             botToken: this._token,
             id: this.id
         }
-        return require("../methods/webhooks").modify(informations, options)
+        return webhookMethod.modify(informations, options)
     }
 
     /**
@@ -76,7 +75,7 @@ class Webhook extends Base{
             botToken: this._token,
             id: this.id
         }
-        return require("../../methods/webhooks").delete(informations)
+        return webhookMethod.delete(informations)
     }
 }
 module.exports = Webhook

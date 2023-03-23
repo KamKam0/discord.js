@@ -1,4 +1,8 @@
 const Base = require("../../bases/channels/base")
+const channelMethod = require("../../../methods/channel")
+const threadMethod = require("../../../methods/thread")
+const forumTypes = require("../../../types/forum")
+
 class Channel extends Base{
     constructor(channel, bot){
         super(channel, bot)
@@ -20,10 +24,7 @@ class Channel extends Base{
     }
 
     #type2(type){
-        return this._typechange({
-            0: "lastest_activity",
-            1: "creation_date"
-        }, type)
+        return this._typechange(forumTypes.revert(), type)
     }
 
     /**
@@ -37,7 +38,7 @@ class Channel extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../../../methods/channel").modify(informations, options)
+        return channelMethod.modify(informations, options)
     }
     
     /**
@@ -51,7 +52,7 @@ class Channel extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../../methods/threads").create_tforum(informations, options)
+        return threadMethod.create_tforum(informations, options)
     }
 }
 module.exports = Channel

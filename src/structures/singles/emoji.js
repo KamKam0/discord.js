@@ -1,4 +1,6 @@
 const Base = require("../bases/baseguild")
+const emojiMethod = require("../../methods/emoji")
+
 class Emoji extends Base{
     constructor(emoji, bot){
         super(emoji, bot)
@@ -16,7 +18,7 @@ class Emoji extends Base{
         tocheck.forEach(e => { 
             if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
         })
-        this._Modify_Get_Datas()
+        this._modifyGetDatas()
         return this
     }
 
@@ -32,7 +34,7 @@ class Emoji extends Base{
             id: this.id,
             guild_id: this.guild_id
         }
-        return require("../../methods/emoji").modify(informations, options)
+        return emojiMethod.modify(informations, options)
     }
 
     /**
@@ -46,7 +48,7 @@ class Emoji extends Base{
             id: this.id,
             guild_id: this.guild_id
         }
-        return require("../../methods/emoji").delete(informations)
+        return emojiMethod.delete(informations)
     }
 }
 module.exports = Emoji
