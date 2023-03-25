@@ -19,7 +19,7 @@ class Webhook extends Base{
     }
 
     #type2(type){
-        return this._typechange(webhookTypes.reverse(), type)
+        return this._typechange(webhookTypes.revert(), type)
     }
 
     _Modify_Datas(webhook){

@@ -1,6 +1,6 @@
 const Base = require("../../bases/channels/base")
 const channelMethod = require("../../../methods/channel")
-const threadMethod = require("../../../methods/thread")
+const threadMethod = require("../../../methods/threads")
 const forumTypes = require("../../../types/forum")
 
 class Channel extends Base{

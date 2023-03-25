@@ -1,5 +1,5 @@
 const apiBase = require("./base")
-const baseMemberAPI = apiBase+"/channel/:channel_id/messages"
+const baseMemberAPI = apiBase+"/channels/:channel_id/messages"
 
 let routes = {
     get: {

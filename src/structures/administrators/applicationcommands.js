@@ -1,6 +1,7 @@
 const BaseCommands = require("../managers/applicationcommands")
 const Command = require("../applicationscommands/command")
 const interactionMethod = require("../../methods/interaction")
+const collector = require("../../handlers/collector")
 
 class Commands extends BaseCommands{
     constructor(bot){
@@ -64,6 +65,14 @@ class Commands extends BaseCommands{
                 return resolve({})
             })
         })
+    }
+
+    async awaitInteractions(options){
+        return collector(this, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
+    }
+
+    collectInteractions(options){
+        return collector.collect(this, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
     }
 }
 

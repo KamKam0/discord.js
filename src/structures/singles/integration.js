@@ -24,7 +24,7 @@ class Integration extends Base{
     }
 
     #type(type){
-        return this._typechange(integrationTypes.reverse(), type)
+        return this._typechange(integrationTypes.revert(), type)
     }
 
     _Modify_Datas(inte){

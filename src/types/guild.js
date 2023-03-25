@@ -55,6 +55,6 @@ module.exports.revert = {
     nsfwLevel: () => revert(nsfwLevel)
 }
 
-function revert(){
+function revert(types){
     return require("../utils/functions").general.revertTypes(types)
 }

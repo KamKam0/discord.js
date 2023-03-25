@@ -15,7 +15,7 @@ class Initiate{
 
     async #manageCommands(){
         return new Promise(async (resolve, reject) => {
-            let commands = await this._bot.commands.fetchAll().catch(err => console.log(err))
+            let commands = await this._bot.commands.fetchAll().catch(err => {})
     
             this._bot.handler.GetAllCommandsfi().filter(cmd => !cmd.help.unclass).forEach(commande => {
                 let descriptions_cmd, names_cmd, descriptions_opt, names_opt, names_cho;
@@ -88,7 +88,7 @@ class Initiate{
                 erembed.addField(che.errors[0].cmd, errtexte + "```", true)
             })
                 
-            return this._bot.sendMessage(this._bot.creator.channel_id, {embeds: [erembed]}) .catch(err => {})
+            return this._bot.messages.send(this._bot.creator.channel_id, {embeds: [erembed]}) .catch(err => {})
         }
     }
 

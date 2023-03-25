@@ -1,5 +1,6 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/user")
+const errors = require("../utils/errors.json")
 
 module.exports.createDM = async (informations, user) => {
     let passedOptions = {
@@ -63,9 +64,9 @@ module.exports.createGroup = async (informations, accesses, nicks) => {
 module.exports.send = async (bot, userid, options) => {
     return new Promise(async (resolve, reject) => {
         const createError = require("../utils/functions").createError
-        if(!options) return reject(createError("An error happened", {code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "User"}))
-        if(!user) return reject(createError("An error happened", {code: require("../DB/errors.json")["7"].code, message: require("../DB/errors.json")["7"].message, file: "User"}))
-        if(!bot) return reject(createError("An error happened", {code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "User"}))
+        if(!options) return reject(createError("An error happened", {code: errors["8"].code, message: errors["8"].message, file: "User"}))
+        if(!user) return reject(createError("An error happened", {code: errors["7"].code, message: errors["7"].message, file: "User"}))
+        if(!bot) return reject(createError("An error happened", {code: errors["34"].code, message: errors["34"].message, file: "User"}))
         
         this.createDM(bot, userid)
         .catch(err => reject(err))

@@ -1,4 +1,6 @@
 const origin = require("../bases/components/base")
+const constants = require("../../utils/constants")
+const utils = require("../../utils/functions")
 
 class Embed extends origin{
     constructor(data){
@@ -25,7 +27,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setDescription(description){
-        if(!description || description.length > 4096) return this
+        if(!description || typeof title !== "string" || description.length > 4096) return this
         else this.description = description
         return this
     }
@@ -35,7 +37,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setTitle(title){
-        if(!title || title.length > 256) return this
+        if(!title || typeof title !== "string" || title.length > 256) return this
         else this.title = title
         return this
     }
@@ -45,6 +47,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setURL(url){
+        if(!url) return this
         if(typeof url !== "string" || url.length > 1000 || !url.split("http")[1]) return this
         else this.url = url
         return this
@@ -55,11 +58,11 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setColor(color){
-        if(!color) this.color = null
+        if(!color) return this
         let list = ["DEFAULT", "AQUA","BLUE","DARK","DEFAULT","FUCHSIA","GOLD","GREEN","GREY","NAVY","ORANGE","PURPLE","RANDOM","RED","WHITE","YELLOW"]
-        if(!list.includes(color) && require("../utils/functions").check_color(color) === false) return this
+        if(!list.includes(color) && utils.checks.checkColor(color) === false) return this
         if(list.includes(color)){
-            const Colors = require("../constants").Colors
+            const Colors = constants.colors
             this.color = Colors[color]
         }
         else this.color = parseInt(color.replace('#', ''), 16)
@@ -76,6 +79,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setThumbnail(thumbnail){
+        if(!thumbnail) return this
         if((typeof thumbnail !== "string" || thumbnail.length > 1000 || !thumbnail.split("http")[1]) && (typeof thumbnail !== "object" || typeof thumbnail.url !== "string"))return this
         else if(typeof thumbnail === "string") this.thumbnail = {url: thumbnail}
         else this.thumbnail = thumbnail
@@ -110,6 +114,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setAuthorName(author){
+        if(!author) return this
         if((typeof author !== "string" || author.length > 256) && (typeof author !== "object" || typeof author.name !== "string")) return this
         else if(typeof author === "string") this.author.name = author
         else this.author.name = author.name
@@ -121,6 +126,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setAuthorURL(author){
+        if(!author) return this
         if((typeof author !== "string" || author.length > 1000 || !author.split("http")[1]) && (typeof author !== "object" || typeof author.url !== "string")) return this
         else if(typeof author === "string") this.author.url = author
         else this.author.url = author.url
@@ -132,6 +138,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setAuthorIconURL(author){
+        if(!author) return this
         if((typeof author !== "string" || author.length > 1000 || !author.split("http")[1]) && (typeof author !== "object" || typeof author.icon_url !== "string")) return this
         else if(typeof author === "string") this.author.icon_url = author
         else this.author.icon_url = author.icon_url
@@ -154,6 +161,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setFooterText(name){
+        if(!name) return this
         if((typeof name !== "string" || name.length > 2048) && (typeof name !== "object" || typeof name.text !== "string")) return this
         else if(typeof name === "string") this.footer.text = name
         else this.footer.text = name.text
@@ -165,6 +173,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setFooterIconURL(icon){
+        if(!icon) return this
         if(icon && icon.length < 1000 && icon.split("http")[1]){
             if(this.footer === null) this.footer = {}
             if(icon.startsWith("https://cdn.discordapp.com/") && icon.endsWith("null.gif")) this.footer = this.footer

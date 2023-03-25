@@ -1,6 +1,7 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/user")
 const gateawayApiPath = require("../api/v10/gateway")
+const errors = require("../utils/errors.json")
 
 module.exports.getuser = async (informations) => {
     let passedOptions = {
@@ -25,10 +26,10 @@ module.exports.getuser = async (informations) => {
  * @returns 
  */
 module.exports.setstatus = (bot, options) => {
-    if(!bot) return ({code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "Me"})
-    if(!options) return ({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Me"})
-    if(typeof options !== "string") return ({code: require("../DB/errors.json")["38"].code, message: require("../DB/errors.json")["38"].message, file: "Me"})
-    if(bot.state !== "ready") return ({code: require("../DB/errors.json")["39"].code, message: require("../DB/errors.json")["39"].message, file: "Me"})
+    if(!bot) return ({code: errors["34"].code, message: errors["34"].message, file: "Me"})
+    if(!options) return ({code: errors["8"].code, message: errors["8"].message, file: "Me"})
+    if(typeof options !== "string") return ({code: errors["38"].code, message: errors["38"].message, file: "Me"})
+    if(bot.state !== "ready") return ({code: errors["39"].code, message: errors["39"].message, file: "Me"})
     let presence = require("../utils/functions").presence({since: bot.discordjs.lancement, activities: bot.presence.activities, status: options})
     let body = {
         op: 3,
@@ -45,10 +46,10 @@ module.exports.setstatus = (bot, options) => {
  * @returns 
  */
 module.exports.setactivity = async (bot, options) => {
-    if(!bot) return ({code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "Me"})
-    if(!options) return ({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Me"})
-    if(!Array.isArray(options)) return ({code: require("../DB/errors.json")["40"].code, message: require("../DB/errors.json")["40"].message, file: "Me"})
-    if(bot.state !== "ready") return ({code: require("../DB/errors.json")["39"].code, message: require("../DB/errors.json")["39"].message, file: "Me"})
+    if(!bot) return ({code: errors["34"].code, message: errors["34"].message, file: "Me"})
+    if(!options) return ({code: errors["8"].code, message: errors["8"].message, file: "Me"})
+    if(!Array.isArray(options)) return ({code: errors["40"].code, message: errors["40"].message, file: "Me"})
+    if(bot.state !== "ready") return ({code: errors["39"].code, message: errors["39"].message, file: "Me"})
     if(!bot || !options || !Array.isArray(options)) return "incorrect infos"
     let presence = require("../utils/functions").presence({since: bot.discordjs.lancement, activities: options, status: bot.presence.status})
     let body = {
@@ -66,12 +67,12 @@ module.exports.setactivity = async (bot, options) => {
  * @returns 
  */
 module.exports.setpresence = async (bot, options) => {
-    if(!bot) return ({code: require("../DB/errors.json")["34"].code, message: require("../DB/errors.json")["34"].message, file: "Me"})
-    if(!options) return ({code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Me"})
-    if(typeof options !== "object") return ({code: require("../DB/errors.json")["24"].code, message: require("../DB/errors.json")["24"].message, file: "Me"})
-    if(bot.state !== "ready") return ({code: require("../DB/errors.json")["39"].code, message: require("../DB/errors.json")["39"].message, file: "Me"})
-    if(!options.status) return ({code: require("../DB/errors.json")["41"].code, message: require("../DB/errors.json")["41"].message, file: "Me"})
-    if(!options.activities) return ({code: require("../DB/errors.json")["42"].code, message: require("../DB/errors.json")["42"].message, file: "Me"})
+    if(!bot) return ({code: errors["34"].code, message: errors["34"].message, file: "Me"})
+    if(!options) return ({code: errors["8"].code, message: errors["8"].message, file: "Me"})
+    if(typeof options !== "object") return ({code: errors["24"].code, message: errors["24"].message, file: "Me"})
+    if(bot.state !== "ready") return ({code: errors["39"].code, message: errors["39"].message, file: "Me"})
+    if(!options.status) return ({code: errors["41"].code, message: errors["41"].message, file: "Me"})
+    if(!options.activities) return ({code: errors["42"].code, message: errors["42"].message, file: "Me"})
     let presence = require("../utils/functions").presence({since: bot.discordjs.lancement, activities: options.activities, status: options.status})
     let body = {
         op: 3,

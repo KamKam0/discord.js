@@ -4,21 +4,22 @@ const commandApiPath = require("../api/v10/applicationcommands")
 const { checkApplicationCommand } = require("../utils/functions").checks
 const utils = require("../utils/functions")
 const getMe = require("./me").getuser
+const errors = require("../utils/errors.json")
 
 module.exports.reply = async (informations, interaction, response) => {
     return new Promise(async (resolve, reject) => {
-        if(!interaction) return reject(utils.checks.checkId("An error happened", {code: require("../DB/errors.json")["43"].code, message: require("../DB/errors.json")["43"].message, file: "Interaction"}))
-        if(!response) return reject(utils.checks.checkId("An error happened", {code: require("../DB/errors.json")["44"].code, message: require("../DB/errors.json")["44"].message, file: "Interaction"}))
-        if(!interaction.id) return reject(utils.checks.checkId("An error happened", {code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"}))
-        if(!interaction.token) return reject(utils.checks.checkId("An error happened", {code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"}))
+        if(!interaction) return reject(utils.checks.checkId("An error happened", {code: errors["43"].code, message: errors["43"].message, file: "Interaction"}))
+        if(!response) return reject(utils.checks.checkId("An error happened", {code: errors["44"].code, message: errors["44"].message, file: "Interaction"}))
+        if(!interaction.id) return reject(utils.checks.checkId("An error happened", {code: errors["45"].code, message: errors["45"].message, file: "Interaction"}))
+        if(!interaction.token) return reject(utils.checks.checkId("An error happened", {code: errors["45"].code, message: errors["45"].message, file: "Interaction"}))
         
         let method = informations.method
         let  url = (method && informations.path) ? apiPath.modify.reponse.url : apiPath.create.response.url
         if(!method) method = apiPath.create.response.method
         let options = utils.general.correctMessageData(response)
 
-        if(!options) return reject(utils.checks.checkId("An error happened", {code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Interaction"}))
-        if(typeof options !== "object") return reject(utils.checks.checkId("An error happened", {code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"}))
+        if(!options) return reject(utils.checks.checkId("An error happened", {code: errors["8"].code, message: errors["8"].message, file: "Interaction"}))
+        if(typeof options !== "object") return reject(utils.checks.checkId("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Interaction"}))
         
         let basedatas;
         
@@ -76,7 +77,7 @@ module.exports.reply = async (informations, interaction, response) => {
                 ]
 
                 basedatas = handler(args, passedOptions, callBackSuccess)
-            }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject(createError("An error happened", {code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"}))
+            }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject(createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Interaction"}))
             
             if(!checkfiles || !Array.isArray(checkfiles) === true || !checkfiles[0]) {
                 let args = []
@@ -106,8 +107,8 @@ module.exports.modifyreply = async (informations, interaction, response) => {
 }
 module.exports.deletereply = async (informations, interaction) => {
     return new Promise(async (resolve, reject) => {
-        if(!interaction.id) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"}))
-        if(!interaction.token) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["45"].code, message: require("../DB/errors.json")["45"].message, file: "Interaction"}))
+        if(!interaction.id) return reject(utils.general.createError("An error happened", {code: errors["45"].code, message: errors["45"].message, file: "Interaction"}))
+        if(!interaction.token) return reject(utils.general.createError("An error happened", {code: errors["45"].code, message: errors["45"].message, file: "Interaction"}))
     
         if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
 

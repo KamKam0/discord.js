@@ -13,8 +13,8 @@ module.exports.modify = (informations, options) => {
         {value: options, data_name: "options", order: 3}
     ]
     let callBackSuccess = function (data){
-        let textType = channelTypes.reverse()[data.type]
-        const single = require(`../structures/singles/channel${textType.toLowerCase()}`)
+        let textType = channelTypes.revert()[data.type]
+        const single = require(`../structures/singles/channels/channel${textType.toLowerCase()}`)
         let newData = new single(data, informations.bot)
         return newData
     }
@@ -145,8 +145,8 @@ module.exports.create = (informations, options) => {
         {value: options, data_name: "options", order: 3}
     ]
     let callBackSuccess = function (data){
-        let textType = channelTypes.reverse()[data.type]
-        const single = require(`../structures/singles/channel${textType.toLowerCase()}`)
+        let textType = channelTypes.revert()[data.type]
+        const single = require(`../structures/singles/channels/channel${textType.toLowerCase()}`)
         let newData = new single(data, informations.bot)
         return newData
     }

@@ -2,22 +2,22 @@ const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/message")
 const emojiApiPath = require("../api/v10/reaction")
 const utils = require("../utils/functions")
+const errors = require("../utils/errors.json")
 
 module.exports.send = async (informations, options) => {
     return new Promise(async (resolve, reject) => {
-        if(!options || typeof options !== "object") return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Message"}))
+        if(!options || typeof options !== "object") return reject(utils.general.createError("An error happened", {code: errors["8"].code, message: errors["8"].message, file: "Message"}))
         
         let method = informations.method
         let  url = (method && informations.path) ? apiPath.create.url : apiPath.create.url
         if(!method) method = apiPath.create.method
         options = utils.general.correctMessageData(options)
 
-        if(!options) return reject(utils.checks.checkId("An error happened", {code: require("../DB/errors.json")["8"].code, message: require("../DB/errors.json")["8"].message, file: "Interaction"}))
-        if(typeof options !== "object") return reject(utils.checks.checkId("An error happened", {code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Interaction"}))
+        if(!options) return reject(utils.checks.checkId("An error happened", {code: errors["8"].code, message: errors["8"].message, file: "Interaction"}))
+        if(typeof options !== "object") return reject(utils.checks.checkId("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Interaction"}))
         
         let body_files;
         let body = {}
-
         body.message_reference = utils.checks.checkReference(options.message_reference)
         body.embeds = utils.checks.checkEmbed(options.embeds)
         body.components = utils.checks.checkComponents(options.components)
@@ -32,9 +32,8 @@ module.exports.send = async (informations, options) => {
                 body_files.append(`files[${file}]`, checkfiles[file].buffer, `${checkfiles[file].name}.${checkfiles[file].extension}`);
             }
             body_files.append("payload_json", JSON.stringify(body))
-        }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["74"].code, message: require("../DB/errors.json")["74"].message, file: "Message"}))
+        }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids?.length === 0) return reject(utils.general.createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Message"}))
 
-        
         let args = [
             {value: body_files || body, data_name: "options", stringified: false, order: 3}
         ]
@@ -51,6 +50,7 @@ module.exports.send = async (informations, options) => {
             let newData = new single(data, informations.bot)
             return newData
         }
+        
         handler(args, passedOptions, callBackSuccess)
         .then(answer => resolve(answer))
         .catch(err => reject(err))

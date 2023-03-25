@@ -1,3 +1,5 @@
+const errors = require("../utils/errors.json")
+const { checkId } = require("../utils/functions").checks
 /**
  * 
  * @param {string} ids 
@@ -7,23 +9,23 @@
  * @returns 
  */
 module.exports.iconURL = (ids, link, type, extension) => {
-    if(!ids) return {code: require("../DB/errors.json")["13"].code, message: require("../DB/errors.json")["13"].message, file: "General"}
-    if(!type) return {code: require("../DB/errors.json")["77"].code, message: require("../DB/errors.json")["77"].message, file: "General"}
-    if(extension && typeof extension !== "string") return {code: require("../DB/errors.json")["82"].code, message: require("../DB/errors.json")["82"].message, file: "General"}
-    if(!["user", "guild", "gbanner", "ubanner" , "splash", "role", "event", "member", "mbanner"].includes(type)) return {code: require("../DB/errors.json")["78"].code, message: require("../DB/errors.json")["78"].message, file: "General"}
+    if(!ids) return {code: errors["13"].code, message: errors["13"].message, file: "General"}
+    if(!type) return {code: errors["77"].code, message: errors["77"].message, file: "General"}
+    if(extension && typeof extension !== "string") return {code: errors["82"].code, message: errors["82"].message, file: "General"}
+    if(!["user", "guild", "gbanner", "ubanner" , "splash", "role", "event", "member", "mbanner"].includes(type)) return {code: errors["78"].code, message: errors["78"].message, file: "General"}
     if(!link) return null
     extension = extension || "png"
     let baseurl = "https://cdn.discordapp.com"
     if(link.includes("a_")) extension = "gif"
-    if(!["png", "jpeg", "webp", "gif"].includes(extension.toLowerCase())) return {code: require("../DB/errors.json")["83"].code, message: require("../DB/errors.json")["83"].message, file: "General"}
+    if(!["png", "jpeg", "webp", "gif"].includes(extension.toLowerCase())) return {code: errors["83"].code, message: errors["83"].message, file: "General"}
     if(["user", "guild", "gbanner", "ubanner" , "splash", "role", "event"].includes(type)){
-        if(typeof ids !=="string") return {code: require("../DB/errors.json")["79"].code, message: require("../DB/errors.json")["79"].message, file: "General"}
-        if(!require("../utils/functions").check_id(ids)) return {code: require("../DB/errors.json")["81"].code, message: require("../DB/errors.json")["81"].message, file: "General"}
+        if(typeof ids !=="string") return {code: errors["79"].code, message: errors["79"].message, file: "General"}
+        if(!checkId(ids)) return {code: errors["81"].code, message: errors["81"].message, file: "General"}
     }
     if(["member", "mbanner"].includes(type)){
-        if(typeof ids !=="object") return {code: require("../DB/errors.json")["80"].code, message: require("../DB/errors.json")["80"].message, file: "General"}
-        if(!require("../utils/functions").check_id(ids.guild_id)) return {code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "General"}
-        if(!require("../utils/functions").check_id(ids.user_id)) return {code: require("../DB/errors.json")["47"].code, message: require("../DB/errors.json")["47"].message, file: "General"}
+        if(typeof ids !=="object") return {code: errors["80"].code, message: errors["80"].message, file: "General"}
+        if(!checkId(ids.guild_id)) return {code: errors["49"].code, message: errors["49"].message, file: "General"}
+        if(!checkId(ids.user_id)) return {code: errors["47"].code, message: errors["47"].message, file: "General"}
     }
     switch(type){
         case("user"):
@@ -62,8 +64,8 @@ module.exports.iconURL = (ids, link, type, extension) => {
  * @returns 
  */
 module.exports.createdAt = (id) => {
-    if(!id) return ({code: require("../DB/errors.json")["13"].code, message: require("../DB/errors.json")["13"].message, file: "General"})
-    if(!require("../utils/functions").check_id(id)) return {code: require("../DB/errors.json")["81"].code, message: require("../DB/errors.json")["81"].message, file: "General"}
+    if(!id) return ({code: errors["13"].code, message: errors["13"].message, file: "General"})
+    if(!checkId(id)) return {code: errors["81"].code, message: errors["81"].message, file: "General"}
     const discordSnowflake = {
         epoch: 1420070400000,
         decimalConvertion: 4194304

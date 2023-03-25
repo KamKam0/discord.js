@@ -64,7 +64,7 @@ class Message extends Base{
     }
 
     #type2(type){
-        return this._typechange(messageTypes.reverse(), type)
+        return this._typechange(messageTypes.revert(), type)
     }
 
     /**

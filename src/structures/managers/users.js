@@ -7,7 +7,7 @@ class Users extends Base{
 
     _add(user){
         if(this.container.find(us => us.id === user.id)) this.container.find(us => us.id === user.id).guilds.push(user.guild_id)
-        else this.container.push(new User({...user, token: this._bot.discordjs.token}, this._bot))
+        else this.container.push(new User(user, this._bot))
         return this
     }
 

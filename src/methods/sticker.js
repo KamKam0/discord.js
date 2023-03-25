@@ -1,16 +1,17 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/sticker")
 const utils = require("../utils/functions")
+const errors = require("../utils/errors.json")
 
 module.exports.create = async (informations, name, file, tags, description) => {
     return new Promise(async (resolve, reject) => {
-        if(!token) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Stickers"}))
-        if(!guildid) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Stickers"}))
-        if(!name) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["19"].code, message: require("../DB/errors.json")["19"].message, file: "Stickers"}))
-        if(!file) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["27"].code, message: require("../DB/errors.json")["27"].message, file: "Stickers"}))
-        if(!tags) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["28"].code, message: require("../DB/errors.json")["28"].message, file: "Stickers"}))
-        if(!description) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["29"].code, message: require("../DB/errors.json")["29"].message, file: "Stickers"}))
-        if(!utils.checks.checkId(guildid)) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Stickers"}))
+        if(!token) return reject(utils.general.createError("An error happened", {code: errors["12"].code, message: errors["12"].message, file: "Stickers"}))
+        if(!guildid) return reject(utils.general.createError("An error happened", {code: errors["1"].code, message: errors["1"].message, file: "Stickers"}))
+        if(!name) return reject(utils.general.createError("An error happened", {code: errors["19"].code, message: errors["19"].message, file: "Stickers"}))
+        if(!file) return reject(utils.general.createError("An error happened", {code: errors["27"].code, message: errors["27"].message, file: "Stickers"}))
+        if(!tags) return reject(utils.general.createError("An error happened", {code: errors["28"].code, message: errors["28"].message, file: "Stickers"}))
+        if(!description) return reject(utils.general.createError("An error happened", {code: errors["29"].code, message: errors["29"].message, file: "Stickers"}))
+        if(!utils.checks.checkId(guildid)) return reject(utils.general.createError("An error happened", {code: errors["49"].code, message: errors["49"].message, file: "Stickers"}))
         
         const FormData = require("form-data")
         let body = new FormData()

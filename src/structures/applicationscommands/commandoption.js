@@ -1,5 +1,6 @@
 const Choice = require("./commandchoice")
 const Base = require("../bases/commands/base")
+const optionTypes = require("../../types/option")
 class Option extends Base{
     constructor(option){
         super()
@@ -32,8 +33,7 @@ class Option extends Base{
     }
        
     setType(type){
-        const types = require("../../types/option")
-        if(types[type] || types.revert()[type]) this.type = types[type] || types.revert()[type]
+        if(optionTypes.types[type] || optionTypes.revert()[type]) this.type = optionTypes.types[type] || optionTypes.revert()[type]
         return this
     }
 

@@ -12,7 +12,7 @@ let types = {
     Attachment:	11
 }
 
-module.exports = types
+module.exports.types = types
 
 module.exports.revert = () => {
     return require("../utils/functions").general.revertTypes(types)

@@ -1,4 +1,5 @@
 const base = require("../bases/components/base")
+const textInputTypes = require("../../types/textinput")
 
 class TextInput extends base{
     constructor(data){
@@ -47,10 +48,7 @@ class TextInput extends base{
     }
 
     setStyle(style){
-        let originalTypes = require("../../types/textinput")
-        let revertedTypes = require("../../types/textinput").revert()
-        
-        let styleValue = originalTypes[style] || revertedTypes[style]
+        let styleValue = textInputTypes.types[style] || textInputTypes.revert()[style]
         if(!styleValue) return this
 
         this.style = styleValue

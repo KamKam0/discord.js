@@ -1,15 +1,16 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/emoji")
 const utils = require("../utils/functions")
+const errors = require("../utils/errors.json")
 
 module.exports.create = async (informations, name, imagedata, roles) => {
     return new Promise(async (resolve, reject) => {
-        if(!token) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["12"].code, message: require("../DB/errors.json")["12"].message, file: "Emoji"}))
-        if(!guildid) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["1"].code, message: require("../DB/errors.json")["1"].message, file: "Emoji"}))
-        if(!utils.checks.checkId(guildid)) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["49"].code, message: require("../DB/errors.json")["49"].message, file: "Emoji"}))
-        if(!name) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["19"].code, message: require("../DB/errors.json")["19"].message, file: "Emoji"}))
-        if(!imagedata) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["20"].code, message: require("../DB/errors.json")["20"].message, file: "Emoji"}))
-        if(!roles) return reject(utils.general.createError("An error happened", {code: require("../DB/errors.json")["21"].code, message: require("../DB/errors.json")["21"].message, file: "Emoji"}))
+        if(!token) return reject(utils.general.createError("An error happened", {code: errors["12"].code, message: errors["12"].message, file: "Emoji"}))
+        if(!guildid) return reject(utils.general.createError("An error happened", {code: errors["1"].code, message: errors["1"].message, file: "Emoji"}))
+        if(!utils.checks.checkId(guildid)) return reject(utils.general.createError("An error happened", {code: errors["49"].code, message: errors["49"].message, file: "Emoji"}))
+        if(!name) return reject(utils.general.createError("An error happened", {code: errors["19"].code, message: errors["19"].message, file: "Emoji"}))
+        if(!imagedata) return reject(utils.general.createError("An error happened", {code: errors["20"].code, message: errors["20"].message, file: "Emoji"}))
+        if(!roles) return reject(utils.general.createError("An error happened", {code: errors["21"].code, message: errors["21"].message, file: "Emoji"}))
         
         const FormData = require("form-data")
         let body = new FormData()

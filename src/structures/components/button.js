@@ -1,4 +1,5 @@
 const base = require("../bases/components/base")
+const buttonTypes = require("../../types/button")
 class Button extends base{
     
     constructor(data){
@@ -19,10 +20,7 @@ class Button extends base{
     * @returns {Button}
     */
     setStyle(style){
-        let originalTypes = require("../../types/button")
-        let revertedTypes = require("../../types/button").revert()
-        
-        let styleValue = originalTypes[style] || revertedTypes[style]
+        let styleValue = buttonTypes.types[style] || buttonTypes.revert()[style]
         if(!styleValue) return this
 
         this.style = styleValue

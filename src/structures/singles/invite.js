@@ -23,7 +23,7 @@ class Invite extends Base{
     }
 
     #type(type){
-        return this._typechange(inviteTypes.reverse(), type)
+        return this._typechange(inviteTypes.revert(), type)
     }
 
     _Modify_Datas(invite){

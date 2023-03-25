@@ -6,10 +6,10 @@ class Channels extends Base{
         super(_bot)
     }
 
-    _add(Channel){
-        let textType = channelTypes.reverse()[datas.type]
-        let channelClass = require(`../structures/singles/channel${textType.toLowerCase()}`)
-        this.container.push(new channelClass(Channel, this._bot))
+    _add(data){
+        let textType = channelTypes.revert()[data.type]
+        let channelClass = require(`../../structures/singles/channels/channel${textType.toLowerCase()}`)
+        this.container.push(new channelClass(data, this._bot))
         return this
     }
 }

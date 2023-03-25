@@ -1,3 +1,4 @@
+const errors = require("../utils/errors.json")
 /**
  * 
  * @param {object} guild 
@@ -6,9 +7,9 @@
  * @returns 
  */
 module.exports = (guild, memberid, permission) => {
-    if(!memberid) return ({code: require("../DB/errors.json")["4"].code, message: require("../DB/errors.json")["4"].message, file: "Permissions"})
-    if(!guild) return ({code: require("../DB/errors.json")["37"].code, message: require("../DB/errors.json")["37"].message, file: "Permissions"})
-    if(!require("../utils/functions").check_id(memberid)) return ({code: require("../DB/errors.json")["56"].code, message: require("../DB/errors.json")["56"].message, file: "Permissions"})
+    if(!memberid) return ({code: errors["4"].code, message: errors["4"].message, file: "Permissions"})
+    if(!guild) return ({code: errors["37"].code, message: errors["37"].message, file: "Permissions"})
+    if(!require("../utils/functions").check_id(memberid)) return ({code: errors["56"].code, message: errors["56"].message, file: "Permissions"})
     if(permission) permission = String(permission).toUpperCase()
     if(guild.owner_id === memberid){
         if(permission) return true

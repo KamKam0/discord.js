@@ -8,13 +8,12 @@ const EventHandler = require("@kamkam1_0/discord-eventhandler")
 const VoiceManager = require("../../handlers/voice/voicemanager")
 const ApplicationCommands = require("../administrators/applicationcommands")
 const ORM = require("@kamkam1_0/sql-orm")
-const WebSocketHandler = require('../../handlers/websocket')
-const collector = require("../../handlers/collector")
+const WebSocketHandler = require('../../websocket/websocket')
+const MessageAdministrator = require("../administrators/messages")
 const os = require('node:os')
 let elementOS = '/'
 if(os.platform() === "win32") elementOS = '\\'
 const methodMe = require("../../methods/me")
-const methodMessage = require("../../methods/message")
 const fs = require("node:fs")
 const constants = require("../../utils/constants")
 const utils = require("../../utils/functions")
@@ -34,17 +33,18 @@ class Bot extends EventEmitter{
         this.presence = null
         this.user = null
         this.creator = null
-        this.voice = new VoiceManager(this)
         this.utils = utils
         this.langues = []
         this.default_language = null
         this.token = null
         this.launchError = null
-        this.availableEvents = this.#getEvents(),
+        this.availableEvents = this.#getEvents()
         this.intents = this.#attributeintents(data.intents)
         this.config = this.#getInfos()
         this.name = this.#checkName()
         this.sql = this.#attributeSQL(data.database)
+        this.voice = new VoiceManager(this)
+        this.messages = new MessageAdministrator(this)
         this.guilds = new Guilds(this)
         this.users = new Users(this)
         this.channels = new Channels(this)
@@ -67,7 +67,7 @@ class Bot extends EventEmitter{
         else return false
     }
 
-    get database_state(){
+    get databaseState(){
         if(!this.sql) return false
         if(this.sql.connectionState) return "stable"
         return "unstable"
@@ -75,7 +75,7 @@ class Bot extends EventEmitter{
 
     _userStatus(ID){
         return new Promise(async (resolve, reject) => {
-            if(!this.database_state || this.database_state === "unstable") return reject(new Error("La connexion avec la BDD sql n'est pas initialisée - bot"))
+            if(!this.databaseState || this.databaseState === "unstable") return reject(new Error("La connexion avec la BDD sql n'est pas initialisée - bot"))
             if(!ID) return reject(new Error("Incorrect infos"))
             let returnInfos = {0: "User", 1: "VIP", 2: "Admin", 3: "Admin & VIP", 4: "Owner"}
             if(ID === this.config.general["ID createur"]) return resolve({...returnInfos, value: 4})
@@ -99,18 +99,6 @@ class Bot extends EventEmitter{
         if(!datas || typeof datas !== "object" || !datas.id || !datas.channel_id) return "invalid"
         this.creator = datas
         return this
-    }
-
-    async awaitInteractions(options){
-        return new Promise((resolve, reject) => {
-            collector(this, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
-            .then(datas => resolve(datas))
-            .catch(datas => reject(datas))
-        })
-    }
-
-    collectInteractions(options){
-        return collector.collect(this, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
     }
 
     #checkName(){
@@ -167,35 +155,6 @@ class Bot extends EventEmitter{
         let presence =  methodMe.setpresence(this, options)
         this.events.presence = presence
         return presence
-    }
-    
-    sendMessage(channelid, options){
-        let informations = {
-            bot: this,
-            token: this.token,
-            channel_id: channelid
-        }
-        return methodMessage.send(informations, options)
-    }
-    
-    modifyMessage(channelid, messageid, options){
-        let informations = {
-            bot: this,
-            token: this.token,
-            channel_id: channelid,
-            message_id: messageid
-        }
-        return methodMessage.modify(informations, options)
-    }
-    
-    deleteMessage(channelid, messageid, options){
-        let informations = {
-            bot: this,
-            token: this.token,
-            channel_id: channelid,
-            message_id: messageid
-        }
-        return methodMessage.delete(informations, options)
     }
 
     #TreatToken(env){
@@ -284,7 +243,7 @@ class Bot extends EventEmitter{
     }
 
     #getEvents(){
-        let path = require.resolve("../../events/CHANNEL_CREATE")
+        let path = require.resolve("../../websocket/events/CHANNEL_CREATE")
         let splitPath = path.split(elementOS)
         splitPath.pop()
         let truePath = splitPath.map(e => {

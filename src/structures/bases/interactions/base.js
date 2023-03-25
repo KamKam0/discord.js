@@ -1,6 +1,10 @@
 const Message = require("../../singles/message")
 const User = require("../../singles/user")
 const Base = require("../basereplying")
+const interactionMethod = require("../../../methods/interaction")
+const generalMethod = require("../../../methods/general")
+const { channelBackup } = require("../../../utils/functions").general
+
 class base extends Base{
     constructor(type, interaction, bot){
         super(interaction, bot)
@@ -9,7 +13,7 @@ class base extends Base{
         this.custom_id = interaction.data.custom_id
         this.channel_id = interaction.channel_id
         this.message = interaction.message ? (new Message({...interaction.message, guild_id: interaction.guild_id, channel_id: interaction.channel_id}, bot)) : null
-        this.channel = bot.channels.get(this.channel_id) || require("../../../utils/functions").channel_backup(interaction.channel_id, bot)
+        this.channel = bot.channels.get(this.channel_id) || channelBackup(interaction.channel_id, bot)
         this.user_id = interaction.user ? interaction.user.id : interaction.member.user.id
         this.user = bot.users.get(this.user_id) ?? new User(interaction.user, bot)
         this.member = interaction.member && this.guild ? this.guild.members.get(this.user_id) : null
@@ -41,7 +45,7 @@ class base extends Base{
             application_id: this._bot.user.id,
             interaction_id: this.id
         }
-        return require("../../../methods/interaction").reply(informations, options)
+        return interactionMethod.reply(informations, options)
     }
 
     /**
@@ -56,7 +60,7 @@ class base extends Base{
             application_id: this._bot.user.id,
             interaction_token: this.token
         }
-        return require("../../../methods/interaction").modifyreply(informations, options)
+        return interactionMethod.modifyreply(informations, options)
     }
 
     /**
@@ -70,11 +74,11 @@ class base extends Base{
             application_id: this._bot.user.id,
             interaction_token: this.token
         }
-        return require("../../../methods/interaction").deletereply(informations)
+        return interactionMethod.deletereply(informations)
     }
     
     get createdAt(){
-        return  require("../../../methods/general").createdAt(this.id, "interaction")
+        return  generalMethod.createdAt(this.id, "interaction")
     }
 
     get isContextMenu(){

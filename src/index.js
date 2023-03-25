@@ -6,6 +6,7 @@ exports.Client = require("./structures/client/bot")
 exports.SelectMenu = require("./structures/components/selectmenu")
 exports.Form = require("./structures/components/form")
 exports.TextInput = require("./structures/components/textinput")
+exports.SlashCommand = require("./structures/applicationscommands/command")
 
 // Data //
 

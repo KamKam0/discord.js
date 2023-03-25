@@ -11,13 +11,13 @@ function getBietfielfFromPermissions(permissions){
 
 function getIntentsFromNames(intents){
     if(!Array.isArray(intents) && typeof intents !== "string" && intents !== "ALL") return "Incorrect Intents"
-    if(intents === "ALL") return Object.values(intentsConstance).reduce((a, b) => a+b, 0)
+    if(intents === "ALL") return Object.values(intentsConstance.types).reduce((a, b) => a+b, 0)
     return intents.reduce((a, b) => intents[b] ? a + intents[b] : a+0, 0)
 }
 
 function getBadges(bitfield){
     if(!bitfield) return "Incorrect number"
-    const ACFlags = Object.entries(userBadges).sort((a, b) => Number(b[1]) - Number(a[1]))
+    const ACFlags = Object.entries(userBadges.types).sort((a, b) => Number(b[1]) - Number(a[1]))
     const final_p = []
     let processConvert = Number(bitfield)
     ACFlags.forEach(flag => {
@@ -74,8 +74,7 @@ function checkOverwrites(overwrites){
 function channelBackup(id, bot){
     let channel = {
         id,
-        type: 1,
-        token: bot.discordjs.token
+        type: 1
     }
     return new channelClass(channel, bot)
 }
@@ -113,8 +112,6 @@ function checkEmbed(embeds){
     }
     let trueembeds = []
     embeds.forEach(emb => {
-        if(emb.footer && !emb.footer.text) return
-        if(emb.author && !emb.author.name) return
         if(!emb.color || typeof emb.color !== "number") emb.color = 0x000000
         if(emb.fields) emb.fields = emb.fields.map(field => {
             if(!field.value && !field.name) return {name: "\u200b", value: "\u200b", inline: field.inline ?? false}
