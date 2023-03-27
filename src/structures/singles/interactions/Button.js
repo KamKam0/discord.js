@@ -1,4 +1,4 @@
-const Base = require("../../bases/interactions/base")
+const Base = require("../../bases/interactions/basecomponent")
 
 class Button extends Base{
     constructor(button, bot){

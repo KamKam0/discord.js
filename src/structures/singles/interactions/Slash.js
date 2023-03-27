@@ -3,7 +3,8 @@ const Base = require("../../bases/interactions/base")
 class Slash extends Base{
     constructor(slash, bot){
         super("slash", slash, bot)
-        this.id = slash.data.id
+        this.id = slash.id
+        this.command_id = slash.data.id || null
         this.options = slash.data.options
     }
 

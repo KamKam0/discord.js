@@ -37,6 +37,7 @@ class Message extends Base{
         this.components = message.components || []
         this.sticker_items = message.sticker_items || []
         this.stickers = message.stickers || []
+        this.receivingType = "message"
     }
 
     _Modify_Datas(message){

@@ -1,4 +1,4 @@
-const Base = require("../../bases/interactions/base")
+const Base = require("../../bases/interactions/basecomponent")
 
 class Modal extends Base{
     constructor(modal, bot){

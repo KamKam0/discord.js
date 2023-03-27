@@ -107,13 +107,13 @@ function presence(presence){
 function checkEmbed(embeds){
     if(!embeds) return []
     if(!Array.isArray(embeds)){
-        if(typeof embeds === "object" && (embeds.description || embeds.title || embeds.fields)) embeds = [embeds]
+        if(typeof embeds === "object" && (embeds.description || embeds.title || embeds.fields.length)) embeds = [embeds]
         else return []
     }
     let trueembeds = []
     embeds.forEach(emb => {
         if(!emb.color || typeof emb.color !== "number") emb.color = 0x000000
-        if(emb.fields) emb.fields = emb.fields.map(field => {
+        if(emb.fields.length) emb.fields = emb.fields.map(field => {
             if(!field.value && !field.name) return {name: "\u200b", value: "\u200b", inline: field.inline ?? false}
             else if(!field.value) return {name: field.name, value: "\u200b", inline: field.inline ?? false}
             else if(!field.name) return {name: "\u200b", value: field.value, inline: field.inline ?? false}

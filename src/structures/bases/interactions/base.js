@@ -8,9 +8,8 @@ const { channelBackup } = require("../../../utils/functions").general
 class base extends Base{
     constructor(type, interaction, bot){
         super(interaction, bot)
-        this.id = interaction.id
         this.application_id = interaction.application_id
-        this.custom_id = interaction.data.custom_id
+        this.name = interaction.data.name || null
         this.channel_id = interaction.channel_id
         this.message = interaction.message ? (new Message({...interaction.message, guild_id: interaction.guild_id, channel_id: interaction.channel_id}, bot)) : null
         this.channel = bot.channels.get(this.channel_id) || channelBackup(interaction.channel_id, bot)
@@ -22,6 +21,7 @@ class base extends Base{
         this.guild_locale = interaction.guild_locale
         this.locale = interaction.locale
         this.receivingTypePrecision = type
+        this.receivingType = "interaction"
     }
 
     _Modify_Datas(inte){
@@ -39,11 +39,13 @@ class base extends Base{
      * @returns 
      */
     async reply(options){
+        console.log(this.id)
+        console.log(this.command_id)
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            application_id: this._bot.user.id,
-            interaction_id: this.id
+            interaction_id: this.id,
+            interaction_token: this.token
         }
         return interactionMethod.reply(informations, options)
     }
