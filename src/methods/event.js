@@ -47,3 +47,24 @@ module.exports.delete = (informations) => {
     let args = [ ]
     return handler(args, passedOptions, null)
 }
+
+module.exports.getusers = (informations) => {
+    let passedOptions = {
+        method: apiPath.get.users.method,
+        token: informations.botToken,
+        url: apiPath.get.users.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    let callBackSuccess = function (data){
+        const MemberClass = require("../structures/singles/member")
+        const UsersClass = require("../structures/singles/user")
+        let returnedData = data.filter(element => element.user).map(element => {
+            if(element.user) element.user = new UsersClass({...element.user, guild_id: informations.guild_id}, informations.bot)
+            if(element.member) element.member = new MemberClass({...element.member, guild_id: informations.guild_id}, informations.bot)
+            return element
+        })
+        return returnedData
+    }
+    return handler(args, passedOptions, callBackSuccess)
+}

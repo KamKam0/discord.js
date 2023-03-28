@@ -25,6 +25,20 @@ class base extends Base{
     #type(type){
         return this._typechange(channelTypes.revert(), type)
     }
+
+    /**
+     * 
+     * @param {object[]} options 
+     * @returns 
+     */
+    async edit(options){
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            id: this.id
+        }
+        return require("../../../../methods/channel").modify(informations, options)
+    }
 }
 
 module.exports = base

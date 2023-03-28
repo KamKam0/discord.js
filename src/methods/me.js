@@ -35,7 +35,7 @@ module.exports.setstatus = (bot, options) => {
         op: 3,
         d: presence
     }
-    bot.discordjs.ws.send(JSON.stringify(body))
+    bot.ws.discordSide.ws.send(JSON.stringify(body))
     return presence
 }
 
@@ -56,7 +56,7 @@ module.exports.setactivity = async (bot, options) => {
         op: 3,
         d: presence
     }
-    bot.discordjs.ws.send(JSON.stringify(body))
+    bot.ws.discordSide.ws.send(JSON.stringify(body))
     return presence
 }
 
@@ -79,7 +79,7 @@ module.exports.setpresence = async (bot, options) => {
         d: presence
     }
     
-    bot.discordjs.ws.send(JSON.stringify(body))
+    bot.ws.discordSide.ws.send(JSON.stringify(body))
     return presence
 }
 

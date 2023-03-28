@@ -15,6 +15,38 @@ class Slash extends Base{
 
         if(slash) this._handleInitiationData(slash)
     }
+    
+    create(){
+        let ID = this._bot?.user?.id || this.applicationId
+        let informations = {
+            bot: this._bot,
+            botToken: this._token,
+            application_id: ID
+        }
+        return interactionMethod.create(informations, this)
+    }
+
+    modify(){
+        let ID = this._bot?.user?.id || this.applicationId
+        let informations = {
+            bot: this._bot,
+            botToken: this._token,
+            application_id: ID,
+            command_id: this.id
+        }
+        return interactionMethod.modifycommand(informations, this.toJSON())
+    }
+
+    delete(){
+        let ID = this._bot?.user?.id || this.applicationId
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            application_id: ID,
+            command_id: this.id
+        }
+        return interactionMethod.deletecommand(informations)
+    }
 
     #analyseDMPerm(dm_perm){
         switch(dm_perm){

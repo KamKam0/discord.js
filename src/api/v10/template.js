@@ -5,7 +5,7 @@ let routes = {
     getGuild: {
         template: {
             method: "GET",
-            url: "guilds/templates/:id"
+            url: apiBase+"/guilds/templates/:code"
         },
         templates: {
             method: "GET",
@@ -17,20 +17,20 @@ let routes = {
         url: baseTemplateAPI,
         fromTemplate: {
             method: "POST",
-            url: "guilds/templates/:id"
+            url: "/guilds/templates/:code"
         }
     },
     sync: {
         method: "PUT",
-        url: baseTemplateAPI+"/:id",
+        url: baseTemplateAPI+"/:code",
     },
     modify: {
         method: "PATCH",
-        url: baseTemplateAPI+"/:id",
+        url: baseTemplateAPI+"/:code",
     },
     delete: {
         method: "DELETE",
-        url: baseTemplateAPI+"/:id",
+        url: baseTemplateAPI+"/:code",
     }
 }
 

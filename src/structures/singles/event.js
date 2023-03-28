@@ -59,7 +59,7 @@ class Event extends Base{
      * @param {object} options 
      * @returns 
      */
-    modify(options){
+    async modify(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
@@ -81,6 +81,16 @@ class Event extends Base{
             guild_id: this.guild_id
         }
         return eventMethod.delete(informations)
+    }
+
+    async getUsers(){
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            id: this.id,
+            guild_id: this.guild_id
+        }
+        return eventMethod.getusers(informations)
     }
 
     get iconURL(){

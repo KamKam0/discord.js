@@ -4,7 +4,7 @@ class baseMultiple{
         this._bot = _bot
         this._token = _bot.token
         this.guild_id = guild_id || null
-        this.name = name
+        this.name = name || null
         this.modifyConstants = []
     }
 

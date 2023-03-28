@@ -19,11 +19,12 @@ const managers = {
     Events: require("../administrators/events"),
     Presences: require("../administrators/presences"),
     Messages: require("../administrators/messages"),
-    voiceManager: require("../../handlers/voice/guildvoicemanager")
+    voiceManager: require("../../handlers/voice/guildvoicemanager"),
+    Templates: require("../administrators/templates")
 }
 const guildTypes = require("../../types/guild")
 
-class Guild extends Base{
+class Guild extends Base{// to test
     constructor(guild, bot){
         super(bot)
         this.name = guild.name
@@ -63,22 +64,25 @@ class Guild extends Base{
         this.nsfw_level = this.#typensfw(guild.nsfw_level)
         this.max_members = guild.max_members || null
         this.nsfw = guild.nsfw ?? false
+        this.templates = new managers.Templates(this._bot, this.id)
         this.roles = (new managers.Roles(bot, this.id))._addMultiple(guild.roles.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.emojis = (new managers.Emojis(bot, this.id))._addMultiple(guild.emojis.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.stickers = (new managers.Stickers(bot, this.id))._addMultiple(guild.stickers.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        
+        this.emojis = (new managers.Emojis(bot, this.id))._addMultiple(guild.emojis.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
+        this.stickers = (new managers.Stickers(bot, this.id))._addMultiple(guild.stickers.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
         this.presences = (new managers.Presences(bot, this.id))._addMultiple(guild.presences.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.channels = (new managers.Channels(bot, this.id))._addMultiple(guild.channels.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.channels = (new managers.Channels(bot, this.id))._addMultiple(guild.channels.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
         this.stage_instances = (new managers.StageInstances(bot, this.id))._addMultiple(guild.stage_instances.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.guild_scheduled_events = (new managers.Events(bot, this.id))._addMultiple(guild.guild_scheduled_events.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.members = (new managers.Members(bot, this.id))._addMultiple(guild.members.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.guild_scheduled_events = (new managers.Events(bot, this.id))._addMultiple(guild.guild_scheduled_events.map(el => { return {...el, guild: this, guild_id: this.id}}))//faire les privacy levels
+        this.members = (new managers.Members(bot, this.id))._addMultiple(guild.members.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
         this.owner = this.members.get(this.owner_id)
-        this.threads = (new managers.Threads(bot, this.id))._addMultiple(guild.threads.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.voice_states = (new managers.Voices(bot, this.id))._addMultiple(guild.voice_states.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.threads = (new managers.Threads(bot, this.id))._addMultiple(guild.threads.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
+        this.voice_states = (new managers.Voices(bot, this.id))._addMultiple(guild.voice_states.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
         this.voice_states.container.forEach(voi => {
             this.channels.get(voi.channel_id).members.container.push(voi.member)
             this.members.get(voi.user_id).voice.presence = voi
             this.members.get(voi.user_id).voice.channel = this.channels.get(voi.channel_id)
         })
+
         this.afk_channel = this.channels.get(this.afk_channel_id) || null
         this.system_channel = this.channels.get(this.system_channel_id) || null
         this.widget_channel = this.channels.get(this.widget_channel_id) || null
@@ -154,7 +158,7 @@ class Guild extends Base{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id
+            guild_id: this.id
         }
         return methods.banMethod.fetch(informations)
     }
@@ -198,47 +202,6 @@ class Guild extends Base{
             id: this.id
         }
         return methods.meMethod.leave(informations)
-    }
-
-    /**
-     * 
-     * @returns 
-     */
-    async createTemplate(){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id
-        }
-        return methods.templateMethod.create(informations)
-    }
-
-    /**
-     * 
-     * @param {string} templatecode 
-     * @returns 
-     */
-    async getTemplate(templatecode){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id,
-            template_code: templatecode
-        }
-        return methods.templateMethod.get(informations)
-    }
-
-    /**
-     * 
-     * @returns 
-     */
-    async getTemplates(){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id
-        }
-        return methods.templateMethod.getall(informations)
     }
 
     /**
@@ -332,7 +295,7 @@ class Guild extends Base{
      * @param {object} options 
      * @returns 
      */
-    async modifyBot(options){
+    async modifyMe(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,

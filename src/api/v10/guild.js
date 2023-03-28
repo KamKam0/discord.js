@@ -92,6 +92,10 @@ let routes = {
         welcomeScreen: {
             method: "GET",
             url: baseGuildAPI+"/welcome-screen",
+        },
+        logs: {
+            method: "GET",
+            url: baseGuildAPI+"/audit-logs",
         }
     }
 }

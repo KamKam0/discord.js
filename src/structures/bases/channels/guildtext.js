@@ -133,20 +133,6 @@ class guildText extends GuildBase{
         }
         return require("../../../../methods/message").send(informations, options)
     }
-
-    /**
-     * 
-     * @param {object[]} options 
-     * @returns 
-     */
-    async edit(options){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id
-        }
-        return require("../../../../methods/channel").modify(informations, options)
-    }
     
 }
 

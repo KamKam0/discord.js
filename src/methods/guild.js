@@ -2,6 +2,7 @@ const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/guild")
 const inviteApiPath = require("../api/v10/invite")
 const memberApiPath = require("../api/v10/member")
+const types = require("../types/audit").types
 
 const Threads = require("../structures/managers/channels")
 const Users = require("../structures/managers/users")
@@ -272,9 +273,9 @@ module.exports.modifyuservoice = (informations, options) => {
 module.exports.fetchauditlogs = async (informations, infosURL) => {
     
     let passedOptions = {
-        method: apiPath.modify.userVoice.method,
+        method: apiPath.get.logs.method,
         token: informations.botToken,
-        url: apiPath.modify.userVoice.url,
+        url: apiPath.get.logs.url,
         urlIDS: informations
     }
     let args = [
@@ -288,13 +289,12 @@ module.exports.fetchauditlogs = async (informations, infosURL) => {
                 {name: "after", type: "string", data_type: "id"}, 
                 {name: "before", type: "string", data_type: "id"}, 
                 {name: "limit", type: "number", limit: 100}, 
-                {name: "action_type", type: "number", filter: Object.values(require("../constants").autoditTransforms).includes(infosURL?.action_type)}
+                {name: "action_type", type: "number", filter: Object.values(types).includes(infosURL?.action_type)}
             ]
         }
     ]
     let callBackSuccess = function (data){
-        let transformac_type = require("../constants").autoditTransforms
-        data.audit_log_entries = data.audit_log_entries.map(each => {return {...each, action_type: Object.entries(transformac_type).find(e => e[1] === each.action_type)}})
+        data.audit_log_entries = data.audit_log_entries.map(each => {return {...each, action_type: Object.entries(types).find(e => e[1] === each.action_type)}})
         if(data.threads) {
             let threads = new Threads(informations.bot)
             data.threads = threads._addMultiple(data.threads)

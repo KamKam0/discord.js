@@ -1,5 +1,4 @@
 const BaseCommands = require("../managers/applicationcommands")
-const Command = require("../applicationscommands/command")
 const interactionMethod = require("../../methods/interaction")
 const collector = require("../../handlers/collector")
 
@@ -9,62 +8,55 @@ class Commands extends BaseCommands{
     }
 
     create(options){
-        return new Promise(async (resolve, reject) => {
-            let ID = this._bot?.user?.id
-            if(!ID) ID = (await this._bot.getMe())?.id
-            require("../methods/interaction").createcommand(this._bot.discordjs.token, ID, options, this._bot)
-            .catch(err => reject(err))
-            .then(datas => {
-                this._bot.commands._add(options instanceof Command ? options : datas)
-                return resolve(this._bot.commands.get(datas.id))
-            })
-        })
+        let ID = this._bot?.user?.id
+        let informations = {
+            bot: this._bot,
+            botToken: this._token,
+            application_id: ID
+        }
+        return interactionMethod.create(informations, options)
     }
 
-    modify(options){
-        return new Promise(async (resolve, reject) => {
-            let ID = this._bot?.user?.id
-            if(!ID) ID = (await this._bot.getMe())?.id
-            require("../methods/interaction").modifycommand(this._bot.discordjs.token, ID, options, this._bot)
-            .catch(err => reject(err))
-            .then(datas => {
-                this._bot.commands._delete(datas.id)
-                this._bot.commands._add(options instanceof Command ? options : datas)
-                return resolve(this._bot.commands.get(datas.id))
-            })
-        })
+    modify(cmdID, options){
+        let ID = this._bot?.user?.id
+        let informations = {
+            bot: this._bot,
+            botToken: this._token,
+            application_id: ID,
+            command_id: cmdID
+        }
+        return interactionMethod.modifycommand(informations, options)
     }
 
-    fetchAll(){
+    delete(ID){
+        let app = this._bot?.user?.id
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            application_id: this._bot.user?.id
+            application_id: app,
+            command_id: ID
+        }
+        return interactionMethod.deletecommand(informations)
+    }
+
+    fetchAll(){
+        let ID = this._bot?.user?.id
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            application_id: ID
         }
         return interactionMethod.getcommands(informations)
     }
 
     fetchById(ID){
-        return new Promise(async (resolve, reject) => {
-            let ID2 = this._bot?.user?.id
-            if(!ID2) ID2 = (await this._bot.getMe())?.id
-            require("../methods/interaction").getcommands(this._bot.discordjs.token, ID, ID2, this._bot)
-            .catch(err => reject(err))
-            .then(datas => resolve(datas))
-        })
-    }
-
-    delete(options){
-        return new Promise(async (resolve, reject) => {
-            let ID = this._bot?.user?.id
-            if(!ID) ID = (await this._bot.getMe())?.id
-            require("../methods/interaction").deletecommand(this._bot.discordjs.token, ID, options, this._bot)
-            .catch(err => reject(err))
-            .then(datas => {
-                this._bot.commands._delete(datas.id)
-                return resolve({})
-            })
-        })
+        let app = this._bot?.user?.id
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            application_id: app
+        }
+        return interactionMethod.getcommands(informations, ID)
     }
 
     async awaitInteractions(options){

@@ -42,7 +42,8 @@ module.exports.delete = (informations) => {
         method: apiPath.delete.method,
         token: informations.botToken,
         url: apiPath.delete.url,
-        urlIDS: informations
+        urlIDS: informations,
+        contentType: "url"
     }
     let args = [ ]
     return handler(args, passedOptions, null)

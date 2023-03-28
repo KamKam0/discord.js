@@ -49,20 +49,15 @@ class Initiate{
                 })
                 
                 let cmd = commands.find(cmd => cmd.name === commande.name)
-                let data  = new ApplicationCommand({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_permission: commande.help.dm, default_member_permissions: commande.help.autorisation, id: cmd?.id, application_id: cmd?.application_id, version: cmd?.version})
+                let newCmd  = new ApplicationCommand({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_permission: commande.help.dm, default_member_permissions: commande.help.autorisation, id: cmd?.id, application_id: cmd?.application_id, version: cmd?.version})
                 
-                if(!cmd) this._bot.commands.create(data.toJSON())
+                if(!cmd) newCmd.create()
                 else{
-                    if(!data.compare(cmd)) ""// this._bot.commands.modify(data)
-                    else if(!this._bot.commands.get(data.id)) this._bot.commands._add(data)
-                    else{
-                        this._bot.commands._delete(cmd.id)
-                        this._bot.commands._add(data)
-                    }
+                    if(!newCmd.compare(cmd)) ""// newCmd.modify()
                     commands = commands._delete(cmd.name)
                 }
             })
-            if(commands.length > 0) commands.container.forEach(cmd => this._bot.commands.delete(cmd.id))
+            if(commands.length > 0) commands.container.forEach(cmd => cmd.delete())
 
             return resolve(null)
         })

@@ -6,12 +6,9 @@ const utils = require("../utils/functions")
 const getMe = require("./me").getuser
 const errors = require("../utils/errors.json")
 
-module.exports.reply = async (informations, interaction, response) => {
+module.exports.reply = async (informations, response) => {
     return new Promise(async (resolve, reject) => {
-        if(!interaction) return reject(utils.checks.checkId("An error happened", {code: errors["43"].code, message: errors["43"].message, file: "Interaction"}))
         if(!response) return reject(utils.checks.checkId("An error happened", {code: errors["44"].code, message: errors["44"].message, file: "Interaction"}))
-        if(!interaction.id) return reject(utils.checks.checkId("An error happened", {code: errors["45"].code, message: errors["45"].message, file: "Interaction"}))
-        if(!interaction.token) return reject(utils.checks.checkId("An error happened", {code: errors["45"].code, message: errors["45"].message, file: "Interaction"}))
         
         let method = informations.method
         let  url = (method && informations.path) ? apiPath.modify.reponse.url : apiPath.create.response.url
@@ -24,8 +21,6 @@ module.exports.reply = async (informations, interaction, response) => {
         let basedatas;
         
         if(response.modal && !method){
-            informations.interaction_token = interaction.token,
-            informations.interaction_id = interaction.id
             let passedOptions = {
                 method: apiPath.create.response.method,
                 url: apiPath.create.response.url,
@@ -94,40 +89,26 @@ module.exports.reply = async (informations, interaction, response) => {
         }
     })
 }
-module.exports.modifyreply = async (informations, interaction, response) => {
+module.exports.modifyreply = async (informations, response) => {
     if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
 
-    informations.application_id = informations.id
-    informations.interaction_token = interaction.token
-    informations.id = interaction.id
     informations.method = apiPath.modify.reponse.method
     informations.path = apiPath.modify.reponse.url
 
-    return this.reply(informations, interaction, response)
+    return this.reply(informations, response)
 }
 module.exports.deletereply = async (informations, interaction) => {
-    return new Promise(async (resolve, reject) => {
-        if(!interaction.id) return reject(utils.general.createError("An error happened", {code: errors["45"].code, message: errors["45"].message, file: "Interaction"}))
-        if(!interaction.token) return reject(utils.general.createError("An error happened", {code: errors["45"].code, message: errors["45"].message, file: "Interaction"}))
+    if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
     
-        if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
+    let args = []
+    let passedOptions = {
+        method: apiPath.delete.reponse.method,
+        token: informations.botToken,
+        url: apiPath.delete.reponse.url,
+        urlIDS: informations
+    }
 
-        informations.application_id = informations.id
-        informations.interaction_token = interaction.token
-        informations.id = interaction.id
-        
-        let args = []
-        let passedOptions = {
-            method: apiPath.delete.reponse.method,
-            token: informations.botToken,
-            url: apiPath.delete.reponse.url,
-            urlIDS: informations
-        }
-
-        handler(args, passedOptions, null)
-        .catch(err => reject(err))
-        .then(datas => resolve(datas))
-    })
+    return handler(args, passedOptions, null)
 }
 
 module.exports.getcommands = async (informations, cmdId) => {

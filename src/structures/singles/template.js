@@ -76,7 +76,7 @@ class Template extends Base{
      * 
      * @returns 
      */
-    async deletetemplate(){
+    async delete(){
         let informations = {
             botToken: this._token,
             bot: this._bot,

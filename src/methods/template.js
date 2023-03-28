@@ -62,7 +62,7 @@ module.exports.getall = (informations) => {
     let callBackSuccess = function (data){
         const multiple = require("../structures/managers/templates")
         let newData = new multiple(informations.bot)
-        multiple._addMultiple(data)
+        newData._addMultiple(data)
         return newData
     }
     return handler(args, passedOptions, callBackSuccess)

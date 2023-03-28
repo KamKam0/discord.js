@@ -39,8 +39,6 @@ class base extends Base{
      * @returns 
      */
     async reply(options){
-        console.log(this.id)
-        console.log(this.command_id)
         let informations = {
             botToken: this._token,
             bot: this._bot,

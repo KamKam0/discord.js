@@ -27,6 +27,6 @@ module.exports.revert = {
     privacyLevel: () => revert(privacyLevel)
 }
 
-function revert(){
+function revert(types){
     return require("../utils/functions").general.revertTypes(types)
 }
