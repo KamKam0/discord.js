@@ -4,7 +4,7 @@ class baseGuild extends Base{
     constructor(channel, bot){
         super(channel, bot)
         this.position = channel.position
-        this.permission_overwrites = new overWriteAdministrator(channel.permission_overwrites, this._bot)
+        this.permission_overwrites = new overWriteAdministrator(bot, this.guild_id)
         if(channel.permission_overwrites) this.permission_overwrites._addMultiple(channel.permission_overwrites)
         this.name = channel.name
         this.nsfw = channel.nsfw ?? false

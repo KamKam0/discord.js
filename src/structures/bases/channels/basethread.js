@@ -1,5 +1,8 @@
 const BaseGuild = require("./guildText")
-class baseGuild extends BaseGuild{
+const threadMethod = require("../../../methods/threads")
+const channelMethod = require("../../../methods/channel")
+
+class baseThread extends BaseGuild{
     constructor(channel, bot){
         super(channel, bot)
         this.owner_id = channel.owner_id
@@ -13,32 +16,14 @@ class baseGuild extends BaseGuild{
         this.last_message_id = channel.last_message_id || null
     }
 
-    /**
-     * 
-     * @param {string} memberid 
-     * @returns 
-     */
-    async removeMember(memberid){
+    join(){
         let informations = {
-            botToken: this._token,
             bot: this._bot,
-            id: this.id,
-            user_id: memberid
-        }
-        return require("../../../../methods/threads").removethreadmember(informations)
-    }
-
-    /**
-     * 
-     * @returns 
-     */
-    async leave(){
-        let informations = {
             botToken: this._token,
-            bot: this._bot,
-            id: this.id
+            guild_id: this.guild_id,
+            channel_id: this.id
         }
-        return require("../../../../methods/threads").leavethread(informations)
+        return threadMethod.jointhread(informations)
     }
 
     /**
@@ -46,35 +31,88 @@ class baseGuild extends BaseGuild{
      * @param {string} memberid 
      * @returns 
      */
-    async addMember(memberid){
+    addMember( memberid){
         let informations = {
-            botToken: this._token,
             bot: this._bot,
-            id: this.id,
+            botToken: this._token,
+            guild_id: this.guild_id,
+            channel_id: this.id,
             user_id: memberid
         }
-        return require("../../../../methods/threads").addthreadmember(informations)
+        return threadMethod.addthreadmember(informations)
     }
 
-    async getMember(memberid, withmember, limit, after){
+    /**
+     * 
+     * @param {string} memberid 
+     * @returns 
+     */
+    removeMember(memberid){
         let informations = {
-            botToken: this._token,
             bot: this._bot,
-            id: this.id,
+            botToken: this._token,
+            guild_id: this.guild_id,
+            channel_id: this.id,
             user_id: memberid
         }
-        return require("../../../../methods/threads").getthreadmember(informations, withmember, limit, after)
+        return threadMethod.removethreadmember(informations)
     }
 
-    async getMembers(withmember, limit, after){
+    leave(){
         let informations = {
-            botToken: this._token,
             bot: this._bot,
-            id: this.id,
+            botToken: this._token,
+            guild_id: this.guild_id,
+            channel_id: threadid
+        }
+        return threadMethod.leavethread(informations)
+    }
+
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
+    modify(options){
+        let informations = {
+            bot: this._bot,
+            botToken: this._token,
+            guild_id: this.guild_id,
+            channel_id: this.id
+        }
+        return channelMethod.modify(informations, options)
+    }
+
+    delete(){
+        let informations = {
+            bot: this._bot,
+            botToken: this._token,
+            guild_id: this.guild_id,
+            channel_id: this.id
+        }
+        return channelMethod.delete(informations)
+    }
+
+    getMember(memberid){
+        let informations = {
+            bot: this._bot,
+            botToken: this._token,
+            guild_id: this.guild_id,
+            channel_id: this.id,
             user_id: memberid
         }
-        return require("../../../../methods/threads").getthreadmembers(informations, withmember, limit, after)
+        return threadMethod.getthreadmember(informations)
+    }
+
+    getMember(){
+        let informations = {
+            bot: this._bot,
+            botToken: this._token,
+            guild_id: this.guild_id,
+            channel_id: this.id
+        }
+        return threadMethod.getthreadmembers(informations)
     }
 }
 
-module.exports = baseGuild
+module.exports = baseThread

@@ -1,10 +1,10 @@
 const apiBase = require("./base")
-const baseThreadAPI = apiBase+"/channel/:channel_id/threads"
+const baseThreadAPI = apiBase+"/channels/:channel_id/threads"
 
 let routes = {
     create: {
         method: "POST",
-        url: apiBase+"/channel/:channel_id/messages/:message_id/threads",
+        url: apiBase+"/channels/:channel_id/messages/:message_id/threads",
         withoutMessage: {
             method: "POST",
             url: baseThreadAPI
@@ -49,11 +49,11 @@ let routes = {
         },
         privatesJoinedArchived: {
             method: "GET",
-            url: apiBase+"/channels/{channel.id}/users/@me/threads/archived/private"
+            url: apiBase+"/channels/:channel_id/users/@me/threads/archived/private"
         }
     },
     modify: {
-        method: "DELETE",
+        method: "PATCH",
         url: apiBase+"/channels/:id"
     },
     delete: {

@@ -1,6 +1,6 @@
 const Guilds = require("../Managers/Guilds")
 const Users = require("../Managers/Users")
-const Channels = require("../Managers/Channels")
+const Channels = require("../Managers/channels")
 const EventEmitter = require("node:events")
 const Cooldown = require("@kamkam1_0/cooldown")
 const CommandHandler = require("@kamkam1_0/discord-commandhandler")

@@ -49,7 +49,7 @@ class Members extends BaseMember{
         return kickMethod(informations)
     }
 
-    adduserid(){
+    add(userid){
         let informations = {
             botToken: this._token,
             bot: this._bot,

@@ -152,3 +152,14 @@ module.exports.create = (informations, options) => {
     }
     return handler(args, passedOptions, callBackSuccess)
 }
+
+module.exports.delete = (informations, options) => {
+    let passedOptions = {
+        method: apiPath.delete.method,
+        token: informations.botToken,
+        url: apiPath.delete.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null)
+}

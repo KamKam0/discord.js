@@ -1,4 +1,5 @@
 const BaseGuild = require("../bases/baseguild")
+const guildMethod = require("../../methods/guild")
 
 class Voice extends BaseGuild{
     constructor(voice, bot){
@@ -28,12 +29,26 @@ class Voice extends BaseGuild{
         return this
     }
 
-    async moveto(voiceId){
+    async muteVoice(){
+        let information = {
+            botToken: this._token,
+            bot: this._bot,
+            id: this.guild_id,
+            user_id: this.user_id
+        }
 
+        return guildMethod.modifyuservoice(information, this.channel_id, true)
     }
 
-    async disconnect(){
-        
+    async unmuteVoice(){
+        let information = {
+            botToken: this._token,
+            bot: this._bot,
+            id: this.guild_id,
+            user_id: this.user_id
+        }
+
+        return guildMethod.modifyuservoice(information, this.channel_id, false)
     }
 }
 module.exports = Voice

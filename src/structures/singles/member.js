@@ -1,5 +1,5 @@
 const Base = require("../bases/baseGuild")
-const Roles = require("../managers/roles")
+const Roles = require("../administrators/memberroles")
 const methods = {
     user: require("../../methods/user"),
     message: require("../../methods/message"),
@@ -23,7 +23,7 @@ class Member extends Base{
         this.joined_at = member.joined_at
         this.deaf = member.deaf ?? false
         this.mute = member.mute ?? false
-        this.roles = new Roles(bot, this.guild_id)
+        this.roles = new Roles(bot, this.guild_id, this.user_id)
         this.#handleRoles(member.roles)
         this.voice = {presence: this.guild?.voice_states?.get(this.user_id) || null, channel: this.guild?.voice_states?.get(this.user_id)?.channel || null}
         this.pending = member.pending ?? false
@@ -92,23 +92,21 @@ class Member extends Base{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.user.dm,
-            channel_id: this.channel_id
+            channel_id: this.user.dm
         }
-        return new Promise(async (resolve, reject) => {
-            if(this.user.dm){
-                return methods.message.send(informations, options)
-            }else{
-               methods.user.createDM({bot: this._bot, botToken: this._token}, this.id)
-                .then(datas => { 
-                    if(datas){
-                        this.user.SetDM(datas.id)
-                        return methods.message.send(informations, options)
-                    }
-                })
-                .catch(err => reject(err))
-            }
+
+        if(this.user.dm){
+            return methods.message.send(informations, options)
+        }
+
+        let datas = await methods.user.createDM({bot: this._bot, botToken: this._token}, this.user_id).catch(err => {
+            return Promise.reject(err)
         })
+        if(datas){
+            this.user.setDM(datas.id)
+            informations.channel_id = this.user.dm
+            return methods.message.send(informations, options)
+        }
     }
     
     /**
@@ -116,7 +114,7 @@ class Member extends Base{
      * @param {number} time 
      * @returns 
      */
-    async mute(time){
+    async muteMember(time){
         let informations = {
             botToken: this._token,
             bot: this._bot,
@@ -130,7 +128,7 @@ class Member extends Base{
      * 
      * @returns 
      */
-    async unmute(){
+    async unmuteMember(){
         let informations = {
             botToken: this._token,
             bot: this._bot,
@@ -151,48 +149,6 @@ class Member extends Base{
 
     /**
      * 
-     * @param {string} ID 
-     * @returns 
-     */
-    hasRole(ID){
-        if(!this.roles.get(ID)) return false
-         return true
-    }
-
-    /**
-     * 
-     * @param {string} roleid 
-     * @returns 
-     */
-    async addRole(roleid){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            user_id: this.user_id,
-            guild_id: this.guild_id,
-            role_id: roleid
-        }
-        return methods.role.add(informations)
-    }
-
-    /**
-     * 
-     * @param {string} roleid 
-     * @returns 
-     */
-    removeRole(roleid){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            user_id: this.user_id,
-            guild_id: this.guild_id,
-            role_id: roleid
-        }
-        return methods.role.remove(informations)
-    }
-
-    /**
-     * 
      * @param {object} options 
      * @returns 
      */
@@ -208,6 +164,7 @@ class Member extends Base{
 
 
     get avatarURL(){
+        if(!this.avatar) return this.user?.avatarURL
         return methods.general.iconURL({guild_id: this.guild_id, user_id: this.user_id}, this.avatar, "member")
     }
 
@@ -217,6 +174,7 @@ class Member extends Base{
      * @returns 
      */
     displayAvatarURL(extension){
+        if(!this.avatar) return this.user?.displayAvatarURL(extension)
         return methods.general.iconURL({guild_id: this.guild_id, user_id: this.user_id}, this.avatar, "member", extension)
     }
 }

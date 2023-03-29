@@ -257,7 +257,7 @@ module.exports.modifywelcomescreen = (informations, options) => {
     return handler(args, passedOptions, null)
 }
 
-module.exports.modifyuservoice = (informations, options) => {
+module.exports.modifyuservoice = (informations, channelId, suppress) => {
     let passedOptions = {
         method: apiPath.modify.userVoice.method,
         token: informations.botToken,
@@ -265,7 +265,10 @@ module.exports.modifyuservoice = (informations, options) => {
         urlIDS: informations
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: {
+            channel_id: channelId,
+            suppress
+        }, data_name: "options", order: 3}
     ]
     return handler(args, passedOptions, null)
 }

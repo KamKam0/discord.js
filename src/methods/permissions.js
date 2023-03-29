@@ -1,4 +1,7 @@
 const errors = require("../utils/errors.json")
+const {checkId} = require("../utils/functions").checks
+const {getPermissionsFromBitfields} = require("../utils/functions").gets
+const constants = require("../utils/constants")
 /**
  * 
  * @param {object} guild 
@@ -9,28 +12,24 @@ const errors = require("../utils/errors.json")
 module.exports = (guild, memberid, permission) => {
     if(!memberid) return ({code: errors["4"].code, message: errors["4"].message, file: "Permissions"})
     if(!guild) return ({code: errors["37"].code, message: errors["37"].message, file: "Permissions"})
-    if(!require("../utils/functions").check_id(memberid)) return ({code: errors["56"].code, message: errors["56"].message, file: "Permissions"})
+    if(!checkId(memberid)) return ({code: errors["56"].code, message: errors["56"].message, file: "Permissions"})
     if(permission) permission = String(permission).toUpperCase()
     if(guild.owner_id === memberid){
         if(permission) return true
-        else return Object.keys(require("../constants.js").permissions_bitfield)
+        else return Object.keys(constants.permissionsBitfield)
     }
-    else{
-        const member = guild.members.find(me => me.user.id === memberid)
-        const guildroles = guild.roles
-        const roles = guildroles.filter(role => member.roles.includes(role.id) || role.id === guild)
-        const perm_base = require("../utils/functions")
-        let final_permissions = []
-        roles.forEach(role => {
-            let permissions = perm_base.bietfieldpermission(Number(role.permissions))
-            permissions.forEach(perm => {
-                if(!final_permissions.includes(perm)) final_permissions.push(perm)
-            })
-        })
-        if(permission){
-            if(final_permissions.includes(permission)) return true
-            else false
-        }else return final_permissions
-    }
+    const member = guild.members.get(memberid)
+    const guildroles = guild.roles
+    const roles = guildroles.filter(role => member.roles.has(role.id) || role.id === guild)
+    roles.push(guild.roles.get(guild.id))
+    let finalPermissions = []
+    roles.forEach(role => {
+        let permissions = getPermissionsFromBitfields(Number(role.permissions)).filter(perm => !finalPermissions.includes(perm))
+        finalPermissions.push(...permissions)
+    })
+    if(permission){
+        if(finalPermissions.includes(permission)) return true
+        else false
+    }else return finalPermissions
         
 }

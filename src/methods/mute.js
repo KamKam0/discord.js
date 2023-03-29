@@ -10,7 +10,7 @@ module.exports.mute = async (informations, time) => {
     }
     let args = [
         {value: time, type: "number", data_name: "time", order:4}, 
-        {value: {communication_disabled_until: time}, data_name: "options"}
+        {value: {communication_disabled_until: new Date(Date.now()+(1000*60*time)).toISOString()}, data_name: "options"}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/member")

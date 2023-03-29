@@ -57,6 +57,10 @@ let routes = {
     removeGroupDM: {
         method: "DELETE",
         url: baseChannelAPI+"/:id/recipients/:user_id"
+    },
+    delete: {
+        method: "DELETE",
+        url: baseChannelAPI+"/:id"
     }
 }
 

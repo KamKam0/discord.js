@@ -6,7 +6,8 @@ module.exports.ban = async (informations) => {
         method: apiPath.create.method,
         token: informations.botToken,
         url: apiPath.create.url,
-        urlIDS: informations
+        urlIDS: informations,
+        contentType: "url"
     }
     let args = [ ]
     return handler(args, passedOptions, null)
@@ -17,7 +18,8 @@ module.exports.unban = async (informations) => {
         method: apiPath.delete.method,
         token: informations.botToken,
         url: apiPath.delete.url,
-        urlIDS: informations
+        urlIDS: informations,
+        contentType: "url"
     }
     let args = [ ]
     return handler(args, passedOptions, null)
@@ -33,7 +35,7 @@ module.exports.fetch = async (informations) => {
     let args = [ ]
     let callBackSuccess = function (data){
         const manager = require("../structures/managers/bans")
-        let newData = new manager(informations.bot)
+        let newData = new manager(informations.bot, informations.guild_id)
         newData._addMultiple(data)
         return newData
     }
@@ -50,6 +52,7 @@ module.exports.fetchspe = async (informations) => {
     let args = [ ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/ban")
+        data.guild_id = informations.guild_id
         let newData = new single(data, informations.bot)
         return newData
     }

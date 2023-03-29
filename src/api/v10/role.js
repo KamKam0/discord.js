@@ -24,11 +24,11 @@ let routes = {
     },
     add: {
         method: "PUT",
-        url: apiBase+"/guilds/:guild_id/members/:user_id/roles/:role_id"
+        url: apiBase+"/guilds/:guild_id/members/:user_id/roles/:id"
     },
     remove: {
         method: "DELETE",
-        url: apiBase+"/guilds/:guild_id/members/:user_id/roles/:role_id"
+        url: apiBase+"/guilds/:guild_id/members/:user_id/roles/:id"
     }
 }
 

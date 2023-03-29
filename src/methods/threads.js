@@ -173,3 +173,36 @@ module.exports.getthreadmembers = async (informations, withm, limit, after) => {
     }
     return handler(args, passedOptions, callBackSuccess)
 }
+
+module.exports.getpublicarchived = async (informations) => {
+    let passedOptions = {
+        method: apiPath.get.publicsArchived.method,
+        token: informations.botToken,
+        url: apiPath.get.publicsArchived.url,
+        urlIDS: informations
+    }
+    let args = []
+    return handler(args, passedOptions, null)
+}
+
+module.exports.getprivatearchived = async (informations) => {
+    let passedOptions = {
+        method: apiPath.get.privatesArchived.method,
+        token: informations.botToken,
+        url: apiPath.get.privatesArchived.url,
+        urlIDS: informations
+    }
+    let args = []
+    return handler(args, passedOptions, null)
+}
+
+module.exports.getprivatejoined = async (informations) => {
+    let passedOptions = {
+        method: apiPath.get.privatesJoinedArchived.method,
+        token: informations.botToken,
+        url: apiPath.get.privatesJoinedArchived.url,
+        urlIDS: informations
+    }
+    let args = []
+    return handler(args, passedOptions, null)
+}

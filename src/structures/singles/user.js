@@ -116,5 +116,9 @@ class User extends Base{
     get tag(){
        return `${this.username}#${this.discriminator}`
     }
+
+    setDM(id){
+        this.dm = id
+    }
 }
 module.exports = User

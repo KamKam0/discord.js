@@ -72,11 +72,11 @@ class Guild extends Base{// to test
         this.presences = (new managers.Presences(bot, this.id))._addMultiple(guild.presences.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.channels = (new managers.Channels(bot, this.id))._addMultiple(guild.channels.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
         this.stage_instances = (new managers.StageInstances(bot, this.id))._addMultiple(guild.stage_instances.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.guild_scheduled_events = (new managers.Events(bot, this.id))._addMultiple(guild.guild_scheduled_events.map(el => { return {...el, guild: this, guild_id: this.id}}))//faire les privacy levels
-        this.members = (new managers.Members(bot, this.id))._addMultiple(guild.members.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
+        this.guild_scheduled_events = (new managers.Events(bot, this.id))._addMultiple(guild.guild_scheduled_events.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.members = (new managers.Members(bot, this.id))._addMultiple(guild.members.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.owner = this.members.get(this.owner_id)
-        this.threads = (new managers.Threads(bot, this.id))._addMultiple(guild.threads.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
-        this.voice_states = (new managers.Voices(bot, this.id))._addMultiple(guild.voice_states.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
+        this.threads = (new managers.Threads(bot, this.id))._addMultiple(guild.threads.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.voice_states = (new managers.Voices(bot, this.id))._addMultiple(guild.voice_states.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.voice_states.container.forEach(voi => {
             this.channels.get(voi.channel_id).members.container.push(voi.member)
             this.members.get(voi.user_id).voice.presence = voi
@@ -225,7 +225,7 @@ class Guild extends Base{// to test
      * @param {string} channelid 
      * @returns 
      */
-    async getWebhook(channelid){
+    async getWebhooks(channelid){
         let informations = {
             botToken: this._token,
             bot: this._bot,
@@ -272,22 +272,6 @@ class Guild extends Base{// to test
             id: this.id
         }
         return methods.guildMethod.delete(informations)
-    }
-
-    /**
-     * 
-     * @param {string} userid 
-     * @param {object} options 
-     * @returns 
-     */
-    async addMember(userid, options){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id,
-            user_id: userid
-        }
-        return methods.guildMethod.addmember(informations, options)
     }
 
     /**
@@ -423,22 +407,6 @@ class Guild extends Base{// to test
             id: this.id
         }
         return methods.guildMethod.modifywelcomescreen(informations, options)
-    }
-
-    /**
-     * 
-     * @param {string} userid 
-     * @param {object} options 
-     * @returns 
-     */
-    async modifyUserVoice(userid, options){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id,
-            user_id: userid
-        }
-        return methods.guildMethod.modifyuservoice(informations, options)
     }
 
     get iconURL(){
