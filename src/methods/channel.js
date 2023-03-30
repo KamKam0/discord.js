@@ -1,5 +1,6 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/channel")
+const inviteApiPath = require("../api/v10/invite")
 let channelTypes = require("../types/channels")
 
 module.exports.modify = (informations, options) => {
@@ -46,6 +47,39 @@ module.exports.getinvites = (informations) => {
     let callBackSuccess = function (data){
         const manager = require("../structures/managers/invites")
         let newData = new manager(informations.bot)
+        newData._addMultiple(data)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess)
+}
+
+module.exports.getinvite = (informations) => {
+    let passedOptions = {
+        method: inviteApiPath.get.method,
+        token: informations.botToken,
+        url: inviteApiPath.get.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/invite")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess)
+}
+
+module.exports.deleteinvite = (informations) => {
+    let passedOptions = {
+        method: inviteApiPath.delete.method,
+        token: informations.botToken,
+        url: inviteApiPath.delete.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/invite")
+        let newData = new single(data, informations.bot)
         newData._addMultiple(data)
         return newData
     }

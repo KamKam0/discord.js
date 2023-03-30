@@ -107,7 +107,6 @@ module.exports.getthreadmember = async (informations, withm, limit, after) => {
         urlIDS: informations
     }
     let args = [
-        {value: options, data_name: "options", order: 3},
         {value: withm, required: false, check: false, type: "boolean", order: 4}, 
         {value: limit, required: false, check: false, type: "number", order: 5}, 
         {value: after, check: false, required: false, value_data: "id", order: 6}, 
@@ -125,9 +124,9 @@ module.exports.getthreadmember = async (informations, withm, limit, after) => {
         }
     ]
     let callBackSuccess = function (data){
-        let guild = informations.bot.guilds.get(informations.bot.channels.get(informations.thread_id).guild_id)
+        let guild = informations.bot.guilds.get(informations.guild_id)
         let member;
-        if(guild) member = guild.members.get(informations.member_id)
+        if(guild) member = guild.members.get(informations.user_id)
         if(member) data.member = member
         data.user = informations.bot.users.get(data.user_id)
         return data
@@ -143,7 +142,6 @@ module.exports.getthreadmembers = async (informations, withm, limit, after) => {
         urlIDS: informations
     }
     let args = [
-        {value: options, data_name: "options", order: 3},
         {value: withm, required: false, check: false, type: "boolean", order: 4}, 
         {value: limit, required: false, check: false, type: "number", order: 5}, 
         {value: after, check: false, required: false, value_data: "id", order: 6}, 
@@ -161,7 +159,7 @@ module.exports.getthreadmembers = async (informations, withm, limit, after) => {
         }
     ]
     let callBackSuccess = function (data){
-        let guild = informations.bot.guilds.get(informations.bot.channels.get(informations.thread_id).guild_id)
+        let guild = informations.bot.guilds.get(informations.guild_id)
         data.map(e => {
             let member;
             if(guild) member = guild.members.get(e.user_id)
@@ -175,34 +173,39 @@ module.exports.getthreadmembers = async (informations, withm, limit, after) => {
 }
 
 module.exports.getpublicarchived = async (informations) => {
-    let passedOptions = {
-        method: apiPath.get.publicsArchived.method,
-        token: informations.botToken,
-        url: apiPath.get.publicsArchived.url,
-        urlIDS: informations
-    }
-    let args = []
-    return handler(args, passedOptions, null)
+    return getThreads(informations, apiPath.get.publicsArchived.method, apiPath.get.publicsArchived.url)
 }
 
 module.exports.getprivatearchived = async (informations) => {
-    let passedOptions = {
-        method: apiPath.get.privatesArchived.method,
-        token: informations.botToken,
-        url: apiPath.get.privatesArchived.url,
-        urlIDS: informations
-    }
-    let args = []
-    return handler(args, passedOptions, null)
+    return getThreads(informations, apiPath.get.privatesArchived.method, apiPath.get.privatesArchived.url)
 }
 
 module.exports.getprivatejoined = async (informations) => {
+    return getThreads(informations, apiPath.get.privatesJoinedArchived.method, apiPath.get.privatesJoinedArchived.url)
+}
+
+async function getThreads(informations, method, url){
     let passedOptions = {
-        method: apiPath.get.privatesJoinedArchived.method,
+        method,
         token: informations.botToken,
-        url: apiPath.get.privatesJoinedArchived.url,
+        url,
         urlIDS: informations
     }
     let args = []
-    return handler(args, passedOptions, null)
+    let callBackSuccess = function (data){
+        let guild = informations.bot.guilds.get(informations.guild_id)
+        if(guild){
+            const threadManager = require("../structures/managers/channels")
+            const memberManager = require("../structures/managers/members")
+            let threads = new threadManager(informations.bot, informations.guild_id)
+            let members = new memberManager(informations.bot, informations.guild_id)
+            threads._addMultiple(data.threads)
+            members._addMultiple(data.members)
+
+            data.threads = threads
+            data.members = members
+        }
+        return data
+    }
+    return handler(args, passedOptions, callBackSuccess)
 }

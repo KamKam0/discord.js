@@ -1,5 +1,4 @@
 const Base = require("../../bases/channels/baseguild")
-const channelMethod = require("../../../methods/channel")
 const threadMethod = require("../../../methods/threads")
 const forumTypes = require("../../../types/forum")
 
@@ -18,20 +17,6 @@ class Channel extends Base{
     #type2(type){
         return this._typechange(forumTypes.revert(), type)
     }
-
-    /**
-     * 
-     * @param {object[]} options 
-     * @returns 
-     */
-    async edit(options){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id
-        }
-        return channelMethod.modify(informations, options)
-    }
     
     /**
      * 
@@ -42,7 +27,7 @@ class Channel extends Base{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id
+            channel_id: this.id
         }
         return threadMethod.create_tforum(informations, options)
     }

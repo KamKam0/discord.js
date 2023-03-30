@@ -109,14 +109,14 @@ class baseMultiple{
             case("template"):
                 clas = require("../singles/template")
             break;
-            case("thread"):
-                clas = require("../singles/channels/channelguildtext")
-            break;
             case("voice"):
                 clas = require("../singles/voice")
             break;
             case("webhook"):
                 clas = require("../singles/webhook")
+            break;
+            case("threadmember"):
+                clas = require("../singles/threadmember")
             break;
             case("cpermissions"):
                 clas = require("../singles/permissions/channel")

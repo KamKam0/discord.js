@@ -1,4 +1,4 @@
-const BaseThreads = require("../managers/threads")
+const BaseThreads = require("../managers/channels")
 const threadMethod = require("../../methods/threads")
 const channelMethod = require("../../methods/channel")
 
@@ -100,7 +100,7 @@ class Threads extends BaseThreads{
             bot: this._bot,
             botToken: this._token,
             guild_id: this.guild_id,
-            channel_id: threadid
+            id: threadid
         }
         return channelMethod.modify(informations, options)
     }
@@ -115,7 +115,7 @@ class Threads extends BaseThreads{
             bot: this._bot,
             botToken: this._token,
             guild_id: this.guild_id,
-            channel_id: threadid
+            id: threadid
         }
         return channelMethod.delete(informations)
     }
@@ -141,7 +141,7 @@ class Threads extends BaseThreads{
      * @param {string} threadid 
      * @returns 
      */
-    getMember(threadid){
+    getMembers(threadid){
         let informations = {
             bot: this._bot,
             botToken: this._token,

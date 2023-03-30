@@ -1,4 +1,6 @@
 const BaseStage = require("../managers/stickers")
+const stickerMethod = require("../../methods/sticker")
+
 class Stickers extends BaseStage{
     constructor(bot, guild_id){
         super(bot, guild_id)
@@ -18,7 +20,27 @@ class Stickers extends BaseStage{
             botToken: this._token,
             guild_id: this.guild_id
         }
-        return require("../methods/stickers").create(informations, name, file, tags, description)
+        return stickerMethod.create(informations, name, file, tags, description)
+    }
+    
+    async modify(id, options){
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            id,
+            guild_id: this.guild_id
+        }
+        return stickerMethod.modify(informations, options)
+    }
+    
+    async delete(id){
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            id,
+            guild_id: this.guild_id
+        }
+        return stickerMethod.delete(informations)
     }
 }
 

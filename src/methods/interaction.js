@@ -62,15 +62,14 @@ module.exports.reply = async (informations, response) => {
                 for(const file in checkfiles){
                     body_files.append(`files[${file}]`, checkfiles[file].buffer, `${checkfiles[file].name}.${checkfiles[file].extension}`);
                 }
-                
-                if(method !== "PATCH") body_files.append("payload_json", JSON.stringify({type: 4, data: body}));
-                else body_files.append("payload_json", JSON.stringify(body));
             
                 passedOptions.boundary = body_files.getBoundary()
+                if(method !== "PATCH") body_files.append("payload_json", JSON.stringify({type: 4, data: body}));
+                else body_files.append("payload_json", JSON.stringify(body));
                 let args = [
                     {value: body_files, data_name: "options", stringified: false, order: 3}
                 ]
-
+                informations.contentType = "file"
                 basedatas = handler(args, passedOptions, callBackSuccess)
             }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject(createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Interaction"}))
             

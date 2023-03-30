@@ -1,4 +1,8 @@
 const Base = require("./base")
+const messageMethod = require("../../../methods/message")
+const channelMethod = require("../../../methods/channel")
+const collector = require("../../../handlers/collector")
+
 class TextBase extends Base{
     constructor(channel, bot){
         super(channel, bot)
@@ -13,7 +17,7 @@ class TextBase extends Base{
      * @returns 
      */
     async awaitMessages(options){
-        return require("../../../../Classes/Collector")(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
+        return collector(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
     }
 
     /**
@@ -25,7 +29,7 @@ class TextBase extends Base{
      * @returns 
      */
     collectMessages(options){
-        return require("../../../../Classes/Collector").collect(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
+        return collector.collect(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
     }
 
     /**
@@ -37,24 +41,24 @@ class TextBase extends Base{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id
+            channel_id: this.id
         }
-        return require("../../../../methods/message").fetch_messages(informations, limit)
+        return messageMethod.fetch_messages(informations, limit)
     }
     
     /**
      * 
-     * @param {string} ID 
+     * @param {string} id 
      * @returns 
      */
-    async fetchMessage(ID){
+    async fetchMessage(id){
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id,
-            message_id: ID
+            id,
+            channel_id: this.id
         }
-        return require("../../../../methods/message").fetch_messages(informations)
+        return messageMethod.fetch_messages(informations)
     }
 
     /**
@@ -67,7 +71,7 @@ class TextBase extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../../../methods/channel").getpins(informations)
+        return channelMethod.getpins(informations)
     }
 
     /**
@@ -80,7 +84,7 @@ class TextBase extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../../../methods/channel").triggertyping(informations)
+        return channelMethod.triggertyping(informations)
     }
 
     /**
@@ -92,9 +96,9 @@ class TextBase extends Base{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id
+            channel_id: this.id
         }
-        return require("../../../../methods/message").send(informations, options)
+        return messageMethod.send(informations, options)
     }
 }
 

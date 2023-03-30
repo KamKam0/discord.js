@@ -7,7 +7,6 @@ const errors = require("../utils/errors.json")
 module.exports.send = async (informations, options) => {
     return new Promise(async (resolve, reject) => {
         if(!options) return reject(utils.general.createError("An error happened", {code: errors["8"].code, message: errors["8"].message, file: "Message"}))
-        
         let method = informations.method
         let  url = (method && informations.path) ? apiPath.create.url : apiPath.create.url
         if(!method) method = apiPath.create.method
@@ -25,12 +24,14 @@ module.exports.send = async (informations, options) => {
         if(!method) body.sticker_ids = utils.checks.checkStickers(options.sticker_ids)
         
         let checkfiles = utils.checks.checkFiles(options.files)
+        let boundary = null
         if(checkfiles && Array.isArray(checkfiles) === true && checkfiles[0]){
             const FormData = require("form-data")
             body_files = new FormData()
             for(const file in checkfiles){
                 body_files.append(`files[${file}]`, checkfiles[file].buffer, `${checkfiles[file].name}.${checkfiles[file].extension}`);
             }
+            boundary = body_files.getBoundary()
             body_files.append("payload_json", JSON.stringify(body))
         }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids?.length === 0) return reject(utils.general.createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Message"}))
 
@@ -42,7 +43,8 @@ module.exports.send = async (informations, options) => {
             url,
             token: informations.botToken,
             urlIDS: informations,
-            boundary: body_files ? body_files.getBoundary() : null
+            boundary,
+            contentType: body_files ? "file" : "basic"
         }
         let callBackSuccess = function(data){
             if(data.requestStatus === 204) return data

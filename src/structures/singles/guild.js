@@ -8,7 +8,7 @@ const methods = {
     webhookMethod:  require("../../methods/webhooks")
 }
 const managers = {
-    Channels: require('../administrators/channels'),
+    Channels: require('../administrators/channelguilds'),
     Roles: require("../administrators/roles"),
     Members: require("../administrators/members"),
     Emojis: require("../administrators/emojis"),
@@ -67,8 +67,8 @@ class Guild extends Base{// to test
         this.templates = new managers.Templates(this._bot, this.id)
         this.roles = (new managers.Roles(bot, this.id))._addMultiple(guild.roles.map(el => { return {...el, guild: this, guild_id: this.id}}))
         
-        this.emojis = (new managers.Emojis(bot, this.id))._addMultiple(guild.emojis.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
-        this.stickers = (new managers.Stickers(bot, this.id))._addMultiple(guild.stickers.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
+        this.emojis = (new managers.Emojis(bot, this.id))._addMultiple(guild.emojis.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.stickers = (new managers.Stickers(bot, this.id))._addMultiple(guild.stickers.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.presences = (new managers.Presences(bot, this.id))._addMultiple(guild.presences.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.channels = (new managers.Channels(bot, this.id))._addMultiple(guild.channels.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
         this.stage_instances = (new managers.StageInstances(bot, this.id))._addMultiple(guild.stage_instances.map(el => { return {...el, guild: this, guild_id: this.id}}))

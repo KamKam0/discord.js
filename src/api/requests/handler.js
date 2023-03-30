@@ -1,6 +1,4 @@
 const router = require("./router")
-const utils = require("../../utils/functions")
-const createError = utils.general.createError
 const errors = require("../../utils/errors.json")
 
 /**
@@ -17,6 +15,8 @@ const errors = require("../../utils/errors.json")
  */
 module.exports = async (args, options, callbackSuccess) => {
     return new Promise(async (resolve, reject) => {
+        const utils = require("../../utils/functions")
+        const createError = utils.general.createError
 
         //check des params
         if(!Array.isArray(args)) return reject(createError(errors["88"].message, {code: errors["88"].code, message: errors["88"].message}))
@@ -44,7 +44,10 @@ module.exports = async (args, options, callbackSuccess) => {
 
         //request via le router
         let requestBody = args.find(e => e.data_name === "options")?.value
-        if(requestBody) basedata = router(requestURLWithQuery, {method: options.method, headers, body: JSON.stringify(requestBody)})
+        if(requestBody) {
+            if(!contentType.includes("multipart/form-data;")) requestBody = JSON.stringify(requestBody)
+            basedata = router(requestURLWithQuery, {method: options.method, headers, body: requestBody })
+        }
         else basedata = router(requestURLWithQuery, {method: options.method, headers})
 
         //response à la requête

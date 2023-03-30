@@ -2,8 +2,8 @@ const Base = require("../bases/basemultiple")
 const channelTypes = require("../../types/channels")
 
 class Channels extends Base{
-    constructor(_bot){
-        super(_bot)
+    constructor(_bot, guildid){
+        super(_bot, guildid)
     }
 
     _add(data){

@@ -6,7 +6,7 @@ class Channel extends GuildVoice{
     constructor(channel, bot){
         super(channel, bot)
     }
-    
+
     /**
      * 
      * @param {object} options 
@@ -16,7 +16,7 @@ class Channel extends GuildVoice{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id
+            channel_id: this.id
         }
         return messageMethod.send(informations, options)
     }
@@ -30,26 +30,26 @@ class Channel extends GuildVoice{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id
+            channel_id: this.id
         }
         return messageMethod.fetch_messages(informations, limit)
     }
     
     /**
      * 
-     * @param {string} ID 
+     * @param {string} id 
      * @returns 
      */
-    async fetchMessage(ID){
+    async fetchMessage(id){
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id,
-            message_id: ID
+            id,
+            channel_id: this.id
         }
         return messageMethod.fetch_messages(informations)
     }
-    
+
     /**
      * 
      * @param {number} number 
@@ -59,7 +59,8 @@ class Channel extends GuildVoice{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id
+            id: this.id,
+            channel_id: this.id
         }
         return new Promise(async (resolve, reject) => {
             messageMethod.fetch_messages(informations, number)

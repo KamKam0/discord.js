@@ -1,4 +1,8 @@
 const GuildBase = require("./baseguild")
+const messageMethod = require("../../../methods/message")
+const channelMethod = require("../../../methods/channel")
+const collector = require("../../../handlers/collector")
+
 class guildText extends GuildBase{
     constructor(channel, bot){
         super(channel, bot)
@@ -14,15 +18,16 @@ class guildText extends GuildBase{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id
+            id: this.id,
+            channel_id: this.id
         }
         return new Promise(async (resolve, reject) => {
-            require("../../../../methods/message").fetch_messages(informations, number)
+            messageMethod.fetch_messages(informations, number)
             .catch(err => reject(err))
             .then(datas => {
-                require("../../../../methods/channel").bulkdelete(informations, datas.map(msg => msg.id))
+                channelMethod.bulkdelete(informations, datas.map(msg => msg.id))
                 .catch(err => reject(err))
-                .then(vdatas => { return resolve(vdatas)})
+                .then(vdatas => resolve(vdatas))
             })
         })
     }
@@ -38,7 +43,7 @@ class guildText extends GuildBase{
             bot: this._bot,
             id: this.id
         }
-        return require("../../../../methods/channel").follownews(informations, targetid)
+        return channelMethod.follownews(informations, targetid)
     }
 
     /**
@@ -50,7 +55,7 @@ class guildText extends GuildBase{
      * @returns 
      */
     async awaitMessages(options){
-        return require("../../../../Classes/Collector")(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
+        return collector(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
     }
 
     /**
@@ -62,7 +67,7 @@ class guildText extends GuildBase{
      * @returns 
      */
     collectMessages(options){
-        return require("../../../../Classes/Collector").collect(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
+        return collector.collect(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
     }
 
     /**
@@ -74,24 +79,24 @@ class guildText extends GuildBase{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id
+            channel_id: this.id
         }
-        return require("../../../../methods/message").fetch_messages(informations, limit)
+        return messageMethod.fetch_messages(informations, limit)
     }
     
     /**
      * 
-     * @param {string} ID 
+     * @param {string} id 
      * @returns 
      */
-    async fetchMessage(ID){
+    async fetchMessage(id){
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id,
-            message_id: ID
+            id,
+            channel_id: this.id
         }
-        return require("../../../../methods/message").fetch_messages(informations)
+        return messageMethod.fetch_messages(informations)
     }
 
     /**
@@ -104,7 +109,7 @@ class guildText extends GuildBase{
             bot: this._bot,
             id: this.id
         }
-        return require("../../../../methods/channel").getpins(informations)
+        return channelMethod.getpins(informations)
     }
 
     /**
@@ -117,7 +122,7 @@ class guildText extends GuildBase{
             bot: this._bot,
             id: this.id
         }
-        return require("../../../../methods/channel").triggertyping(informations)
+        return channelMethod.triggertyping(informations)
     }
 
     /**
@@ -129,9 +134,9 @@ class guildText extends GuildBase{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id
+            channel_id: this.id
         }
-        return require("../../../../methods/message").send(informations, options)
+        return messageMethod.send(informations, options)
     }
     
 }

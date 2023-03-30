@@ -1,5 +1,6 @@
 const Base = require("../baseguild")
 const channelTypes = require("../../../types/channels")
+const channelMethod = require("../../../methods/channel")
 
 class base extends Base{
     constructor(channel, bot){
@@ -37,7 +38,7 @@ class base extends Base{
             bot: this._bot,
             id: this.id
         }
-        return require("../../../../methods/channel").modify(informations, options)
+        return channelMethod.modify(informations, options)
     }
 }
 

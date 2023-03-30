@@ -5,26 +5,21 @@ const errors = require("../utils/errors.json")
 
 module.exports.create = async (informations, name, imagedata, roles) => {
     return new Promise(async (resolve, reject) => {
-        if(!token) return reject(utils.general.createError("An error happened", {code: errors["12"].code, message: errors["12"].message, file: "Emoji"}))
-        if(!guildid) return reject(utils.general.createError("An error happened", {code: errors["1"].code, message: errors["1"].message, file: "Emoji"}))
-        if(!utils.checks.checkId(guildid)) return reject(utils.general.createError("An error happened", {code: errors["49"].code, message: errors["49"].message, file: "Emoji"}))
         if(!name) return reject(utils.general.createError("An error happened", {code: errors["19"].code, message: errors["19"].message, file: "Emoji"}))
         if(!imagedata) return reject(utils.general.createError("An error happened", {code: errors["20"].code, message: errors["20"].message, file: "Emoji"}))
         if(!roles) return reject(utils.general.createError("An error happened", {code: errors["21"].code, message: errors["21"].message, file: "Emoji"}))
         
-        const FormData = require("form-data")
-        let body = new FormData()
-        body.append(`files[0]`, imagedata.buffer, `${imagedata.name}.${imagedata.extension}`);
-        let bodyAdding = {name: name, roles: roles}
-        body.append("payload_json", JSON.stringify(bodyAdding))
+        let body = {
+            name,
+            image: imagedata,
+            roles
+        }
 
         let passedOptions = {
             method: apiPath.create.method,
             url: apiPath.create.url,
             token: informations.botToken,
-            contentType: "file",
-            urlIDS: informations,
-            boundary: body.getBoundary()
+            urlIDS: informations
         }
         let args = [
             {value: body, data_name: "options", order: 3}

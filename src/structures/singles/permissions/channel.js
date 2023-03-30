@@ -16,5 +16,35 @@ class Permissions extends base{
     #type(type){
         return this._typechange(automoderationTypes.revert(), type)
     }
+
+    /**
+     * 
+     * @param {object} overwrites 
+     * @returns 
+     */
+    async edit(overwrites){
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            id: this.channel_id,
+            overwrite_id: this.id
+        }
+        return channelMethod.editpermissions(informations, overwrites)
+    }
+
+    /**
+     * 
+     * @param {object} overwrites 
+     * @returns 
+     */
+    async delete(){
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            id: this.channel_id,
+            overwrite_id: this.id
+        }
+        return channelMethod.deletepermission(informations, overwrites)
+    }
 }
 module.exports = Permissions

@@ -1,6 +1,7 @@
 const BaseGuild = require("./guildText")
 const threadMethod = require("../../../methods/threads")
 const channelMethod = require("../../../methods/channel")
+const threadmembersAdministrator = require("../../administrators/threadmembers")
 
 class baseThread extends BaseGuild{
     constructor(channel, bot){
@@ -14,48 +15,16 @@ class baseThread extends BaseGuild{
         this.owner = channel.owner_id && this.guild ? this.guild.members.get(channel.owner_id).user : null
         this.flags = channel.flags || 0
         this.last_message_id = channel.last_message_id || null
+        this.members = new threadmembersAdministrator(this._bot, this.guild_id, this.id)
     }
 
     join(){
         let informations = {
             bot: this._bot,
             botToken: this._token,
-            guild_id: this.guild_id,
             channel_id: this.id
         }
         return threadMethod.jointhread(informations)
-    }
-
-    /**
-     * 
-     * @param {string} memberid 
-     * @returns 
-     */
-    addMember( memberid){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            channel_id: this.id,
-            user_id: memberid
-        }
-        return threadMethod.addthreadmember(informations)
-    }
-
-    /**
-     * 
-     * @param {string} memberid 
-     * @returns 
-     */
-    removeMember(memberid){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            channel_id: this.id,
-            user_id: memberid
-        }
-        return threadMethod.removethreadmember(informations)
     }
 
     leave(){
@@ -63,7 +32,7 @@ class baseThread extends BaseGuild{
             bot: this._bot,
             botToken: this._token,
             guild_id: this.guild_id,
-            channel_id: threadid
+            channel_id: this.id
         }
         return threadMethod.leavethread(informations)
     }
@@ -78,7 +47,7 @@ class baseThread extends BaseGuild{
             bot: this._bot,
             botToken: this._token,
             guild_id: this.guild_id,
-            channel_id: this.id
+            id: this.id
         }
         return channelMethod.modify(informations, options)
     }
@@ -88,30 +57,9 @@ class baseThread extends BaseGuild{
             bot: this._bot,
             botToken: this._token,
             guild_id: this.guild_id,
-            channel_id: this.id
+            id: this.id
         }
         return channelMethod.delete(informations)
-    }
-
-    getMember(memberid){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            channel_id: this.id,
-            user_id: memberid
-        }
-        return threadMethod.getthreadmember(informations)
-    }
-
-    getMember(){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            channel_id: this.id
-        }
-        return threadMethod.getthreadmembers(informations)
     }
 }
 
