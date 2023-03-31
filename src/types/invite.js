@@ -1,6 +1,6 @@
 let types = {
     Stream: 1,
-    EmbeddedApplication
+    EmbeddedApplication: 2
 }
 
 module.exports.types = types

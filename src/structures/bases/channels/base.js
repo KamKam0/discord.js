@@ -32,7 +32,7 @@ class base extends Base{
      * @param {object[]} options 
      * @returns 
      */
-    async edit(options){
+    async modify(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,

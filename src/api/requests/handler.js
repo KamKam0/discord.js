@@ -54,8 +54,8 @@ module.exports = async (args, options, callbackSuccess) => {
         basedata
         .then(data => {
             if(data.requestStatus < 204){
-                if(callbackSuccess) return resolve(callbackSuccess(data))
-                return resolve(data)
+                if(callbackSuccess) return resolve(callbackSuccess(data.response))
+                return resolve(data.response)
             }
             else if(data.requestStatus == 204) return resolve(null)
             else if(data.retry_after){

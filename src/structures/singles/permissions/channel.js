@@ -22,7 +22,7 @@ class Permissions extends base{
      * @param {object} overwrites 
      * @returns 
      */
-    async edit(overwrites){
+    async modify(overwrites){
         let informations = {
             botToken: this._token,
             bot: this._bot,

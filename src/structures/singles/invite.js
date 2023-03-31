@@ -48,7 +48,7 @@ class Invite extends Base{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            id: this.id
+            id: this.code
         }
         return guildMethod.deleteinvite(informations)
     }

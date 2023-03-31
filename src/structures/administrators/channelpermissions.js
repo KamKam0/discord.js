@@ -12,7 +12,7 @@ class ChannelPermissions extends BasePermissions{
      * @param {object} overwrites 
      * @returns 
      */
-    async edit(id, overwrites){
+    async modify(id, overwrites){
         let informations = {
             botToken: this._token,
             bot: this._bot,
@@ -34,7 +34,7 @@ class ChannelPermissions extends BasePermissions{
             id: this.channel_id,
             overwrite_id: id
         }
-        return channelMethod.deletepermission(informations, overwrites)
+        return channelMethod.deletepermission(informations)
     }
 }
 

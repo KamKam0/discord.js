@@ -12,7 +12,8 @@ class Channels extends BaseChannel{
             botToken: this._token,
             guild_id: this.guild_id || null
         }
-        return channelMethod.create(informations,options)
+        
+        return channelMethod.create(informations, options)
     }
 }
 

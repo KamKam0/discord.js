@@ -21,7 +21,7 @@ class Channel extends GuildVoice{
         return messageMethod.send(informations, options)
     }
 
-    /**
+    /**ç
      * 
      * @param {number} limit 
      * @returns 
@@ -47,7 +47,7 @@ class Channel extends GuildVoice{
             id,
             channel_id: this.id
         }
-        return messageMethod.fetch_messages(informations)
+        return messageMethod.fetch_message(informations)
     }
 
     /**

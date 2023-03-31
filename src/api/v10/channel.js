@@ -4,7 +4,7 @@ const baseChannelAPI = apiBase+"/channels"
 let routes = {
     create: {
         method: "POST",
-        url: apiBase+"/:guild_id/channels"
+        url: apiBase+"/guilds/:guild_id/channels"
     },
     get: {
         method: "GET",

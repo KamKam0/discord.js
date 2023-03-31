@@ -40,7 +40,7 @@ class ChannelInvites extends BaseInvites{
             bot: this._bot,
             id
         }
-        return channelMethod.deleteinvite(informations, overwrites)
+        return channelMethod.deleteinvite(informations)
     }
 }
 

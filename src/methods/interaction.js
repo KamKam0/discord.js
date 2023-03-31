@@ -42,7 +42,7 @@ module.exports.reply = async (informations, response) => {
                 boundary: null
             }
             let callBackSuccess = function(data){
-                if(data.requestStatus === 204) return data
+                if(!data) return data
                 const single = require("../structures/singles/message")
                 let newData = new single(data, informations.bot)
                 return newData

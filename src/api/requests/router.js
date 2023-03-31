@@ -23,6 +23,6 @@ module.exports = async (url, options) => {
 
         jsonDatas.requestStatus = initialRequest.status
 
-        return resolve(jsonDatas)
+        return resolve({response: jsonDatas, requestStatus: initialRequest.status})
     })
 }

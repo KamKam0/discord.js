@@ -80,21 +80,23 @@ module.exports.deleteinvite = (informations) => {
     let callBackSuccess = function (data){
         const single = require("../structures/singles/invite")
         let newData = new single(data, informations.bot)
-        newData._addMultiple(data)
         return newData
     }
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.createinvite = (informations) => {
+module.exports.createinvite = (informations, options) => {
     let passedOptions = {
-        method: apiPath.invites.getInvites.method,
+        method: apiPath.invites.createInvite.method,
         token: informations.botToken,
-        url: apiPath.invites.getInvites.url,
+        url: apiPath.invites.createInvite.url,
         urlIDS: informations
     }
-    let args = [ ]
+    let args = [
+        {value: options || {}, data_name: "options"}
+    ]
     let callBackSuccess = function (data){
+        console.log(data)
         const single = require("../structures/singles/invite")
         let newData = new single(data, informations.bot)
         return newData
@@ -110,7 +112,7 @@ module.exports.editpermissions = (informations, newoverwrite) => {
         urlIDS: informations
     }
     let args = [
-        {value: newoverwrite, value_data: "newoverwrite", type: "array", data_name: "options", order:3}
+        {value: newoverwrite, value_data: "newoverwrite", type: "object", data_name: "options", order:3}
     ]
     return handler(args, passedOptions, null)
 }

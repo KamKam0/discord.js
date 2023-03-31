@@ -80,8 +80,11 @@ module.exports.removethreadmember = async (informations) => {
     let args = []
     return handler(args, passedOptions, null)
 }
-
-module.exports.create_tforum = (token, channelid, options, bot) => {
+/*name: "treoi",
+            message: {
+                content: "zlkfj"
+            }*/
+module.exports.create_tforum = (informations, options) => {
     let passedOptions = {
         method: apiPath.create.forum.method,
         token: informations.botToken,

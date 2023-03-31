@@ -9,7 +9,7 @@ class baseGuild extends Base{
         this.position = channel.position
         this.permission_overwrites = new overWriteAdministrator(bot, this.guild_id, this.id)
         this.invites = new inviteAdministrator(bot, this.guild_id, this.id)
-        if(channel.permission_overwrites) this.permission_overwrites._addMultiple(channel.permission_overwrites)
+        if(channel.permission_overwrites) this.permission_overwrites._addMultiple(channel.permission_overwrites.map(perm => perm.channel_id = this.id))
         this.name = channel.name
         this.nsfw = channel.nsfw ?? false
         this.parent_id = channel.parent_id || null

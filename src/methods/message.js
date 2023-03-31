@@ -47,7 +47,7 @@ module.exports.send = async (informations, options) => {
             contentType: body_files ? "file" : "basic"
         }
         let callBackSuccess = function(data){
-            if(data.requestStatus === 204) return data
+            if(!data) return data
             const single = require("../structures/singles/message")
             let newData = new single(data, informations.bot)
             return newData
@@ -66,39 +66,48 @@ module.exports.modify = async (informations, options) => {
     return this.send(informations, options)
 }
 
+
+module.exports.fetch_message = async (informations) => {
+    let passedOptions = {
+        token: informations.botToken,
+        urlIDS: informations,
+        method: apiPath.get.method,
+        url: apiPath.get.url
+    }
+
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/message")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    let args = []
+    return handler(args, passedOptions, callBackSuccess)
+}
+
 module.exports.fetch_messages = async (informations, limit) => {
     let passedOptions = {
         token: informations.botToken,
-        urlIDS: informations
+        urlIDS: informations,
+        method: apiPath.get.list.method,
+        url: apiPath.get.list.url
     }
-    
-    if(!limit || isNaN(limit) || Number(limit) < 1 || Number(limit) > 100){
-        if(!isNaN(limit) && limit.length >= 22) limit = {type: "sfetch", id: limit}
-        else limit = {type: "gfetch", number: limit}
-    }else limit = {type: "gfetch", number: limit}
 
-    if(limit.type === "sfetch"){
-        passedOptions.method = apiPath.get.method
-        passedOptions.url = apiPath.get.url
-        let callBackSuccess = function (data){
-            const single = require("../structures/singles/message")
-            let newData = new single(data, informations.bot)
-            return newData
-        }
-        let args = []
-        return handler(args, passedOptions, callBackSuccess)
-    }else{
-        passedOptions.method = apiPath.get.list.method
-        passedOptions.url = apiPath.get.list.url
-        let callBackSuccess = function (data){
-            const manager = require("../structures/singles/message")
-            const messages = new manager(informations.bot)
-            messages._addMultiple(data)
-            return messages
-        }
-        let args = []
-        return handler(args, passedOptions, callBackSuccess)
+    let callBackSuccess = function (data){
+        const manager = require("../structures/managers/messages")
+        const messages = new manager(informations.bot)
+        messages._addMultiple(data)
+        return messages
     }
+    let args = [
+        {
+            value: { limit }, 
+            data_name: "infosURL",
+            required: false,  
+            check: [
+                {name: "limit", type: "number", limit: 100}
+            ]
+        }]
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.crosspost = async (informations) => {

@@ -96,7 +96,7 @@ class guildText extends GuildBase{
             id,
             channel_id: this.id
         }
-        return messageMethod.fetch_messages(informations)
+        return messageMethod.fetch_message(informations)
     }
 
     /**
