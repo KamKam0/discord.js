@@ -8,7 +8,7 @@ const methods = {
     webhookMethod:  require("../../methods/webhooks")
 }
 const managers = {
-    Channels: require('../administrators/channelguilds'),
+    Channels: require('../administrators/channels/channels'),
     Roles: require("../administrators/roles"),
     Members: require("../administrators/members"),
     Emojis: require("../administrators/emojis"),
@@ -66,7 +66,6 @@ class Guild extends Base{// to test
         this.nsfw = guild.nsfw ?? false
         this.templates = new managers.Templates(this._bot, this.id)
         this.roles = (new managers.Roles(bot, this.id))._addMultiple(guild.roles.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        
         this.emojis = (new managers.Emojis(bot, this.id))._addMultiple(guild.emojis.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.stickers = (new managers.Stickers(bot, this.id))._addMultiple(guild.stickers.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.presences = (new managers.Presences(bot, this.id))._addMultiple(guild.presences.map(el => { return {...el, guild: this, guild_id: this.id}}))
@@ -82,7 +81,6 @@ class Guild extends Base{// to test
             this.members.get(voi.user_id).voice.presence = voi
             this.members.get(voi.user_id).voice.channel = this.channels.get(voi.channel_id)
         })
-
         this.afk_channel = this.channels.get(this.afk_channel_id) || null
         this.system_channel = this.channels.get(this.system_channel_id) || null
         this.widget_channel = this.channels.get(this.widget_channel_id) || null

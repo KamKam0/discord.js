@@ -1,5 +1,5 @@
-const BasePermissions = require("../managers/channelpermissions")
-const channelMethod = require("../../methods/channel")
+const BasePermissions = require("../../managers/channelpermissions")
+const channelMethod = require("../../../methods/channel")
 
 class ChannelPermissions extends BasePermissions{
     constructor(bot, guild_id, channel_id){

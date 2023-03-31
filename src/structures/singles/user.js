@@ -53,6 +53,7 @@ class User extends Base{
                 .then(datas => { 
                     if(datas){
                         this.dm = datas.id
+                        informations.channel_id = this.dm
                         messageMethod.send(informations, options)
                         .then(result => resolve(result))
                         .catch(err => reject(err))

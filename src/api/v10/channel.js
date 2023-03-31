@@ -43,12 +43,12 @@ let routes = {
         url: baseChannelAPI+"/:id/followers"
     },
     getPins: {
-        method: "POST",
+        method: "GET",
         url: baseChannelAPI+"/:id/pins"
     },
     triggerTyping: {
         method: "POST",
-        url: baseChannelAPI+"/:id/pins/typing"
+        url: baseChannelAPI+"/:id/typing"
     },
     addGroupDM: {
         method: "PUT",

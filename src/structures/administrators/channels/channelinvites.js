@@ -1,7 +1,7 @@
-const BaseInvites = require("../managers/invites")
-const channelMethod = require("../../methods/channel")
+const Base = require("../../bases/basemuldecla")
+const channelMethod = require("../../../methods/channel")
 
-class ChannelInvites extends BaseInvites{
+class ChannelInvites extends Base{
     constructor(bot, guild_id, channel_id){
         super(bot, guild_id)
         this.channel_id = channel_id

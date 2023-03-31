@@ -1,5 +1,5 @@
-const BaseChannel = require("../managers/channels")
-const channelMethod = require("../../methods/channel")
+const BaseChannel = require("../../managers/channels")
+const channelMethod = require("../../../methods/channel")
 
 class Channels extends BaseChannel{
     constructor(bot, guild_id){

@@ -1,9 +1,10 @@
-const BaseThreadMembers = require("../managers/threadmembers")
+const Base = require("../bases/basemuldecla")
 const threadMethod = require("../../methods/threads")
 
-class ThreadMembers extends BaseThreadMembers{
+class ThreadMembers extends Base{
     constructor(bot, guild_id, thread_id){
-        super(bot, guild_id, thread_id)
+        super(bot, guild_id)
+        this.thread_id = thread_id
     }
     
     async add(user_id){

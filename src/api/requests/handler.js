@@ -58,13 +58,13 @@ module.exports = async (args, options, callbackSuccess) => {
                 return resolve(data.response)
             }
             else if(data.requestStatus == 204) return resolve(null)
-            else if(data.retry_after){
+            else if(data.response.retry_after){
                 setTimeout(() => {
                     require("../requests/handler")(args, options, callbackSuccess, executeDeferently)
                     .catch(err => reject(err))
                     .then(datas => resolve(datas))
-                }, data.retry_after * 1000)
-            }else return reject(data)
+                }, data.response.retry_after * 1000)
+            }else return reject(data.response)
         })
         .catch(err => reject(err))
     })

@@ -1,8 +1,8 @@
-const BaseCommands = require("../managers/applicationcommands")
 const interactionMethod = require("../../methods/interaction")
 const collector = require("../../handlers/collector")
+const Base = require("../bases/basemuldecla")
 
-class Commands extends BaseCommands{
+class Commands extends Base{
     constructor(bot){
         super(bot)
     }

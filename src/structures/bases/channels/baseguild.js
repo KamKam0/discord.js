@@ -1,6 +1,6 @@
 const Base = require("./base")
-const overWriteAdministrator = require("../../administrators/channelpermissions")
-const inviteAdministrator = require("../../administrators/channelinvites")
+const overWriteAdministrator = require("../../administrators/channels/channelpermissions")
+const inviteAdministrator = require("../../administrators/channels/channelinvites")
 const channelMethod = require("../../../methods/channel")
 
 class baseGuild extends Base{

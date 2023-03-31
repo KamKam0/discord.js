@@ -1,5 +1,6 @@
-const BaseAutoMod = require("../managers/automoderations")
-class AutoModerations extends BaseAutoMod{
+const Base = require("../bases/basemuldecla")
+
+class AutoModerations extends Base{
     constructor(bot, guild_id){
         super(bot, guild_id)
     }

@@ -1,9 +1,9 @@
-class baseMultiple{
+const base = require("./basemuldecla")
+
+class baseMultiple extends base{
     constructor(_bot, guild_id, name){
+        super(_bot, guild_id)
         this.container = []
-        this._bot = _bot
-        this._token = _bot.token
-        this.guild_id = guild_id || null
         this.name = name || null
         this.modifyConstants = []
     }
