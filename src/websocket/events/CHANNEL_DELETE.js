@@ -6,7 +6,7 @@ module.exports = async (bot, datas) => {
     guild.channels._delete(datas.id)
   }else oldchannel = bot.channels.get(datas.id)
   bot.channels._delete(datas.id)
-  if(bot.databaseState !== "unstable") bot.emit(name(), bot, oldchannel)
+  if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldchannel)
 }
 
 function name(){ return "CHANNEL_DELETE" }

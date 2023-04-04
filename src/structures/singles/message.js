@@ -1,5 +1,5 @@
-const Mentions = require("../managers/mentions")
 const Base = require("../bases/basereplying")
+const Mentions = require("../managers/mentions")
 const Embed = require("../components/embed")
 const messageMethod = require("../../methods/message")
 const utils = require("../../utils/functions")
@@ -8,6 +8,10 @@ const messageTypes = require("../../types/message")
 class Message extends Base{
     constructor(message, bot){
         super(message, bot)
+
+        this._modifyConstants.push({name: "type", data: messageTypes.revert()})
+        this._modifyConstants.push({name: "mention_channels", function: this.#treatMentionsChannels})
+
         this.user_id = (message.user || message.user_id) ? message.user_id : message.author.id
         this.user = this.user_id ? (bot.users.get(this.user_id) ?? null) : null
         this.member = message.guild_id ? (this.guild.members.get(this.user_id) ?? null) : null
@@ -28,7 +32,7 @@ class Message extends Base{
         this.nonce = message.nonce || null
         this.pinned = message.pinned ?? false
         this.webhook_id = message.webhook_id|| null
-        this.type = this.#type2(message.type)
+        this.type = this._typechange(this._modifyConstants.find(e => e.name === "type").data, message.type)
         this.activity = message.activity || null
         this.message_reference = message.message_reference || null
         this.application_id = message.application_id
@@ -40,20 +44,6 @@ class Message extends Base{
         this.receivingType = "message"
     }
 
-    _Modify_Datas(message){
-        let tocheck = Object.entries(message)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined"){
-                if(e[0] === "type"){
-                    if(this[e[0]] !== this.#type2(e[1])) this[e[0]] = this.#type2(e[1])
-                }
-                else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
-            }
-        })
-        this._modifyGetDatas()
-        return this
-    }
-
     #treatMentionsChannels(content){
         let clas = new Mentions(this._bot, this.guild_id, "channel")
         if(!content) return clas
@@ -63,11 +53,7 @@ class Message extends Base{
         }
         return clas
     }
-
-    #type2(type){
-        return this._typechange(messageTypes.revert(), type)
-    }
-
+    
     /**
      * 
      * @returns 

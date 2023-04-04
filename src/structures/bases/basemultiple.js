@@ -5,22 +5,6 @@ class baseMultiple extends base{
         super(_bot, guild_id)
         this.container = []
         this.name = name || null
-        this.modifyConstants = []
-    }
-
-    _modifyDatas(){
-        let tocheck = Object.entries(automod)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined"){
-                let comparison = this.modifyConstants.find(element => element.name === e[0])
-                if(comparison){
-                    if(this[e[0]] !== this[comparison].function(e[1])) this[e[0]] = this[comparison].function(e[1])
-                }else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
-            }
-        })
-        this._modifyGetDatas()
-        if(this.actions.metadata.channel) this.actions.metadata.channel = bot.channels.get(this.actions.metadata.channel_id)
-        return this
     }
 
     push(da){
@@ -101,7 +85,7 @@ class baseMultiple extends base{
                 clas = require("../singles/role")
             break;
             case("stage"):
-                clas = require("../singles/stageInstance")
+                clas = require("../singles/stageinstance")
             break;
             case("sticker"):
                 clas = require("../singles/sticker")

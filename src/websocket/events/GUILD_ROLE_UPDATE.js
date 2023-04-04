@@ -1,3 +1,4 @@
+const Roles = require("../../structures/singles/role")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     
@@ -6,10 +7,9 @@ module.exports = async (bot, datas) => {
     let oldrole = guild.roles.get(datas.role.id)
     
     if(!oldrole) return
-    const role_e = require("../../structures/singles/role")
-    oldrole = new role_e(oldrole, bot)
+    oldrole = new Roles(oldrole, bot)
 
-    guild.roles.get(datas.role.id)._Modify_Datas(datas.role)
+    guild.roles.get(datas.role.id)._modifyDatas(datas.role)
     const newrole = guild.roles.get(datas.role.id)
 
     let modifications = []
@@ -25,7 +25,7 @@ module.exports = async (bot, datas) => {
     })
 
     oldrole.modifications = modifications
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, oldrole, newrole)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldrole, newrole)
 }
 
 function name(){ return "GUILD_ROLE_UPDATE" }

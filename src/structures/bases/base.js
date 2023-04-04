@@ -2,6 +2,31 @@ class baseForAll {
     constructor(bot){
         this._bot = bot
         this._token = bot.token
+        this._modifyConstants = []
+    }
+
+    _modifyDatas(data){
+        let modifications = []
+        let tocheck = Object.entries(data)
+        tocheck.forEach(e => { 
+            if(String(this[e[0]]) !== "undefined"){
+                let comparison = this._modifyConstants.find(element => element.name === e[0])
+                if(comparison){
+                    if(comparison.data){
+                        if(this[e[1]] !== this._typechange(comparison.data, e[1])){
+                            this[e[0]] = this._typechange(comparison.data, e[1])
+                            modifications.push(e[0])
+                        }
+                    }
+                    else if(this[e[1]] !== comparison.function(e[1])){
+                        this[e[0]] = comparison.function(e[1])
+                        modifications.push(e[0])
+                    }
+                }else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
+            }
+        })
+        this._modifyGetDatas()
+        return modifications
     }
 
     _modifyGetDatas(){

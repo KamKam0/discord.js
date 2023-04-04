@@ -13,15 +13,6 @@ class Emoji extends Base{
         this.available = emoji.available ?? true
     }
 
-    _Modify_Datas(emoji){
-        let tocheck = Object.entries(emoji)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
-        })
-        this._modifyGetDatas()
-        return this
-    }
-
     /**
      * 
      * @param {object} options 

@@ -5,7 +5,7 @@ module.exports = async (bot, datas) => {
   
     const oldrole = guild.roles.get(datas.role_id)
     guild.roles._delete(datas.role_id)
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, oldrole)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldrole)
 }
 
 function name(){ return "GUILD_ROLE_DELETE" }

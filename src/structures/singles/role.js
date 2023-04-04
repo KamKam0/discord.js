@@ -20,15 +20,6 @@ class Role extends BaseGuild{
         this.flags = role.flags || 0
     }
     
-    _Modify_Datas(role){
-        let tocheck = Object.entries(role)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
-        })
-        this._modifyGetDatas()
-        return this
-    }
-    
     async delete(){
         let informations = {
             botToken: this._token,

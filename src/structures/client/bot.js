@@ -68,14 +68,13 @@ class Bot extends EventEmitter{
     }
 
     get databaseState(){
-        if(!this.sql) return false
-        if(this.sql.connectionState) return "stable"
-        return "unstable"
+        if(!this.sql) return null
+        return this.sql.connectionState
     }
 
     _userStatus(ID){
         return new Promise(async (resolve, reject) => {
-            if(!this.databaseState || this.databaseState === "unstable") return reject(new Error("La connexion avec la BDD sql n'est pas initialisée - bot"))
+            if(!this.databaseState) return reject(new Error("La connexion avec la BDD sql n'est pas initialisée - bot"))
             if(!ID) return reject(new Error("Incorrect infos"))
             let returnInfos = {0: "User", 1: "VIP", 2: "Admin", 3: "Admin & VIP", 4: "Owner"}
             if(ID === this.config.general["ID createur"]) return resolve({...returnInfos, value: 4})

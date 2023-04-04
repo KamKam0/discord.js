@@ -1,13 +1,16 @@
+const createEvent = require("./GUILD_EMOJI_CREATE")
+const modifyEvent = require("./GUILD_EMOJI_UPDATE")
+const deleteEvent = require("./GUILD_EMOJI_DELETE")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     if(!datas.guild_id || !guild) return
     let type = determine(datas, guild)
     switch(type){
       case("ADD"):
-        require("./GUILD_EMOJI_CREATE")(bot, {...datas.emojis.find(emo => !guild.emojis.find(e => e.id === emo.id)), guild_id: guild.id})
+        createEvent(bot, {...datas.emojis.find(emo => !guild.emojis.find(e => e.id === emo.id)), guild_id: guild.id})
       break;
       case("DELETE"):
-        require("./GUILD_EMOJI_DELETE")(bot, guild.emojis.find(emo => !datas.emojis.find(e => e.id === emo.id)))
+        deleteEvent(bot, guild.emojis.find(emo => !datas.emojis.find(e => e.id === emo.id)))
       break;
       case("UPDATE"):
         let newemoji;
@@ -30,7 +33,7 @@ module.exports = async (bot, datas) => {
         if(!newemoji || !oldemoji) return
         oldemoji.guild_id = guild.id
         newemoji.guild_id = guild.id
-        require("./GUILD_EMOJI_UPDATE")(bot, oldemoji, newemoji)
+        modifyEvent(bot, oldemoji, newemoji)
       break;
     }
 }

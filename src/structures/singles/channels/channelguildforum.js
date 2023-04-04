@@ -5,17 +5,16 @@ const forumTypes = require("../../../types/forum")
 class Channel extends Base{
     constructor(channel, bot){
         super(channel, bot)
+
+        this._modifyConstants.push({name: "default_sort_order", data: forumTypes.revert()})
+
         this.topic = channel.topic
         this.rate_limit_per_user = channel.rate_limit_per_user
         this.template = channel.template
-        this.default_sort_order = this.#type2(channel.default_sort_order) || forumTypes.revert()[1]
+        this.default_sort_order = this._typechange(this._modifyConstants.find(e => e.name === "default_sort_order").data, channel.default_sort_order) || forumTypes.revert()[1]
         this.default_reaction_emoji = channel.default_reaction_emoji || null
         this.available_tags = channel.available_tags
         this.flags = channel.flags
-    }
-
-    #type2(type){
-        return this._typechange(forumTypes.revert(), type)
     }
     
     /**

@@ -7,7 +7,7 @@ module.exports = async (bot, datas) => {
 
     guild.guild_scheduled_events._delete(datas.id)
     
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, oldevent)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldevent)
 }
 
 function name(){ return "GUILD_SCHEDULED_EVENT_DELETE" }

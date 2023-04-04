@@ -1,15 +1,15 @@
+const User = require("../../structures/singles/user")
 module.exports = async (bot, datas) => {
     let olduser = bot.users.get(datas.id)
 
     if(!olduser) return
-    const user_e = require("../../structures/singles/user")
-    olduser = new user_e(olduser, bot)
+    olduser = new User(olduser, bot)
 
-    bot.users.get(datas.id)._Modify_Datas(datas)
+    bot.users.get(datas.id)._modifyDatas(datas)
     
     const newuser = bot.users.get(datas.id)
 
-    if(olduser.id === bot.user.id) bot.user._Modify_Datas(datas)
+    if(olduser.id === bot.user.id) bot.user._modifyDatas(datas)
 
 
     let modifications = []
@@ -26,7 +26,7 @@ module.exports = async (bot, datas) => {
 
     olduser.modifications = modifications
 
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, olduser, newuser)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, olduser, newuser)
 }
 
 function name(){ return "USER_UPDATE" }

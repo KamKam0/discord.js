@@ -3,7 +3,7 @@ module.exports = async (bot, datas) => {
     if(!datas.guild_id || !guild) return
     guild.members._add(datas)
     bot.users._add({...datas.user, guild_id: datas.guild_id})
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, guild.members.get(datas.user.id))
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, guild.members.get(datas.user.id))
 }
 
 function name(){ return "GUILD_MEMBER_ADD" }

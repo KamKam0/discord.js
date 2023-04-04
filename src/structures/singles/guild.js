@@ -24,9 +24,17 @@ const managers = {
 }
 const guildTypes = require("../../types/guild")
 
-class Guild extends Base{// to test
+class Guild extends Base{
     constructor(guild, bot){
         super(bot)
+
+        this._modifyConstants.push({name: "verification_level", data: guildTypes.revert.verificationLevel()})
+        this._modifyConstants.push({name: "default_message_notifications", data: guildTypes.revert.defaultMessageNotifications()})
+        this._modifyConstants.push({name: "explicit_content_filter", data: guildTypes.revert.explicitContentFilter()})
+        this._modifyConstants.push({name: "mfa_level", data: guildTypes.revert.mfaLevel()})
+        this._modifyConstants.push({name: "premium_tier", data: guildTypes.revert.premiumTier()})
+        this._modifyConstants.push({name: "nsfw_level", data: guildTypes.revert.nsfwLevel()})
+
         this.name = guild.name
         this.id = guild.id
         this.icon = guild.icon || null
@@ -38,11 +46,11 @@ class Guild extends Base{// to test
         this.afk_timeout = guild.afk_timeout || null
         this.widget_enabled = guild.widget_enabled ?? false
         this.widget_channel_id = guild.widget_channel_id || null
-        this.verification_level = this.#typeverif(guild.verification_level)
-        this.default_message_notifications = this.#typemesdef(guild.default_message_notifications)
-        this.explicit_content_filter = this.#typeexpll(guild.explicit_content_filter)
+        this.verification_level = this._typechange(this._modifyConstants.find(e => e.name === "verification_level").data, guild.verification_level)
+        this.default_message_notifications = this._typechange(this._modifyConstants.find(e => e.name === "default_message_notifications").data, guild.default_message_notifications)
+        this.explicit_content_filter = this._typechange(this._modifyConstants.find(e => e.name === "explicit_content_filter").data, guild.explicit_content_filter)
         this.features = guild.features || []
-        this.mfa_level = this.#typemfa(guild.mfa_level)
+        this.mfa_level = this._typechange(this._modifyConstants.find(e => e.name === "mfa_level").data, guild.mfa_level)
         this.application_id = guild.application_id
         this.system_channel_id = guild.system_channel_id || null
         this.system_channel_flags = guild.system_channel_flags || 0
@@ -56,12 +64,12 @@ class Guild extends Base{// to test
         this.lazy = guild.lazy ?? false
         this.large = guild.large ?? false
         this.hub_type = guild.hub_type || null
-        this.premium_tier = this.#typeprem(guild.premium_tier)
+        this.premium_tier = this._typechange(this._modifyConstants.find(e => e.name === "premium_tier").data, guild.premium_tier)
         this.premium_subscription_count = guild.premium_subscription_count || 0
         this.preferred_locale = guild.preferred_locale
         this.public_updates_channel_id = guild.public_updates_channel_id || null
         this.welcome_screen = guild.welcome_screen || null
-        this.nsfw_level = this.#typensfw(guild.nsfw_level)
+        this.nsfw_level = this._typechange(this._modifyConstants.find(e => e.name === "nsfw_level").data, guild.nsfw_level)
         this.max_members = guild.max_members || null
         this.nsfw = guild.nsfw ?? false
         this.templates = new managers.Templates(this._bot, this.id)
@@ -92,60 +100,6 @@ class Guild extends Base{// to test
         this.me = this.members.get(bot.user.id)
         this.db_language = guild.db_language
         this.voice = new managers.voiceManager(this._bot, this.id)
-    }
-
-    #typeverif(type){
-        return this._typechange(guildTypes.revert.verificationLevel(), type)
-    }
-
-    #typemesdef(type){
-        return this._typechange(guildTypes.revert.defaultMessageNotifications(), type)
-    }
-
-    #typeexpll(type){
-        return this._typechange(guildTypes.revert.explicitContentFilter(), type)
-    }
-
-    #typemfa(type){
-        return this._typechange(guildTypes.revert.mfaLevel(), type)
-    }
-
-    #typeprem(type){
-        return this._typechange(guildTypes.revert.premiumTier(), type)
-    }
-
-    #typensfw(type){
-        return this._typechange(guildTypes.revert.nsfwLevel(), type)
-    }
-
-    _Modify_Datas(guild){
-        let treatable = ["permissions", "roles", "emojis", "voice_states", "members", "channels", "threads", "presences", "stage_instances", "stickers", "guild_scheduled_events"]
-        let tocheck = Object.entries(guild)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined"){
-                if(e[0] === "verification_level"){
-                    if(this[e[0]] !== this.#typeverif(e[1])) this[e[0]] = this.#typeverif(e[1])
-                }
-                else if(e[0] === "default_message_notifications"){
-                    if(this[e[0]] !== this.#typemesdef(e[1])) this[e[0]] = this.#typemesdef(e[1])
-                }
-                else if(e[0] === "explicit_content_filter"){
-                    if(this[e[0]] !== this.#typeexpll(e[1])) this[e[0]] = this.#typeexpll(e[1])
-                }
-                else if(e[0] === "mfa_level"){
-                    if(this[e[0]] !== this.#typemfa(e[1])) this[e[0]] = this.#typemfa(e[1])
-                }
-                else if(e[0] === "premium_tier"){
-                    if(this[e[0]] !== this.#typeprem(e[1])) this[e[0]] = this.#typeprem(e[1])
-                }
-                else if(e[0] === "nsfw_level"){
-                    if(this[e[0]] !== this.#typensfw(e[1])) this[e[0]] = this.#typensfw(e[1])
-                }
-                else if(this[e[0]] !== e[1] && !treatable.includes(e[0])) this[e[0]] = e[1] 
-            } 
-        })
-        this._modifyGetDatas()
-        return this
     }
 
     /**

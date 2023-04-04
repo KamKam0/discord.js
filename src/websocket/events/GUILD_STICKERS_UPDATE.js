@@ -1,13 +1,16 @@
+const createEvent = require("./GUILD_STICKER_CREATE")
+const modifyEvent = require("./GUILD_STICKER_UPDATE")
+const deleteEvent = require("./GUILD_STICKER_DELETE")
 module.exports = async (bot, datas) => {
   const guild = bot.guilds.get(datas.guild_id)
   if(!datas.guild_id || !guild) return
   let type = determine(datas, guild)
   switch(type){
     case("ADD"):
-      require("./GUILD_STICKER_CREATE")(bot, {...datas.stickers.find(emo => !guild.stickers.find(e => e.id === emo.id)), guild_id: guild.id})
+      createEvent(bot, {...datas.stickers.find(emo => !guild.stickers.find(e => e.id === emo.id)), guild_id: guild.id})
     break;
     case("DELETE"):
-      require("./GUILD_STICKER_DELETE")(bot, guild.stickers.find(emo => !datas.stickers.find(e => e.id === emo.id)))
+      deleteEvent(bot, guild.stickers.find(emo => !datas.stickers.find(e => e.id === emo.id)))
     break;
     case("UPDATE"):
       let newsticker;
@@ -30,7 +33,7 @@ module.exports = async (bot, datas) => {
       if(!newsticker || !oldsticker) return
       oldsticker.guild_id = guild.id
       newsticker.guild_id = guild.id
-      require("./GUILD_STICKER_UPDATE")(bot, oldsticker, newsticker)
+      modifyEvent(bot, oldsticker, newsticker)
     break;
   }
 }

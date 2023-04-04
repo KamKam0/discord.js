@@ -4,7 +4,7 @@ module.exports = async (bot, datas) => {
     if(!guild) return
     datas.type = "add"
     let event = new eventupdate(datas, bot)
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, event)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, event)
 }
 
 function name(){ return "GUILD_SCHEDULED_EVENT_USER_ADD" }

@@ -13,15 +13,6 @@ class ThreadMember extends Base{
         this.join_timestamp = threadmember.join_timestamp
         this.flags = threadmember.flags
     }
-
-    _Modify_Datas(threadmember){
-        let tocheck = Object.entries(threadmember)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
-        })
-        this._modifyGetDatas()
-        return this
-    }
     
     async add(){
         let informations = {

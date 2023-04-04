@@ -4,7 +4,7 @@ class AutoModerationExecution extends guildBase{
         super(automod, bot)
         
         this.action = automod.action.map(act => {
-            act.type = this.#actionType(act.type)
+            act.type = this._typechange({ 1: "MESSAGE_SEND"  }, act.type)
             if(act.metadata.channel_id){
                 act.metadata.channel = this._bot.channels.get(act.metadata.channel_id)
             }
@@ -12,7 +12,7 @@ class AutoModerationExecution extends guildBase{
         })
 
         this.rule_id = automod.rule_id
-        this.rule_trigger_type = this.#triggerType(automod.rule_trigger_type)
+        this.rule_trigger_type = this._typechange({ 1: "MESSAGE_SEND" }, automod.rule_trigger_type)
 
         this.user_id = automod.user_id
         this.user = this._bot.users.get(this.user_id) || null
@@ -25,18 +25,6 @@ class AutoModerationExecution extends guildBase{
         this.content = automod.content
         this.matched_keyword = automod.matched_keyword
         this.matched_content = automod.matched_content
-    }
-
-    #triggerType(type){
-        return this._typechange({
-            1: "MESSAGE_SEND"
-        }, type)
-    }
-
-    #actionType(type){
-        return this._typechange({
-            1: "MESSAGE_SEND"
-        }, type)
     }
 }
 module.exports = AutoModerationExecution

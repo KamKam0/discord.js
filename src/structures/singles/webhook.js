@@ -5,7 +5,10 @@ const webhookMethod = require("../../methods/webhooks")
 class Webhook extends Base{
     constructor(webhook, bot){
         super(webhook, bot)
-        this.type = this.#type2(webhook.type)
+
+        this._modifyConstants.push({name: "type", data: webhookTypes.revert()})
+
+        this.type = this._typechange(this._modifyConstants.find(e => e.name === "type").data, webhook.type)
         this.id = webhook.id
         this.channel_id = webhook.channel_id || null
         this.channel = webhook.channel_id ? bot.channels.get(webhook.channel_id) : null
@@ -16,24 +19,6 @@ class Webhook extends Base{
         this.token = webhook.token
         this.application_id = webhook.application_id
         this.url = webhook.url
-    }
-
-    #type2(type){
-        return this._typechange(webhookTypes.revert(), type)
-    }
-
-    _Modify_Datas(webhook){
-        let tocheck = Object.entries(webhook)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined"){
-                if(e[0] === "type"){
-                    if(this[e[0]] !== this.#type2(e[1])) this[e[0]] = this.#type2(e[1])
-                }
-                else if(this[e[0]] !== e[1]) this[e[0]] = e[1]
-            }
-        })
-        this._modifyGetDatas()
-        return this
     }
 
     /**

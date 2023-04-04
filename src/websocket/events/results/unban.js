@@ -8,15 +8,7 @@ class Unban extends guildBase{
         this.user = new User(ban.user, bot)
         this.user_id = ban.user.id || null
     }
-
-    _Modify_Datas(ban){
-        let tocheck = Object.entries(ban)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
-        })
-        return this
-    }
-
+    
     ban(options){
         let informations = {
             botToken: this._token,

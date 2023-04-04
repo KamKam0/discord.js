@@ -1,9 +1,9 @@
+const Voice = require("../../structures/singles/voice")
 module.exports = async (bot, oldvoice, newvoice) => {
     const guild = bot.guilds.get(oldvoice.guild_id)
     let oldvoice2 = guild.voice_states.get(newvoice.user_id)
-    const voice_e = require("../../structures/singles/voice")
-    oldvoice2 = new voice_e(oldvoice2, bot)
-    guild.voice_states.get(newvoice.user_id)._Modify_Datas(newvoice)
+    oldvoice2 = new Voice(oldvoice2, bot)
+    guild.voice_states.get(newvoice.user_id)._modifyDatas(newvoice)
     const newvoice2 = guild.voice_states.get(newvoice.user_id)
     guild.members.get(newvoice.user_id).voice = {presence: newvoice2, channel: newvoice2?.channel || null}
     
@@ -24,7 +24,7 @@ module.exports = async (bot, oldvoice, newvoice) => {
     })
 
     oldvoice2.modifications = modifications
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, oldvoice2, newvoice2)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldvoice2, newvoice2)
 }
 
 function name(){ return "VOICE_UPDATE" }

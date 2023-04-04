@@ -1,10 +1,10 @@
+const Stage = require("../../structures/singles/stageinstance")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     if(!guild) return
     let oldevent = guild.stage_instances.get(datas.id)
-    const stage_e = require("../../structures/singles/stageinstance")
-    oldevent = new stage_e(oldevent, bot)
-    guild.stage_instances.get(datas.id)._Modify_Datas(datas)
+    oldevent = new Stage(oldevent, bot)
+    guild.stage_instances.get(datas.id)._modifyDatas(datas)
     const newevent = guild.stage_instances.get(datas.id)
 
     let modifications = []
@@ -21,6 +21,6 @@ module.exports = async (bot, datas) => {
 
     oldevent.modifications = modifications
 
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, oldevent, newevent)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldevent, newevent)
 }
 function name(){ return "STAGE_INSTANCE_UPDATE" }

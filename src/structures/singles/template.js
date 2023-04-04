@@ -18,16 +18,7 @@ class Template extends Base{
 
         this.is_dirty = template.is_dirty ?? false
     }
-
-    _Modify_Datas(template){
-        let tocheck = Object.entries(template)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
-        })
-        this._modifyGetDatas()
-        return this
-    }
-
+    
     /**
      * 
      * @param {object} options 

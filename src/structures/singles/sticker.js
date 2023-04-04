@@ -15,15 +15,6 @@ class Sticker extends BaseGuild{
         this.available = sticker.available ?? false
         this.sort_value = sticker.sort_value || null
     }
-
-    _Modify_Datas(sticker){
-        let tocheck = Object.entries(sticker)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
-        })
-        this._modifyGetDatas()
-        return this
-    }
     
     async modify(options){
         let informations = {

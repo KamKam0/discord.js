@@ -15,8 +15,9 @@ module.exports.modify = (informations, options) => {
     ]
     let callBackSuccess = function (data){
         let textType = channelTypes.revert()[data.type]
-        const single = require(`../structures/singles/channels/channel${textType.toLowerCase()}`)
-        let newData = new single(data, informations.bot)
+        if(!textType && String(channelTypes.types[data.type]) !== "undefined") textType = data.type
+        let channelClass = require(`../singles/channels/channel${String(textType).toLowerCase()}`)
+        let newData = new channelClass(data, informations.bot)
         return newData
     }
     return handler(args, passedOptions, callBackSuccess)
@@ -182,8 +183,9 @@ module.exports.create = (informations, options) => {
     ]
     let callBackSuccess = function (data){
         let textType = channelTypes.revert()[data.type]
-        const single = require(`../structures/singles/channels/channel${textType.toLowerCase()}`)
-        let newData = new single(data, informations.bot)
+        if(!textType && String(channelTypes.types[data.type]) !== "undefined") textType = data.type
+        let channelClass = require(`../singles/channels/channel${String(textType).toLowerCase()}`)
+        let newData = new channelClass(data, informations.bot)
         return newData
     }
     return handler(args, passedOptions, callBackSuccess)

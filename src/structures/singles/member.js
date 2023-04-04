@@ -39,20 +39,6 @@ class Member extends Base{
         this.roles.container = trueroles
     }
 
-    _Modify_Datas(member){
-        let tocheck = Object.entries(member)
-        tocheck.forEach(e => { 
-            if(e[0] === "roles"){
-                let t1 = this.roles.map(e => e.id).filter(role => !e[1].map(e => e.id).includes(role))
-                let t2 = e[1].map(e => e.id).filter(role => !this.roles.map(e => e.id).includes(role))
-                if(t1 || t2) this.#handleRoles(member.roles)
-            }
-            else if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
-        })
-        this._modifyGetDatas()
-        return this
-    }
-
     /**
      * 
      * @param {object} options 

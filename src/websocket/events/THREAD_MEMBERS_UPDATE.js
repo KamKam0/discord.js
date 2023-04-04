@@ -10,7 +10,7 @@ module.exports = async (bot, datas) => {
         thread: thread,
         guild: guild,
         guild_id: guild.id,
-        bot_token: bot.discordjs.token,
+        bot_token: bot.ws.discordSide.token,
         added_members: null,
         removed_member: null,
         member_count: datas.member_count
@@ -18,7 +18,7 @@ module.exports = async (bot, datas) => {
     if(datas.added_members) to_transmit.added_members = (new Members(bot))._addMultiple(datas.added_members)
     if(datas.removed_member) to_transmit.removed_member = (new Members(bot))._addMultiple(datas.removed_member)
 
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, new ThreadUpdate(to_transmit, bot))
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, new ThreadUpdate(to_transmit, bot))
 }
 
 function name(){ return "THREAD_MEMBERS_UPDATE" }

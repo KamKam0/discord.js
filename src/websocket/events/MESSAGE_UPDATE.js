@@ -1,15 +1,15 @@
+const Message = require("../../structures/singles/message")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     if(!datas.guild_id || !guild) return
     let oldmessage = guild.messages.get(datas.id)
     if(!oldmessage){
-        const mess_u_p = new (require('../../structures/singles/message'))(datas, bot)
-        if(bot.databaseState !== "unstable") return bot.emit(name(), bot, mess_u_p)
+        const mess_u_p = new Message(datas, bot)
+        if(bot.databaseState) return bot.emit(name(), bot, mess_u_p)
     }
     else{
-        const Message = require(`../../structures/singles/message`)
         oldmessage = new Message(oldmessage, bot)
-        guild.messages.get(datas.id)._Modify_Datas(datas)
+        guild.messages.get(datas.id)._modifyDatas(datas)
         const newmessage = guild.messages.get(datas.id)
     
         let modifications = []
@@ -26,7 +26,7 @@ module.exports = async (bot, datas) => {
     
         oldmessage.modifications = modifications
     
-        if(bot.databaseState !== "unstable") bot.emit(name(), bot, oldmessage, newmessage)
+        if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldmessage, newmessage)
     }
     
 }

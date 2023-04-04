@@ -1,3 +1,6 @@
+const createEvent = require("./VOICE_CREATE")
+const modifyEvent = require("./VOICE_UPDATE")
+const deleteEvent = require("./VOICE_DELETE")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     let member = guild.members.get(datas.user_id) 
@@ -13,10 +16,10 @@ module.exports = async (bot, datas) => {
     const oldvoice = guild.voice_states.get(datas.user_id)
     const newvoice = datas
 
-    if(String(oldvoice) === "undefined" && String(newvoice.channel_id) !== "null") if(bot.databaseState !== "unstable") require("./VOICE_CREATE")(bot, newvoice)
+    if(String(oldvoice) === "undefined" && String(newvoice.channel_id) !== "null") if(bot.databaseState) createEvent(bot, newvoice)
     if(String(oldvoice) !== "undefined" && String(newvoice.channel_id) === "null"){
         oldvoice.guild_id = datas.guild_id
-        if(bot.databaseState !== "unstable") require("./VOICE_DELETE")(bot, oldvoice)
+        if(bot.databaseState) deleteEvent(bot, oldvoice)
     }
-    else if(String(oldvoice) !== "undefined" && String(newvoice.channel_id) !== "null" && String(oldvoice.channel_id) !==  String(newvoice.channel_id)) if(bot.databaseState !== "unstable") require("./VOICE_UPDATE")(bot, oldvoice, newvoice)
+    else if(String(oldvoice) !== "undefined" && String(newvoice.channel_id) !== "null" && String(oldvoice.channel_id) !==  String(newvoice.channel_id)) if(bot.databaseState) modifyEvent(bot, oldvoice, newvoice)
 }

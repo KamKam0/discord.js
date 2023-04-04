@@ -12,15 +12,6 @@ class StageInstance extends BaseGuild{
         this.discoverable_disabled = stage.discoverable_disabled ?? false
     }
 
-    _Modify_Datas(stage){
-        let tocheck = Object.entries(stage)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
-        })
-        this._modifyGetDatas()
-        return this
-    }
-
     async modify(options){
         let informations = {
             botToken: this._token,

@@ -1,10 +1,10 @@
+const Emoji = require(`../../structures/singles/emoji`)
 module.exports = async (bot, oldemoji, newemoji) => {
     const guild = bot.guilds.get(newemoji.guild_id)
     let oldemoji2 = guild.emojis.get(oldemoji.id)
     if(!oldemoji2) return
-    const emoji_e = require(`../../structures/singles/emoji`)
-    oldemoji2 = new emoji_e(oldemoji2, bot)
-    guild.emojis.get(oldemoji.id)._Modify_Datas(newemoji)
+    oldemoji2 = new Emoji(oldemoji2, bot)
+    guild.emojis.get(oldemoji.id)._modifyDatas(newemoji)
     let newemoji2 = guild.emojis.get(oldemoji.id)
 
     let modifications = []
@@ -21,7 +21,7 @@ module.exports = async (bot, oldemoji, newemoji) => {
 
     oldemoji2.modifications = modifications
 
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, oldemoji2, newemoji2)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldemoji2, newemoji2)
 }
 
 function name(){ return "GUILD_EMOJI_UPDATE" }

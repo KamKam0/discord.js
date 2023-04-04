@@ -5,7 +5,7 @@ module.exports = async (bot, datas) => {
     if(guild) oldmessage_v = guild.messages.get(datas.id)
     if(oldmessage_v) guild.messages._delete(oldmessage_v.id)
     
-    if(bot.databaseState !== "unstable"){
+    if(bot.databaseState){
         if(!guild) bot.emit(name(), bot, (new Result(datas, bot)))
         else if(oldmessage_v) bot.emit(name(), bot,oldmessage_v)
     }

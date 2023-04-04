@@ -1,3 +1,4 @@
+const Event = require("../../structures/singles/event")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     
@@ -6,10 +7,9 @@ module.exports = async (bot, datas) => {
     let oldevent = guild.guild_scheduled_events.get(datas.id)
     
     if(!oldevent) return
-    const event_e = require("../../structures/singles/event")
-    oldevent = new event_e(oldevent, bot)
+    oldevent = new Event(oldevent, bot)
 
-    guild.guild_scheduled_events.get(datas.id)._Modify_Datas(datas)
+    guild.guild_scheduled_events.get(datas.id)._modifyDatas(datas)
 
     const newevent = guild.guild_scheduled_events.get(datas.id)
 
@@ -28,7 +28,7 @@ module.exports = async (bot, datas) => {
     oldevent.modifications = modifications
 
 
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, oldevent, newevent)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldevent, newevent)
 }
     
 function name(){ return "GUILD_SCHEDULED_EVENT_UPDATE" }

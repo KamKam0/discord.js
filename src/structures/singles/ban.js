@@ -10,15 +10,6 @@ class Ban extends BaseGuild{
         this.reason = ban.reason ||  null
     }
 
-    _Modify_Datas(ban){
-        let tocheck = Object.entries(ban)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
-        })
-        this._modifyGetDatas()
-        return this
-    }
-
     async unban(options){
         let informations = {
             botToken: this._token,

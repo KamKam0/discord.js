@@ -1,11 +1,11 @@
+const Sticker = require("../../structures/singles/sticker")
 module.exports = async (bot, oldsticker, newsticker) => {
     const guild = bot.guilds.get(oldsticker.guild_id)
     if(!guild) return
     let oldsticker2 = guild.stickers.get(newsticker.id)
     if(!oldsticker2) return
-    const sticker_e = require("../../structures/singles/sticker")
-    oldsticker2 = new sticker_e(oldsticker2, bot)
-    guild.stickers.get(newsticker.id)._Modify_Datas(newsticker)
+    oldsticker2 = new Sticker(oldsticker2, bot)
+    guild.stickers.get(newsticker.id)._modifyDatas(newsticker)
     const newsticker2 = guild.stickers.get(newsticker.id)
 
     let modifications = []
@@ -22,7 +22,7 @@ module.exports = async (bot, oldsticker, newsticker) => {
 
     oldsticker2.modifications = modifications
 
-    if(bot.databaseState !== "unstable") bot.emit(name(), bot, oldsticker2, newsticker2)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldsticker2, newsticker2)
 }
 
 function name(){ return "GUILD_STICKER_UPDATE" }

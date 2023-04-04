@@ -8,7 +8,8 @@ class Channels extends Base{
 
     _add(data){
         let textType = channelTypes.revert()[data.type]
-        let channelClass = require(`../singles/channels/channel${textType.toLowerCase()}`)
+        if(!textType && String(channelTypes.types[data.type]) !== "undefined") textType = data.type
+        let channelClass = require(`../singles/channels/channel${String(textType).toLowerCase()}`)
         this.container.push(new channelClass(data, this._bot))
         return this
     }

@@ -1,3 +1,4 @@
+const Member = require("../../structures/singles/member")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     
@@ -8,7 +9,7 @@ module.exports = async (bot, datas) => {
 
     let modifications = []
     let olddatas = Object.entries(oldmember)
-    let newdatas = Object.entries(new (require("../../structures/singles/member"))(datas, bot))
+    let newdatas = Object.entries(new Member(datas, bot))
 
     olddatas.forEach(da => {
         let filter = ["guild", "bot_token", "user", "member", "channel", "parent", "owner"]
@@ -29,10 +30,10 @@ module.exports = async (bot, datas) => {
     else{
         const member_e = require("../../structures/singles/member")
         oldmember = new member_e(oldmember, bot)
-        guild.members.get(datas.user.id)._Modify_Datas(datas)
+        guild.members.get(datas.user.id)._modifyDatas(datas)
         const newmember = guild.members.get(datas.user.id)
         oldmember.modifications = modifications
-        if(bot.databaseState !== "unstable") bot.emit(name(), bot, oldmember, newmember)
+        if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldmember, newmember)
     }
 }
 

@@ -24,16 +24,6 @@ class User extends Base{
         this.dm = null
         this.guilds = user.guild_id ? [user.guild_id] : []
     }
-
-    _Modify_Datas(user){
-        let tocheck = Object.entries(user)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
-        })
-        this._modifyGetDatas()
-        return this
-    }
-
     /**
      * 
      * @param {object} options 

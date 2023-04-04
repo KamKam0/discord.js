@@ -20,15 +20,6 @@ class Voice extends BaseGuild{
         this.request_to_speak_timestamp = voice.request_to_speak_timestamp || null
     }
 
-    _Modify_Datas(voice){
-        let tocheck = Object.entries(voice)
-        tocheck.forEach(e => { 
-            if(String(this[e[0]]) !== "undefined") if(this[e[0]] !== e[1]) this[e[0]] = e[1] 
-        })
-        this._modifyGetDatas()
-        return this
-    }
-
     async muteVoice(){
         let information = {
             botToken: this._token,
