@@ -21,8 +21,6 @@ module.exports = async (url, options) => {
         if(initialRequest.status === 204) jsonDatas = {}
         else jsonDatas = await initialRequest.json()
 
-        jsonDatas.requestStatus = initialRequest.status
-
         return resolve({response: jsonDatas, requestStatus: initialRequest.status})
     })
 }

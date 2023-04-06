@@ -1,12 +1,18 @@
 const Initiate = require("../handlers/initiate")
-const createError = require("../utils/functions").createError
+const createError = require("../utils/functions").general.createError
 const ws = require("ws")
 const { getGateway } = require("../methods/me")
 const { createDM } = require("../methods/user")
+const ms = require("@kamkam1_0/ms")
 
 class WebsocketHandler{
+    #internetInterval
+    #internetConnectionErrorWarn
     constructor(bot){
         this._bot = bot
+        this.#internetInterval = 60 / 12
+        this.internetConnectionError = null,
+        this.#internetConnectionErrorWarn = false,
         this.discordSide = {
             ws: null,
             commandsChecked: null,
@@ -37,21 +43,16 @@ class WebsocketHandler{
         return new Promise(async (resolve, reject) => {
             let trueurl;
             if(this._bot.state === "processing" && !this.discordSide.connectionInfos.connectionUrl){
-                const basedatas = await getGateway(this._bot.token).catch(err => {})
-                if(!basedatas){
-                    setTimeout(() => {
-                        this.#connectionURL()
-                        .catch(err => reject(err))
-                        .then(datas => resolve(datas))
-                    }, 5 * 1000 * 60)
-                }
+                const basedatas = await getGateway(this._bot.token).catch(err => reject(err))
+                if(!basedatas) return
                 this.discordSide.connectionInfos = {
                     connectionUrl: `${basedatas.url}/?v=10&encoding=json`,
                     connectionNumber: basedatas.session_start_limit.remaining,
                     shardAdvised: basedatas.shards
                 }
                 trueurl = this.discordSide.connectionInfos.connectionUrl
-            }else trueurl = this.discordSide.reconnectionUrl
+            }else if (this._bot.state === "reconnect") trueurl = this.discordSide.reconnectionUrl
+            else trueurl = this.discordSide.connectionInfos.connectionUrl
 
             return resolve(trueurl)
         })
@@ -59,24 +60,17 @@ class WebsocketHandler{
 
     async #handleCreator(){
         return new Promise(async (resolve, reject) => {
-            if(this._bot.state === "processing" && !this._bot.creator){
-                this.discordSide.lancement = Date.now()
-                let sentInformation = {
-                    botToken: this._bot.token,
-                    bot: this._bot
-                }
-                var us = await createDM(sentInformation, this._bot.config.general["ID createur"]).catch(err => {})
-                if(!us){
-                    setTimeout(() => {
-                        this.#handleCreator()
-                        .catch(err => reject(err))
-                        .then(datas => resolve(datas))
-                    }, 5 * 1000 * 60)
-                }
-                else this._bot._setCreator({id: us.recipients[0].id, channel_id: us.id})
+            this.discordSide.lancement = Date.now()
+            let sentInformation = {
+                botToken: this._bot.token,
+                bot: this._bot
             }
-
-            return resolve(null)
+            createDM(sentInformation, this._bot.config.general["ID createur"])
+            .then(us => {
+                this._bot._setCreator({id: us.recipients[0].id, channel_id: us.id})
+                return resolve(null)
+            })
+            .catch(err => reject(err))
         })
     }
 
@@ -84,37 +78,75 @@ class WebsocketHandler{
         return new Promise(async (resolve, reject) => {
             if(this.discordSide.lancement && this._bot.state === "processing") return reject(createError("Cannot start the bot twice", {state: false, message: "You already started the bot once at " + new Date(this.discordSide.lancement).toDateString()}))
             if(this._bot.launchError) return reject(createError("Error with configuration", {state: false, message: this._bot.launchError}))
-            
-            this.#handleCreator()
-            .then(() => {
-                this.initiate.init()
+
+            this.#connectionURL()
+            .then(connectionURL => {
+                this.#handleCreator()
                 .then(() => {
-                    if(this.discordSide.connectionInfos.connectionNumber === 0) return reject(createError("Could not log in", {state: false, message: "You reached the maximum of daily connection"}))
-                    this.#connectionURL()
-                    .then(connectionURL => {
-                        const WebSocket = new ws(connectionURL)
-                        if(!WebSocket) return reject(createError("Incorrect Infos"))
-
-                        this.discordSide.ws = WebSocket
-                        let bodyLogin;
-
-                        if(this._bot.state !== "reconnect"){
-                            bodyLogin = this._bot._getConnection((this._bot.presence || presence))
-                            this._bot.presence = bodyLogin.d.presence
+                    this.initiate.init()
+                    .then(() => {
+                        if(this.internetConnectionError){
+                            if(this._bot.logs.system){
+                                let timeOut = Date.now() - this.internetConnectionError
+                                console.log("")
+                                console.log(`Discord.js: Internet connection reinstated [${new Date(Date.now()).toUTCString()}]`)
+                                console.log(`Discord.js: The outage lasted ${ms(timeOut)}`)
+                            }
+                            this.internetConnectionError = null
+                            this.#internetConnectionErrorWarn = false
                         }
+                        if(this.discordSide.connectionInfos.connectionNumber === 0) return reject(createError("Could not log in", {state: false, message: "You reached the maximum of daily connection"})) 
+                        const WebSocket = new ws(connectionURL)
+                            if(!WebSocket) return reject(createError("Incorrect Infos"))
+                            this.discordSide.ws = WebSocket
+                            let bodyLogin;
 
-                        this.#handleWebsocketCalls(bodyLogin)
+                            if(this._bot.state !== "reconnect"){
+                                bodyLogin = this._bot._getConnection((this._bot.presence || presence))
+                                this._bot.presence = bodyLogin.d.presence
+                            }
+                            this.discordSide.connectionInfos.connectionNumber --
+                            this.#handleWebsocketCalls(bodyLogin)
 
-                        return resolve({result: this._bot, message: "Bot Launched", state: true})
+                            return resolve({result: this._bot, message: "Bot Launched", state: true})
+                        })
                     })
-                    .catch(err => {})
+                    .catch(err => {
+                        let error = this.#handleError(err)
+                        if(error.content)  return reject(createError("Could not start", {state: false, message: "Errors are detcted in your commands.\nPlease correct them and retry."}))
+                    })
                 })
                 .catch(err => {
-                    return reject(createError("Could not start", {state: false, message: "Errors are detcted in your commands.\nPlease correct them and retry."}))
+                    let error = this.#handleError(err)
+                    if(error.content) return reject(error)
                 })
+            .catch(err => {
+                let error = this.#handleError(err)
+                if(error.content) return reject(error)
             })
-            .catch(err => {})
         })
+    }
+
+    #handleError(err){
+        if(err.type == "system" && err.code === "internet"){
+            if(!this.internetConnectionError){
+                this.internetConnectionError = Date.now()
+                if(this._bot.logs.system){
+                    console.log("")
+                    if(this.discordSide.lancement) console.warn(`Discord.js: Internet connection interrupted at [${new Date(Date.now()).toUTCString()}]`)
+                    else console.warn(`Discord.js: No internet connection for log in !`)
+                }
+            } 
+            if(!this.#internetConnectionErrorWarn){
+                this.#internetConnectionErrorWarn = true
+                if(this._bot.logs.system) console.warn("Discord.js: Waiting for an internet connection ...")
+            }
+            return setTimeout(() => {
+                return this.login()
+            }, 1000 * this.#internetInterval)
+        }
+
+        return err
     }
 
     #handleWebsocketCalls(bodyLogin){
@@ -146,15 +178,17 @@ class WebsocketHandler{
                     this.#handleHearBeats()
                 break;
                 case(7):
+                    if(this._bot.logs.system) console.log(`Discord.js: Reconnection asked by Discord [${new Date(Date.now()).toUTCString()}]`)
                     this.#stopWS("RECONNECT")
                 break;
                 case(9):
+                    if(this._bot.logs.system) console.log(`Discord.js: Invalid Session response from Discord [${new Date(Date.now()).toUTCString()}]`)
                     this.#stopWS("INVALID_SESSION")
                 break;
                 case(0):
                     if(message.d.guild_id && !this._bot.guilds.get(message.d.guild_id)) return
                     if(this._bot.availableEvents.includes(message.t)) return require(`./events/${message.t}`)(this._bot, message.d)
-                    console.info(`The Discord event ${message.t} is unavailable !`)
+                    if(this._bot.logs.system) console.info(`Discord.js: The Discord event ${message.t} is unavailable !`)
                 break;
                 case(1):
                     this.#sendHearBeat()
@@ -172,7 +206,10 @@ class WebsocketHandler{
 
     #handleHearBeats(){
         this.discordSide.interval = setInterval(() => {
-            if((Date.now() - this.discordSide.lastACK) > (this.discordSide.HBinterval * 1.1)) this.#stopWS("SESSION_CONNECTION_LOST")
+            if((Date.now() - this.discordSide.lastACK) > (this.discordSide.HBinterval * 1.1)){
+                if(this._bot.logs.system) console.log(`Discord.js: Connection lost with Discord [${new Date(Date.now()).toUTCString()}]`)
+                this.#stopWS("SESSION_CONNECTION_LOST")
+            }
             else{
                 this.discordSide.lastPing = Date.now()
                 this.#sendHearBeat()
@@ -185,7 +222,7 @@ class WebsocketHandler{
         this.discordSide.ws.close()
         this.discordSide.intervalState = null
         clearInterval(this.discordSide.interval)
-        this.login()
+        return this.login()
     }
 
     resetDiscordSide(){

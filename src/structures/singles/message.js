@@ -4,6 +4,10 @@ const Embed = require("../components/embed")
 const messageMethod = require("../../methods/message")
 const utils = require("../../utils/functions")
 const messageTypes = require("../../types/message")
+const componentsClass = {
+    button: require("../components/button"),
+    selectMenu: require("../components/selectmenu")
+}
 
 class Message extends Base{
     constructor(message, bot){
@@ -38,7 +42,18 @@ class Message extends Base{
         this.application_id = message.application_id
         this.flags = message.flags || 0
         this.referenced_message = message.referenced_message ? new Message(message.referenced_message) : null
-        this.components = message.components || []
+        this.components = []
+        if(message.components){
+            let mainComponent = message.components.find(compo => compo.type === 1)?.components
+            if(mainComponent){
+                let mappedMainComponent = mainComponent.map(component => {
+                    if(component.type === 2) return new componentsClass.button(component)
+                    if(component.type === 3) return new componentsClass.selectMenu(component)
+                    return component
+                })
+                this.components = mappedMainComponent
+            }
+        }
         this.sticker_items = message.sticker_items || []
         this.stickers = message.stickers || []
         this.receivingType = "message"
@@ -81,85 +96,6 @@ class Message extends Base{
             channel_id: this.channel_id
         }
         return messageMethod.modify(informations, options)
-    }
-
-    /**
-     * 
-     * @param {string} emoji 
-     * @returns 
-     */
-    async addreaction(emoji){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id,
-            channel_id: this.channel_id,
-            emoji
-        }
-        return messageMethod.addreaction(informations)
-    }
-
-    /**
-     * 
-     * @param {string} emoji 
-     * @returns 
-     */
-    async removereaction(emoji){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id,
-            channel_id: this.channel_id,
-            emoji
-        }
-        return messageMethod.removereaction(informations)
-    }
-
-    /**
-     * 
-     * @param {string} userid 
-     * @param {string} emoji 
-     * @returns 
-     */
-    async removeuserreaction(userid, emoji){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id,
-            channel_id: this.channel_id,
-            user_id: userid,
-            emoji
-        }
-        return messageMethod.removeuserreaction(informations)
-    }
-
-    /**
-     * 
-     * @param {string} emoji 
-     * @returns 
-     */
-    async removeallreaction(emoji){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id,
-            channel_id: this.channel_id
-        }
-        return messageMethod.removeallreactionemoji(informations, emoji)
-    }
-
-    /**
-     * 
-     * @returns 
-     */
-    async removeallreactions(){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.id,
-            channel_id: this.channel_id
-        }
-        return messageMethod.removeallreactions(informations)
     }
 
     /**
@@ -252,7 +188,5 @@ class Message extends Base{
         }
         return messageMethod.crosspost(informations)
     }
-
-    
 }
 module.exports = Message

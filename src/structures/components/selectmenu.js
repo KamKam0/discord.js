@@ -1,18 +1,17 @@
 const base = require("../bases/components/base")
+const selectOption = require("./selectoption")
 
 class SelectMenu extends base{
 
-    constructor(data){
-        super()
+    constructor(data={}){
+        super(data)
         
-        this.type = null
-        this.options = []
-        this.placeholder = null
-        this.min_values = 1
-        this.max_values = 1
-        this.disabled = false
-
-        if(data) this._handleInitiationData(data)
+        this.type = data.type || 3
+        this.options = data.options ? data.options.map(option => new selectOption(option)) : []
+        this.placeholder = data.placeholder || null
+        this.min_values = data.min_values || 1
+        this.max_values = data.max_values || 1
+        this.disabled = data.disabled || false
     }
     
     setDisabled(state){

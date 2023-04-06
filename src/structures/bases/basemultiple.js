@@ -5,6 +5,69 @@ class baseMultiple extends base{
         super(_bot, guild_id)
         this.container = []
         this.name = name || null
+        this.individualClass = null
+        switch(this.name){
+            case("automod"):
+                this.individualClass = require("../singles/autoModeration")
+            break;
+            case("ban"):
+                this.individualClass = require("../singles/ban")
+            break;
+            case("command"):
+                this.individualClass = require("../applicationscommands/command")
+            break;
+            case("emoji"):
+                this.individualClass = require("../singles/emoji")
+            break;
+            case("event"):
+                this.individualClass = require("../singles/event")
+            break;
+            case("guild"):
+                this.individualClass = require("../singles/guild")
+            break;
+            case("integration"):
+                this.individualClass = require("../singles/integration")
+            break;
+            case("invite"):
+                this.individualClass = require("../singles/invite")
+            break;
+            case("member"):
+                this.individualClass = require("../singles/member")
+            break;
+            case("message"):
+                this.individualClass = require("../singles/message")
+            break;
+            case("presence"):
+                this.individualClass = require("../singles/presence")
+            break;
+            case("role"):
+                this.individualClass = require("../singles/role")
+            break;
+            case("stage"):
+                this.individualClass = require("../singles/stageinstance")
+            break;
+            case("sticker"):
+                this.individualClass = require("../singles/sticker")
+            break;
+            case("template"):
+                this.individualClass = require("../singles/template")
+            break;
+            case("voice"):
+                this.individualClass = require("../singles/voice")
+            break;
+            case("webhook"):
+                this.individualClass = require("../singles/webhook")
+            break;
+            case("threadmember"):
+                this.individualClass = require("../singles/threadmember")
+            break;
+            case("cpermissions"):
+                this.individualClass = require("../singles/permissions/channel")
+            break;
+            case("apermissions"):
+                this.individualClass = require("../singles/permissions/application")
+            break;
+        }
     }
 
     push(da){
@@ -46,74 +109,8 @@ class baseMultiple extends base{
     }
 
     _add(data){
-        let clas;
-        switch(this.name){
-            case("automod"):
-                clas = require("../singles/autoModeration")
-            break;
-            case("ban"):
-                clas = require("../singles/ban")
-            break;
-            case("command"):
-                clas = require("../applicationscommands/command")
-            break;
-            case("emoji"):
-                clas = require("../singles/emoji")
-            break;
-            case("event"):
-                clas = require("../singles/event")
-            break;
-            case("guild"):
-                clas = require("../singles/guild")
-            break;
-            case("integration"):
-                clas = require("../singles/integration")
-            break;
-            case("invite"):
-                clas = require("../singles/invite")
-            break;
-            case("member"):
-                clas = require("../singles/member")
-            break;
-            case("message"):
-                clas = require("../singles/message")
-            break;
-            case("presence"):
-                clas = require("../singles/presence")
-            break;
-            case("role"):
-                clas = require("../singles/role")
-            break;
-            case("stage"):
-                clas = require("../singles/stageinstance")
-            break;
-            case("sticker"):
-                clas = require("../singles/sticker")
-            break;
-            case("template"):
-                clas = require("../singles/template")
-            break;
-            case("voice"):
-                clas = require("../singles/voice")
-            break;
-            case("webhook"):
-                clas = require("../singles/webhook")
-            break;
-            case("threadmember"):
-                clas = require("../singles/threadmember")
-            break;
-            case("cpermissions"):
-                clas = require("../singles/permissions/channel")
-            break;
-            case("apermissions"):
-                clas = require("../singles/permissions/application")
-            break;
-            default:
-                clas = null
-            break;
-        }
-        if(!clas) return this
-        this.container.push(new clas({...data, guild_id: this.guild_id}, this._bot))
+        if(!this.individualClass) return this
+        this.container.push(new this.individualClass({...data, guild_id: this.guild_id}, this._bot))
         return this
     }
 

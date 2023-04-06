@@ -2,13 +2,11 @@ const base = require("../bases/components/base")
 const textInput = require("./textinput")
 class Form extends base{
 
-    constructor(data){
-        super()
+    constructor(data={}){
+        super(data)
 
-        this.title = null
-        this.components = []
-
-        if(data) this._handleInitiationData(data)
+        this.title = data.title || null
+        this.components = data.components ? data.components.map(component => new textInput(component)) : null
     }
     
     AddTextInput(obj){

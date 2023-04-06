@@ -1,11 +1,11 @@
 const constances = require("../../../utils/constants")
 
 class commandBase {
-    constructor(){
-        this.name = null
-        this.name_localizations = {}
-        this.description = null
-        this.description_localizations = {}
+    constructor(data){
+        this.name = data.name || null
+        this.name_localizations = data.name_localizations || {}
+        this.description = data.description || null
+        this.description_localizations = data.description_localizations || {}
     }
 
     setName(name){
@@ -26,31 +26,6 @@ class commandBase {
         let check = this._setLocalisation(object, 100)
         if(check) this.name_localizations = object
         return this
-    }
-    
-    _handleInitiationData(data){
-        if(typeof data !== "object") return this
-        let methods = Object.getOwnPropertyNames(Object.getPrototypeOf(this)).filter(method => method !== "constructor")
-        methods.push(...Object.getOwnPropertyNames(commandBase.prototype).filter(method => !["constructor", "handleInitiationData"].includes(method)))
-
-        let modifiedData = Object.entries(data)
-        .map(element => { 
-            element[0] = element[0].split("_").join("").toLowerCase()
-            return {name: element[0], value: element[1]}
-        })
-
-        methods
-        .map(method => {
-            let returnedObject = {original: method, transformed: null, value: null}
-            method = method.split("_").join("").toLowerCase().slice(3)
-            returnedObject.transformed = method
-            returnedObject.value = modifiedData.find(modifiedDataValue => modifiedDataValue.name === method)?.value
-            return returnedObject
-        })
-        .filter(element => element.value || element.value === false)
-        .forEach(element => {
-            this[element.original](element.value)
-        })
     }
 
     _setLocalisation(object, length){

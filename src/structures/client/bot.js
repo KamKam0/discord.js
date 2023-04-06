@@ -24,7 +24,9 @@ class Bot extends EventEmitter{
      * 
      * @param {object} data 
      * @param {object|boolean} data.database
-     * @param {number|undefined} data.intents
+     * @param {number|undefined|string} data.intents
+     * @param {boolean} data.systemLog
+     * @param {boolean} data.eventsLog
      */
     constructor(data={}){
         super()
@@ -53,6 +55,10 @@ class Bot extends EventEmitter{
         this.events = new EventHandler.Events(this, this.availableEvents)
         this.commands = new ApplicationCommands(this)
         this.ws = new WebSocketHandler(this)
+        this.logs = {
+            events: data.eventsLog ?? false,
+            system: data.systemLog ?? true
+        }
     }
 
     #attributeintents(intents){
@@ -74,9 +80,9 @@ class Bot extends EventEmitter{
 
     _userStatus(ID){
         return new Promise(async (resolve, reject) => {
-            if(!this.databaseState) return reject(new Error("La connexion avec la BDD sql n'est pas initialisée - bot"))
             if(!ID) return reject(new Error("Incorrect infos"))
             let returnInfos = {0: "User", 1: "VIP", 2: "Admin", 3: "Admin & VIP", 4: "Owner"}
+            if(!this.databaseState) return resolve({...returnInfos, value: 0})
             if(ID === this.config.general["ID createur"]) return resolve({...returnInfos, value: 4})
             else if(this.sql){
                 let tables = await this.sql.show()

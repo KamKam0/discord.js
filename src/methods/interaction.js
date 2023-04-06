@@ -5,11 +5,13 @@ const { checkApplicationCommand } = require("../utils/functions").checks
 const utils = require("../utils/functions")
 const getMe = require("./me").getuser
 const errors = require("../utils/errors.json")
+const ApplicationCommand = require("../structures/applicationscommands/command")
+const ApplicationCommandManager = require("../structures/managers/applicationcommands")
 
 module.exports.reply = async (informations, response) => {
     return new Promise(async (resolve, reject) => {
         if(!response) return reject(utils.checks.checkId("An error happened", {code: errors["44"].code, message: errors["44"].message, file: "Interaction"}))
-        
+
         let method = informations.method
         let  url = (method && informations.path) ? apiPath.modify.reponse.url : apiPath.create.response.url
         if(!method) method = apiPath.create.response.method
@@ -17,9 +19,9 @@ module.exports.reply = async (informations, response) => {
 
         if(!options) return reject(utils.checks.checkId("An error happened", {code: errors["8"].code, message: errors["8"].message, file: "Interaction"}))
         if(typeof options !== "object") return reject(utils.checks.checkId("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Interaction"}))
-        
+
         let basedatas;
-        
+
         if(response.modal && !method){
             let passedOptions = {
                 method: apiPath.create.response.method,
@@ -47,7 +49,6 @@ module.exports.reply = async (informations, response) => {
                 let newData = new single(data, informations.bot)
                 return newData
             }
-
             body.message_reference = utils.checks.checkReference(options.message_reference)
             body.embeds = utils.checks.checkEmbed(options.embeds)
             body.components = utils.checks.checkComponents(options.components)
@@ -73,12 +74,11 @@ module.exports.reply = async (informations, response) => {
                 basedatas = handler(args, passedOptions, callBackSuccess)
             }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject(createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Interaction"}))
             
-            if(!checkfiles || !Array.isArray(checkfiles) === true || !checkfiles[0]) {
+            if(!checkfiles || !Array.isArray(checkfiles) || !checkfiles[0]) {
                 let args = []
 
                 if(method === "PATCH") args.push({value: body, data_name: "options"})
                 else if (method) args.push({value: {type: 4, data: body}, data_name: "options"})
-
                 basedatas = handler(args, passedOptions, callBackSuccess)
             }
 
@@ -120,8 +120,6 @@ module.exports.getcommands = async (informations, cmdId) => {
     }
     let args = [ ]
     let callBackSuccess = function (data){
-        const ApplicationCommand = require("../structures/applicationscommands/command")
-        const ApplicationCommandManager = require("../structures/managers/applicationcommands")
         if(cmdId){
             if(data.find(com => com.id === cmdId)) return new ApplicationCommand(data.find(com => com.id === cmdId), informations.bot)
             else return reject("No command found")
@@ -136,9 +134,9 @@ module.exports.getcommands = async (informations, cmdId) => {
 module.exports.deletecommand = async (informations) => {
     if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
     let passedOptions = {
-        method: commandApiPath.get.global.method,
+        method: commandApiPath.delete.method,
         token: informations.botToken,
-        url: commandApiPath.get.global.url,
+        url: commandApiPath.delete.url,
         urlIDS: informations
     }
     let args = [ ]
@@ -147,7 +145,7 @@ module.exports.deletecommand = async (informations) => {
 module.exports.createcommand = async (informations, options) => {
     if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
     let check = checkApplicationCommand(options)
-    if(!check.status) return reject(check)
+    if(!check.status) return Promise.reject(check)
     
     let passedOptions = {
         method: commandApiPath.create.global.method,
@@ -155,13 +153,15 @@ module.exports.createcommand = async (informations, options) => {
         url: commandApiPath.create.global.url,
         urlIDS: informations
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
     return handler(args, passedOptions, null)
 }
 module.exports.modifycommand = async (informations, options) => {
     if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
     let check = checkApplicationCommand(options)
-    if(!check.status) return reject(check)
+    if(!check.status) return Promise.reject(check)
     
     let passedOptions = {
         method: commandApiPath.modify.method,
@@ -169,7 +169,9 @@ module.exports.modifycommand = async (informations, options) => {
         url: commandApiPath.modify.url,
         urlIDS: informations
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
     return handler(args, passedOptions, null)
 }
 

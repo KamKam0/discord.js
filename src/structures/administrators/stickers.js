@@ -14,13 +14,13 @@ class Stickers extends BaseStage{
      * @param {string} description 
      * @returns 
      */
-    create(name, file, tags, description){
+    create(options){
         let informations = {
             bot: this._bot,
             botToken: this._token,
             guild_id: this.guild_id
         }
-        return stickerMethod.create(informations, name, file, tags, description)
+        return stickerMethod.create(informations, options)
     }
     
     async modify(id, options){

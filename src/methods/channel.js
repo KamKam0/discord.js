@@ -97,7 +97,6 @@ module.exports.createinvite = (informations, options) => {
         {value: options || {}, data_name: "options"}
     ]
     let callBackSuccess = function (data){
-        console.log(data)
         const single = require("../structures/singles/invite")
         let newData = new single(data, informations.bot)
         return newData

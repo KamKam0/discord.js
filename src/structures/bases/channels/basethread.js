@@ -1,4 +1,4 @@
-const BaseGuild = require("./guildText")
+const BaseGuild = require("./guildtext")
 const threadMethod = require("../../../methods/threads")
 const channelMethod = require("../../../methods/channel")
 const threadmembersAdministrator = require("../../administrators/threadmembers")

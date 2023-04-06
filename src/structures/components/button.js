@@ -2,17 +2,15 @@ const base = require("../bases/components/base")
 const buttonTypes = require("../../types/button")
 class Button extends base{
     
-    constructor(data){
-        super()
+    constructor(data={}){
+        super(data)
 
         this.type = 2
-        this.style = null
-        this.label = null
-        this.emoji = null
-        this.url = null
-        this.disabled = null
-
-        if(data) this._handleInitiationData(data)
+        this.style = data.style || null
+        this.label = data.label || null
+        this.emoji = data.emoji || null
+        this.url = data.url || null
+        this.disabled = data.disabled || null
     }
 
     /**

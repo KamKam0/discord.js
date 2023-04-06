@@ -2,19 +2,17 @@ const base = require("../bases/components/base")
 const textInputTypes = require("../../types/textinput")
 
 class TextInput extends base{
-    constructor(data){
-        super()
+    constructor(data={}){
+        super(data)
 
         this.type = 4
-        this.label = null
-        this.style = null
-        this.min_length = 1
-        this.value = null
-        this.max_length = 50
-        this.placeholder = null
-        this.required = true
-
-        if(data) this._handleInitiationData(data)
+        this.label = data.label || null
+        this.style = data.style || null
+        this.min_length = data.min_length || 1
+        this.value = data.value || null
+        this.max_length = data.max_length || 50
+        this.placeholder = data.placeholder || null
+        this.required = data.required || true
     }
 
     setMaxLength(num){

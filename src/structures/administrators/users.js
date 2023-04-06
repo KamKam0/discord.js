@@ -1,5 +1,5 @@
-const BaseUser = require("../managers/Users")
-class Users extends BaseUser{// to test
+const BaseUser = require("../managers/users")
+class Users extends BaseUser{
     constructor(bot){
         super(bot)
     }

@@ -1,49 +1,51 @@
 const Option = require("./commandoption")
 const Base = require("../bases/commands/base")
+const interactionMethod = require("../../methods/interaction")
+const utils = require("../../utils/functions")
 class Slash extends Base{
-    constructor(slash){
-        super()
-        this.id = null
-        this.application_id = null
-        this.version = null
-        this.default_member_permissions = null
-        this.onlydm = false
-        this.dm_permission = null
+    constructor(slash, bot){
+        super(slash)
+        this.id = slash.id || null
+        this.application_id = slash.application_id || null
+        this.version = slash.version || null
+        this.default_member_permissions = slash.default_member_permissions ? this.#analyseDefaultMember(slash.default_member_permissions) : null
+        this.onlydm = slash.onlydm ?? false
+        this.dm_permission = slash.dm_permission ? this.#analyseDMPerm(slash.dm_permission) : null
         this.options = slash.options ? slash.options.map(opt => new Option(opt)) : []
         this.type = 1
-        this.nsfw = false
-
-        if(slash) this._handleInitiationData(slash)
+        this.nsfw = slash.nsfw ?? false
+        this._bot = bot
+        this._token = bot.token
     }
     
     create(){
-        let ID = this._bot?.user?.id || this.applicationId
+        let ID = this._bot?.user?.id || this.application_id
         let informations = {
             bot: this._bot,
             botToken: this._token,
             application_id: ID
         }
-        return interactionMethod.create(informations, this)
+        return interactionMethod.createcommand(informations, this.toJSON())
     }
 
     modify(){
-        let ID = this._bot?.user?.id || this.applicationId
+        let ID = this._bot?.user?.id || this.application_id
         let informations = {
             bot: this._bot,
             botToken: this._token,
             application_id: ID,
-            command_id: this.id
+            id: this.id
         }
         return interactionMethod.modifycommand(informations, this.toJSON())
     }
 
     delete(){
-        let ID = this._bot?.user?.id || this.applicationId
+        let ID = this._bot?.user?.id || this.application_id
         let informations = {
             botToken: this._token,
             bot: this._bot,
             application_id: ID,
-            command_id: this.id
+            id: this.id
         }
         return interactionMethod.deletecommand(informations)
     }
@@ -65,7 +67,7 @@ class Slash extends Base{
         if(typeof mem_perm === "number") return mem_perm
         let bit
         if(String(mem_perm).toLowerCase() === "aucune") bit = null
-        else bit = require("../utils/functions").get_bitfield([mem_perm])
+        else bit = utils.gets.getBietfielfFromPermissions([mem_perm])
         if(bit === 8) bit = 0
         return bit
     }
@@ -75,6 +77,8 @@ class Slash extends Base{
         delete returnObject.id
         delete returnObject.application_id
         delete returnObject.version
+        delete returnObject._bot
+        delete returnObject._token
         return returnObject
     }
 

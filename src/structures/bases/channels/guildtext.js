@@ -25,13 +25,11 @@ class guildText extends GuildBase{
             channel_id: this.id
         }
         return new Promise(async (resolve, reject) => {
-            messageMethod.fetch_messages(informations, number)
-            .catch(err => reject(err))
-            .then(datas => {
-                channelMethod.bulkdelete(informations, datas.map(msg => msg.id))
-                .catch(err => reject(err))
-                .then(vdatas => resolve(vdatas))
-            })
+            let datas = await this.fetchMessages(informations, number).catch(err => reject(err))
+            if(!datas) return
+            let bulkDatas = await channelMethod.bulkdelete(informations, datas.map(msg => msg.id)).catch(err => reject(err))
+            if(!bulkDatas) return
+            return resolve(bulkDatas)
         })
     }
 

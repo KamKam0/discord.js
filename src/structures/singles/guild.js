@@ -74,15 +74,15 @@ class Guild extends Base{
         this.nsfw = guild.nsfw ?? false
         this.templates = new managers.Templates(this._bot, this.id)
         this.roles = (new managers.Roles(bot, this.id))._addMultiple(guild.roles.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.members = (new managers.Members(bot, this.id))._addMultiple(guild.members.map(el => { return {...el, guild: this, guild_id: this.id}}))
+        this.threads = (new managers.Threads(bot, this.id))._addMultiple(guild.threads.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.emojis = (new managers.Emojis(bot, this.id))._addMultiple(guild.emojis.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.stickers = (new managers.Stickers(bot, this.id))._addMultiple(guild.stickers.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.presences = (new managers.Presences(bot, this.id))._addMultiple(guild.presences.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.channels = (new managers.Channels(bot, this.id))._addMultiple(guild.channels.map(el => { return {...el, guild: this, guild_id: this.id}}))// to test
+        this.channels = (new managers.Channels(bot, this.id))._addMultiple(guild.channels.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.stage_instances = (new managers.StageInstances(bot, this.id))._addMultiple(guild.stage_instances.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.guild_scheduled_events = (new managers.Events(bot, this.id))._addMultiple(guild.guild_scheduled_events.map(el => { return {...el, guild: this, guild_id: this.id}}))
-        this.members = (new managers.Members(bot, this.id))._addMultiple(guild.members.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.owner = this.members.get(this.owner_id)
-        this.threads = (new managers.Threads(bot, this.id))._addMultiple(guild.threads.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.voice_states = (new managers.Voices(bot, this.id))._addMultiple(guild.voice_states.map(el => { return {...el, guild: this, guild_id: this.id}}))
         this.voice_states.container.forEach(voi => {
             this.channels.get(voi.channel_id).members.container.push(voi.member)

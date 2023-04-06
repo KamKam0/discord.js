@@ -1,10 +1,8 @@
 const Base = require("../bases/commands/base")
 class Choice extends Base{
     constructor(choice){
-        super()
-        this.value = null
-
-        if(choice) this._handleInitiationData(choice)
+        super(choice)
+        this.value = choice.value || null
     }
 
     setValue(value){

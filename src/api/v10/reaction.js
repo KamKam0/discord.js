@@ -1,5 +1,5 @@
 const apiBase = require("./base")
-const baseReactionAPI = apiBase+"/channels/:channel_id/messages/:message_id/reactions"
+const baseReactionAPI = apiBase+"/channels/:channel_id/messages/:id/reactions"
 
 let routes = {
     get: {

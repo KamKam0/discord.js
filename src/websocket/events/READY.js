@@ -4,6 +4,7 @@ module.exports = async (bot, datas) => {
     bot.ws.discordSide.passedDatas = datas.v
     bot.ws.discordSide.guild_ids = datas.guilds.map(g => { return {id: g.id}})
     if(bot.ws.discordSide.guild_ids.length === 0){
+        delete bot.discordSide.connectionInfos.connectionUrl
         bot.state = "ready"
         if(bot.databaseState || bot.databaseState === null) bot.emit("READY", bot)
     }

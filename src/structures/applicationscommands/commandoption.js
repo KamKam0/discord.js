@@ -3,17 +3,15 @@ const Base = require("../bases/commands/base")
 const optionTypes = require("../../types/option")
 class Option extends Base{
     constructor(option){
-        super()
-        this.type = 3
-        this.required = false
-        this.choices = []
-        this.min_value = 1
-        this.max_value = 1000000000
-        this.min_length = 1
-        this.max_length = 6000
-        this.autocomplete = false
-
-        if(option) this._handleInitiationData(option)
+        super(option)
+        this.type = option.type || 3
+        this.required = option.required || false
+        this.choices = option.choices ? option.choices.map(cho => new Choice(cho)) : []
+        this.min_value = option.min_value || 1
+        this.max_value = option.max_value || 1000000000
+        this.min_length = option.min_length || 1
+        this.max_length = option.max_length || 6000
+        this.autocomplete = option.autocomplete ?? false
     }
 
     setMinValue(value){

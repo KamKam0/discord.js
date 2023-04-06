@@ -15,7 +15,8 @@ class Initiate{
 
     async #manageCommands(){
         return new Promise(async (resolve, reject) => {
-            let commands = await this._bot.commands.fetchAll().catch(err => {})
+            let commands = await this._bot.commands.fetchAll().catch(err => reject(err))
+            if(!commands) return
     
             this._bot.handler.GetAllCommandsfi().filter(cmd => !cmd.help.unclass).forEach(commande => {
                 let descriptions_cmd, names_cmd, descriptions_opt, names_opt, names_cho;
@@ -49,7 +50,7 @@ class Initiate{
                 })
                 
                 let cmd = commands.find(cmd => cmd.name === commande.name)
-                let newCmd  = new ApplicationCommand({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_permission: commande.help.dm, default_member_permissions: commande.help.autorisation, id: cmd?.id, application_id: cmd?.application_id, version: cmd?.version})
+                let newCmd  = new ApplicationCommand({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_permission: commande.help.dm, default_member_permissions: commande.help.autorisation, id: cmd?.id, application_id: cmd?.application_id, version: cmd?.version}, this._bot)
                 
                 if(!cmd) newCmd.create()
                 else{

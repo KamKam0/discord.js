@@ -3,23 +3,21 @@ const constants = require("../../utils/constants")
 const utils = require("../../utils/functions")
 
 class Embed extends origin{
-    constructor(data){
-        super()
-        this.title = null
-        this.description = null
-        this.type = "rich"
-        this.url = null
-        this.color = null
-        this.timestamp = null
-        this.fields = []
-        this.thumbnail = {url: null, proxy_url: null, height: null, width: null}
-        this.image = {url: null, proxy_url: null, height: null, width: null}
-        this.video = {url: null, proxy_url: null, height: null, width: null}
-        this.author = {url: null, icon_url: null, name: null, proxy_icon_url: null}
-        this.provider = {url: null, name: null}
-        this.footer = {icon_url: null, text: null, proxy_icon_url: null}
-
-        if(data) this._handleInitiationData(data)
+    constructor(data={}){
+        super(data)
+        this.title = data.title || null
+        this.description = data.description || null
+        this.type = data.type || "rich"
+        this.url = data.url || null
+        this.color = data.color || null
+        this.timestamp = data.timestamp || null
+        this.fields = data.fields || []
+        this.thumbnail = data.thumbnail || {url: null, proxy_url: null, height: null, width: null}
+        this.image = data.image || {url: null, proxy_url: null, height: null, width: null}
+        this.video = data.video || {url: null, proxy_url: null, height: null, width: null}
+        this.author = data.author || {url: null, icon_url: null, name: null, proxy_icon_url: null}
+        this.provider = data.provider || {url: null, name: null}
+        this.footer = data.footer || {icon_url: null, text: null, proxy_icon_url: null}
     }
     
     /**
@@ -27,7 +25,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setDescription(description){
-        if(!description || typeof title !== "string" || description.length > 4096) return this
+        if(!description || typeof description !== "string" || description.length > 4096) return this
         else this.description = description
         return this
     }

@@ -214,15 +214,18 @@ module.exports.unpin = async (informations) => {
     return handler(args, passedOptions, null)
 }
 
-module.exports.fetch_reactions = async (token, channelid, messageid, bot) => {//à tester
-    return new Promise(async (resolve, reject) => {
-        this.fetch_messages(token, channelid, messageid, bot)
-        .catch(err => reject(err))
-        .then(datas => resolve(datas.reactions))
-    })
+module.exports.fetch_reactions = async (informations) => {
+    let passedOptions = {
+        method: emojiApiPath.get.method,
+        token: informations.botToken,
+        url: emojiApiPath.get.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null)
 }
 
-module.exports.fetch_reaction = async (informations) => {//encodeURIComponent(emoji)//à tester
+module.exports.fetch_reaction = async (informations) => {
     let passedOptions = {
         method: emojiApiPath.get.listOne.method,
         token: informations.botToken,
@@ -231,7 +234,7 @@ module.exports.fetch_reaction = async (informations) => {//encodeURIComponent(em
     }
     let args = [ ]
     let callBackSuccess = function (data){
-        const multiple = require("../structures/managers/messages")
+        const multiple = require("../structures/managers/users")
         let newData = new multiple(informations.bot)
         newData._addMultiple(data)
         return newData

@@ -6,13 +6,13 @@ class Emojis extends BaseEmojis{
         super(bot, guild_id)
     }
     
-    create(name, imagedata, roles){//"data:image/png;base64,"+fs.readFileSync('../debit.png', 'base64')
+    create(options){
         let informations = {
             bot: this._bot,
             botToken: this._token,
             guild_id: this.guild_id
         }
-        return emojiMethod.create(informations, name, imagedata, roles)
+        return emojiMethod.create(informations, options)
     }
 
     modify(id, options){
