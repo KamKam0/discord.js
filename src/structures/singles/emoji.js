@@ -32,14 +32,14 @@ class Emoji extends Base{
      * 
      * @returns 
      */
-    async delete(){
+    async delete(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id,
             guild_id: this.guild_id
         }
-        return emojiMethod.delete(informations)
+        return emojiMethod.delete(informations, options)
     }
 }
 module.exports = Emoji

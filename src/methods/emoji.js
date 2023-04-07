@@ -1,17 +1,23 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/emoji")
-const utils = require("../utils/functions")
-const errors = require("../utils/errors.json")
+const fileManager = require("../handlers/filemanager")
+
 
 module.exports.create = async (informations, options) => {
+    if(typeof options === "object" && typeof options.image === "object" && options.image instanceof fileManager){
+        let extensions = ["jpg", "gif", "png"]
+        if(!extensions[options.image.getExtension().toLowerCase()]) return Promise.reject(`The emoji extension is not one of (${extensions.join(", ")})`)
+        options.image = options.image.getEmojiFile()
+    }
     let passedOptions = {
         method: apiPath.create.method,
         url: apiPath.create.url,
         token: informations.botToken,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function(data){
         const single = require("../structures/singles/emoji")
@@ -21,26 +27,32 @@ module.exports.create = async (informations, options) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.delete = async (informations) => {
+
+module.exports.delete = async (informations, options) => {
     let passedOptions = {
         method: apiPath.delete.method,
         token: informations.botToken,
         url: apiPath.delete.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
     return handler(args, passedOptions, null)
 }
+
 
 module.exports.modify = async (informations, options) => {
     let passedOptions = {
         method: apiPath.modify.method,
         token: informations.botToken,
         url: apiPath.modify.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/emoji")

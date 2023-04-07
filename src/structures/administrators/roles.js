@@ -16,23 +16,15 @@ class Roles extends BaseRole{
     }
 
     modify(id, options){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            id
-        }
-        return roleMethod.modify(informations, options)
+        let role = this.get(id)
+        if(!role) return Promise.reject("No role found")
+        return role.modify(options)
     }
 
-    delete(id){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            guild_id: this.guild_id,
-            id
-        }
-        return roleMethod.delete(informations)
+    delete(id, options){
+        let role = this.get(id)
+        if(!role) return Promise.reject("No role found")
+        return role.delete(options)
     }
 
     changePositions(options){

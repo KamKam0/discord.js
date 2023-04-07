@@ -33,6 +33,28 @@ module.exports = async (args, options, callbackSuccess) => {
         if(options.contentType === "file") contentType+=options.boundary
         headers = {...headers, "Content-Type": contentType}
         if(options.token) headers = {...headers, Authorization: headers.Authorization.replace("TOKEN", options.token)}
+        
+        if(options.xAuditReasonAvailable){
+            let optionField = args.find(e => e.data_name === "options")
+
+            if(optionField && optionField.value && optionField.reason){
+
+                if(typeof optionField.value === "string"){
+                    headers = {...headers, "X-Audit-Log-Reason": optionField.value}
+                    args.splice(args.indexOf(optionField))
+                }
+                else if(optionField.value.reason){
+                    
+                    headers = {...headers, "X-Audit-Log-Reason": optionField.value.reason}
+
+                    if(Object.entries(optionField.value).length === 1) args.splice(args.indexOf(optionField))
+                    else delete optionField.value.reason
+                }
+
+            }
+
+            delete options.xAuditReasonAvailable
+        }
 
         // modification des params donnés pour être compatibles discord
         let requestURL = require("./linkmodification")(options.url, options.urlIDS)

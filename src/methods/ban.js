@@ -1,38 +1,66 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/ban")
 
-module.exports.ban = async (informations) => {
+
+module.exports.ban = async (informations, options) => {
     let passedOptions = {
         method: apiPath.create.method,
         token: informations.botToken,
         url: apiPath.create.url,
         urlIDS: informations,
-        contentType: "url"
+        contentType: "url",
+        xAuditReasonAvailable: true
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
     return handler(args, passedOptions, null)
 }
 
-module.exports.unban = async (informations) => {
+
+module.exports.unban = async (informations, options) => {
     let passedOptions = {
         method: apiPath.delete.method,
         token: informations.botToken,
         url: apiPath.delete.url,
         urlIDS: informations,
-        contentType: "url"
+        contentType: "url",
+        xAuditReasonAvailable: true
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
     return handler(args, passedOptions, null)
 }
 
-module.exports.fetch = async (informations) => {
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {string} [queryParams.before] ID
+ * @param {string} [queryParams.after] ID
+ * @param {number} [queryParams.limit] 
+ * @returns 
+ */
+module.exports.fetch = async (informations, queryParams) => {
     let passedOptions = {
         method: apiPath.get.list.method,
         token: informations.botToken,
         url: apiPath.get.list.url,
         urlIDS: informations
     }
-    let args = [ ]
+    let args = [
+        {
+            value: queryParams, 
+            data_name: "infosURL",
+            required: false,  
+            check: [
+                {name: "before", type: "number", data_type: "id"}, 
+                {name: "after", type: "number", data_type: "id"}, 
+                {name: "limit", type: "number", limit: 100}
+            ]
+        }
+    ]
     let callBackSuccess = function (data){
         const manager = require("../structures/managers/bans")
         let newData = new manager(informations.bot, informations.guild_id)

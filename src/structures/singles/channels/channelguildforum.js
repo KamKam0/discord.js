@@ -2,6 +2,7 @@ const Base = require("../../bases/channels/baseguild")
 const threadMethod = require("../../../methods/threads")
 const forumTypes = require("../../../types/forum")
 const ThreadAdministrator = require("../../administrators/threads")
+const WebhooksAdministrator = require("../../administrators/webhooks")
 
 class Channel extends Base{
     constructor(channel, bot){
@@ -18,6 +19,7 @@ class Channel extends Base{
         this.flags = channel.flags
         this.threads = new ThreadAdministrator(bot, this.guild_id)
         this.threads._addMultiple(this.guild.threads.filter(thread => thread.parent_id === this.id))
+        this.webhooks = new WebhooksAdministrator(bot, this.guild_id, this.id)
     }
     
     /**

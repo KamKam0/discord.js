@@ -13,13 +13,9 @@ class Threads extends BaseThreads{
      * @returns 
      */
     join(threadid){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            channel_id: threadid
-        }
-        return threadMethod.jointhread(informations)
+        let thread = this.get(threadid)
+        if(!thread) return Promise.reject("No thread found")
+        return thread.join()
     }
 
     /**
@@ -29,14 +25,9 @@ class Threads extends BaseThreads{
      * @returns 
      */
     addMember(threadid, memberid){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            channel_id: threadid,
-            user_id: memberid
-        }
-        return threadMethod.addthreadmember(informations)
+        let thread = this.get(threadid)
+        if(!thread) return Promise.reject("No thread found")
+        return thread.addMember(memberid)
     }
 
     /**
@@ -46,14 +37,9 @@ class Threads extends BaseThreads{
      * @returns 
      */
     removeMember(threadid, memberid){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            channel_id: threadid,
-            user_id: memberid
-        }
-        return threadMethod.removethreadmember(informations)
+        let thread = this.get(threadid)
+        if(!thread) return Promise.reject("No thread found")
+        return thread.removeMember(memberid)
     }
 
     /**
@@ -62,13 +48,9 @@ class Threads extends BaseThreads{
      * @returns 
      */
     leave(threadid){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            channel_id: threadid
-        }
-        return threadMethod.leavethread(informations)
+        let thread = this.get(threadid)
+        if(!thread) return Promise.reject("No thread found")
+        return thread.leave()
     }
 
     /**
@@ -96,13 +78,9 @@ class Threads extends BaseThreads{
      * @returns 
      */
     modify(threadid, options){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            id: threadid
-        }
-        return channelMethod.modify(informations, options)
+        let thread = this.get(threadid)
+        if(!thread) return Promise.reject("No thread found")
+        return thread.modify(options)
     }
 
     /**
@@ -111,21 +89,20 @@ class Threads extends BaseThreads{
      * @returns 
      */
     delete(threadid){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            id: threadid
-        }
-        return channelMethod.delete(informations)
+        let thread = this.get(threadid)
+        if(!thread) return Promise.reject("No thread found")
+        return thread.delete()
     }
 
+
     /**
-     * 
      * @param {string} threadid 
+     * @param {string} memberid 
+     * @param {object} [queryParams] 
+     * @param {boolean} [queryParams.with_member]
      * @returns 
      */
-    getMember(threadid, memberid){
+    getMember(threadid, memberid, queryParams){
         let informations = {
             bot: this._bot,
             botToken: this._token,
@@ -133,7 +110,7 @@ class Threads extends BaseThreads{
             channel_id: threadid,
             user_id: memberid
         }
-        return threadMethod.getthreadmember(informations)
+        return threadMethod.getthreadmember(informations, queryParams)
     }
 
     /**
@@ -167,31 +144,56 @@ class Threads extends BaseThreads{
         return threadMethod.create_withoutm(informations, options)
     }
 
-    getPublicArchived(channelid){
+
+    /**
+     * 
+     * @param {object} informations 
+     * @param {object} [queryParams] 
+     * @param {string} [queryParams.before] ID
+     * @param {number} [queryParams.limit] 
+     * @returns 
+     */
+    getPublicArchived(channelid, queryParams){
         let informations = {
             bot: this._bot,
             botToken: this._token,
             channel_id: channelid
         }
-        return threadMethod.getpublicarchived(informations)
+        return threadMethod.getpublicarchived(informations, queryParams)
     }
 
-    getPrivateArchived(channelid){
+    /**
+     * 
+     * @param {object} informations 
+     * @param {object} [queryParams] 
+     * @param {string} [queryParams.before] ID
+     * @param {number} [queryParams.limit] 
+     * @returns 
+     */
+    getPrivateArchived(channelid, queryParams){
         let informations = {
             bot: this._bot,
             botToken: this._token,
             channel_id: channelid
         }
-        return threadMethod.getprivatearchived(informations)
+        return threadMethod.getprivatearchived(informations, queryParams)
     }
 
-    getPrivateJoinedArchived(channelid){
+    /**
+     * 
+     * @param {object} informations 
+     * @param {object} [queryParams] 
+     * @param {string} [queryParams.before] ID
+     * @param {number} [queryParams.limit] 
+     * @returns 
+     */
+    getPrivateJoinedArchived(channelid, queryParams){
         let informations = {
             bot: this._bot,
             botToken: this._token,
             channel_id: channelid
         }
-        return threadMethod.getprivatejoined(informations)
+        return threadMethod.getprivatejoined(informations, queryParams)
     }
 }
 

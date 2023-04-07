@@ -21,18 +21,22 @@ class Channel extends GuildVoice{
         return messageMethod.send(informations, options)
     }
 
-    /**ç
+    /**
      * 
-     * @param {number} limit 
+     * @param {object} [queryParams] 
+     * @param {string} [queryParams.before] ID
+     * @param {string} [queryParams.after] ID
+     * @param {number} [queryParams.limit] 
+     * @param {string} [queryParams.around] ID
      * @returns 
      */
-    async fetchMessages(limit){
+    async fetchMessages(queryParams){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             channel_id: this.id
         }
-        return messageMethod.fetch_messages(informations, limit)
+        return messageMethod.fetch_messages(informations, queryParams)
     }
     
     /**
@@ -65,7 +69,7 @@ class Channel extends GuildVoice{
         return new Promise(async (resolve, reject) => {
             let datas = await this.fetchMessages(informations, number).catch(err => reject(err))
             if(!datas) return
-            let bulkDatas = await channelMethod.bulkdelete(informations, datas.map(msg => msg.id)).catch(err => reject(err))
+            let bulkDatas = await channelMethod.bulkdelete(informations, {payload: datas.map(msg => msg.id), ...options}).catch(err => reject(err))
             if(!bulkDatas) return
             return resolve(bulkDatas)
         })

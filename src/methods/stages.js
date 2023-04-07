@@ -1,15 +1,17 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/stage")
 
+
 module.exports.create = (informations, options) => {
     let passedOptions = {
         method: apiPath.create.method,
         token: informations.botToken,
         url: apiPath.create.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/stageinstance")
@@ -18,16 +20,18 @@ module.exports.create = (informations, options) => {
     }
     return handler(args, passedOptions, callBackSuccess)
 }
+
 
 module.exports.modify = (informations, options) => {
     let passedOptions = {
         method: apiPath.modify.method,
         token: informations.botToken,
         url: apiPath.modify.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/stageinstance")
@@ -37,14 +41,18 @@ module.exports.modify = (informations, options) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.delete = (informations) => {
+
+module.exports.delete = (informations, options) => {
     let passedOptions = {
         method: apiPath.delete.method,
         token: informations.botToken,
         url: apiPath.delete.url,
         urlIDS: informations,
-        contentType: "url"
+        contentType: "url",
+        xAuditReasonAvailable: true
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
     return handler(args, passedOptions, null)
 }

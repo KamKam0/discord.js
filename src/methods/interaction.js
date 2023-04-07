@@ -61,7 +61,7 @@ module.exports.reply = async (informations, response) => {
                 const FormData = require("form-data")
                 let body_files = new FormData()
                 for(const file in checkfiles){
-                    body_files.append(`files[${file}]`, checkfiles[file].buffer, `${checkfiles[file].name}.${checkfiles[file].extension}`);
+                    body_files.append(`files[${file}]`, checkfiles[file].getBuffer(), checkfiles[file].getFullName());
                 }
             
                 passedOptions.boundary = body_files.getBoundary()

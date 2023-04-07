@@ -14,14 +14,10 @@ class Members extends BaseMember{
      * @param {object} options 
      * @returns 
      */
-    ban(ID, options){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            user_id: ID
-        }
-        return banMethod.ban(informations, options)
+    ban(id, options){
+        let member = this.get(id)
+        if(!member) return Promise.reject("No member found")
+        return member.ban(options)
     }
 
     /**
@@ -29,24 +25,20 @@ class Members extends BaseMember{
      * @param {string} ID 
      * @returns 
      */
-    unban(ID){
+    unban(ID, options){
         let informations = {
             bot: this._bot,
             botToken: this._token,
             guild_id: this.guild_id,
             user_id: ID
         }
-        return banMethod.unban(informations)
+        return banMethod.unban(informations, options)
     }
 
-    kick(ID){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            user_id: ID
-        }
-        return kickMethod(informations)
+    kick(id){
+        let member = this.get(id)
+        if(!member) return Promise.reject("No member found")
+        return member.kick(options)
     }
 
     add(userid){

@@ -25,22 +25,29 @@ class ChannelInvites extends Base{
         return channelMethod.getinvites(informations)
     }
 
-    async fetch(id){
+    /**
+    * @param {object} [queryParams] 
+    * @param {boolean} [queryParams.with_counts]
+    * @param {string} [queryParams.guild_scheduled_event_id] ID
+    * @param {boolean} [queryParams.with_expiration] 
+    * @returns 
+    */
+    async fetch(id, queryParams){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id
         }
-        return channelMethod.getinvite(informations)
+        return channelMethod.getinvite(informations, queryParams)
     }
 
-    async delete(id){
+    async delete(id, options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id
         }
-        return channelMethod.deleteinvite(informations)
+        return channelMethod.deleteinvite(informations, options)
     }
 }
 

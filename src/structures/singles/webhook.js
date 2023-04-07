@@ -18,7 +18,7 @@ class Webhook extends Base{
         this.avatar = webhook.avatar || null
         this.token = webhook.token
         this.application_id = webhook.application_id
-        this.url = webhook.url
+        this.url = webhook.url || null
     }
 
     /**
@@ -26,14 +26,14 @@ class Webhook extends Base{
      * @param {object} options 
      * @returns 
      */
-    async execute(options){
+    async execute(options, queryParams){
         let informations = {
             bot: this._bot,
             botToken: this._token,
             token: this.token,
             id: this.id
         }
-        return webhookMethod.create(informations, options)
+        return webhookMethod.execute(informations, options, queryParams)
     }
 
     /**
@@ -54,13 +54,58 @@ class Webhook extends Base{
      * 
      * @returns 
      */
-    async delete(){
+    async delete(options){
         let informations = {
             bot: this._bot,
             botToken: this._token,
             id: this.id
         }
-        return webhookMethod.delete(informations)
+        return webhookMethod.delete(informations, options)
+    }
+
+    /**
+     * 
+     * @returns 
+     */
+    async getMessage(id, queryParams){
+        let informations = {
+            bot: this._bot,
+            botToken: this._token,
+            id: this.id,
+            token: this.token,
+            message_id: id
+        }
+        return webhookMethod.getmessage(informations, queryParams)
+    }
+
+    /**
+     * 
+     * @returns 
+     */
+    async deleteMessage(id, queryParams){
+        let informations = {
+            bot: this._bot,
+            botToken: this._token,
+            id: this.id,
+            token: this.token,
+            message_id: id
+        }
+        return webhookMethod.deletemessage(informations, queryParams)
+    }
+
+    /**
+     * 
+     * @returns 
+     */
+    async modifyMessage(id, options, queryParams){
+        let informations = {
+            bot: this._bot,
+            botToken: this._token,
+            id: this.id,
+            token: this.token,
+            message_id: id
+        }
+        return webhookMethod.modifymessage(informations, options, queryParams)
     }
 }
 module.exports = Webhook

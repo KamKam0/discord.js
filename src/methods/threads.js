@@ -1,15 +1,17 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/threads")
 
+
 module.exports.create_withoutm = async (informations, options) => {
     let passedOptions = {
         method: apiPath.create.withoutMessage.method,
         token: informations.botToken,
         url: apiPath.create.withoutMessage.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/channels/channelguildpublicthread")
@@ -19,15 +21,17 @@ module.exports.create_withoutm = async (informations, options) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
+
 module.exports.create_withm = async (informations, options) => {
     let passedOptions = {
         method: apiPath.create.method,
         token: informations.botToken,
         url: apiPath.create.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/channels/channelguildpublicthread")
@@ -80,19 +84,18 @@ module.exports.removethreadmember = async (informations) => {
     let args = []
     return handler(args, passedOptions, null)
 }
-/*name: "treoi",
-            message: {
-                content: "zlkfj"
-            }*/
+
+
 module.exports.create_tforum = (informations, options) => {
     let passedOptions = {
         method: apiPath.create.forum.method,
         token: informations.botToken,
         url: apiPath.create.forum.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/channels/channelguildpublicthread")
@@ -102,7 +105,14 @@ module.exports.create_tforum = (informations, options) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.getthreadmember = async (informations, withm, limit, after) => {
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {boolean} [queryParams.with_member]
+ * @returns 
+ */
+module.exports.getthreadmember = async (informations, queryParams) => {
     let passedOptions = {
         method: apiPath.get.member.method,
         token: informations.botToken,
@@ -110,19 +120,12 @@ module.exports.getthreadmember = async (informations, withm, limit, after) => {
         urlIDS: informations
     }
     let args = [
-        {value: withm, required: false, check: false, type: "boolean", order: 4}, 
-        {value: limit, required: false, check: false, type: "number", order: 5}, 
-        {value: after, check: false, required: false, value_data: "id", order: 6}, 
         {
-            value: {
-                with_member: withm, after, limit
-            }, 
+            value: queryParams, 
             data_name: "infosURL",
             required: false,  
             check: [
-                {name: "with_member", type: "boolean"}, 
-                {name: "after", type: "string", data_type: "id"}, 
-                {name: "limit", type: "number", limit: 100}
+                {name: "with_member", type: "boolean"}
             ]
         }
     ]
@@ -137,7 +140,16 @@ module.exports.getthreadmember = async (informations, withm, limit, after) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.getthreadmembers = async (informations, withm, limit, after) => {
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {string} [queryParams.before] ID
+ * @param {string} [queryParams.after] ID
+ * @param {number} [queryParams.limit] 
+ * @returns 
+ */
+module.exports.getthreadmembers = async (informations, queryParams) => {
     let passedOptions = {
         method: apiPath.get.members.method,
         token: informations.botToken,
@@ -145,13 +157,8 @@ module.exports.getthreadmembers = async (informations, withm, limit, after) => {
         urlIDS: informations
     }
     let args = [
-        {value: withm, required: false, check: false, type: "boolean", order: 4}, 
-        {value: limit, required: false, check: false, type: "number", order: 5}, 
-        {value: after, check: false, required: false, value_data: "id", order: 6}, 
         {
-            value: {
-                with_member: withm, after, limit
-            }, 
+            value: queryParams, 
             data_name: "infosURL",
             required: false,  
             check: [
@@ -175,26 +182,60 @@ module.exports.getthreadmembers = async (informations, withm, limit, after) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.getpublicarchived = async (informations) => {
-    return getThreads(informations, apiPath.get.publicsArchived.method, apiPath.get.publicsArchived.url)
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {string} [queryParams.before] ID
+ * @param {number} [queryParams.limit] 
+ * @returns 
+ */
+module.exports.getpublicarchived = async (informations, queryParams) => {
+    return getThreads(informations, apiPath.get.publicsArchived.method, apiPath.get.publicsArchived.url, queryParams)
 }
 
-module.exports.getprivatearchived = async (informations) => {
-    return getThreads(informations, apiPath.get.privatesArchived.method, apiPath.get.privatesArchived.url)
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {string} [queryParams.before] ID
+ * @param {number} [queryParams.limit] 
+ * @returns 
+ */
+module.exports.getprivatearchived = async (informations, queryParams) => {
+    return getThreads(informations, apiPath.get.privatesArchived.method, apiPath.get.privatesArchived.url, queryParams)
 }
 
-module.exports.getprivatejoined = async (informations) => {
-    return getThreads(informations, apiPath.get.privatesJoinedArchived.method, apiPath.get.privatesJoinedArchived.url)
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {string} [queryParams.before] ID
+ * @param {number} [queryParams.limit] 
+ * @returns 
+ */
+module.exports.getprivatejoined = async (informations, queryParams) => {
+    return getThreads(informations, apiPath.get.privatesJoinedArchived.method, apiPath.get.privatesJoinedArchived.url, queryParams)
 }
 
-async function getThreads(informations, method, url){
+async function getThreads(informations, method, url, queryParams){
     let passedOptions = {
         method,
         token: informations.botToken,
         url,
         urlIDS: informations
     }
-    let args = []
+    let args = [
+        {
+            value: queryParams, 
+            data_name: "infosURL",
+            required: false,  
+            check: [
+                {name: "before", type: "string", data_type: "id"}, 
+                {name: "limit", type: "number", limit: 100}
+            ]
+        }
+    ]
     let callBackSuccess = function (data){
         let guild = informations.bot.guilds.get(informations.guild_id)
         if(guild){

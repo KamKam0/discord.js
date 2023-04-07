@@ -21,24 +21,24 @@ class Pins extends Base{
         return channelMethod.getpins(informations)
     }
 
-    async pin(id){
+    async pin(id, options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             channel_id: this.channel_id,
             id
         }
-        return messageMethod.pin(informations)
+        return messageMethod.pin(informations, options)
     }
 
-    async unpin(id){
+    async unpin(id, options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             channel_id: this.channel_id,
             id
         }
-        return messageMethod.unpin(informations)
+        return messageMethod.unpin(informations, options)
     }
 }
 

@@ -9,7 +9,7 @@ class Initiate{
 
     async init(){
         this.#checkCommandsErrors()
-        if(!this._bot.ws.discordSide.commandsChecked) return reject(null)
+        if(!this._bot.ws.discordSide.commandsChecked) return Promise.reject(null)
         return this.#manageCommands()
     }
 
@@ -52,13 +52,13 @@ class Initiate{
                 let cmd = commands.find(cmd => cmd.name === commande.name)
                 let newCmd  = new ApplicationCommand({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_permission: commande.help.dm, default_member_permissions: commande.help.autorisation, id: cmd?.id, application_id: cmd?.application_id, version: cmd?.version}, this._bot)
                 
-                if(!cmd) newCmd.create()
+                if(!cmd) newCmd.create().catch(err => {})
                 else{
-                    if(!newCmd.compare(cmd)) ""// newCmd.modify()
+                    if(!newCmd.compare(cmd)) newCmd.modify().catch(err => {})
                     commands = commands._delete(cmd.name)
                 }
             })
-            if(commands.length > 0) commands.container.forEach(cmd => cmd.delete())
+            if(commands.length > 0) commands.container.forEach(cmd => cmd.delete().catch(err => {}))
 
             return resolve(null)
         })

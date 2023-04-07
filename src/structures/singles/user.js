@@ -7,11 +7,11 @@ const utils = require("../../utils/functions")
 class User extends Base{
     constructor(user, bot){
         super(bot)
-        this.id = user.id
-        this.username = user.username
-        this.discriminator = user.discriminator
-        this.avatar = user.avatar
-        this.bot = user.bot ?? false
+        this.id = user.id || null
+        this.username = user.username || null
+        this.discriminator = user.discriminator || null
+        this.avatar = user.avatar || null
+        this.bot = this.username ? (user.bot ?? false) : true
         this.system = user.system || null
         this.mfa_enabled = user.mfa_enabled ?? false
         this.banner = user.banner || null

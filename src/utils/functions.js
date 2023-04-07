@@ -2,6 +2,7 @@ const constants = require("./constants")
 const intentsConstance = require("../types/intents")
 const userBadges = require("../types/userbadges")
 const channelClass = require("../structures/singles/channels/channeldm")
+const fileManager = require("../handlers/filemanager")
 
 function getBietfielfFromPermissions(permissions){
     if(!Array.isArray(permissions)) return null
@@ -164,10 +165,11 @@ function checkFiles(files){
     }
     let truefiles = []
     files.forEach(file => {
+        if(file instanceof fileManager) return truefiles.push(file)
         if(!file.name || typeof file.name !== "string" || file.name.length > 200) return
         if(!file.buffer || !Buffer.isBuffer(file.buffer)) return
         if(!file.extension || typeof file.extension !== "string" || file.extension.length > 8) return
-        truefiles.push(file)
+        truefiles.push(new fileManager(file))
     })
     return truefiles
 }
@@ -270,6 +272,17 @@ function checkOptions(object, state, languages){
             }
         }
     })
+
+    if(object.options){
+        let firstNotRequiredOption = object.options.find(option => !option.required)
+        let firstRequiredOption = [...object.options].reverse().find(option => option.required)
+        if(firstNotRequiredOption && firstRequiredOption){
+            let indexFirstNotRequired = object.options.indexOf(firstNotRequiredOption)
+            let indexFirstRequired = object.options.indexOf(firstRequiredOption)
+            if(indexFirstRequired > indexFirstNotRequired) error.push({err: "Required options must be placed before not required options", cmd: object.name})
+        }
+    }
+
     return {type: "option", errors: error.length === 0 ? null : error, status: error.length === 0 ? true : false}
 }
 

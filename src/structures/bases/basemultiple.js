@@ -8,7 +8,7 @@ class baseMultiple extends base{
         this.individualClass = null
         switch(this.name){
             case("automod"):
-                this.individualClass = require("../singles/autoModeration")
+                this.individualClass = require("../singles/automoderation")
             break;
             case("ban"):
                 this.individualClass = require("../singles/ban")

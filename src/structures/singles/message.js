@@ -8,6 +8,8 @@ const componentsClass = {
     button: require("../components/button"),
     selectMenu: require("../components/selectmenu")
 }
+const User = require("./user")
+const optionsTypes = require("../../types/option").types
 
 class Message extends Base{
     constructor(message, bot){
@@ -17,7 +19,7 @@ class Message extends Base{
         this._modifyConstants.push({name: "mention_channels", function: this.#treatMentionsChannels})
 
         this.user_id = (message.user || message.user_id) ? message.user_id : message.author.id
-        this.user = this.user_id ? (bot.users.get(this.user_id) ?? null) : null
+        this.user = !this.user_id ? new User({id: this.user_id}, bot) : ((bot.users.get(this.user_id) ?? null) || new User({id: this.user_id}, bot))
         this.member = message.guild_id ? (this.guild.members.get(this.user_id) ?? null) : null
         this.id = message.id
         this.channel_id = message.channel_id || null
@@ -57,6 +59,46 @@ class Message extends Base{
         this.sticker_items = message.sticker_items || []
         this.stickers = message.stickers || []
         this.receivingType = "message"
+        this.commandName = null
+        this.isCommand = this.#handleCommand()
+        this.options = this.#handleOptions()
+    }
+
+    #handleCommand(){
+        if(!this.content) return false
+        if(!this.content.startsWith(`<@!${this._bot.user.id}>`) && !this.content.startsWith(`<@${this._bot.user.id}>`)) return false
+        let name = this.content.split(this._bot.user.id)[1].slice(1).split(" ").filter(e => e !== "")[0]
+        if(!name) return false
+        this.commandName = name
+        return true
+    }
+
+    #handleOptions(){
+        if(!this.isCommand) return []
+        let command = this._bot.handler.GetCommand(this.commandName)
+        if(!command || !command.help || !command.help.options?.length) return []
+        let splittedMessageContent = this.content.split(" ")
+        if(splittedMessageContent.length < 3) return []
+        let options = command.help.options
+        let allowedOptionTypes = ["string", "number", "boolean"]
+        splittedMessageContent.splice(0, 2)
+        let returnedOptions = []
+        for (const option in options){
+            let associatedValue = splittedMessageContent[option]
+            if(!associatedValue[option]) return returnedOptions
+            if(!isNaN(associatedValue)) associatedValue = +associatedValue
+            if(!allowedOptionTypes.includes(typeof associatedValue)) continue
+            let typeOfAssociatedValue = typeof associatedValue
+            let mappedType = typeOfAssociatedValue.charAt(0).toUpperCase() + typeOfAssociatedValue.slice(1)
+            let type = optionsTypes[mappedType]
+            if(options[option].type === 4 && typeof allowedOptionTypes === "number" && String(allowedOptionTypes).includes(".")){
+                allowedOptionTypes = Number((allowedOptionTypes).toFixed(0))
+                type = 4
+            }
+            if(type !== options[option].type) associatedValue = null
+            returnedOptions.push({name: options[option].name, value: associatedValue})
+        }
+        return returnedOptions
     }
 
     #treatMentionsChannels(content){
@@ -73,14 +115,14 @@ class Message extends Base{
      * 
      * @returns 
      */
-    async delete(){
+    async delete(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id,
             channel_id: this.channel_id
         }
-        return messageMethod.delete(informations)
+        return messageMethod.delete(informations, options)
     }
 
     /**
@@ -122,28 +164,28 @@ class Message extends Base{
      * 
      * @returns 
      */
-    async pin(){
+    async pin(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id,
             channel_id: this.channel_id
         }
-        return messageMethod.pin(informations)
+        return messageMethod.pin(informations, options)
     }
 
     /**
      * 
      * @returns 
      */
-    async unpin(){
+    async unpin(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id,
             channel_id: this.channel_id
         }
-        return messageMethod.unpin(informations)
+        return messageMethod.unpin(informations, options)
     }
 
     /**
@@ -163,16 +205,20 @@ class Message extends Base{
     /**
      * 
      * @param {string} reaction 
+     * @param {object} [queryParams]
+     * @param {string} [queryParams.after] ID
+     * @param {number} [queryParams.limit] 
      * @returns 
      */
-    async fetchreaction(reaction){
+    async fetchreaction(reaction, queryParams){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id,
-            channel_id: this.channel_id
+            channel_id: this.channel_id,
+            emoji: encodeURIComponent(reaction)
         }
-        return messageMethod.fetch_reaction(informations, reaction)
+        return messageMethod.fetch_reaction(informations, queryParams)
     }
 
     /**

@@ -17,7 +17,7 @@ class guildText extends GuildBase{
      * @param {number} number 
      * @returns 
      */
-    bulkDelete(number){
+    bulkDelete(number, options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
@@ -27,7 +27,7 @@ class guildText extends GuildBase{
         return new Promise(async (resolve, reject) => {
             let datas = await this.fetchMessages(informations, number).catch(err => reject(err))
             if(!datas) return
-            let bulkDatas = await channelMethod.bulkdelete(informations, datas.map(msg => msg.id)).catch(err => reject(err))
+            let bulkDatas = await channelMethod.bulkdelete(informations, {payload: datas.map(msg => msg.id), ...options}).catch(err => reject(err))
             if(!bulkDatas) return
             return resolve(bulkDatas)
         })

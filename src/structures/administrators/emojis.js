@@ -16,23 +16,15 @@ class Emojis extends BaseEmojis{
     }
 
     modify(id, options){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            id
-        }
-        return emojiMethod.modify(informations, options)
+        let emoji = this.get(id)
+        if(!emoji) return Promise.reject("No emoji found")
+        return emoji.modify(options)
     }
 
-    delete(id){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            id
-        }
-        return emojiMethod.delete(informations)
+    delete(id, options){
+        let emoji = this.get(id)
+        if(!emoji) return Promise.reject("No emoji found")
+        return emoji.delete(options)
     }
 }
 

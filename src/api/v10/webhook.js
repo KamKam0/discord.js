@@ -1,5 +1,6 @@
 const apiBase = require("./base")
 const baseWebhookAPI = apiBase+"/webhooks/:id"
+const baseWebhookAPIToken = apiBase+"/webhooks/:id/:token"
 
 let routes = {
     create: {
@@ -8,60 +9,60 @@ let routes = {
     },
     get: {
         method: "GET",
-        url: baseWebhookAPI+"/:id",
+        url: baseWebhookAPI,
         withToken: {
             method: "GET",
-            url: baseWebhookAPI+"/:id/:webhook_token"
+            url: baseWebhookAPIToken
         },
         guildWebhooks: {
             method: "GET",
-            url: baseWebhookAPI+"/guilds/:guild_id/webhooks"
+            url: apiBase+"/guilds/:guild_id/webhooks"
         },
         channelWebhooks: {
             method: "GET",
-            url: baseWebhookAPI+"/channels/:channel_id/webhhoks"
+            url: apiBase+"/channels/:channel_id/webhooks"
         }
     },
     modify: {
         method: "PATCH",
-        url: baseWebhookAPI+"/:id",
+        url: baseWebhookAPI,
         withToken: {
             method: "PATCH",
-            url: baseWebhookAPI+"/:id/:webhook_token"
+            url: baseWebhookAPIToken
         }
     },
     delete: {
         method: "DELETE",
-        url: baseWebhookAPI+"/:id",
+        url: baseWebhookAPI,
         withToken: {
             method: "DELETE",
-            url: baseWebhookAPI+"/:id/:webhook_token"
+            url: baseWebhookAPIToken
         }
     },
     execute: {
         method: "POST",
-        url: baseWebhookAPI+"/:id/:webhook_token",
+        url: baseWebhookAPIToken,
         slack: {
             method: "POST",
-            url: baseWebhookAPI+"/:id/:webhook_token/slack"
+            url: baseWebhookAPIToken+"/slack"
         },
         github: {
             method: "POST",
-            url: baseWebhookAPI+"/:id/:webhook_token/github"
+            url: baseWebhookAPIToken+"/github"
         }
     },
     message: {
         get: {
             method: "GET",
-            url: baseWebhookAPI+"/:id/:webhook_token/message/:message_id"
+            url: baseWebhookAPIToken+"/messages/:message_id"
         },
         modify: {
             method: "PATCH",
-            url: baseWebhookAPI+"/:id/:webhook_token/message/:message_id"
+            url: baseWebhookAPIToken+"/messages/:message_id"
         },
         delete: {
             method: "DELETE",
-            url: baseWebhookAPI+"/:id/:webhook_token/message/:message_id"
+            url: baseWebhookAPIToken+"/messages/:message_id"
         }
     }
 }

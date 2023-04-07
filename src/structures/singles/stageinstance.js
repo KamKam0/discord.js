@@ -22,14 +22,14 @@ class StageInstance extends BaseGuild{
         return stageMethod.modify(informations, options)
     }
 
-    async delete(){
+    async delete(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id,
             guild_id: this.guild_id
         }
-        return stageMethod.delete(informations)
+        return stageMethod.delete(informations, options)
     }
 }
 module.exports = StageInstance

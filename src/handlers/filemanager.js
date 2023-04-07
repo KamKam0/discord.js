@@ -3,11 +3,18 @@ class FileManager{
     #extension
     #buffer
     #name
-    constructor(){
+    /**
+     * 
+     * @param {object} [data]
+     * @param {buffer} [data.buffer]
+     * @param {string} [data.name]
+     * @param {string} [data.extension]
+     */
+    constructor(data={}){
         this.path = null
-        this.#name = null
-        this.#extension = null
-        this.#buffer = null
+        this.#name = data.name || null
+        this.#extension = data.extension || null
+        this.#buffer = data.buffer || null
     }
 
     loadFile(relativePath){
@@ -34,8 +41,16 @@ class FileManager{
         return this.#buffer
     }
 
+    getExtension(){
+        return this.#extension
+    }
+
     getGlobalFile(){
         return {name: this.#name, buffer: this.#buffer, extension: this.#extension}
+    }
+
+    getFullName(){
+        return `${this.#name}.${this.#extension}`
     }
 
     getEmojiFile(){

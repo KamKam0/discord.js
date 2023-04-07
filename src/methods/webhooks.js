@@ -1,16 +1,19 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/webhook")
 const errors = require("../utils/errors.json")
+const utils = require("../utils/functions")
+
 
 module.exports.create = async (informations, options) => {
     let passedOptions = {
         method: apiPath.create.method,
         token: informations.botToken,
         url: apiPath.create.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/webhook")
@@ -20,7 +23,7 @@ module.exports.create = async (informations, options) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.get = async (informations) => {
+module.exports.getchannel = async (informations) => {
     let passedOptions = {
         method: apiPath.get.channelWebhooks.method,
         token: informations.botToken,
@@ -37,124 +40,235 @@ module.exports.get = async (informations) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
+module.exports.get = async (informations) => {
+    let passedOptions = {
+        method: apiPath.get.method,
+        token: informations.botToken,
+        url: apiPath.get.url,
+        urlIDS: informations
+    }
+    let args = []
+    let callBackSuccess = function (data){
+        const single = require("../structures/singles/webhook")
+        let newClass = new single(data, informations.bot)
+        return newClass
+    }
+    return handler(args, passedOptions, callBackSuccess)
+}
+
+
 module.exports.modify = async (informations, options) => {
     let passedOptions = {
         method: apiPath.modify.method,
         token: informations.botToken,
         url: apiPath.modify.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options"}
+        {value: options, data_name: "options", reason: true}
     ]
     let callBackSuccess = function (data){
-        const manager = require("../structures/managers/webhooks")
-        let newManager = new manager(informations.bot)
-        newManager._addMultiple(data)
-        return newManager
+        const single = require("../structures/singles/webhook")
+        let newClass = new single(data, informations.bot)
+        return newClass
     }
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.delete = async (token, webhookid, bot) => {
+
+module.exports.delete = async (informations, options) => {
     let passedOptions = {
         method: apiPath.delete.method,
         token: informations.botToken,
         url: apiPath.delete.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
     return handler(args, passedOptions, null)
 }
 
-module.exports.execute = async (token, webhook, options, bot) => {//cp
-    return
-    // return new Promise(async (resolve, reject) => {
-    //     const createError = require("../utils/functions").createError
-    //     const fetch = require("node-fetch")
-    //     let baseinfos = require("../utils/functions").getbaseinfosre(token)
-    //     const baseurl = baseinfos["baseurl"]
-    //     const baseheaders = baseinfos["baseheaders"]
-    //     if(!options) return reject(createError("An error happened", {code: errors["8"].code, message: errors["8"].message, file: "Webhooks"}))
-    //     if(!webhook) return reject(createError("An error happened", {code: errors["35"].code, message: errors["35"].message, file: "Webhooks"}))
-    //     if(!token) return reject(createError("An error happened", {code: errors["12"].code, message: errors["12"].message, file: "Webhooks"}))
-    
-    //     const url = `${baseurl}/webhooks/${webhook.id}/${webhook.token}?wait=true`
-    
-    //     if(typeof options !== "object") return reject(createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Webhooks"}))
-    //     else{
-    
-    //         let body = {}
-    //         if(options.files && Array.isArray(options.files) === true){
-    //             const FormData = require("form-data")
-    //             body = new FormData()
-    //             let count = -1
-    //             options.files.forEach(file => {
-    //                 if(file.name && file.extension && file.buffer){
-    //                     count++
-                        
-    //                     body.append(`files[${count}]`, file.buffer, `${file.name}.${file.extension}`);
-    //                 }
-    //             })
-    //             let headers = require("../utils/functions").getbaseinfosrecp(token).baseheaders
-    //             headers["Content-Type"] += body.getBoundary()
-    //             if(options.content || options.embeds || options.components){
-    //                 let vody = {}
-    //                 if(options.embeds && Array.isArray(options.embeds) === true && options.embeds[0]) vody.embeds = options.embeds
-    //                 if(options.components && Array.isArray(options.components) === true && options.components[0]) vody.components = [{type: 1, components: options.components}]
-    //                 if(options.content) vody.content = options.content
-    //                 if(options.replyto) vody.message_reference = {"message_id": options.replyto, "fail_if_not_exists": false}
-    //                 body.append("payload_json", JSON.stringify(vody))
-    //             }
-                
-    //             const basedatas = await fetch(url, {method: "POST", headers: headers, body: body}).catch(err => {})
-    //             const datas = await basedatas.json()
-    //             if(!datas || datas.code || datas.retry_after){
-    //                 if(datas && datas.retry_after){
-    //                     setTimeout(() => {
-    //                         this.execute(token, webhook, options)
-    //                         .catch(err => reject(createError("An error happened", err)))
-    //                         .then(datas => resolve(datas))
-    //                     }, datas.retry_after * 1000)
-    //                 }else return reject(createError("Une erreur s'est produite lors de la requête", datas))
-    //             }
-    //             else return resolve(new (require("../Gestionnaires/Individual/Message"))(datas, bot))
-    //         }else{
-    //             if(options.content && typeof options.content === "string") body.content = options.content
-    //             if(options.embeds && Array.isArray(options.embeds) === true){
-    //                 options.embeds.forEach(embed => {
-    //                     if(embed.footer && !embed.footer.text) return
-    //                     if(embed.author && !embed.author.name) return
-    //                     if(!embed.color || typeof embed.color !== "number") embed.color = 0x000000
-    //                     if(!body.embeds) body.embeds = []
-    //                     body.embeds.push(embed)
-    //                 })
-    //             }
-    //             if(options.components && Array.isArray(options.components) === true){
-    //                 options.components.forEach(compo => {
-    //                     if(!body.components) body.components = [{type: 1, components: []}]
-    //                     body.components[0].components.push(compo)
-    //                 })
-    //             }
-    //             if(options.replyto) body.message_reference = {"message_id": options.replyto, "fail_if_not_exists": true}
-    //             if(!body.content && !body.embeds && !body.components) return reject({code: errors["74"].code, message: errors["74"].message, file: "Webhooks"})
-    //             const basedatas = await fetch(url, {method: "POST", headers: baseheaders, body: JSON.stringify(body)}).catch(err => {})
-    //             const datas = await basedatas.json()
-    //             if(!datas || datas.code || datas.retry_after){
-    //                 if(datas && datas.retry_after){
-    //                     setTimeout(() => {
-    //                         this.execute(token, webhook, options)
-    //                         .catch(err => reject(createError("An error happened", err)))
-    //                         .then(datas => resolve(datas))
-    //                     }, datas.retry_after * 1000)
-    //                 }else return reject(createError("Une erreur s'est produite lors de la requête", datas))
-    //             }
-    //             else return resolve(new (require("../Gestionnaires/Individual/Message"))(datas, bot))
-    //         }
-    //     }
-    // })
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {boolean} [queryParams.wait]
+ * @param {string} [queryParams.thread_id] ID
+ * @returns 
+ */
+module.exports.execute = async (informations, options, queryParams) => {
+    return new Promise(async (resolve, reject) => {
+        
+        if(!options) return reject(utils.general.createError("An error happened", {code: errors["8"].code, message: errors["8"].message, file: "Message"}))
+        options = utils.general.correctMessageData(options)
+
+        if(!options) return reject(utils.checks.checkId("An error happened", {code: errors["8"].code, message: errors["8"].message, file: "Interaction"}))
+        if(typeof options !== "object") return reject(utils.checks.checkId("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Interaction"}))
+        
+        let body_files;
+        let body = {}
+        body.message_reference = utils.checks.checkReference(options.message_reference)
+        body.embeds = utils.checks.checkEmbed(options.embeds)
+        body.components = utils.checks.checkComponents(options.components)
+        body.content = utils.checks.checkContent(options.content)
+        body.sticker_ids = utils.checks.checkStickers(options.sticker_ids)
+        
+        let checkfiles = utils.checks.checkFiles(options.files)
+        let boundary = null
+        if(checkfiles && Array.isArray(checkfiles) === true && checkfiles[0]){
+            const FormData = require("form-data")
+            body_files = new FormData()
+            for(const file in checkfiles){
+                body_files.append(`files[${file}]`, checkfiles[file].getBuffer(), checkfiles[file].getFullName());
+            }
+            boundary = body_files.getBoundary()
+            body_files.append("payload_json", JSON.stringify(body))
+        }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids?.length === 0) return reject(utils.general.createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Message"}))
+
+        let args = [
+            {value: body_files || body, data_name: "options", stringified: false, order: 3},
+            {
+                value: queryParams, 
+                data_name: "infosURL",
+                required: false,
+                check: [
+                    {name: "thread_id", type: "string", data_type: "id"}, 
+                    {name: "wait", type: "boolean"}
+                ]
+            }
+        ]
+
+        let passedOptions = {
+            method: apiPath.execute.method,
+            url: apiPath.execute.url,
+            token: informations.botToken,
+            urlIDS: informations,
+            boundary,
+            contentType: body_files ? "file" : "basic"
+        }
+
+        let callBackSuccess = function(data){
+            if(!data) return data
+            const single = require("../structures/singles/message")
+            let newData = new single(data, informations.bot)
+            return newData
+        }
+        
+        handler(args, passedOptions, callBackSuccess)
+        .then(answer => resolve(answer))
+        .catch(err => reject(err))
+    })
 }
 
-module.exports.modify = async (token, webhook, options, bot) => {//cp
-    return
+// // INFOS URL
+// /*thread_id	snowflake	id of the thread to send the message in	false
+// wait	boolean	waits for server confirmation of message send before response (defaults to true; when false a message that is not saved does not return an error)	false*/
+// module.exports.executeslaskcompatible = async (token, webhook, options, bot) => {//cp
+//     return
+// }
+
+// // INFOS URL
+// /*thread_id	snowflake	id of the thread to send the message in	false
+// wait	boolean	waits for server confirmation of message send before response (defaults to true; when false a message that is not saved does not return an error)	false*/
+// module.exports.executegitcompatible = async (token, webhook, options, bot) => {//cp
+//     return
+// }
+
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} options 
+ * @param {object} [queryParams] 
+ * @param {string} [queryParams.thread_id] ID
+ * @returns 
+ */
+module.exports.modifymessage = async (informations, options, queryParams) => {
+    let passedOptions = {
+        method: apiPath.message.modify.method,
+        token: informations.botToken,
+        url: apiPath.message.modify.url,
+        urlIDS: informations,
+        xAuditReasonAvailable: true
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3},
+        {
+            value: queryParams, 
+            data_name: "infosURL",
+            required: false,
+            check: [
+                {name: "thread_id", type: "string", data_type: "id"}
+            ]
+        }
+    ]
+    let callBackSuccess = function(data){
+        const single = require("../structures/singles/message")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess)
+}
+
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {string} [queryParams.thread_id] ID
+ * @returns 
+ */
+module.exports.getmessage = async (informations, queryParams) => {
+    let passedOptions = {
+        method: apiPath.message.get.method,
+        token: informations.botToken,
+        url: apiPath.message.get.url,
+        urlIDS: informations,
+        xAuditReasonAvailable: true
+    }
+    let args = [
+        {
+            value: queryParams, 
+            data_name: "infosURL",
+            required: false,
+            check: [
+                {name: "thread_id", type: "string", data_type: "id"}
+            ]
+        }
+    ]
+    let callBackSuccess = function(data){
+        const single = require("../structures/singles/message")
+        let newData = new single(data, informations.bot)
+        return newData
+    }
+    return handler(args, passedOptions, callBackSuccess)
+}
+
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {string} [queryParams.thread_id] ID
+ * @returns 
+ */
+module.exports.deletemessage = async (informations, queryParams) => {
+    let passedOptions = {
+        method: apiPath.message.delete.method,
+        token: informations.botToken,
+        url: apiPath.message.delete.url,
+        urlIDS: informations,
+        xAuditReasonAvailable: true
+    }
+    let args = [
+        {
+            value: queryParams, 
+            data_name: "infosURL",
+            required: false,
+            check: [
+                {name: "thread_id", type: "string", data_type: "id"}
+            ]
+        }
+    ]
+    return handler(args, passedOptions, null)
 }

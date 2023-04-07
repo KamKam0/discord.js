@@ -52,14 +52,14 @@ class baseThread extends BaseGuild{
         return channelMethod.modify(informations, options)
     }
 
-    delete(){
+    delete(options){
         let informations = {
             bot: this._bot,
             botToken: this._token,
             guild_id: this.guild_id,
             id: this.id
         }
-        return channelMethod.delete(informations)
+        return channelMethod.delete(informations, options)
     }
 }
 

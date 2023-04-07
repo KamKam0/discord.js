@@ -29,7 +29,7 @@ module.exports.send = async (informations, options) => {
             const FormData = require("form-data")
             body_files = new FormData()
             for(const file in checkfiles){
-                body_files.append(`files[${file}]`, checkfiles[file].buffer, `${checkfiles[file].name}.${checkfiles[file].extension}`);
+                body_files.append(`files[${file}]`, checkfiles[file].getBuffer(), checkfiles[file].getFullName());
             }
             boundary = body_files.getBoundary()
             body_files.append("payload_json", JSON.stringify(body))
@@ -84,7 +84,17 @@ module.exports.fetch_message = async (informations) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.fetch_messages = async (informations, limit) => {
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {string} [queryParams.before] ID
+ * @param {string} [queryParams.after] ID
+ * @param {number} [queryParams.limit] 
+ * @param {string} [queryParams.around] ID
+ * @returns 
+ */
+module.exports.fetch_messages = async (informations, queryParams) => {
     let passedOptions = {
         token: informations.botToken,
         urlIDS: informations,
@@ -100,13 +110,17 @@ module.exports.fetch_messages = async (informations, limit) => {
     }
     let args = [
         {
-            value: { limit }, 
+            value: queryParams, 
             data_name: "infosURL",
-            required: false,  
+            required: false,
             check: [
-                {name: "limit", type: "number", limit: 100}
+                {name: "before", type: "number", data_type: "id"}, 
+                {name: "after", type: "number", data_type: "id"}, 
+                {name: "limit", type: "number", limit: 100}, 
+                {name: "around", type: "number", data_type: "id"}
             ]
-        }]
+        }
+    ]
     return handler(args, passedOptions, callBackSuccess)
 }
 
@@ -126,14 +140,18 @@ module.exports.crosspost = async (informations) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.delete = async (informations) => {
+
+module.exports.delete = async (informations, options) => {
     let passedOptions = {
         method: apiPath.delete.method,
         token: informations.botToken,
         url: apiPath.delete.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
     return handler(args, passedOptions, null)
 }
 
@@ -192,25 +210,33 @@ module.exports.removeallreactionemoji = async (informations) => {
     return handler(args, passedOptions, null)
 }
 
-module.exports.pin = async (informations) => {
+
+module.exports.pin = async (informations, options) => {
     let passedOptions = {
         method: apiPath.create.pin.method,
         token: informations.botToken,
         url: apiPath.create.pin.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
     return handler(args, passedOptions, null)
 }
 
-module.exports.unpin = async (informations) => {
+
+module.exports.unpin = async (informations, options) => {
     let passedOptions = {
         method: apiPath.delete.pin.method,
         token: informations.botToken,
         url: apiPath.delete.pin.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
     return handler(args, passedOptions, null)
 }
 
@@ -225,14 +251,32 @@ module.exports.fetch_reactions = async (informations) => {
     return handler(args, passedOptions, null)
 }
 
-module.exports.fetch_reaction = async (informations) => {
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams]
+ * @param {string} [queryParams.after] ID
+ * @param {number} [queryParams.limit] 
+ * @returns 
+ */
+module.exports.fetch_reaction = async (informations, queryParams) => {
     let passedOptions = {
         method: emojiApiPath.get.listOne.method,
         token: informations.botToken,
         url: emojiApiPath.get.listOne.url,
         urlIDS: informations
     }
-    let args = [ ]
+    let args = [
+        {
+            value: queryParams, 
+            data_name: "infosURL",
+            required: false,
+            check: [
+                {name: "after", type: "number", data_type: "id"}, 
+                {name: "limit", type: "number", limit: 100}, 
+            ]
+        }
+    ]
     let callBackSuccess = function (data){
         const multiple = require("../structures/managers/users")
         let newData = new multiple(informations.bot)

@@ -1,4 +1,5 @@
 const Base = require("../bases/basemuldecla")
+const automoderationMethod = require("../../methods/automoderation")
 
 class AutoModerations extends Base{
     constructor(bot, guild_id){
@@ -16,7 +17,7 @@ class AutoModerations extends Base{
             botToken: this._token,
             guild_id: this.guild_id
         }
-        return require("../methods/automoderation").create(informations, options)
+        return automoderationMethod.create(informations, options)
     }
 
     getList(){
@@ -25,7 +26,7 @@ class AutoModerations extends Base{
             botToken: this._token,
             guild_id: this.guild_id
         }
-        return require("../methods/automoderation").getall(informations)
+        return automoderationMethod.getall(informations)
     }
 }
 

@@ -29,7 +29,14 @@ class ThreadMembers extends Base{
         return threadMethod.removethreadmember(informations)
     }
 
-    getMember(memberid){
+    /**
+     * 
+     * @param {string} memberid 
+     * @param {object} [queryParams] 
+     * @param {boolean} [queryParams.with_member]
+     * @returns 
+     */
+    getMember(memberid, queryParams){
         let informations = {
             bot: this._bot,
             botToken: this._token,
@@ -37,7 +44,7 @@ class ThreadMembers extends Base{
             channel_id: this.thread_id,
             user_id: memberid
         }
-        return threadMethod.getthreadmember(informations)
+        return threadMethod.getthreadmember(informations, queryParams)
     }
 
     getMembers(){

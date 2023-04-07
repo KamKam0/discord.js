@@ -187,7 +187,10 @@ class WebsocketHandler{
                 break;
                 case(0):
                     if(message.d.guild_id && !this._bot.guilds.get(message.d.guild_id)) return
-                    if(this._bot.availableEvents.includes(message.t)) return require(`./events/${message.t}`)(this._bot, message.d)
+                    if(this._bot.availableEvents.includes(message.t)){
+                        if(this._bot.logs.events) console.log(`Discord.js: New event received: ${message.t}`)
+                        return require(`./events/${message.t}`)(this._bot, message.d)
+                    }
                     if(this._bot.logs.system) console.info(`Discord.js: The Discord event ${message.t} is unavailable !`)
                 break;
                 case(1):

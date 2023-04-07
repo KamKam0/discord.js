@@ -10,8 +10,8 @@ class Permissions extends base{
 
         this.id = permissions.id
         this.type = this._typechange(this._modifyConstants.find(e => e.name === "type").data, permissions.type)
-        this.allow = permissions.allow
-        this.deny = permissions.deny
+        this.allow = Number(permissions.allow)
+        this.deny = Number(permissions.deny)
         this.allowArray = getPermissionsFromBitfields(this.allow)
         this.denyArray = getPermissionsFromBitfields(this.deny)
     }
@@ -21,14 +21,14 @@ class Permissions extends base{
      * @param {object} overwrites 
      * @returns 
      */
-    async modify(overwrites){
+    async modify(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.channel_id,
             overwrite_id: this.id
         }
-        return channelMethod.editpermissions(informations, overwrites)
+        return channelMethod.editpermissions(informations, options)
     }
 
     /**
@@ -36,14 +36,14 @@ class Permissions extends base{
      * @param {object} overwrites 
      * @returns 
      */
-    async delete(){
+    async delete(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.channel_id,
             overwrite_id: this.id
         }
-        return channelMethod.deletepermission(informations, overwrites)
+        return channelMethod.deletepermission(informations, options)
     }
 }
 module.exports = Permissions

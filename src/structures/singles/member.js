@@ -1,4 +1,4 @@
-const Base = require("../bases/baseGuild")
+const Base = require("../bases/baseguild")
 const Roles = require("../administrators/memberroles")
 const methods = {
     user: require("../../methods/user"),
@@ -100,28 +100,28 @@ class Member extends Base{
      * @param {number} time 
      * @returns 
      */
-    async muteMember(time){
+    async muteMember(time, options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             user_id: this.user_id,
             guild_id: this.guild_id
         }
-        return methods.mute.mute(informations, time)
+        return methods.mute.mute(informations, {payload: time, reason: options})
     }
     
     /**
      * 
      * @returns 
      */
-    async unmuteMember(){
+    async unmuteMember(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             user_id: this.user_id,
             guild_id: this.guild_id
         }
-        return methods.mute.unmute(informations)
+        return methods.mute.unmute(informations, options)
     }
 
     /**

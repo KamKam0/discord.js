@@ -5,25 +5,15 @@ class Voices extends BaseVoice{
     }
 
     async muteVoice(userId){
-        let information = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.guild_id,
-            user_id: userId
-        }
-
-        return guildMethod.modifyuservoice(information, this.channel_id, true)
+        let voice = this.get(userId)
+        if(!voice) return Promise.reject("No voice found")
+        return voice.muteVoice(overwrites)
     }
 
     async unmuteVoice(userId){
-        let information = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.guild_id,
-            user_id: userId
-        }
-
-        return guildMethod.modifyuservoice(information, this.channel_id, false)
+        let voice = this.get(userId)
+        if(!voice) return Promise.reject("No voice found")
+        return voice.unmuteVoice(overwrites)
     }
 }
 

@@ -27,15 +27,17 @@ module.exports.deleteinvite = async (informations) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
+
 module.exports.modify = (informations, options) => {
     let passedOptions = {
         method: apiPath.modify.method,
         token: informations.botToken,
         url: apiPath.modify.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/guild")
@@ -82,15 +84,17 @@ module.exports.addmember = (informations, options) => {
     return handler(args, passedOptions, null)
 }
 
+
 module.exports.modifymember = (informations, options) => {
     let passedOptions = {
         method: memberApiPath.modify.method,
         token: informations.botToken,
         url: memberApiPath.modify.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/member")
@@ -100,28 +104,61 @@ module.exports.modifymember = (informations, options) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.modifycurrentmember = (informations, nick) => {
+
+module.exports.modifycurrentmember = (informations, options) => {
     let passedOptions = {
         method: memberApiPath.modify.current.method,
         token: informations.botToken,
         url: memberApiPath.modify.current.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: {nick}, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     return handler(args, passedOptions, null)
 }
 
+
 module.exports.prune = (informations, options) => {
     let passedOptions = {
-        method: apiPath.create.prune.current.method,
+        method: apiPath.create.prune.method,
         token: informations.botToken,
-        url: apiPath.create.prune.current.url,
+        url: apiPath.create.prune.url,
+        urlIDS: informations,
+        xAuditReasonAvailable: true
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
+    return handler(args, passedOptions, null)
+}
+
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams]
+ * @param {string} [queryParams.include_roles] array of IDS separated by ;
+ * @param {number} [queryParams.days] 
+ * @returns 
+ */
+module.exports.prunecount = (informations, queryParams) => {
+    let passedOptions = {
+        method: apiPath.get.pruneCount.method,
+        token: informations.botToken,
+        url: apiPath.get.pruneCount.url,
         urlIDS: informations
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {
+            value: queryParams, 
+            data_name: "infosURL",
+            required: false,
+            check: [
+                {name: "days", type: "number"}, 
+                {name: "include_roles", type: "string"}, 
+            ]
+        }
     ]
     return handler(args, passedOptions, null)
 }
@@ -160,14 +197,18 @@ module.exports.getintegrations = (informations) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.deleteintegration = (informations) => {
+
+module.exports.deleteintegration = (informations, options) => {
     let passedOptions = {
         method: apiPath.delete.integration.method,
         token: informations.botToken,
         url: apiPath.delete.integration.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
     return handler(args, passedOptions, null)
 }
 
@@ -198,6 +239,13 @@ module.exports.getwidget = (informations) => {
     return handler(args, passedOptions, null)
 }
 
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams]
+ * @param {string} [queryParams.style]
+ * @returns 
+ */
 module.exports.getwidgetpng = (informations) => {
     let passedOptions = {
         method: apiPath.get.widgetImage.method,
@@ -205,19 +253,30 @@ module.exports.getwidgetpng = (informations) => {
         url: apiPath.get.widgetImage.url,
         urlIDS: informations
     }
-    let args = [ ]
+    let args = [
+        {
+            value: queryParams, 
+            data_name: "infosURL",
+            required: false,
+            check: [
+                {name: "style", type: "string"}
+            ]
+        }
+    ]
     return handler(args, passedOptions, null)
 }
+
 
 module.exports.modifywidget = (informations, options) => {
     let passedOptions = {
         method: apiPath.modify.widget.method,
         token: informations.botToken,
         url: apiPath.modify.widget.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     return handler(args, passedOptions, null)
 }
@@ -244,15 +303,17 @@ module.exports.getwelcomescreen = (informations) => {
     return handler(args, passedOptions, null)
 }
 
+
 module.exports.modifywelcomescreen = (informations, options) => {
     let passedOptions = {
         method: apiPath.modify.welcomeScreen.method,
         token: informations.botToken,
         url: apiPath.modify.welcomeScreen.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     return handler(args, passedOptions, null)
 }
@@ -273,7 +334,18 @@ module.exports.modifyuservoice = (informations, channelId, suppress) => {
     return handler(args, passedOptions, null)
 }
 
-module.exports.fetchauditlogs = async (informations, infosURL) => {
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {string} [queryParams.before] ID
+ * @param {string} [queryParams.after] ID
+ * @param {number} [queryParams.limit] 
+ * @param {number} [queryParams.action_type] 
+ * @param {string} [queryParams.user_id] ID
+ * @returns 
+ */
+module.exports.fetchauditlogs = async (informations, queryParams) => {
     
     let passedOptions = {
         method: apiPath.get.logs.method,
@@ -283,7 +355,7 @@ module.exports.fetchauditlogs = async (informations, infosURL) => {
     }
     let args = [
         {
-            value: infosURL, 
+            value: queryParams, 
             data_name: "infosURL", 
             order: 3, 
             required: false, 
@@ -292,7 +364,7 @@ module.exports.fetchauditlogs = async (informations, infosURL) => {
                 {name: "after", type: "string", data_type: "id"}, 
                 {name: "before", type: "string", data_type: "id"}, 
                 {name: "limit", type: "number", limit: 100}, 
-                {name: "action_type", type: "number", filter: Object.values(types).includes(infosURL?.action_type)}
+                {name: "action_type", type: "number", filter: Object.values(types).includes(queryParams?.action_type)}
             ]
         }
     ]
@@ -328,4 +400,19 @@ module.exports.fetchauditlogs = async (informations, infosURL) => {
         return data
     }
     return handler(args, passedOptions, callBackSuccess)
+}
+
+
+module.exports.mfalevel = (informations, options) => {
+    let passedOptions = {
+        method: apiPath.modify.mfa.method,
+        token: informations.botToken,
+        url: apiPath.modify.mfa.url,
+        urlIDS: informations,
+        xAuditReasonAvailable: true
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
+    return handler(args, passedOptions, null)
 }

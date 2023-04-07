@@ -38,14 +38,14 @@ class AutoModeration extends Base{
         return automoderationMethod.modify(informations, options)
     }
 
-    async delete(){
+    async delete(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             user_id: this.user_id,
             guild_id: this.guild_id
         }
-        return automoderationMethod.delete(informations)
+        return automoderationMethod.delete(informations, options)
     }
 
 }

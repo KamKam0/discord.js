@@ -21,21 +21,15 @@ class StageInstances extends BaseStage{
     }
 
     modify(id, options){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            id
-        }
-        return stageMethod.modify(informations, options)
+        let stageInstance = this.get(id)
+        if(!stageInstance) return Promise.reject("No stageInstance found")
+        return stageInstance.modify(options)
     }
 
-    delete(id){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id
-        }
-        return stageMethod.delete(informations)
+    delete(id, options){
+        let stageInstance = this.get(id)
+        if(!stageInstance) return Promise.reject("No stageInstance found")
+        return stageInstance.delete(options)
     }
 }
 

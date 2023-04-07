@@ -1,15 +1,17 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/event")
 
+
 module.exports.create = (informations, options) => {
     let passedOptions = {
         method: apiPath.create.method,
         token: informations.botToken,
         url: apiPath.create.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/event")
@@ -18,16 +20,18 @@ module.exports.create = (informations, options) => {
     }
     return handler(args, passedOptions, callBackSuccess)
 }
+
 
 module.exports.modify = (informations, options) => {
     let passedOptions = {
         method: apiPath.modify.method,
         token: informations.botToken,
         url: apiPath.modify.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/event")
@@ -37,25 +41,51 @@ module.exports.modify = (informations, options) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.delete = (informations) => {
+
+module.exports.delete = (informations, options) => {
     let passedOptions = {
         method: apiPath.delete.method,
         token: informations.botToken,
         url: apiPath.delete.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
     return handler(args, passedOptions, null)
 }
 
-module.exports.getusers = (informations) => {
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} [queryParams] 
+ * @param {string} [queryParams.before] ID
+ * @param {string} [queryParams.after] ID
+ * @param {number} [queryParams.limit] 
+ * @param {boolean} [queryParams.with_member] 
+ * @returns 
+ */
+module.exports.getusers = (informations, queryParams) => {
     let passedOptions = {
         method: apiPath.get.users.method,
         token: informations.botToken,
         url: apiPath.get.users.url,
         urlIDS: informations
     }
-    let args = [ ]
+    let args = [
+        {
+            value: queryParams, 
+            data_name: "infosURL",
+            required: false,  
+            check: [
+                {name: "before", type: "number", data_type: "id"}, 
+                {name: "after", type: "number", data_type: "id"}, 
+                {name: "limit", type: "number", limit: 100}, 
+                {name: "with_member", type: "boolean"}
+            ]
+        }
+    ]
     let callBackSuccess = function (data){
         const MemberClass = require("../structures/singles/member")
         const UsersClass = require("../structures/singles/user")

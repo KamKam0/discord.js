@@ -20,14 +20,14 @@ class Role extends BaseGuild{
         this.flags = role.flags || 0
     }
     
-    async delete(){
+    async delete(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id,
             guild_id: this.guild_id
         }
-        return roleMethod.delete(informations)
+        return roleMethod.delete(informations, options)
     }
     
     async modify(options){

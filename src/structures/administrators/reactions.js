@@ -18,7 +18,14 @@ class Reactions extends Base{
         return messageMethod.fetch_reactions(informations)
     }
 
-    fetchEmoji(emoji){
+    /**
+     * 
+     * @param {object} [queryParams]
+     * @param {string} [queryParams.after] ID
+     * @param {number} [queryParams.limit] 
+     * @returns 
+     */
+    fetchEmoji(emoji, queryParams){
         let informations = {
             botToken: this._token,
             bot: this._bot,
@@ -26,7 +33,7 @@ class Reactions extends Base{
             channel_id: this.channel_id,
             emoji: encodeURIComponent(emoji)
         }
-        return messageMethod.fetch_reaction(informations)
+        return messageMethod.fetch_reaction(informations, queryParams)
     }
     
     /**

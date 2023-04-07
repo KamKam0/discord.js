@@ -33,13 +33,22 @@ class ChannelInvites extends Base{
         return collector.collect(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
     }
 
-    async fetchAll(){
+    /**
+     * 
+     * @param {object} [queryParams] 
+     * @param {string} [queryParams.before] ID
+     * @param {string} [queryParams.after] ID
+     * @param {number} [queryParams.limit] 
+     * @param {string} [queryParams.around] ID
+     * @returns 
+     */
+    async fetchAll(queryParams){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             channel_id: this.id
         }
-        return messageMethod.fetch_messages(informations, limit)
+        return messageMethod.fetch_messages(informations, queryParams)
     }
 
     async fetch(id){
@@ -49,16 +58,16 @@ class ChannelInvites extends Base{
             id,
             channel_id: this.id
         }
-        return messageMethod.fetch_messages(informations)
+        return messageMethod.fetch_message(informations)
     }
 
-    async delete(id){
+    async delete(id, options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id
         }
-        return channelMethod.deleteinvite(informations)
+        return channelMethod.deleteinvite(informations,options)
     }
 }
 

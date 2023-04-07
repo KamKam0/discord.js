@@ -13,13 +13,9 @@ class ChannelPermissions extends BasePermissions{
      * @returns 
      */
     async modify(id, overwrites){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.channel_id,
-            overwrite_id: id
-        }
-        return channelMethod.editpermissions(informations, overwrites)
+        let overwrite = this.get(id)
+        if(!overwrite) return Promise.reject("No permission overwrite found")
+        return overwrite.modify(overwrites)
     }
 
     /**
@@ -28,13 +24,9 @@ class ChannelPermissions extends BasePermissions{
      * @returns 
      */
     async delete(id){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id: this.channel_id,
-            overwrite_id: id
-        }
-        return channelMethod.deletepermission(informations)
+        let overwrite = this.get(id)
+        if(!overwrite) return Promise.reject("No permission overwrite found")
+        return overwrite.delete()
     }
 }
 

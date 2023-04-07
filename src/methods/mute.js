@@ -1,16 +1,17 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/member")
 
-module.exports.mute = async (informations, time) => {
+module.exports.mute = async (informations, options) => {
     let passedOptions = {
         method: apiPath.modify.method,
         token: informations.botToken,
         url: apiPath.modify.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
         {value: time, type: "number", data_name: "time", order:4}, 
-        {value: {communication_disabled_until: new Date(Date.now()+(1000*60*time)).toISOString()}, data_name: "options"}
+        {value: options, data_name: "options", reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/member")
@@ -20,15 +21,16 @@ module.exports.mute = async (informations, time) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.unmute = async (informations) => {
+module.exports.unmute = async (informations, options) => {
     let passedOptions = {
         method: apiPath.modify.method,
         token: informations.botToken,
         url: apiPath.modify.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: {communication_disabled_until: null}, data_name: "options"}
+        {value: {communication_disabled_until: null, ...options}, data_name: "options", reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/member")

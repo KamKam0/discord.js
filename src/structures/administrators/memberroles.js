@@ -22,7 +22,7 @@ class MemberRoles extends BaseRole{
      * @param {string} roleId 
      * @returns 
      */
-    async add(roleId){
+    async add(roleId, options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
@@ -30,7 +30,7 @@ class MemberRoles extends BaseRole{
             guild_id: this.guild_id,
             id: roleId
         }
-        return roleMethod.add(informations)
+        return roleMethod.add(informations, options)
     }
 
     /**
@@ -38,7 +38,7 @@ class MemberRoles extends BaseRole{
      * @param {string} roleId 
      * @returns 
      */
-    async remove(roleId){
+    async remove(roleId, options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
@@ -46,7 +46,7 @@ class MemberRoles extends BaseRole{
             guild_id: this.guild_id,
             id: roleId
         }
-        return roleMethod.remove(informations)
+        return roleMethod.remove(informations, options)
     }
 }
 

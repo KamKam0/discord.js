@@ -102,17 +102,20 @@ class Guild extends Base{
         this.voice = new managers.voiceManager(this._bot, this.id)
     }
 
-    /**
-     * 
-     * @returns 
-     */
-    async fetchBans(){
+    /** 
+    * @param {object} [queryParams] 
+    * @param {string} [queryParams.before] ID
+    * @param {string} [queryParams.after] ID
+    * @param {number} [queryParams.limit] 
+    * @returns 
+    * */
+    async fetchBans(queryParams){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             guild_id: this.id
         }
-        return methods.banMethod.fetch(informations)
+        return methods.banMethod.fetch(informations, queryParams)
     }
 
     /**
@@ -132,15 +135,21 @@ class Guild extends Base{
 
     /**
      * 
+     * @param {object} [queryParams] 
+     * @param {string} [queryParams.before] ID
+     * @param {string} [queryParams.after] ID
+     * @param {number} [queryParams.limit] 
+     * @param {number} [queryParams.action_type] 
+     * @param {string} [queryParams.user_id] ID
      * @returns 
      */
-    async fetchAuditLogs(infos){
+    async fetchAuditLogs(queryParams){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id
         }
-        return methods.guildMethod.fetchauditlogs(informations, infos)
+        return methods.guildMethod.fetchauditlogs(informations, queryParams)
     }
 
     /**
@@ -283,15 +292,17 @@ class Guild extends Base{
 
     /**
      * 
+     * @param {object} [queryParams]
+     * @param {string} [queryParams.style]
      * @returns 
      */
-    async getWidgetPNG(){
+    async getWidgetPNG(queryParams){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id
         }
-        return methods.guildMethod.getwidgetpng(informations)
+        return methods.guildMethod.getwidgetpng(informations, queryParams)
     }
 
     /**

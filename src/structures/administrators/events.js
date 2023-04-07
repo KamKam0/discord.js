@@ -21,33 +21,29 @@ class Events extends BaseEvents{
     }
 
     modify(id, options){
-        let informations = {
-            bot: this._bot,
-            botToken: this._token,
-            guild_id: this.guild_id,
-            id
-        }
-        return eventMethod.modify(informations, options)
+        let event = this.get(id)
+        if(!event) return Promise.reject("No event found")
+        return event.modify(options)
     }
 
-    delete(id){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            guild_id: this.guild_id,
-            id
-        }
-        return eventMethod.delete(informations)
+    delete(id, options){
+        let event = this.get(id)
+        if(!event) return Promise.reject("No event found")
+        return event.delete(options)
     }
-
-    getUsers(id){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            guild_id: this.guild_id,
-            id
-        }
-        return eventMethod.getusers(informations)
+    
+    /**
+    * @param {object} [queryParams] 
+    * @param {string} [queryParams.before] ID
+    * @param {string} [queryParams.after] ID
+    * @param {number} [queryParams.limit] 
+    * @param {boolean} [queryParams.with_member] 
+    * @returns 
+    */
+    getUsers(id, queryParams){
+        let event = this.get(id)
+        if(!event) return Promise.reject("No event found")
+        return event.getUsers(queryParams)
     }
 }
 

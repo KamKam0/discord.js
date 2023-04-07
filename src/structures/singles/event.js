@@ -46,24 +46,32 @@ class Event extends Base{
      * 
      * @returns 
      */
-    async delete(){
+    async delete(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id,
             guild_id: this.guild_id
         }
-        return eventMethod.delete(informations)
+        return eventMethod.delete(informations, options)
     }
 
-    async getUsers(){
+    /**
+    * @param {object} [queryParams] 
+    * @param {string} [queryParams.before] ID
+    * @param {string} [queryParams.after] ID
+    * @param {number} [queryParams.limit] 
+    * @param {boolean} [queryParams.with_member] 
+    * @returns 
+    */
+    async getUsers(queryParams){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id,
             guild_id: this.guild_id
         }
-        return eventMethod.getusers(informations)
+        return eventMethod.getusers(informations, queryParams)
     }
 
     get iconURL(){

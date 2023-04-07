@@ -5,14 +5,14 @@ class threadMessage extends Message{
         super(data, bot)
     }
 
-    createThread(){
+    createThread(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             message_id: this.id,
             channel_id: this.channel_id
         }
-        return threadMethod.create_withm(informations)
+        return threadMethod.create_withm(informations, options)
     }
 }
 

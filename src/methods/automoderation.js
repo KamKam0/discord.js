@@ -6,10 +6,11 @@ module.exports.create = async (informations, options) => {
         method: apiPath.create.method,
         token: informations.botToken,
         url: apiPath.create.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/automoderation")
@@ -59,10 +60,11 @@ module.exports.modify = async (informations, options) => {
         method: apiPath.modify.method,
         token: informations.botToken,
         url: apiPath.modify.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3}
+        {value: options, data_name: "options", order: 3, reason: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/automoderation")
@@ -72,13 +74,16 @@ module.exports.modify = async (informations, options) => {
     return handler(args, passedOptions, callBackSuccess)
 }
 
-module.exports.delete = async (informations) => {
+module.exports.delete = async (informations, options) => {
     let passedOptions = {
         method: apiPath.modify.method,
         token: informations.botToken,
         url: apiPath.modify.url,
-        urlIDS: informations
+        urlIDS: informations,
+        xAuditReasonAvailable: true
     }
-    let args = [ ]
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true}
+    ]
     return handler(args, passedOptions, null)
 }

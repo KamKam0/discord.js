@@ -20,7 +20,7 @@ module.exports = (guild, memberid, permission) => {
     }
     const member = guild.members.get(memberid)
     const guildroles = guild.roles
-    const roles = guildroles.filter(role => member.roles.has(role.id) || role.id === guild)
+    const roles = guildroles.filter(role => member.roles.has(role.id))
     roles.push(guild.roles.get(guild.id))
     let finalPermissions = []
     roles.forEach(role => {

@@ -26,14 +26,14 @@ class Sticker extends BaseGuild{
         return stickerMethod.modify(informations, options)
     }
     
-    async delete(){
+    async delete(options){
         let informations = {
             botToken: this._token,
             bot: this._bot,
             id: this.id,
             guild_id: this.guild_id
         }
-        return stickerMethod.delete(informations)
+        return stickerMethod.delete(informations), options
     }
 }
 module.exports = Sticker

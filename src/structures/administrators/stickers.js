@@ -24,23 +24,15 @@ class Stickers extends BaseStage{
     }
     
     async modify(id, options){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id,
-            guild_id: this.guild_id
-        }
-        return stickerMethod.modify(informations, options)
+        let sticker = this.get(id)
+        if(!sticker) return Promise.reject("No sticker found")
+        return sticker.modify(options)
     }
     
-    async delete(id){
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            id,
-            guild_id: this.guild_id
-        }
-        return stickerMethod.delete(informations)
+    async delete(id, options){
+        let sticker = this.get(id)
+        if(!sticker) return Promise.reject("No sticker found")
+        return sticker.delete(options)
     }
 }
 
