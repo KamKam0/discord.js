@@ -5,7 +5,7 @@ module.exports = async (bot, datas) => {
 
     if(!datas.id|| !oldguild) return
   
-    bot.guilds.get(datas.id)._modifyDatas(datas)
+    bot.guilds._modify(datas)
   
     const newguild = bot.guilds.get(datas.id)
 

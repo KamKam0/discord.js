@@ -39,14 +39,14 @@ class Commands extends Base{
         return interactionMethod.deletecommand(informations)
     }
 
-    fetchAll(){
+    fetchAll(queryParams){
         let ID = this._bot?.user?.id
         let informations = {
             botToken: this._token,
             bot: this._bot,
             application_id: ID
         }
-        return interactionMethod.getcommands(informations)
+        return interactionMethod.getcommands(informations, queryParams)
     }
 
     fetchById(ID){
@@ -54,9 +54,10 @@ class Commands extends Base{
         let informations = {
             botToken: this._token,
             bot: this._bot,
-            application_id: app
+            application_id: app,
+            id: ID
         }
-        return interactionMethod.getcommands(informations, ID)
+        return interactionMethod.getcommand(informations)
     }
 
     async awaitInteractions(options){

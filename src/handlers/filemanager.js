@@ -23,9 +23,9 @@ class FileManager{
             let data = fs.readFileSync(relativePath)
             this.#buffer = data
             let splittedPath = relativePath.split(".")
-            let splittedPathOsSep = relativePath.split(".")
+            let splittedPathOsSep = relativePath.split("/")
             this.#extension = splittedPath[splittedPath.length - 1]
-            if(!this.#name) this.#name = splittedPathOsSep[splittedPathOsSep.length - 1]
+            if(!this.#name) this.#name = splittedPathOsSep[splittedPathOsSep.length - 1]?.split(".")?.[0]
             return true
         }catch(err){ 
             return false

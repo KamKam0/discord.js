@@ -110,7 +110,14 @@ module.exports.deletereply = async (informations, interaction) => {
     return handler(args, passedOptions, null)
 }
 
-module.exports.getcommands = async (informations, cmdId) => {
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} options 
+ * @param {boolean} options.with_localizations
+ * @returns 
+ */
+module.exports.getcommands = async (informations, options) => {
     if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
     let passedOptions = {
         method: commandApiPath.get.global.method,
@@ -118,19 +125,40 @@ module.exports.getcommands = async (informations, cmdId) => {
         url: commandApiPath.get.global.url,
         urlIDS: informations
     }
-    let args = [ ]
-    let callBackSuccess = function (data){
-        if(cmdId){
-            if(data.find(com => com.id === cmdId)) return new ApplicationCommand(data.find(com => com.id === cmdId), informations.bot)
-            else return reject("No command found")
-        }else{
-            const commands = new ApplicationCommandManager(informations.bot)
-            commands._addMultiple(data)
-            return commands
+    let args = [
+        {
+            value: options, 
+            data_name: "infosURL", 
+            order: 3, 
+            required: false, 
+            check: [
+                {name: "with_localizations", type: "boolean"}
+            ]
         }
+    ]
+    let callBackSuccess = function (data){
+        const commands = new ApplicationCommandManager(informations.bot)
+        commands._addMultiple(data)
+        return commands
     }
     return handler(args, passedOptions, callBackSuccess)
 }
+
+module.exports.getcommand = async (informations) => {
+    if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
+    let passedOptions = {
+        method: commandApiPath.get.method,
+        token: informations.botToken,
+        url: commandApiPath.get.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    let callBackSuccess = function (data){
+        return new ApplicationCommand(data, informations.bot)
+    }
+    return handler(args, passedOptions, callBackSuccess)
+}
+
 module.exports.deletecommand = async (informations) => {
     if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
     let passedOptions = {

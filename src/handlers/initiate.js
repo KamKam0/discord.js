@@ -15,7 +15,7 @@ class Initiate{
 
     async #manageCommands(){
         return new Promise(async (resolve, reject) => {
-            let commands = await this._bot.commands.fetchAll().catch(err => reject(err))
+            let commands = await this._bot.commands.fetchAll({with_localizations: true}).catch(err => reject(err))
             if(!commands) return
     
             this._bot.handler.GetAllCommandsfi().filter(cmd => !cmd.help.unclass).forEach(commande => {
@@ -26,24 +26,24 @@ class Initiate{
                 descriptions_cmd = {}
                 names_cmd = {}
                 las.forEach(la => {
-                    if(la.Langue_Code === this._bot.default_language) commande.description = la.Help[`${commande.name}_description`]
-                    descriptions_cmd[la.Langue_Code] = la.Help[`${commande.name}_description`]
-                    names_cmd[la.Langue_Code] = la.Help[`${commande.name}_name`]
+                    if(la.languageCode === this._bot.default_language) commande.description = la.commands[`${commande.name}_description`]
+                    descriptions_cmd[la.languageCode] = la.commands[`${commande.name}_description`]
+                    names_cmd[la.languageCode] = la.commands[`${commande.name}_name`]
                 })
                 if(commande.help.options && commande.help.options[0]) commande.help.options.forEach(option => {
                     descriptions_opt = {}
                     names_opt = {}
                     las.forEach(la => {
-                        if(la.Langue_Code === this._bot.default_language) option.description = la.Options[`${commande.name}_${option.name}_description`]
-                        descriptions_opt[la.Langue_Code] = la.Options[`${commande.name}_${option.name}_description`]
-                        names_opt[la.Langue_Code] = la.Options[`${commande.name}_${option.name}_name`]
+                        if(la.languageCode === this._bot.default_language) option.description = la.options[`${commande.name}_${option.name}_description`]
+                        descriptions_opt[la.languageCode] = la.options[`${commande.name}_${option.name}_description`]
+                        names_opt[la.languageCode] = la.options[`${commande.name}_${option.name}_name`]
                     })
                     option.name_localizations = names_opt
                     option.description_localizations = descriptions_opt
                     if(option.choices) option.choices.forEach(choice => {
                         names_cho = {}
                         las.forEach(la => {
-                            names_cho[la.Langue_Code] = la.Choices[`${commande.name}_${option.name}_${choice.name}_name`]
+                            names_cho[la.languageCode] = la.choices[`${commande.name}_${option.name}_${choice.name}_name`]
                         })
                         choice.name_localizations = names_cho
                     })

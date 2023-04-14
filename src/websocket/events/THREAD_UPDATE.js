@@ -17,7 +17,7 @@ module.exports = async (bot, datas) => {
     let channelClass = require(`../../structures/singles/channels/channel${String(textType).toLowerCase()}`)
     oldthread = new channelClass(oldthread, bot)
 
-    guild.threads.get(datas.id)._modifyDatas(datas)
+    guild.threads._modify(datas)
 
     const newthread = guild.threads.get(datas.id)
 

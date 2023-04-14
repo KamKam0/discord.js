@@ -4,7 +4,7 @@ module.exports = async (bot, datas) => {
     if(!guild) return
     let oldevent = guild.stage_instances.get(datas.id)
     oldevent = new Stage(oldevent, bot)
-    guild.stage_instances.get(datas.id)._modifyDatas(datas)
+    guild.stage_instances._modify(datas)
     const newevent = guild.stage_instances.get(datas.id)
 
     let modifications = []

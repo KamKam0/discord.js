@@ -9,7 +9,7 @@ module.exports = async (bot, datas) => {
     if(!oldevent) return
     oldevent = new Event(oldevent, bot)
 
-    guild.guild_scheduled_events.get(datas.id)._modifyDatas(datas)
+    guild.guild_scheduled_events._modify(datas)
 
     const newevent = guild.guild_scheduled_events.get(datas.id)
 

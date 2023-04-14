@@ -8,6 +8,9 @@ exports.FileManager = require("./handlers/filemanager")
 
 // User interactions //
 
+exports.Slash = require("./structures/applicationscommands/command")
+exports.Option = require("./structures/applicationscommands/commandoption")
+exports.Choice = require("./structures/applicationscommands/commandchoice")
 exports.Form = require("./structures/components/form")
 exports.TextInput = require("./structures/components/textinput")
 exports.SlashCommand = require("./structures/applicationscommands/command")

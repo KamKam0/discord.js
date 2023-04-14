@@ -98,6 +98,13 @@ class baseMultiple extends base{
         return this.container.length
     }
 
+    _modify(data){
+        let modifications = this.get(data.id)._modifyDatas(data)
+        if(modifications.length) return modifications
+        this._delete(data.id)
+        this._add(data)
+    }
+
     _delete(data){
         if(this.container.find(me => me.id === data)) this.container.splice(this.container.indexOf(this.container.find(me => me.id === data)), 1)
         return this

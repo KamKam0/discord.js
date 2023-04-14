@@ -1,16 +1,16 @@
 const Roles = require("../../structures/singles/role")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
-    
+    datas = {...datas.role, guild_id: datas.guild_id}
     if(!datas.guild_id || !guild) return
     
-    let oldrole = guild.roles.get(datas.role.id)
+    let oldrole = guild.roles.get(datas.id)
     
     if(!oldrole) return
     oldrole = new Roles(oldrole, bot)
 
-    guild.roles.get(datas.role.id)._modifyDatas(datas.role)
-    const newrole = guild.roles.get(datas.role.id)
+    guild.roles._modify(datas)
+    const newrole = guild.roles.get(datas.id)
 
     let modifications = []
     let olddatas = Object.entries(oldrole)

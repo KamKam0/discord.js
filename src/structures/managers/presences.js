@@ -5,7 +5,7 @@ class Presences extends Base{
     }
 
     _Treat(presence){
-        if(this.get(presence.user_id)) this.get(presence.user_id)._modifyDatas(presence)
+        if(this.get(presence.user_id)) this._modify(presence)
         else this._add(presence)
     }
 }

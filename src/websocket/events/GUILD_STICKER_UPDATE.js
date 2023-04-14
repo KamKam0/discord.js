@@ -5,7 +5,7 @@ module.exports = async (bot, oldsticker, newsticker) => {
     let oldsticker2 = guild.stickers.get(newsticker.id)
     if(!oldsticker2) return
     oldsticker2 = new Sticker(oldsticker2, bot)
-    guild.stickers.get(newsticker.id)._modifyDatas(newsticker)
+    guild.stickers._modify(newsticker)
     const newsticker2 = guild.stickers.get(newsticker.id)
 
     let modifications = []

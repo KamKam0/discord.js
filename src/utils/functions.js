@@ -36,17 +36,17 @@ function checkColor(color){
     else return false
 }
 
-function getPermissionsFromBitfields(bitfield){
-    const ACFlags = Object.entries(constants.permissionsBitfield).sort((a, b) => Number(b[1]) - Number(a[1]))
-    const final_p = []
-    let processConvert = Number(bitfield)
-    ACFlags.forEach(flag => {
-        if(processConvert - flag[1] >= 0) {
-            processConvert = processConvert - flag[1]
-            final_p.push(flag[0])
+function getPermissionsFromBitfields(bietfield){
+    bietfieldNumber = Number(bietfield)
+    let bietfieldEntries = Object.entries(constants.permissionsBitfield).sort((a, b) => b[1] - a[1])
+    let permissions = []
+    bietfieldEntries.forEach(entry => {
+        if(entry[1] <= bietfieldNumber){
+            permissions.push(entry[0])
+            bietfieldNumber -= entry[1]
         }
     })
-    return final_p
+    return permissions
 }
 
 function checkId(Id){
@@ -219,15 +219,15 @@ function checkCommands(object, state, languages){
     if(object.name.length > 32) error.push({err: "name too long", cmd: object.name})
     if(state){
         languages.forEach(la => {
-            const Des_Lan = la["Help"]
-            if(!Des_Lan[`${object.name}_name`]) error.push({err: "no name", cmd: object.name, langue: la.Langue_Code})
-            else if(Des_Lan[`${object.name}_name`].length > 32) error.push({err: "name too long", cmd: object.name, langue: la.Langue_Code, taille: Des_Lan[`${object.name}_name`].length})
-            else if(Des_Lan[`${object.name}_name`].toLowerCase() !== Des_Lan[`${object.name}_name`]) error.push({err: "character in uppercase", cmd: object.name, langue: la.Langue_Code})
-            else if(!(/^[\w-]{1,32}$/gm).test(Des_Lan[`${object.name}_name`])) error.push({err: "name does not match regex", cmd: object.name, langue: la.Langue_Code})
-            if(!Des_Lan[`${object.name}_description`]) error.push({cmd: object.name, err: "no description", langue: la.Langue_Code})
-            else if(Des_Lan[`${object.name}_description`].length > 99) error.push({cmd: object.name, err: "description too long", langue: la.Langue_Code, taille: Des_Lan[`${object.name}_description`].length})
-            if(!Des_Lan[`${object.name}_exemple`]) error.push({cmd: object.name, err: "no exemple", langue: la.Langue_Code})
-            if(!Des_Lan[`${object.name}_composition`] && !Des_Lan[`${object.name}_usage`]) error.push({cmd: object.name, err: "no usage and composition", langue: la.Langue_Code})
+            const Des_Lan = la["commands"]
+            if(!Des_Lan[`${object.name}_name`]) error.push({err: "no name", cmd: object.name, langue: la.languageCode})
+            else if(Des_Lan[`${object.name}_name`].length > 32) error.push({err: "name too long", cmd: object.name, langue: la.languageCode, taille: Des_Lan[`${object.name}_name`].length})
+            else if(Des_Lan[`${object.name}_name`].toLowerCase() !== Des_Lan[`${object.name}_name`]) error.push({err: "character in uppercase", cmd: object.name, langue: la.languageCode})
+            else if(!(/^[\w-]{1,32}$/gm).test(Des_Lan[`${object.name}_name`])) error.push({err: "name does not match regex", cmd: object.name, langue: la.languageCode})
+            if(!Des_Lan[`${object.name}_description`]) error.push({cmd: object.name, err: "no description", langue: la.languageCode})
+            else if(Des_Lan[`${object.name}_description`].length > 99) error.push({cmd: object.name, err: "description too long", langue: la.languageCode, taille: Des_Lan[`${object.name}_description`].length})
+            if(!Des_Lan[`${object.name}_exemple`]) error.push({cmd: object.name, err: "no exemple", langue: la.languageCode})
+            if(!Des_Lan[`${object.name}_composition`] && !Des_Lan[`${object.name}_usage`]) error.push({cmd: object.name, err: "no usage and composition", langue: la.languageCode})
         })
     }else{
         if(!object.description) error.push({cmd: object.name, err: "no description"})
@@ -248,13 +248,13 @@ function checkOptions(object, state, languages){
             if(!(/^[\w-]{1,32}$/gm).test(option.name)) error.push({opt: option.name, err: "name does not match regex", taille: option.name.length, cmd: object.name})
             if(state){
                 languages.forEach(la => {
-                    const Des_Lan = la["Options"]
-                    if(!Des_Lan[`${object.name}_${option.name}_name`]) error.push({err: "no name", cmd: object.name, langue: la.Langue_Code, opt: option.name})
-                    else if(Des_Lan[`${object.name}_${option.name}_name`].length > 32) error.push({err: "name too long", cmd: object.name, langue: la.Langue_Code, opt: option.name, taille: Des_Lan[`${object.name}_${option.name}_name`].length})
-                    else if(Des_Lan[`${object.name}_${option.name}_name`].toLowerCase() !== Des_Lan[`${object.name}_${option.name}_name`]) error.push({err: "character in uppercase", cmd: object.name, langue: la.Langue_Code, opt: option.name})
-                    else if(!(/^[\w-]{1,32}$/gm).test(Des_Lan[`${object.name}_${option.name}_name`])) error.push({err: "name does not match regex", cmd: object.name, langue: la.Langue_Code, opt: option.name})
-                    if(!Des_Lan[`${object.name}_${option.name}_description`]) error.push({cmd: object.name, err: "no description", langue: la.Langue_Code, opt: option.name})
-                    else if(Des_Lan[`${object.name}_${option.name}_description`].length > 99) error.push({cmd: object.name, err: "description too long", langue: la.Langue_Code, taille: Des_Lan[`${object.name}_${option.name}_description`].length, opt: option.name})
+                    const Des_Lan = la["options"]
+                    if(!Des_Lan[`${object.name}_${option.name}_name`]) error.push({err: "no name", cmd: object.name, langue: la.languageCode, opt: option.name})
+                    else if(Des_Lan[`${object.name}_${option.name}_name`].length > 32) error.push({err: "name too long", cmd: object.name, langue: la.languageCode, opt: option.name, taille: Des_Lan[`${object.name}_${option.name}_name`].length})
+                    else if(Des_Lan[`${object.name}_${option.name}_name`].toLowerCase() !== Des_Lan[`${object.name}_${option.name}_name`]) error.push({err: "character in uppercase", cmd: object.name, langue: la.languageCode, opt: option.name})
+                    else if(!(/^[\w-]{1,32}$/gm).test(Des_Lan[`${object.name}_${option.name}_name`])) error.push({err: "name does not match regex", cmd: object.name, langue: la.languageCode, opt: option.name})
+                    if(!Des_Lan[`${object.name}_${option.name}_description`]) error.push({cmd: object.name, err: "no description", langue: la.languageCode, opt: option.name})
+                    else if(Des_Lan[`${object.name}_${option.name}_description`].length > 99) error.push({cmd: object.name, err: "description too long", langue: la.languageCode, taille: Des_Lan[`${object.name}_${option.name}_description`].length, opt: option.name})
                 })
             }else{
                 if(!option.description) error.push({cmd: object.name, err: "no description", opt: option.name})
@@ -296,11 +296,11 @@ function checkChoices(object, state, languages){
                 if(!(/^[\w-]{1,32}$/gm).test(choice.name)) error.push({opt: option.name, err: "name does not match regex", taille: choice.name.length, cho: choice.name, cmd: object.name})
                 if(state){
                     languages.forEach(la => {
-                        const Des_Lan = la["Choices"]
-                        if(!Des_Lan[`${object.name}_${option.name}_${choice.name}_name`]) error.push({err: "no name", opt: option.name, cmd: object.name, langue: la.Langue_Code, choice: choice.name})
-                        else if(Des_Lan[`${object.name}_${option.name}_${choice.name}_name`].length > 32) error.push({err: "name too long", opt: option.name, cmd: object.name, langue: la.Langue_Code, choice: choice.name, taille: Des_Lan[`${object.name}_${option.name}_${choice.name}_name`].length})
-                        else if(!(/^[\w-]{1,32}$/gm).test(Des_Lan[`${object.name}_${option.name}_${choice.name}_name`])) error.push({err: "name does not match regex", opt: option.name, cmd: object.name, choice: choice.name, langue: la.Langue_Code})
-                        else if(Des_Lan[`${object.name}_${option.name}_${choice.name}_name`].toLowerCase() !== Des_Lan[`${object.name}_${option.name}_${choice.name}_name`]) error.push({err: "character in uppercase", opt: option.name, cmd: object.name, langue: la.Langue_Code, choice: choice.name})
+                        const Des_Lan = la["choices"]
+                        if(!Des_Lan[`${object.name}_${option.name}_${choice.name}_name`]) error.push({err: "no name", opt: option.name, cmd: object.name, langue: la.languageCode, choice: choice.name})
+                        else if(Des_Lan[`${object.name}_${option.name}_${choice.name}_name`].length > 32) error.push({err: "name too long", opt: option.name, cmd: object.name, langue: la.languageCode, choice: choice.name, taille: Des_Lan[`${object.name}_${option.name}_${choice.name}_name`].length})
+                        else if(!(/^[\w-]{1,32}$/gm).test(Des_Lan[`${object.name}_${option.name}_${choice.name}_name`])) error.push({err: "name does not match regex", opt: option.name, cmd: object.name, choice: choice.name, langue: la.languageCode})
+                        else if(Des_Lan[`${object.name}_${option.name}_${choice.name}_name`].toLowerCase() !== Des_Lan[`${object.name}_${option.name}_${choice.name}_name`]) error.push({err: "character in uppercase", opt: option.name, cmd: object.name, langue: la.languageCode, choice: choice.name})
                     })
                 }else{
                     

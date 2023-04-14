@@ -4,6 +4,13 @@ class Templates extends Base{
         super(_bot, guild_id, "template")
     }
 
+    _modify(data){
+        let modifications = this.get(data.code)._modifyDatas(data)
+        if(modifications.length) return modifications
+        this._delete(data.code)
+        this._add(data)
+    }
+
     get(ID){
         return this.container.find(el => el.code === ID)
     }

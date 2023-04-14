@@ -115,7 +115,7 @@ class Bot extends EventEmitter{
         this.handler.Deploy()
         this.events.Deploy(presence)
         this.cooldown.Deploy(["global", "commands", "verif", "mention"])
-        return this.ws.login()
+        return this.ws.login(presence)
     }
 
     getMe(){
@@ -188,43 +188,41 @@ class Bot extends EventEmitter{
         languages = languages.filter(e => e.endsWith(".json"))
         let toreturn = languages.map(e => JSON.parse(fs.readFileSync(process.cwd()+elementOS+"langues"+elementOS+e, 'utf-8')))
 
-        if(!toreturn.find(e => e.Langue_Code === this.default_language)) return this.launchError = "There is no language file corresponding to your default language"
+        if(!toreturn.find(e => e.languageCode === this.default_language)) return this.launchError = "There is no language file corresponding to your default language"
 
         for (const langue of toreturn){
-            if(!langue["Langue_Code"]) return this.launchError = "In one of your language files, there is no code."
-            if(!availableLanguages.find(da => da.id === langue["Langue_Code"]))  return this.launchError = `The code in ${langue["Langue_Code"]} file is wrong`
-            for (const opt of ["Help", "Options", "Choices"]) if(!langue[opt]) return this.launchError = `No ${opt} in your ${langue["Langue_Code"]} file`
+            if(!langue["languageCode"]) return this.launchError = "In one of your language files, there is no code."
+            if(!availableLanguages.find(da => da.id === langue["languageCode"]))  return this.launchError = `The code in ${langue["languageCode"]} file is wrong`
+            for (const opt of ["commands", "options", "choices"]) if(!langue[opt]) return this.launchError = `No ${opt} in your ${langue["languageCode"]} file`
         }
         this.langues = toreturn
 
-        let dbtr = {"general": config.general, "Dependencies": {}}
-        if(config.dependencies){
-            if(Array.isArray(config.dependencies)){
-                config.dependencies.forEach(dependency => {
-                    if(typeof dependency === "object"){
-                        if((dependency.name && typeof dependency.name === "string") && (dependency.objects && Array.isArray(dependency.objects)) && (dependency.location && typeof dependency.location === "string") &&(dependency.path && typeof dependency.path === "string")){
-                            if(["env", "original"].includes(dependency.location)){
-                                if(!dbtr.Dependencies[dependency.name]) dbtr.Dependencies[dependency.name] = {}
-                                dependency.objects.forEach(obj => {
-                                    if(typeof obj === "string"){
-                                        let result;
-                                        if(dependency.location === "env") result = env
-                                        if(dependency.location === "original") result = config
-                                        let i=dependency.path.split("/")
-                                        do{
-                                            result = result[i[0]]
-                                            i.shift()
-                                        }while(result !== undefined && i.length !== 0)
-                                        if(result && result[obj]){
-                                            dbtr.Dependencies[dependency.name][obj] = result[obj]
-                                        }
-                                    }
-                                })
-                            }
-                        }
-                    }
-                })
-            }
+        let dbtr = {"general": config.general, "dependencies": {}}
+        if(config.dependencies && Array.isArray(config.dependencies)){
+            config.dependencies.forEach(dependency => {
+                if(typeof dependency !== "object" || !["env", "original"].includes(dependency.location) || typeof dependency.path !== "string" || typeof dependency.name !== "string" ) return
+                if(dependency.objects && (!Array.isArray(dependency.objects) || !dependency.objects[0])) return
+                let splittedPath = dependency.path.split("/")
+                let searchArea;
+                if(dependency.location === "env") searchArea = env
+                if(dependency.location === "original") searchArea = config
+                let lastElement;
+                for (let pathElement of splittedPath){
+                    let localPathElement = searchArea[pathElement]
+                    if(!localPathElement) return;
+                    lastElement = localPathElement
+                }
+
+                if(dependency.objects){
+                    dbtr.dependencies[dependency.name] = {};
+                    dependency.objects.forEach(obj => {
+                        if(typeof obj !== "string" || !lastElement[obj]) return
+                        dbtr.dependencies[dependency.name][obj] = lastElement[obj]
+                    })
+                }else{
+                    dbtr.dependencies[dependency.name] = lastElement;
+                }
+            })
         }
         return dbtr
 

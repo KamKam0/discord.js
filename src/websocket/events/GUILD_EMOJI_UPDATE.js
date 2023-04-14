@@ -4,7 +4,7 @@ module.exports = async (bot, oldemoji, newemoji) => {
     let oldemoji2 = guild.emojis.get(oldemoji.id)
     if(!oldemoji2) return
     oldemoji2 = new Emoji(oldemoji2, bot)
-    guild.emojis.get(oldemoji.id)._modifyDatas(newemoji)
+    guild.emojis._modify(newemoji)
     let newemoji2 = guild.emojis.get(oldemoji.id)
 
     let modifications = []

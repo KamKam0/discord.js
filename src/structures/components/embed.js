@@ -89,8 +89,18 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setImage(image){
-        if((typeof image !== "string" || image.length > 1000 || !image.split("http")[1]) && (typeof image !== "object" || typeof image.url !== "string"))return this
-        else if(typeof image === "string") this.image = {url: image}
+        if((typeof image !== "string" || image.length > 1000) && (typeof image !== "object" || typeof image.url !== "string")) return this
+        if(typeof image === "string"){
+            if(image.startsWith("http")) this.image = {url: image}
+            else{
+                let splitted = image.split(".")
+                let extension = splitted[splitted.length  - 1].toLowerCase()
+                let extensions = ["jpg", "jpeg", "png", "webp", "gif"]
+                if(image.includes(".") && extensions.find(ext => ext === extension)) this.image = {url: `attachment://${image}`}
+            }
+
+            return this
+        } 
         else this.image = image
         return this
     }

@@ -5,6 +5,11 @@ class Users extends Base{
         super(_bot, null, "user")
     }
 
+    _modify(data){
+        let modifications = this.get(data.id)._modifyDatas(data)
+        if(modifications.length) return modifications
+    }
+
     _add(user){
         if(this.container.find(us => us.id === user.id)) this.container.find(us => us.id === user.id).guilds.push(user.guild_id)
         else this.container.push(new User(user, this._bot))

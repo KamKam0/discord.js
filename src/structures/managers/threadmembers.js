@@ -7,6 +7,13 @@ class ThreadMembers extends Base{
         this.thread_id = threadid
     }
 
+    _modify(data){
+        let modifications = this.get(data.user_id)._modifyDatas(data)
+        if(modifications.length) return modifications
+        this._delete(data.user_id)
+        this._add(data)
+    }
+
     _add(data){
         this.container.push(new threadMember({...data, guild_id: this.guild_id, id: this.thread_id}, this._bot))
         return this

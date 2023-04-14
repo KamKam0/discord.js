@@ -88,9 +88,8 @@ class WebsocketHandler{
                         if(this.internetConnectionError){
                             if(this._bot.logs.system){
                                 let timeOut = Date.now() - this.internetConnectionError
-                                console.log("")
-                                console.log(`Discord.js: Internet connection reinstated [${new Date(Date.now()).toUTCString()}]`)
-                                console.log(`Discord.js: The outage lasted ${ms(timeOut)}`)
+                                console.info(`\n\x1b[32mDiscord.js: Internet connection reinstated [${new Date(Date.now()).toUTCString()}]\x1b[37m`)
+                                console.info(`\x1b[32mDiscord.js: The outage lasted ${ms(timeOut)}\x1b[37m`)
                             }
                             this.internetConnectionError = null
                             this.#internetConnectionErrorWarn = false
@@ -132,14 +131,13 @@ class WebsocketHandler{
             if(!this.internetConnectionError){
                 this.internetConnectionError = Date.now()
                 if(this._bot.logs.system){
-                    console.log("")
-                    if(this.discordSide.lancement) console.warn(`Discord.js: Internet connection interrupted at [${new Date(Date.now()).toUTCString()}]`)
-                    else console.warn(`Discord.js: No internet connection for log in !`)
+                    if(this.discordSide.lancement) console.warn(`\n\x1b[33mDiscord.js: Internet connection interrupted at [${new Date(Date.now()).toUTCString()}]\x1b[37m`)
+                    else console.warn(`\n\x1b[33mDiscord.js: No internet connection for log in !\x1b[37m`)
                 }
             } 
             if(!this.#internetConnectionErrorWarn){
                 this.#internetConnectionErrorWarn = true
-                if(this._bot.logs.system) console.warn("Discord.js: Waiting for an internet connection ...")
+                if(this._bot.logs.system) console.warn("\n\x1b[33mDiscord.js: Waiting for an internet connection ...\x1b[37m")
             }
             return setTimeout(() => {
                 return this.login()
@@ -191,7 +189,7 @@ class WebsocketHandler{
                         if(this._bot.logs.events) console.log(`Discord.js: New event received: ${message.t}`)
                         return require(`./events/${message.t}`)(this._bot, message.d)
                     }
-                    if(this._bot.logs.system) console.info(`Discord.js: The Discord event ${message.t} is unavailable !`)
+                    if(this._bot.logs.system) console.info(`\x1b[34mDiscord.js: The Discord event ${message.t} is unavailable !\x1b[37m`)
                 break;
                 case(1):
                     this.#sendHearBeat()

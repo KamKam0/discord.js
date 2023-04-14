@@ -13,7 +13,9 @@ module.exports = (guild, memberid, permission) => {
     if(!memberid) return ({code: errors["4"].code, message: errors["4"].message, file: "Permissions"})
     if(!guild) return ({code: errors["37"].code, message: errors["37"].message, file: "Permissions"})
     if(!checkId(memberid)) return ({code: errors["56"].code, message: errors["56"].message, file: "Permissions"})
-    if(permission) permission = String(permission).toUpperCase()
+    if(typeof permission === "string") permission = String(permission).toUpperCase()
+    else if (Array.isArray(permission)) permission = permission.map(element => String(element).toUpperCase())
+    else return false
     if(guild.owner_id === memberid){
         if(permission) return true
         else return Object.keys(constants.permissionsBitfield)
@@ -28,8 +30,12 @@ module.exports = (guild, memberid, permission) => {
         finalPermissions.push(...permissions)
     })
     if(permission){
-        if(finalPermissions.includes(permission)) return true
-        else false
-    }else return finalPermissions
+        if(typeof permission === "string") return finalPermissions.includes(permission)
+        else if (Array.isArray(permission)){
+            let filteredPermissions = permission.filter(perm => finalPermissions.includes(perm))
+            return filteredPermissions.length === permission.length
+        }
+    }
+    else return finalPermissions
         
 }

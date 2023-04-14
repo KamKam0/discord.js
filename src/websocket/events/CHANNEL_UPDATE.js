@@ -9,8 +9,8 @@ module.exports = async (bot, datas) => {
     if(!textType && String(channelTypes.types[datas.type]) !== "undefined") textType = datas.type
     let channelClass = require(`../../structures/singles/channels/channel${String(textType).toLowerCase()}`)
     oldchannel = new channelClass(oldchannel, bot)
-    guild.channels.get(datas.id)._modifyDatas(datas)
-    bot.channels.get(datas.id)._modifyDatas(datas)
+    guild.channels._modify(datas)
+    bot.channels._modify(datas)
     let newchannel = guild.channels.get(datas.id)
     
     let modifications = []

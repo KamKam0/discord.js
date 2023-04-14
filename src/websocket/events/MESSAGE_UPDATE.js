@@ -9,7 +9,7 @@ module.exports = async (bot, datas) => {
     }
     else{
         oldmessage = new Message(oldmessage, bot)
-        guild.messages.get(datas.id)._modifyDatas(datas)
+        guild.messages._modify(datas)
         const newmessage = guild.messages.get(datas.id)
     
         let modifications = []

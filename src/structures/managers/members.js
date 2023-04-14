@@ -4,6 +4,13 @@ class Members extends Base{
         super(_bot, guildid, "member")
     }
 
+    _modify(data){
+        let modifications = this.get(data.user_id)._modifyDatas(data)
+        if(modifications.length) return modifications
+        this._delete(data.user_id)
+        this._add(data)
+    }
+
     get(ID){
         return this.container.find(ba => ba.user_id === ID)
     }
