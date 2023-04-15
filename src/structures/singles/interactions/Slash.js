@@ -5,7 +5,7 @@ class Slash extends Base{
         super("slash", slash, bot)
         this.id = slash.id
         this.command_id = slash.data.id || null
-        this.options = slash.data.options
+        this.options = slash.data.options || []
     }
 
     getOption(name){

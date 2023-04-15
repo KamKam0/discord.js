@@ -52,9 +52,9 @@ class Collector extends event{
         }
         if(this.type === "interaction" && this.message_id){
             if(Array.isArray(this.message_id)){
-                if(!this.message_id.includes(datas.message.id)) return
+                if(!this.message_id.includes(datas.message?.id)) return
             }
-            else if(datas.message.id !== this.message_id) return
+            else if(datas.message?.id !== this.message_id) return
         }
         if(this.interaction_id){
             if(Array.isArray(this.interaction_id)) {

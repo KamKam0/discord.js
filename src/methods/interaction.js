@@ -2,6 +2,7 @@ const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/interaction")
 const commandApiPath = require("../api/v10/applicationcommands")
 const { checkApplicationCommand } = require("../utils/functions").checks
+const {createError} = require("../utils/functions").general
 const utils = require("../utils/functions")
 const getMe = require("./me").getuser
 const errors = require("../utils/errors.json")
@@ -96,7 +97,8 @@ module.exports.modifyreply = async (informations, response) => {
 
     return this.reply(informations, response)
 }
-module.exports.deletereply = async (informations, interaction) => {
+
+module.exports.deletereply = async (informations) => {
     if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
     
     let args = []
@@ -165,6 +167,17 @@ module.exports.deletecommand = async (informations) => {
         method: commandApiPath.delete.method,
         token: informations.botToken,
         url: commandApiPath.delete.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null)
+}
+module.exports.getoriginalresponse = async (informations) => {
+    if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
+    let passedOptions = {
+        method: apiPath.get.reponse.method,
+        token: informations.botToken,
+        url: apiPath.get.reponse.url,
         urlIDS: informations
     }
     let args = [ ]

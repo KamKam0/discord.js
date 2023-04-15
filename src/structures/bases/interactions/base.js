@@ -8,6 +8,7 @@ const { channelBackup } = require("../../../utils/functions").general
 class base extends Base{
     constructor(type, interaction, bot){
         super(interaction, bot)
+        this.id = interaction.id
         this.application_id = interaction.application_id
         this.name = interaction.data.name || null
         this.channel_id = interaction.channel_id
@@ -37,6 +38,16 @@ class base extends Base{
             interaction_token: this.token
         }
         return interactionMethod.reply(informations, options)
+    }
+
+    async getOriginalResponse(){
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            interaction_id: this.id,
+            interaction_token: this.token
+        }
+        return interactionMethod.getoriginalresponse(informations)
     }
 
     /**

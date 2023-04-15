@@ -3,7 +3,7 @@ const channelMethod = require("../../../methods/channel")
 const messageMethod = require("../../../methods/message")
 const collector = require("../../../handlers/collector")
 
-class ChannelInvites extends Base{
+class ChannelMessages extends Base{
     constructor(bot, guild_id, channel_id){
         super(bot, guild_id)
         this.channel_id = channel_id
@@ -71,4 +71,4 @@ class ChannelInvites extends Base{
     }
 }
 
-module.exports = ChannelInvites
+module.exports = ChannelMessages

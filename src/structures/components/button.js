@@ -31,9 +31,8 @@ class Button extends base{
     * @returns {Button}
     */
     setEmoji(emoji){
-        if(!emoji || (typeof emoji !== "string" && (typeof emoji !== "object" || typeof emoji.animated !== "boolean" || (typeof emoji.id !== "string" && emoji.id !== null) || typeof emoji.name !== "string"))) return this
-        else if(!isNaN(emoji)) this.emoji = { animated: false, name:  emoji, id: null} 
-        else this.emoji = emoji
+        if(typeof emoji === "string") this.emoji = { animated: false, name:  emoji, id: null} 
+        else if(typeof emoji === "object") this.emoji = emoji
         return this
     }
 

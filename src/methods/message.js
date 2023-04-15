@@ -8,7 +8,7 @@ module.exports.send = async (informations, options) => {
     return new Promise(async (resolve, reject) => {
         if(!options) return reject(utils.general.createError("An error happened", {code: errors["8"].code, message: errors["8"].message, file: "Message"}))
         let method = informations.method
-        let  url = (method && informations.path) ? apiPath.create.url : apiPath.create.url
+        let  url = (method && informations.path) ? apiPath.modify.url : apiPath.create.url
         if(!method) method = apiPath.create.method
         options = utils.general.correctMessageData(options)
 
@@ -53,17 +53,21 @@ module.exports.send = async (informations, options) => {
             return newData
         }
         
-        handler(args, passedOptions, callBackSuccess)
+        return handler(args, passedOptions, callBackSuccess)
         .then(answer => resolve(answer))
         .catch(err => reject(err))
     })
 }
 
 module.exports.modify = async (informations, options) => {
-    informations.method = apiPath.modify.method
-    informations.path = apiPath.modify.url
+    return new Promise(async (resolve, reject) => {
+        informations.method = apiPath.modify.method
+        informations.path = apiPath.modify.url
 
-    return this.send(informations, options)
+        this.send(informations, options)
+        .then(answer => resolve(answer))
+        .catch(err => reject(err))
+    })
 }
 
 
