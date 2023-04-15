@@ -18,7 +18,7 @@ class Initiate{
             let commands = await this._bot.commands.fetchAll({with_localizations: true}).catch(err => reject(err))
             if(!commands) return
     
-            this._bot.handler.GetAllCommandsfi().filter(cmd => !cmd.help.unclass).forEach(commande => {
+            this._bot.handler.getCommandsfi().filter(cmd => !cmd.help.unclass).forEach(commande => {
                 let descriptions_cmd, names_cmd, descriptions_opt, names_opt, names_cho;
     
                 let las = (commande.help.langues && commande.help.langues[0]) ? commande.help.langues : this._bot.langues
@@ -89,7 +89,7 @@ class Initiate{
     }
 
     #checkCommands(){
-        let commands = this._bot.handler.GetAllCommands()
+        let commands = this._bot.handler.getCommands()
         let error = []
         let slashChecker = Utils.checks.checkApplicationCommand
         commands.forEach(cmd => {

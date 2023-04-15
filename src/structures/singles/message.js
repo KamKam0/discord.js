@@ -75,7 +75,7 @@ class Message extends Base{
 
     #handleOptions(){
         if(!this.isCommand) return []
-        let command = this._bot.handler.GetCommand(this.commandName)
+        let command = this._bot.handler.getCommand(this.commandName)
         if(!command || !command.help || !command.help.options?.length) return []
         let splittedMessageContent = this.content.split(" ")
         if(splittedMessageContent.length < 3) return []

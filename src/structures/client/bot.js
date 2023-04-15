@@ -51,7 +51,7 @@ class Bot extends EventEmitter{
         this.users = new Users(this)
         this.channels = new Channels(this)
         this.cooldown = new Cooldown()
-        this.handler = new CommandHandler.Handlers(this.name, this.langues)
+        this.handler = new CommandHandler.Handlers(this.langues)
         this.events = new EventHandler.Events(this, this.availableEvents)
         this.commands = new ApplicationCommands(this)
         this.ws = new WebSocketHandler(this)
@@ -112,7 +112,7 @@ class Bot extends EventEmitter{
     }
 
     async login(presence){
-        this.handler.Deploy()
+        this.handler.deploy()
         this.events.Deploy(presence)
         this.cooldown.Deploy(["global", "commands", "verif", "mention"])
         return this.ws.login(presence)
