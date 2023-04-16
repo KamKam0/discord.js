@@ -6,7 +6,7 @@ class Form extends base{
         super(data)
 
         this.title = data.title || null
-        this.components = data.components ? data.components.map(component => new textInput(component)) : null
+        this.components = data.components ? data.components.map(component => new textInput(component)) : []
     }
     
     AddTextInput(obj){

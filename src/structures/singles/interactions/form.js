@@ -5,7 +5,10 @@ class Modal extends Base{
         super("modal", modal, bot)
         let mappedComponents = modal.data.components?.filter(e => e.components[0].value !== "")?.map(component => component.components)
         this.components = []
-        if(mappedComponents) mappedComponents.forEach(compo => this.components.push(...compo))
+        if(mappedComponents) mappedComponents.forEach(compo => {
+            delete compo.type
+            this.components.push(...compo)
+        })
     }
 
     getComponent(name){

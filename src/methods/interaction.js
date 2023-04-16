@@ -23,7 +23,7 @@ module.exports.reply = async (informations, response) => {
 
         let basedatas;
 
-        if(response.modal && !method){
+        if(response.modal && method.toLowerCase() === "post"){
             let passedOptions = {
                 method: apiPath.create.response.method,
                 url: apiPath.create.response.url,
@@ -82,11 +82,11 @@ module.exports.reply = async (informations, response) => {
                 else if (method) args.push({value: {type: 4, data: body}, data_name: "options"})
                 basedatas = handler(args, passedOptions, callBackSuccess)
             }
-
-            basedatas
-            .then(answer => resolve(answer))
-            .catch(err => reject(err))
         }
+
+        basedatas
+        .then(answer => resolve(answer))
+        .catch(err => reject(err))
     })
 }
 module.exports.modifyreply = async (informations, response) => {
