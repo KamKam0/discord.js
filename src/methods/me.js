@@ -2,6 +2,8 @@ const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/user")
 const gateawayApiPath = require("../api/v10/gateway")
 const errors = require("../utils/errors.json")
+const presenceFunction = require("../utils/functions").general.presence
+const user = require("../structures/singles/user")
 
 module.exports.getuser = async (informations) => {
     let passedOptions = {
@@ -12,8 +14,7 @@ module.exports.getuser = async (informations) => {
     }
     let args = [ ]
     let callBackSuccess = function (data){
-        const single = require("../structures/singles/user")
-        let newData = new single(data, informations.bot)
+        let newData = new user(data, informations.bot)
         return newData
     }
     return handler(args, passedOptions, callBackSuccess)
@@ -30,7 +31,7 @@ module.exports.setstatus = (bot, options) => {
     if(!options) return ({code: errors["8"].code, message: errors["8"].message, file: "Me"})
     if(typeof options !== "string") return ({code: errors["38"].code, message: errors["38"].message, file: "Me"})
     if(bot.state !== "ready") return ({code: errors["39"].code, message: errors["39"].message, file: "Me"})
-    let presence = require("../utils/functions").presence({since: bot.ws.discordSide.lancement, activities: bot.presence.activities, status: options})
+    let presence = presenceFunction({since: bot.ws.discordSide.lancement, activities: bot.presence.activities, status: options})
     let body = {
         op: 3,
         d: presence
@@ -51,7 +52,7 @@ module.exports.setactivity = async (bot, options) => {
     if(!Array.isArray(options)) return ({code: errors["40"].code, message: errors["40"].message, file: "Me"})
     if(bot.state !== "ready") return ({code: errors["39"].code, message: errors["39"].message, file: "Me"})
     if(!bot || !options || !Array.isArray(options)) return "incorrect infos"
-    let presence = require("../utils/functions").presence({since: bot.ws.discordSide.lancement, activities: options, status: bot.presence.status})
+    let presence = presenceFunction({since: bot.ws.discordSide.lancement, activities: options, status: bot.presence.status})
     let body = {
         op: 3,
         d: presence
@@ -73,7 +74,7 @@ module.exports.setpresence = async (bot, options) => {
     if(bot.state !== "ready") return ({code: errors["39"].code, message: errors["39"].message, file: "Me"})
     if(!options.status) return ({code: errors["41"].code, message: errors["41"].message, file: "Me"})
     if(!options.activities) return ({code: errors["42"].code, message: errors["42"].message, file: "Me"})
-    let presence = require("../utils/functions").presence({since: bot.ws.discordSide.lancement, activities: options.activities, status: options.status})
+    let presence = presenceFunction({since: bot.ws.discordSide.lancement, activities: options.activities, status: options.status})
     let body = {
         op: 3,
         d: presence
