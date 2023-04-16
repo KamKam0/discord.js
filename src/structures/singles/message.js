@@ -43,7 +43,7 @@ class Message extends Base{
         this.message_reference = message.message_reference || null
         this.application_id = message.application_id
         this.flags = message.flags || 0
-        this.referenced_message = message.referenced_message ? new Message(message.referenced_message) : null
+        this.referenced_message = message.referenced_message ? new Message(message.referenced_message, bot) : null
         this.components = []
         if(message.components){
             let mainComponent = message.components.find(compo => compo.type === 1)?.components
