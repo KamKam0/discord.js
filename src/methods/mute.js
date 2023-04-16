@@ -11,7 +11,7 @@ module.exports.mute = async (informations, options) => {
     }
     let args = [
         {value: time, type: "number", data_name: "time", order:4}, 
-        {value: options, data_name: "options", reason: true}
+        {value: options, data_name: "options", reason: true, required: false}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/member")
@@ -30,7 +30,7 @@ module.exports.unmute = async (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: {communication_disabled_until: null, ...options}, data_name: "options", reason: true}
+        {value: {communication_disabled_until: null, ...options}, data_name: "options", reason: true, required: false}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/member")

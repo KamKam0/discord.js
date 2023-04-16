@@ -11,7 +11,7 @@ module.exports.create_withoutm = async (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/channels/channelguildpublicthread")
@@ -31,7 +31,7 @@ module.exports.create_withm = async (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/channels/channelguildpublicthread")
@@ -95,7 +95,7 @@ module.exports.create_tforum = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/channels/channelguildpublicthread")

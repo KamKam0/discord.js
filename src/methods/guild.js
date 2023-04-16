@@ -37,7 +37,7 @@ module.exports.modify = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/guild")
@@ -94,7 +94,7 @@ module.exports.modifymember = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/member")
@@ -114,7 +114,7 @@ module.exports.modifycurrentmember = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
@@ -129,7 +129,7 @@ module.exports.prune = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
@@ -207,7 +207,7 @@ module.exports.deleteintegration = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
@@ -276,7 +276,7 @@ module.exports.modifywidget = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
@@ -313,7 +313,7 @@ module.exports.modifywelcomescreen = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
@@ -412,7 +412,7 @@ module.exports.mfalevel = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }

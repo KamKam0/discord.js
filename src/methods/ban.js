@@ -12,7 +12,7 @@ module.exports.ban = async (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
@@ -28,7 +28,7 @@ module.exports.unban = async (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }

@@ -13,7 +13,7 @@ module.exports.modify = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     let callBackSuccess = function (data){
         let textType = channelTypes.revert()[data.type]
@@ -36,7 +36,7 @@ module.exports.bulkdelete = (informations, options) => {
     }
     let args = [
         {value: options, data_name: "options"}, 
-        {value: ids, type: "array", data_name: "ids", order: 3, reason: true}
+        {value: ids, type: "array", data_name: "ids", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
@@ -110,7 +110,7 @@ module.exports.deleteinvite = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/invite")
@@ -149,7 +149,7 @@ module.exports.editpermissions = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, value_data: "newoverwrite", type: "object", data_name: "options", order:3, reason: true}
+        {value: options, value_data: "newoverwrite", type: "object", data_name: "options", order:3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
@@ -164,7 +164,7 @@ module.exports.deletepermission = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
@@ -221,7 +221,7 @@ module.exports.create = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     let callBackSuccess = function (data){
         let textType = channelTypes.revert()[data.type]
@@ -243,7 +243,7 @@ module.exports.delete = (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }

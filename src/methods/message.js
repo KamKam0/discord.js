@@ -154,7 +154,7 @@ module.exports.delete = async (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
@@ -224,7 +224,7 @@ module.exports.pin = async (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
@@ -239,7 +239,7 @@ module.exports.unpin = async (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true}
+        {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
     return handler(args, passedOptions, null)
 }
