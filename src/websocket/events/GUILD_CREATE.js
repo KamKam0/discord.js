@@ -26,7 +26,7 @@ function analyseGuild(bot, datas){
   let tempoGuild = bot.ws.discordSide.available_ids.find(id => id.id === datas.id)
   if(tempoGuild){
     bot.ws.discordSide.available_ids.splice(bot.ws.discordSide.available_ids.indexOf(tempoGuild), 1)
-    if(bot.ws.discordSide.available_ids.length === 0){
+    if(bot.ws.discordSide.available_ids.length === 0 && bot.state === "processing"){
       bot.state = "ready"
       if(bot.databaseState || bot.databaseState === null) bot.emit("READY", bot)
     }

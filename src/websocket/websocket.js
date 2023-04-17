@@ -24,10 +24,10 @@ class WebsocketHandler{
             dvdatas: null,
             lancement: null,
             guild_ids: [],
-            availableIds: [],
+            available_ids: [],
             intervalState: null,
             lastPing: -1,
-            reconnectionUrl: null,
+            reconnection_url: null,
             token: null,
             passedDatas: null,
             connectionInfos: {
@@ -51,7 +51,7 @@ class WebsocketHandler{
                     shardAdvised: basedatas.shards
                 }
                 trueurl = this.discordSide.connectionInfos.connectionUrl
-            }else if (this._bot.state === "reconnect") trueurl = this.discordSide.reconnectionUrl
+            }else if (this._bot.state === "reconnect") trueurl = this.discordSide.reconnection_url
             else trueurl = this.discordSide.connectionInfos.connectionUrl
 
             return resolve(trueurl)
@@ -96,19 +96,18 @@ class WebsocketHandler{
                         }
                         if(this.discordSide.connectionInfos.connectionNumber === 0) return reject(createError("Could not log in", {state: false, message: "You reached the maximum of daily connection"})) 
                         const WebSocket = new ws(connectionURL)
-                            if(!WebSocket) return reject(createError("Incorrect Infos"))
-                            this.discordSide.ws = WebSocket
-                            let bodyLogin;
+                        if(!WebSocket) return reject(createError("Incorrect Infos"))
+                        this.discordSide.ws = WebSocket
+                        let bodyLogin;
 
-                            if(this._bot.state !== "reconnect"){
-                                bodyLogin = this._bot._getConnection((this._bot.presence || presence))
-                                this._bot.presence = bodyLogin.d.presence
-                            }
-                            this.discordSide.connectionInfos.connectionNumber --
-                            this.#handleWebsocketCalls(bodyLogin)
+                        if(this._bot.state !== "reconnect"){
+                            bodyLogin = this._bot._getConnection((this._bot.presence || presence))
+                            this._bot.presence = bodyLogin.d.presence
+                        }
+                        this.discordSide.connectionInfos.connectionNumber --
+                        this.#handleWebsocketCalls(bodyLogin)
 
-                            return resolve({result: this._bot, message: "Bot Launched", state: true})
-                        })
+                        return resolve({result: this._bot, message: "Bot Launched", state: true})
                     })
                     .catch(err => {
                         let error = this.#handleError(err)
@@ -119,6 +118,7 @@ class WebsocketHandler{
                     let error = this.#handleError(err)
                     if(error.content) return reject(error)
                 })
+            })
             .catch(err => {
                 let error = this.#handleError(err)
                 if(error.content) return reject(error)
@@ -238,10 +238,10 @@ class WebsocketHandler{
             dvdatas: null,
             lancement: null,
             guild_ids: [],
-            availableIds: [],
+            available_ids: [],
             intervalState: null,
             lastPing: -1,
-            reconnectionUrl: null,
+            reconnection_url: null,
             availableEvents: this._bot.availableEvents,
             token: this._bot.token,
             lancementError: null,

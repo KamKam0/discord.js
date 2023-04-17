@@ -6,6 +6,7 @@ module.exports = {
     channelPermission: require("./channelpermission"),
     channels: require("./channels"),
     command: require("./command"),
+    contextmenu: require("./contextmenu"),
     event: require("./event"),
     forum: require("./forum"),
     guild: require("./guild"),
@@ -17,6 +18,5 @@ module.exports = {
     permissions: require("./permissions"),
     textInput: require("./textinput"),
     userbadges: require("./userbadges"),
-    webhook: require("./webhook"),
-    
+    webhook: require("./webhook")
 }

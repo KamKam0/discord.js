@@ -60,7 +60,7 @@ class baseReplying extends BaseGuild {
         return this.#SendSpe(msg, "success", type)
     }
 
-    async warn_se(msg, type){
+    async warn(msg, type){
         return this.#SendSpe(msg, "warn", type)
     }
 

@@ -1,4 +1,5 @@
 const base = require("../bases/components/base")
+const menuTypes = require("../../types/contextmenu")
 const selectOption = require("./selectoption")
 
 class SelectMenu extends base{
@@ -45,29 +46,33 @@ class SelectMenu extends base{
     }
 
     addOption(obj){
+        if(this.type !== menuTypes.types["String"]) return this
+        if(obj instanceof selectOption){
+            this.options.push(obj)
+            return this
+        }
         if(!obj || typeof obj !== "object" || !obj.label || !obj.value) return this
-        if(!obj.label || !isNaN(obj.label) || obj.label.length < 1 || obj.label.length > 100) return this
-        if(!obj.value || !isNaN(obj.value) || obj.value.length < 1 || obj.value.length > 100) return this
-        let description = obj.description
-        if(description && (!isNaN(description) || description.length < 1 || description.length > 100)) return this
-        if(!description) description = null
-        let defaulte = obj.default
-        if(defaulte && typeof defaulte !== "boolean") defaulte = null
-        if(!defaulte) defaulte = null
-        let emoji = obj.emoji
-        if(emoji && typeof emoji !== "string") emoji = null
-        if(!emoji) emoji = null
-        this.options.push({label: obj.label, value: obj.value, description: description, default: defaulte, emoji: emoji})
+        let instanceOption = new selectOption()
+        .setDescription(obj.description)
+        .setEmoji(obj.emoji)
+        .setLabel(obj.label)
+        .setValue(obj.value)
+        
+        this.options.push(instanceOption)
         return this
     }
 
     setType(type){
-        if(!type || isNaN(type) || Number(type) < 1 || Number(type) > 25) return this
-        this.type = type
+        let verifiedType = menuTypes.types[type] || menuTypes.revert()[type]
+        if(!verifiedType) return this
+
+        this.type = verifiedType
+        
         return this
     }
 
     addOptions(array){
+        if(this.type !== menuTypes.types["String"]) return this
         if(!Array.isArray(array)) array = undefined
         let options = array || [...arguments]
         options.forEach(obj => this.addOption(obj))

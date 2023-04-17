@@ -13,7 +13,7 @@ module.exports.create = async (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", order: 3, reason: true, required: false}
+        {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/webhook")
@@ -66,7 +66,7 @@ module.exports.modify = async (informations, options) => {
         xAuditReasonAvailable: true
     }
     let args = [
-        {value: options, data_name: "options", reason: true, required: false}
+        {value: options, data_name: "options", reason: true, required: true}
     ]
     let callBackSuccess = function (data){
         const single = require("../structures/singles/webhook")
