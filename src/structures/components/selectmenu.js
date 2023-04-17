@@ -63,7 +63,7 @@ class SelectMenu extends base{
     }
 
     setType(type){
-        let verifiedType = menuTypes.types[type] || menuTypes.revert()[type]
+        let verifiedType = menuTypes.types[type]
         if(!verifiedType) return this
 
         this.type = verifiedType

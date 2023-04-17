@@ -2,17 +2,13 @@ class selectOption {
     constructor(data={}){
         this.label = data.label || null,
         this.value = data.value || null,
-        this.description = data.description || null,
-        this.emoji = data.emoji || {
-            name: null,
-            id: null
-        }
+        this.description = data.description || null
+        if(data.emoji) this.emoji = data.emoji
     }
 
     setEmoji(emoji){
-        if(!emoji || (typeof emoji !== "string" && (typeof emoji !== "object" || (typeof emoji.id !== "string" && emoji.id !== null) || typeof emoji.name !== "string"))) return this
-        else if(!isNaN(emoji)) this.emoji = { name:  emoji, id: null} 
-        else this.emoji = emoji
+        if(typeof emoji === "string") this.emoji = { name:  emoji, id: null} 
+        else if(typeof emoji === "object") this.emoji = emoji
         return this
     }
 
