@@ -4,11 +4,13 @@ module.exports = async (bot, datas) => {
     if(!datas.guild_id || !guild) return
     let oldmessage = guild.messages.get(datas.id)
     if(!oldmessage){
+        if(!datas.author && (bot.databaseState || bot.databaseState === null)) return bot.emit(name(), bot, datas)
         const mess_u_p = new Message(datas, bot)
         if(bot.databaseState) return bot.emit(name(), bot, mess_u_p)
     }
     else{
         oldmessage = new Message(oldmessage, bot)
+        if(!datas.author && (bot.databaseState || bot.databaseState === null)) return bot.emit(name(), bot, datas)
         guild.messages._modify(datas)
         const newmessage = guild.messages.get(datas.id)
     

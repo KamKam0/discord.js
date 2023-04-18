@@ -7,7 +7,7 @@ class Option extends Base{
         this.type = option.type || 3
         this.required = option.required || false
         this.choices = option.choices ? option.choices.map(cho => new Choice(cho)) : []
-        this.min_value = option.min_value || 1
+        this.min_value = option.min_value || 0
         this.max_value = option.max_value || 1000000000
         this.min_length = option.min_length || 1
         this.max_length = option.max_length || 6000

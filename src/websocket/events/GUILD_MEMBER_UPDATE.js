@@ -30,7 +30,7 @@ module.exports = async (bot, datas) => {
     else{
         const member_e = require("../../structures/singles/member")
         oldmember = new member_e(oldmember, bot)
-        guild.members.get(datas.user.id)._modify(datas)
+        guild.members._modify(datas)
         const newmember = guild.members.get(datas.user.id)
         oldmember.modifications = modifications
         if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldmember, newmember)
