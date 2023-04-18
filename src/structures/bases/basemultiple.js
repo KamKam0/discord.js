@@ -99,7 +99,9 @@ class baseMultiple extends base{
     }
 
     _modify(data){
-        let modifications = this.get(data.id)._modifyDatas(data)
+        let instance = this.get(data.id)
+        if(!instance) return
+        let modifications = instance._modifyDatas(data)
         if(modifications.length) return modifications
         this._delete(data.id)
         this._add(data)

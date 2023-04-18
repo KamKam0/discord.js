@@ -91,11 +91,11 @@ class base extends Base{
         return this.receivingTypePrecision === "slash"
     }
 
-    get isForm(){
-        return this.receivingTypePrecision === "form"
+    get isModal(){
+        return this.receivingTypePrecision === "modal"
     }
 
-    get isForm(){
+    get isButton(){
         return this.receivingTypePrecision === "button"
     }
 }

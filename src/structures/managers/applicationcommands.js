@@ -5,7 +5,9 @@ class Commands extends Base{
     }
 
     _modify(data){
-        let modifications = this.get(data.name)._modifyDatas(data)
+        let instance = this.get(data.name)
+        if(!instance) return
+        let modifications = instance._modifyDatas(data)
         if(modifications.length) return modifications
         this._delete(data.name)
         this._add(data)

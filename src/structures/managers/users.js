@@ -6,7 +6,9 @@ class Users extends Base{
     }
 
     _modify(data){
-        let modifications = this.get(data.id)._modifyDatas(data)
+        let instance = this.get(data.id)
+        if(!instance) return
+        let modifications = instance._modifyDatas(data)
         if(modifications.length) return modifications
     }
 
@@ -24,12 +26,11 @@ class Users extends Base{
         return this
     }
 
-    _delete(ID){
-        let user_i = ID.user
-        let guild_i = ID.guild
-        let u = this.container.find(sti => sti.id === user_i)
-        u.guilds.splice(u.guilds.indexOf(u.guilds.find(gui => gui === guild_i)), 1)
-        if(u.guilds.length === 0) this.container.splice(this.container.indexOf(u), 1)
+    _delete(data){
+        let user = this.get(data.user)
+        if(!user) return
+        user.guilds.splice(user.guilds.indexOf(user.guilds.find(gui => gui === data.guild)), 1)
+        if(user.guilds.length === 0) this.container.splice(this.container.indexOf(this.get(data.user)), 1)
         return this
     }
 

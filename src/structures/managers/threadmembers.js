@@ -8,7 +8,9 @@ class ThreadMembers extends Base{
     }
 
     _modify(data){
-        let modifications = this.get(data.user_id)._modifyDatas(data)
+        let instance = this.get(data.user_id)
+        if(!instance) return
+        let modifications = instance._modifyDatas(data)
         if(modifications.length) return modifications
         this._delete(data.user_id)
         this._add(data)

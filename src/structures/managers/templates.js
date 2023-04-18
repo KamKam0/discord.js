@@ -5,7 +5,9 @@ class Templates extends Base{
     }
 
     _modify(data){
-        let modifications = this.get(data.code)._modifyDatas(data)
+        let instance = this.get(data.code)
+        if(!instance) return
+        let modifications = instance._modifyDatas(data)
         if(modifications.length) return modifications
         this._delete(data.code)
         this._add(data)

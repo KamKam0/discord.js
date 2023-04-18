@@ -9,7 +9,7 @@ module.exports = async (bot, datas) => {
 
     const guild = bot.guilds.get(datas.id)
     bot.guilds = bot.guilds._delete(datas.id)
-    bot.users._deleteMultiple(guild.members.Map(users => { return {user: users.ID, guild: guild.id}}))
+    bot.users._deleteMultiple(guild.members.map(users => { return {user: users.ID, guild: guild.id}}))
     bot.channels._deleteMultiple(guild.channels.map(ch => ch.id))
 
     if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, guild)
