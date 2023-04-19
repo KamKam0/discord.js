@@ -1,4 +1,4 @@
-const guildBase = require("../../../../structures/bases/baseguild")
+const guildBase = require("../../../structures/bases/baseguild")
 const channelBackup = require("../../../utils/functions").general.channelBackup
 
 class MessageReactionAdd extends guildBase{

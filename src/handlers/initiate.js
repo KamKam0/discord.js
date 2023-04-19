@@ -21,7 +21,7 @@ class Initiate{
             this._bot.handler.getCommandsfi().filter(cmd => !cmd.help.unclass).forEach(commande => {
                 let descriptions_cmd, names_cmd, descriptions_opt, names_opt, names_cho;
     
-                let las = (commande.help.langues && commande.help.langues[0]) ? commande.help.langues : this._bot.langues
+                let las = (commande.help.langues) ? this._bot.handler.getLanguages() : this._bot.langues
     
                 descriptions_cmd = {}
                 names_cmd = {}
@@ -95,7 +95,7 @@ class Initiate{
         commands.forEach(cmd => {
             if(!cmd.help) error.push({cmd: cmd.name, err: "no help"})
             else{
-                let verif = slashChecker({...cmd.help, name: cmd.name}, true, ((cmd.help.langues && cmd.help.langues[0]) ? cmd.help.langues : this._bot.langues))
+                let verif = slashChecker({...cmd.help, name: cmd.name}, true, ((cmd.help.langues ) ? this._bot.handler.getLanguages() : this._bot.langues))
                 if(!verif.status) error.push({...verif, cmd: cmd.name})
             }
         })
