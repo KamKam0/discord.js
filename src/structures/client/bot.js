@@ -178,9 +178,9 @@ class Bot extends EventEmitter{
         if(this.launchError) return
         if(!config.general) return this.launchError = "No general section in your config.json file"
         const availableLanguages = constants.languagesAvailable
-        if(!config.general.language || typeof config.general.language !== "string") this.default_language = "en-US"
+        if(!config.general.language || typeof config.general.language !== "string") return this.launchError = "No default language"
         else if (availableLanguages.find(da => da.id === config.general.language)) this.default_language = config.general.language
-        else this.default_language = "en-US"
+        else  return this.launchError = "No valid default language"
 
         let languages = getCheck.bind(this)("langues", true)
         if(this.launchError) return

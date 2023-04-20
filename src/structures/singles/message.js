@@ -43,7 +43,7 @@ class Message extends Base{
         this.message_reference = message.message_reference || null
         this.application_id = message.application_id
         this.flags = message.flags || 0
-        this.referenced_message = message.referenced_message ? new Message(message.referenced_message, bot) : null
+        this.referenced_message = message.referenced_message ? new Message({...message.referenced_message, guild_id: this.guild_id}, bot) : null
         this.components = []
         if(message.components){
             let mainComponent = message.components.find(compo => compo.type === 1)?.components
@@ -106,7 +106,9 @@ class Message extends Base{
         if(!content) return clas
         if(content.includes("<#")){
             let splitted = content.split("<#").filter(e => e.includes(">")).map(e => e.split(">")[0]).filter(e => !isNaN(e))
-            if(splitted && splitted[0]) clas._add(splitted)
+            if(splitted && splitted[0]){
+                splitted.forEach(splitMention => clas._add(splitMention))
+            }
         }
         return clas
     }
