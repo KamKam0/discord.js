@@ -1,6 +1,6 @@
 {
   "name": "@kamkam1_0/discord.js",
-  "version": "4.0.12",
+  "version": "4.0.13",
   "description": "Allows you to fully interact with discord's apis",
   "main": "./src/index.js",
   "scripts": {

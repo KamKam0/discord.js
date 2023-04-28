@@ -3,12 +3,19 @@ class selectOption {
         this.label = data.label || null,
         this.value = data.value || null,
         this.description = data.description || null
+        this.default = false
         if(data.emoji) this.emoji = data.emoji
     }
 
     setEmoji(emoji){
         if(typeof emoji === "string") this.emoji = { name:  emoji, id: null} 
         else if(typeof emoji === "object") this.emoji = emoji
+        return this
+    }
+
+    setDefault(state){
+        if(typeof state !== "boolean") return this
+        this.default = state
         return this
     }
 

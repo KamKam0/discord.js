@@ -84,10 +84,10 @@ function correctMessageData(options){
     if(!options) return null
     if(options && options.modal) return options
     if(typeof options !== "object" && typeof options === "string") return {content: options}
+    else if(typeof options === "object" && (options.content || options.embeds || options.files || options.modal || options.components || options.sticker_ids)) return options
     else if(typeof options === "object" && (options.description || options.title || options.fields)) return {embeds: [options]}
     else if(typeof options === "object" && (options.name || options.buffer || options.extension)) return {files: [options]}
-    else if(typeof options === "object" && options.type) return {components: [options]}
-    else if(typeof options === "object" && (options.content || options.embeds || options.files || options.modal || options.components || options.sticker_ids)) return options
+    else if(typeof options === "object" && options.custom_id !== undefined) return {components: [options]}
     else return null
 }
 

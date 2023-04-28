@@ -1,4 +1,4 @@
-const User = require("../../structures/singles/user")
+const User = require("../../structures/client/user")
 module.exports = async (bot, datas) => {
     bot.user = new User(datas.user, bot)
     bot.ws.discordSide.passedDatas = datas.v

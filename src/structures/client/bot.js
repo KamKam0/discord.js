@@ -61,21 +61,16 @@ class Bot extends EventEmitter{
         }
     }
 
-    #attributeintents(intents){
-        if(!intents || !Array.isArray(intents) || intents.filter(e => typeof e === "string").length !== intents.length) return utils.gets.getIntentsFromNames("ALL")
-        return utils.gets.getIntentsFromNames(intents)
-    }
-
-    #attributeSQL(database){
-        if(!database) return false
-        if(typeof database === "boolean") return new ORM({host: "127.0.0.1", port: 3306, user: "root", database: this.name})
-        else if (typeof database === "object") return new ORM(database)
-        else return false
-    }
-
     get databaseState(){
         if(!this.sql) return null
         return this.sql.connectionState
+    }
+
+    async login(presence){
+        this.handler.deploy()
+        this.events.deploy(presence)
+        this.cooldown.Deploy(["global", "commands", "verif", "mention"])
+        return this.ws.login(presence)
     }
 
     _userStatus(ID){
@@ -111,14 +106,7 @@ class Bot extends EventEmitter{
         return link[link.length - 1]
     }
 
-    async login(presence){
-        this.handler.deploy()
-        this.events.deploy(presence)
-        this.cooldown.Deploy(["global", "commands", "verif", "mention"])
-        return this.ws.login(presence)
-    }
-
-    getMe(){
+    async getMe(){
         let informations = {
             bot: this,
             token: this.token
@@ -144,27 +132,21 @@ class Bot extends EventEmitter{
         }
     }
 
-    setStatus(options){
-        let presence = methodMe.setstatus(this, options)
-        this.events.presence = presence
-        return presence
-    }
-
-    setActivity(options){
-        let presence = methodMe.setactivity(this, options)
-        this.events.presence = presence
-        return presence
-    }
-
-    setPresence(options){
-        let presence =  methodMe.setpresence(this, options)
-        this.events.presence = presence
-        return presence
-    }
-
     #TreatToken(env){
         if(env.token && env.token_beta && typeof env.token_beta === "string" && process.argv.includes("-t")) this.token = env.token_beta
         else this.token = env.token
+    }
+
+    #attributeintents(intents){
+        if(!intents || !Array.isArray(intents) || intents.filter(e => typeof e === "string").length !== intents.length) return utils.gets.getIntentsFromNames("ALL")
+        return utils.gets.getIntentsFromNames(intents)
+    }
+
+    #attributeSQL(database){
+        if(!database) return false
+        if(typeof database === "boolean") return new ORM({host: "127.0.0.1", port: 3306, user: "root", database: this.name})
+        else if (typeof database === "object") return new ORM(database)
+        else return false
     }
     
     #getInfos(){
