@@ -1,7 +1,7 @@
 const webhook = require("./results/webhookupdate")
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
-    datas.token = bot.ws.discordSide.token
+    datas.token = bot.token
     
     if(!datas.guild_id|| !guild) return
     

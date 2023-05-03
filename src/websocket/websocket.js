@@ -65,12 +65,15 @@ class WebsocketHandler{
                 botToken: this._bot.token,
                 bot: this._bot
             }
-            createDM(sentInformation, this._bot.config.general["ID createur"])
+            createDM(sentInformation, this._bot.config.general["creatorId"])
             .then(us => {
                 this._bot._setCreator({id: us.recipients[0].id, channel_id: us.id})
                 return resolve(null)
             })
-            .catch(err => reject(err))
+            .catch(err => {
+                if(err.type == "system" && err.code === "internet") return reject(err)
+                return resolve(null)
+            })
         })
     }
 
@@ -111,12 +114,15 @@ class WebsocketHandler{
                     })
                     .catch(err => {
                         let error = this.#handleError(err)
-                        if(error.content)  return reject(createError("Could not start", {state: false, message: "Errors are detcted in your commands.\nPlease correct them and retry."}))
+                        if(error.content && this._bot.logs.system) return console.log(`\x1b[31mDiscord.js: ${error.content}\x1b[37m`)
                     })
                 })
                 .catch(err => {
                     let error = this.#handleError(err)
-                    if(error.content) return reject(error)
+                    if(error.content) {
+                        if (this._bot.logs.system) console.log('\x1b[31mDiscord.js: Cannot create a DM channel with the given creator ID.\nPlease provide a way to do so (a server in common\x1b[37m')
+                        return reject(error)
+                    }
                 })
             })
             .catch(err => {
@@ -127,7 +133,12 @@ class WebsocketHandler{
     }
 
     #handleError(err){
-        if(err.type == "system" && err.code === "internet"){
+        if(err === null){
+            let error = new Error('Invalid commands data')
+            error.content = 'One of your commands does not pass through the securities. Please look at your DMs to understand the error.'
+            return error
+        }
+        else if(err.type == "system" && err.code === "internet"){
             if(!this.internetConnectionError){
                 this.internetConnectionError = Date.now()
                 if(this._bot.logs.system){
@@ -143,7 +154,6 @@ class WebsocketHandler{
                 return this.login()
             }, 1000 * this.#internetInterval)
         }
-
         return err
     }
 

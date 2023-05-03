@@ -67,24 +67,42 @@ class Initiate{
     async #checkCommandsErrors(){
         let checked = this.#checkCommands()
         if(!checked.status){
-            let erembed = new Embed()
-            .setTitle("Command error")
-
-            if(checked.errors.length > 10) checked.errors = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nu => checked.errors[nu])
-
-            checked.errors.forEach(che => {
-                let errtexte = ""
-                if(che.errors.length > 5) che.errors = [0, 1, 2, 3, 4].map(nu => che.errors[nu])
-                che.errors.forEach(err => {
-                    if(errtexte.length === 0) errtexte += `\`\`\``
-                    else errtexte += `\`\`\`\n\n\`\`\``
-                    err = Object.entries(err)
-                    err.forEach(err => errtexte += `\n\n${err[0]}: ${err[1]}`)
+            if(this._bot.logs.system){
+                console.log('\x1b[33m')
+                checked.errors.forEach(che => {
+                    che.errors.forEach(erro => {
+                        let text = '----------'
+                        Object.entries(erro).forEach(entry => {
+                            text += `\n${entry[0]}: ${entry[1]}`
+                        })
+                        text+='\n----------'
+                        console.log(text)
+                    })
                 })
-                erembed.addField(che.errors[0].cmd, errtexte + "```", true)
-            })
-                
-            return this._bot.messages.send(this._bot.creator.channel_id, {embeds: [erembed]}) .catch(err => {})
+                console.log('\x1b[37m')
+            }
+            if(this._bot.creator && this._bot.creator.channel_id){
+                let erembed = new Embed()
+                .setTitle("Command error")
+                .setDescription('Errors are detected in your commands.\n Please correct them and retry.')
+                .setColor('RED')
+    
+                if(checked.errors.length > 10) checked.errors = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nu => checked.errors[nu])
+    
+                checked.errors.forEach(che => {
+                    let errtexte = ""
+                    if(che.errors.length > 5) che.errors = [0, 1, 2, 3, 4].map(nu => che.errors[nu])
+                    che.errors.forEach(err => {
+                        if(errtexte.length === 0) errtexte += `\`\`\``
+                        else errtexte += `\`\`\`\n\n\`\`\``
+                        err = Object.entries(err)
+                        err.forEach(err => errtexte += `\n\n${err[0]}: ${err[1]}`)
+                    })
+                    erembed.addField(che.errors[0].cmd, errtexte + "```", true)
+                })
+                    
+                return this._bot.messages.send(this._bot.creator.channel_id, {embeds: [erembed]}) .catch(err => {})
+            }
         }
     }
 

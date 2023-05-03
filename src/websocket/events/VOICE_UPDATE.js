@@ -3,7 +3,7 @@ module.exports = async (bot, oldvoice, newvoice) => {
     const guild = bot.guilds.get(oldvoice.guild_id)
     let oldvoice2 = guild.voice_states.get(newvoice.user_id)
     oldvoice2 = new Voice(oldvoice2, bot)
-    guild.voice_states._modify(datas)
+    guild.voice_states._modify(newvoice)
     const newvoice2 = guild.voice_states.get(newvoice.user_id)
     guild.members.get(newvoice.user_id).voice = {presence: newvoice2, channel: newvoice2?.channel || null}
     

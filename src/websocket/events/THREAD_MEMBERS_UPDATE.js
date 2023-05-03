@@ -10,7 +10,7 @@ module.exports = async (bot, datas) => {
         thread: thread,
         guild: guild,
         guild_id: guild.id,
-        bot_token: bot.ws.discordSide.token,
+        bot_token: bot.token,
         added_members: null,
         removed_member: null,
         member_count: datas.member_count

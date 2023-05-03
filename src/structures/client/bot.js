@@ -78,7 +78,7 @@ class Bot extends EventEmitter{
             if(!ID) return reject(new Error("Incorrect infos"))
             let returnInfos = {0: "User", 1: "VIP", 2: "Admin", 3: "Admin & VIP", 4: "Owner"}
             if(!this.databaseState) return resolve({...returnInfos, value: 0})
-            if(ID === this.config.general["ID createur"]) return resolve({...returnInfos, value: 4})
+            if(ID === this.config.general["creatorId"]) return resolve({...returnInfos, value: 4})
             else if(this.sql){
                 let tables = await this.sql.show()
                 tables = tables.map(e => Object.values(e)[0])
