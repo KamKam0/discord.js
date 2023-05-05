@@ -71,7 +71,7 @@ module.exports.reply = async (informations, response) => {
                 let args = [
                     {value: body_files, data_name: "options", stringified: false, order: 3}
                 ]
-                informations.contentType = "file"
+                passedOptions.contentType = "file"
                 basedatas = handler(args, passedOptions, callBackSuccess)
             }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject(createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Interaction"}))
             
