@@ -1,7 +1,7 @@
-const reactionremove = require("./results/messagereactionremove")
+const reactionClass = require("./results/messagereaction")
 module.exports = async (bot, datas) => { 
-    const guild = bot.guilds.get(datas.guild_id)
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, new reactionremove(datas, bot))
+    let reactionInstance = new reactionClass(datas, bot)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, reactionInstance)
 }
 
 function name(){ return "MESSAGE_REACTION_REMOVE" }

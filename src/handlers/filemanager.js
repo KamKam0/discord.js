@@ -32,8 +32,21 @@ class FileManager{
         }
     }
 
-    name(title){
+    setBuffer(buf){
+        if (Buffer.isBuffer(buf)) this.#buffer = buf
+
+        return this
+    }
+
+    setName(title){
         if(typeof title === "string" && title.length < 25) this.#name = title
+
+        return this
+    }
+
+    setExtension(extension){
+        if(typeof extension === "string" && extension.length < 7) this.#extension = extension
+
         return this
     }
 

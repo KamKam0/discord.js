@@ -1,8 +1,8 @@
-const reactionadd = require("./results/messagereactionadd")
+const reactionClass = require("./results/messagereaction")
 module.exports = async (bot, datas) => {
-    const guild = bot.guilds.get(datas.guild_id)
     if(bot.databaseState) return 
-    if(guild) bot.emit(name(), bot, new reactionadd(datas, bot))
+    let reactionInstance = new reactionClass(datas, bot)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, reactionInstance)
 }
 
 function name(){ return "MESSAGE_REACTION_ADD" }
