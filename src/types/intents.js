@@ -1,7 +1,7 @@
 let types = {
     GUILDS: 1 << 0,
     GUILD_MEMBERS: 1 << 1,
-    GUILD_BANS: 1 << 2,
+    GUILD_MODERATION: 1 << 2,
     GUILD_EMOJIS_AND_STICKERS: 1 << 3,
     GUILD_INTEGRATIONS: 1 << 4,
     GUILD_WEBHOOKS: 1 << 5,

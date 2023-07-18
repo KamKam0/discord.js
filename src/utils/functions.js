@@ -1,4 +1,4 @@
-const constants = require("./constants")
+const permissionsBitfield = require('../types/permissions').types
 const intentsConstance = require("../types/intents").types
 const userBadges = require("../types/user").badges
 const applicationBadges = require("../types/application").flags
@@ -9,7 +9,7 @@ const fileManager = require("../handlers/filemanager")
 function getBietfielfFromPermissions(permissions){
     if(!Array.isArray(permissions)) return null
     if(!permissions[0]) return 0
-    return permissions.map(perm => String(perm).toUpperCase()).reduce((a, b) => constants.permissionsBitfield[b] ? a+constants.permissionsBitfield[b] : a+0, 0)
+    return permissions.map(perm => String(perm).toUpperCase()).reduce((a, b) => permissionsBitfield[b] ? a+permissionsBitfield[b] : a+0, 0)
 }
 
 function getIntentsFromNames(intents){
@@ -56,7 +56,7 @@ function checkColor(color){
 
 function getPermissionsFromBitfields(bietfield){
     bietfieldNumber = Number(bietfield)
-    let bietfieldEntries = Object.entries(constants.permissionsBitfield).sort((a, b) => b[1] - a[1])
+    let bietfieldEntries = Object.entries(permissionsBitfield).sort((a, b) => b[1] - a[1])
     let permissions = []
     bietfieldEntries.forEach(entry => {
         if(entry[1] <= bietfieldNumber){

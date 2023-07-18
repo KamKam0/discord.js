@@ -1,7 +1,7 @@
 const errors = require("../utils/errors.json")
 const {checkId} = require("../utils/functions").checks
 const {getPermissionsFromBitfields} = require("../utils/functions").gets
-const constants = require("../utils/constants")
+const permissionsBitfield = require('../types/permissions').types
 /**
  * 
  * @param {object} guild 
@@ -18,7 +18,7 @@ module.exports = (guild, memberid, permission) => {
     else return false
     if(guild.owner_id === memberid){
         if(permission) return true
-        else return Object.keys(constants.permissionsBitfield)
+        else return Object.keys(permissionsBitfield)
     }
     const member = guild.members.get(memberid)
     const guildroles = guild.roles
