@@ -1,4 +1,4 @@
-const Base = require("../bases/basemuldecla")
+const Base = require("../managers/automoderations")
 const automoderationMethod = require("../../methods/automoderation")
 
 class AutoModerations extends Base{

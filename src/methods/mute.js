@@ -12,7 +12,7 @@ module.exports.mute = async (informations, options) => {
     let args = [ 
         {value: options, data_name: "options", reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/member")
         let newData = new single(data, informations.bot)
         return newData
@@ -31,7 +31,7 @@ module.exports.unmute = async (informations, options) => {
     let args = [
         {value: {communication_disabled_until: null, ...options}, data_name: "options", reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/member")
         let newData = new single(data, informations.bot)
         return newData

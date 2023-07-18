@@ -1,6 +1,7 @@
 const User = require("../../structures/client/user")
 module.exports = async (bot, datas) => {
-    bot.user = new User(datas.user, bot)
+    bot.users.push(new User(datas.user, bot))
+    bot.user = bot.users.get(datas.user.id)
     bot.ws.discordSide.passedDatas = datas.v
     bot.ws.discordSide.guild_ids = datas.guilds.map(g => { return {id: g.id}})
     if(bot.ws.discordSide.guild_ids.length === 0 && bot.state === "processing"){

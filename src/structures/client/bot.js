@@ -10,6 +10,7 @@ const ApplicationCommands = require("../administrators/applicationcommands")
 const ORM = require("@kamkam1_0/sql-orm")
 const WebSocketHandler = require('../../websocket/websocket')
 const MessageAdministrator = require("../administrators/messages")
+const Application = require("../singles/application")
 const os = require('node:os')
 let elementOS = '/'
 if(os.platform() === "win32") elementOS = '\\'
@@ -54,7 +55,9 @@ class Bot extends EventEmitter{
         this.handler = new CommandHandler.Handlers(this.langues)
         this.events = new EventHandler.Events(this, this.availableEvents)
         this.commands = new ApplicationCommands(this)
-        this.ws = new WebSocketHandler(this)
+        this.application = null
+        this.ws = new WebSocketHandler(this, this.availableEvents)
+
         this.logs = {
             events: data.eventsLog ?? false,
             system: data.systemLog ?? true

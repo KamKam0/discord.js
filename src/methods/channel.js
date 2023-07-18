@@ -15,7 +15,7 @@ module.exports.modify = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         let textType = channelTypes.revert()[data.type]
         if(!textType && String(channelTypes.types[data.type]) !== "undefined") textType = data.type
         let channelClass = require(`../singles/channels/channel${String(textType).toLowerCase()}`)
@@ -48,7 +48,7 @@ module.exports.getinvites = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         data = data.map(da => {
             da.channel_id = da.channel.id
             return da
@@ -89,7 +89,7 @@ module.exports.getinvite = (informations, queryParams) => {
             ]
         }
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         data.channel_id = data.channel.id
         data.guild_id = data.guild.id
         const single = require("../structures/singles/invite")
@@ -111,7 +111,7 @@ module.exports.deleteinvite = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: false}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/invite")
         let newData = new single(data, informations.bot)
         return newData
@@ -130,7 +130,7 @@ module.exports.createinvite = (informations, options) => {
     let args = [
         {value: options || {}, data_name: "options"}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/invite")
         let newData = new single(data, informations.bot)
         return newData
@@ -190,7 +190,7 @@ module.exports.getpins = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const manager = require("../structures/managers/messages")
         let newData = new manager(informations.bot)
         newData._addMultiple(data)
@@ -222,7 +222,7 @@ module.exports.create = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         let textType = channelTypes.revert()[data.type]
         if(!textType && String(channelTypes.types[data.type]) !== "undefined") textType = data.type
         let channelClass = require(`../singles/channels/channel${String(textType).toLowerCase()}`)

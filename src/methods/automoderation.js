@@ -12,7 +12,7 @@ module.exports.create = async (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/automoderation")
         let newData = new single(data, informations.bot)
         return newData
@@ -30,7 +30,7 @@ module.exports.getall = async (informations) => {
     let args = [
         {value: options, data_name: "options", order: 3}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/managers/automoderations")
         let newData = new single(informations.bot)
         newData._addMultiple(data)
@@ -47,7 +47,7 @@ module.exports.get = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/automoderation")
         let newData = new single(data, informations.bot)
         return newData
@@ -66,7 +66,7 @@ module.exports.modify = async (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/automoderation")
         let newData = new single(data, informations.bot)
         return newData

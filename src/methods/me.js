@@ -13,7 +13,7 @@ module.exports.getuser = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         let newData = new user(data, informations.bot)
         return newData
     }

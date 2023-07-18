@@ -13,7 +13,7 @@ module.exports.createDM = async (informations, user) => {
         {value: user, value_data: "id", data_name: "user", order:2},
         {value: {recipient_id: user}, data_name: "options"}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/channels/channeldm")
         let newData = new single(data, informations.bot)
         return newData
@@ -33,27 +33,7 @@ module.exports.createGroup = async (informations, accesses, nicks) => {
         {value: nicks, type: "array", data_name: "nicks", order:3}, 
         {value: {access_tokens: accesses, nicks: nicks}, data_name: "options"}
     ]
-    let callBackSuccess = function (data){
-        const single = require("../structures/singles/channels/channeldm")
-        let newData = new single(data, informations.bot)
-        return newData
-    }
-    return handler(args, passedOptions, callBackSuccess)
-}
-
-module.exports.createGroup = async (informations, accesses, nicks) => {
-    let passedOptions = {
-        method: apiPath.create.method,
-        token: informations.botToken,
-        url: apiPath.create.url,
-        urlIDS: informations
-    }
-    let args = [
-        {value: accesses, type: "array", data_name: "accesses", order:2}, 
-        {value: nicks, type: "array", data_name: "nicks", order:3}, 
-        {value: {access_tokens: accesses, nicks: nicks}, data_name: "options"}
-    ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/channels/channeldm")
         let newData = new single(data, informations.bot)
         return newData

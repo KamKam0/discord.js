@@ -61,7 +61,7 @@ module.exports.fetch = async (informations, queryParams) => {
             ]
         }
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const manager = require("../structures/managers/bans")
         let newData = new manager(informations.bot, informations.guild_id)
         newData._addMultiple(data)
@@ -78,7 +78,7 @@ module.exports.fetchspe = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/ban")
         data.guild_id = informations.guild_id
         let newData = new single(data, informations.bot)

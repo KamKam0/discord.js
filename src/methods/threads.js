@@ -13,7 +13,7 @@ module.exports.create_withoutm = async (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/channels/channelguildpublicthread")
         let newData = new single(data, informations.bot)
         return newData
@@ -33,7 +33,7 @@ module.exports.create_withm = async (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/channels/channelguildpublicthread")
         let newData = new single(data, informations.bot)
         return newData
@@ -97,7 +97,7 @@ module.exports.create_tforum = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/channels/channelguildpublicthread")
         let newData = new single(data, informations.bot)
         return newData
@@ -129,7 +129,7 @@ module.exports.getthreadmember = async (informations, queryParams) => {
             ]
         }
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         let guild = informations.bot.guilds.get(informations.guild_id)
         let member;
         if(guild) member = guild.members.get(informations.user_id)
@@ -168,7 +168,7 @@ module.exports.getthreadmembers = async (informations, queryParams) => {
             ]
         }
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         let guild = informations.bot.guilds.get(informations.guild_id)
         data.map(e => {
             let member;
@@ -236,7 +236,7 @@ async function getThreads(informations, method, url, queryParams){
             ]
         }
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         let guild = informations.bot.guilds.get(informations.guild_id)
         if(guild){
             const threadManager = require("../structures/managers/channels")

@@ -58,7 +58,7 @@ module.exports.create = async (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/role")
         let newData = new single(data, informations.bot)
         return newData
@@ -93,7 +93,7 @@ module.exports.modify = async (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/role")
         let newData = new single(data, informations.bot)
         return newData

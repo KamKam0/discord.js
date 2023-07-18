@@ -111,4 +111,24 @@ const languagesAvailable = [
     {id: "ko", name: "Korean"}
 ]
 
-module.exports =  {permissionsBitfield, colors, languagesAvailable}
+const priviledgedIntents = [
+    {
+        intentName: 'GUILD_MEMBERS',
+        flagName: 'GatewayGuildMembersLimited',
+    },
+    {
+        intentName: 'MESSAGE_CONTENT',
+        flagName: 'GatewayMessageContentLimited',
+    },
+    {
+        intentName: 'GUILD_PRESENCES',
+        flagName: 'GatewayPresenceLimited',
+    },
+]
+
+module.exports =  {
+    permissionsBitfield, 
+    colors, 
+    languagesAvailable,
+    priviledgedIntents,
+}

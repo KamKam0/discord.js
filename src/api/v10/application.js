@@ -4,11 +4,17 @@ const baseApplicationMetadataAPI = apiBase+"/applications/:id/role-connections/m
 let routes = {
     get: {
         method: "GET",
-        url: baseApplicationMetadataAPI
+        url: apiBase+'/applications/@me'
     },
-    modify: {
-        method: "PUT",
-        url: baseApplicationMetadataAPI
+    metadata: {
+        get: {
+            method: "GET",
+            url: baseApplicationMetadataAPI
+        },
+        modify: {
+            method: "PUT",
+            url: baseApplicationMetadataAPI
+        }
     }
 }
 

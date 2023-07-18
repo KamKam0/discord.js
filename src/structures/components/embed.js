@@ -25,6 +25,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setDescription(description){
+        if (typeof description === 'number') description = String(description)
         if(!description || typeof description !== "string" || description.length > 4096) return this
         else this.description = description
         return this
@@ -35,6 +36,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setTitle(title){
+        if (typeof title === 'number') title = String(title)
         if(!title || typeof title !== "string" || title.length > 256) return this
         else this.title = title
         return this
@@ -209,6 +211,8 @@ class Embed extends origin{
     * @returns {Embed}
     */
     addField(name, value, inline){
+        if (typeof name === 'number') name = String(name)
+        if (typeof value === 'number') value = String(value)
         if(typeof name !== "string" || name.length > 256 || typeof value !== "string" || value.length > 1024) return this
         this.fields.push({name: name, value: value, inline: inline ?? false})
         return this

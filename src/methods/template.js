@@ -11,7 +11,7 @@ module.exports.create = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/template")
         let newData = new single(data, informations.bot)
         return newData
@@ -27,7 +27,7 @@ module.exports.delete = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/template")
         let newData = new single(data, informations.bot)
         return newData
@@ -43,7 +43,7 @@ module.exports.get = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/template")
         let newData = new single(data, informations.bot)
         return newData
@@ -59,7 +59,7 @@ module.exports.getall = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const multiple = require("../structures/managers/templates")
         let newData = new multiple(informations.bot)
         newData._addMultiple(data)
@@ -78,7 +78,7 @@ module.exports.createguild = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/guild")
         let newData = new single(data, informations.bot)
         return newData
@@ -94,7 +94,7 @@ module.exports.sync = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/template")
         let newData = new single(data, informations.bot)
         return newData
@@ -112,7 +112,7 @@ module.exports.modify = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/template")
         let newData = new single(data, informations.bot)
         return newData

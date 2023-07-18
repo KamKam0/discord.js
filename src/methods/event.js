@@ -13,7 +13,7 @@ module.exports.create = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/event")
         let newData = new single(data, informations.bot)
         return newData
@@ -33,7 +33,7 @@ module.exports.modify = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/event")
         let newData = new single(data, informations.bot)
         return newData
@@ -86,7 +86,7 @@ module.exports.getusers = (informations, queryParams) => {
             ]
         }
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const MemberClass = require("../structures/singles/member")
         const UsersClass = require("../structures/singles/user")
         let returnedData = data.filter(element => element.user).map(element => {

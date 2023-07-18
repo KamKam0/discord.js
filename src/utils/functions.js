@@ -1,6 +1,8 @@
 const constants = require("./constants")
-const intentsConstance = require("../types/intents")
-const userBadges = require("../types/userbadges")
+const intentsConstance = require("../types/intents").types
+const userBadges = require("../types/user").badges
+const applicationBadges = require("../types/application").flags
+const applicationMetadataTypes = require("../types/applicationmetadata").types
 const channelClass = require("../structures/singles/channels/channeldm")
 const fileManager = require("../handlers/filemanager")
 
@@ -12,13 +14,13 @@ function getBietfielfFromPermissions(permissions){
 
 function getIntentsFromNames(intents){
     if(!Array.isArray(intents) && typeof intents !== "string" && intents !== "ALL") return "Incorrect Intents"
-    if(intents === "ALL") return Object.values(intentsConstance.types).reduce((a, b) => a+b, 0)
+    if(intents === "ALL") return Object.values(intentsConstance).reduce((a, b) => a+b, 0)
     return intents.reduce((a, b) => intents[b] ? a + intents[b] : a+0, 0)
 }
 
-function getBadges(bitfield){
+function getArrayFromBitfield(types, bitfield){
     if(!bitfield) return "Incorrect number"
-    const ACFlags = Object.entries(userBadges.types).sort((a, b) => Number(b[1]) - Number(a[1]))
+    const ACFlags = Object.entries(types).sort((a, b) => Number(b[1]) - Number(a[1]))
     const final_p = []
     let processConvert = Number(bitfield)
     ACFlags.forEach(flag => {
@@ -28,6 +30,22 @@ function getBadges(bitfield){
         }
     })
     return final_p
+}
+
+function getBadges(bitfield){
+    return getArrayFromBitfield(userBadges, bitfield)
+}
+
+function getIntents(bitfield){
+    return getArrayFromBitfield(intentsConstance, bitfield)
+}
+
+function getApplicationFlags(bitfield){
+    return getArrayFromBitfield(applicationBadges, bitfield)
+}
+
+function getApplicationMetadataType(bitfield){
+    return getArrayFromBitfield(applicationMetadataTypes, bitfield)
 }
 
 function checkColor(color){
@@ -318,7 +336,10 @@ module.exports.gets = {
     getBadges,
     getBietfielfFromPermissions,
     getIntentsFromNames,
-    getPermissionsFromBitfields
+    getPermissionsFromBitfields,
+    getApplicationFlags,
+    getApplicationMetadataType,
+    getIntents,
 }
 
 module.exports.checks = {

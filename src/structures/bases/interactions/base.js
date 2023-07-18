@@ -40,6 +40,16 @@ class base extends Base{
         return interactionMethod.reply(informations, options)
     }
 
+    async deferredLoadingResponse(){
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            interaction_id: this.id,
+            interaction_token: this.token
+        }
+        return interactionMethod.defer(informations)
+    }
+
     async getOriginalResponse(){
         let informations = {
             botToken: this._token,

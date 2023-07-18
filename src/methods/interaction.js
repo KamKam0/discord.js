@@ -2,14 +2,14 @@ const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/interaction")
 const commandApiPath = require("../api/v10/applicationcommands")
 const { checkApplicationCommand } = require("../utils/functions").checks
-const {createError} = require("../utils/functions").general
+const { createError } = require("../utils/functions").general
 const utils = require("../utils/functions")
 const getMe = require("./me").getuser
 const errors = require("../utils/errors.json")
 const ApplicationCommand = require("../structures/applicationscommands/command")
 const ApplicationCommandManager = require("../structures/managers/applicationcommands")
 
-module.exports.reply = async (informations, response) => {
+module.exports.reply = async (informations, response, isDeferredResponse=false) => {
     return new Promise(async (resolve, reject) => {
         if(!response) return reject(utils.checks.checkId("An error happened", {code: errors["44"].code, message: errors["44"].message, file: "Interaction"}))
 
@@ -66,7 +66,7 @@ module.exports.reply = async (informations, response) => {
                 }
             
                 passedOptions.boundary = body_files.getBoundary()
-                if(method !== "PATCH") body_files.append("payload_json", JSON.stringify({type: 4, data: body}));
+                if(method !== "PATCH") body_files.append("payload_json", JSON.stringify({type: isDeferredResponse ? 6 : 4, data: body}));
                 else body_files.append("payload_json", JSON.stringify(body));
                 let args = [
                     {value: body_files, data_name: "options", stringified: false, order: 3}
@@ -79,7 +79,7 @@ module.exports.reply = async (informations, response) => {
                 let args = []
 
                 if(method === "PATCH") args.push({value: body, data_name: "options"})
-                else if (method) args.push({value: {type: 4, data: body}, data_name: "options"})
+                else if (method) args.push({value: {type: isDeferredResponse ? 6 : 4, data: body}, data_name: "options"})
                 basedatas = handler(args, passedOptions, callBackSuccess)
             }
         }
@@ -89,6 +89,26 @@ module.exports.reply = async (informations, response) => {
         .catch(err => reject(err))
     })
 }
+
+module.exports.defer = async (informations) => {
+    let passedOptions = {
+        method: apiPath.create.response.method,
+        token: informations.botToken,
+        url: apiPath.create.response.url,
+        urlIDS: informations
+    }
+
+    let args = [{
+        value: {
+            type: 5,
+            data_type: 'number'
+        },
+        data_name: "options"
+    }]
+
+    return handler(args, passedOptions, null)
+}
+
 module.exports.modifyreply = async (informations, response) => {
     if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
 
@@ -138,7 +158,7 @@ module.exports.getcommands = async (informations, options) => {
             ]
         }
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const commands = new ApplicationCommandManager(informations.bot)
         commands._addMultiple(data)
         return commands
@@ -155,7 +175,7 @@ module.exports.getcommand = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         return new ApplicationCommand(data, informations.bot)
     }
     return handler(args, passedOptions, callBackSuccess)
@@ -172,6 +192,7 @@ module.exports.deletecommand = async (informations) => {
     let args = [ ]
     return handler(args, passedOptions, null)
 }
+
 module.exports.getoriginalresponse = async (informations) => {
     if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
     let passedOptions = {
@@ -183,6 +204,7 @@ module.exports.getoriginalresponse = async (informations) => {
     let args = [ ]
     return handler(args, passedOptions, null)
 }
+
 module.exports.createcommand = async (informations, options) => {
     if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
     let check = checkApplicationCommand(options)
@@ -199,6 +221,7 @@ module.exports.createcommand = async (informations, options) => {
     ]
     return handler(args, passedOptions, null)
 }
+
 module.exports.modifycommand = async (informations, options) => {
     if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
     let check = checkApplicationCommand(options)

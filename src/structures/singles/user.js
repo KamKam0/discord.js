@@ -3,24 +3,30 @@ const userMethod = require("../../methods/user")
 const generalMethod = require("../../methods/general")
 const messageMethod = require("../../methods/message")
 const utils = require("../../utils/functions")
+const userTypes = require('../../types/user')
 
 class User extends Base{
     constructor(user, bot){
         super(bot)
+        this._modifyConstants.push({name: "premium_type", data: userTypes.revert.nitro()})
+        
         this.id = user.id || null
         this.username = user.username || null
         this.discriminator = user.discriminator || null
+        this.global_name = user.global_name || null
         this.avatar = user.avatar || null
         this.bot = this.username ? (user.bot ?? false) : true
         this.system = user.system || null
         this.mfa_enabled = user.mfa_enabled ?? false
         this.banner = user.banner || null
         this.accent_color = user.accent_color || null
+        this.locale = user.locale || null
         this.verified = user.verified ?? false
         this.email = user.email || null
-        this.flags = user.flags || 0
-        this.premium_type = user.premium_type || null
-        this.public_flags = user.public_flags || null
+        this.flags = utils.gets.getBadges(user.flags || 0)
+        this.premium_type = this._typechange(this._modifyConstants.find(e => e.name === "premium_type").data, user.premium_type)
+        this.public_flags = utils.gets.getBadges(user.public_flags || 0)
+        this.avatar_decoration = user.avatar_decoration || null
         this.dm = null
         this.guilds = user.guild_id ? [user.guild_id] : []
     }
@@ -105,7 +111,10 @@ class User extends Base{
     }
 
     get tag(){
-       return `${this.username}#${this.discriminator}`
+        if (this.discriminator) {
+            return `${this.username}#${this.discriminator}`
+        }
+        return `${this.username}@${this.global_name}`
     }
 
     setDM(id){

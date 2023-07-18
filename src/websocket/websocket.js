@@ -1,4 +1,7 @@
 const Initiate = require("../handlers/initiate")
+const utils = require('../utils/functions')
+const constants = require('../utils/constants')
+const applicationMethods = require('../methods/application')
 const createError = require("../utils/functions").general.createError
 const ws = require("ws")
 const { getGateway } = require("../methods/me")
@@ -8,7 +11,7 @@ const ms = require("@kamkam1_0/ms")
 class WebsocketHandler{
     #internetInterval
     #internetConnectionErrorWarn
-    constructor(bot){
+    constructor(bot, events){
         this._bot = bot
         this.#internetInterval = 60 / 12
         this.internetConnectionError = null,
@@ -37,6 +40,18 @@ class WebsocketHandler{
             }
         }
         this.initiate = new Initiate(bot)
+        this.events = this.getEventsRequired(events)
+    }
+
+    getEventsRequired(events){
+        let arrayToReturn = []
+        events.forEach(eventName => {
+            arrayToReturn.push({
+                name: eventName,
+                execute: require(`./events/${eventName}`)
+            })
+        })
+        return arrayToReturn
     }
 
     async #connectionURL(){
@@ -55,6 +70,25 @@ class WebsocketHandler{
             else trueurl = this.discordSide.connectionInfos.connectionUrl
 
             return resolve(trueurl)
+        })
+    }
+
+    async #getApplication(){
+        return new Promise(async (resolve, reject) => {
+            let informations = {
+                botToken: this._bot.token,
+                bot: this._bot,
+            }
+
+            applicationMethods.getMe(informations)
+            .then(applicationData => {
+                this._bot.application = applicationData
+                return resolve(true)
+            })
+            .catch(err => {
+                if(err.type == "system" && err.code === "internet") return reject(err)
+                return resolve(null)
+            })
         })
     }
 
@@ -84,45 +118,61 @@ class WebsocketHandler{
 
             this.#connectionURL()
             .then(connectionURL => {
-                this.#handleCreator()
+                this.#getApplication()
                 .then(() => {
-                    this.initiate.init()
+                    const processedIntents = utils.gets.getIntents(this._bot.intents)
+                    let priviledgeBotIntents = processedIntents.filter(intent => constants.priviledgedIntents.find(priviledge => priviledge.intentName === intent))
+                    if (priviledgeBotIntents.length) {
+                        let priviledgeBotIntentsDeclared = this._bot.application.flags.filter(flag => constants.priviledgedIntents.find(priviledge => priviledge.flagName === flag))
+                        if (priviledgeBotIntents.length !== priviledgeBotIntentsDeclared.length) {
+                            console.log('\x1b[31mTry to check if the intents you gave correspond to the ones in the developer portal.\x1b[37m')
+                            return
+                        }
+                    }
+                    this.#handleCreator()
                     .then(() => {
-                        if(this.internetConnectionError){
-                            if(this._bot.logs.system){
-                                let timeOut = Date.now() - this.internetConnectionError
-                                console.info(`\n\x1b[32mDiscord.js: Internet connection reinstated [${new Date(Date.now()).toUTCString()}]\x1b[37m`)
-                                console.info(`\x1b[32mDiscord.js: The outage lasted ${ms(timeOut)}\x1b[37m`)
+                        this.initiate.init()
+                        .then(() => {
+                            if(this.internetConnectionError){
+                                if(this._bot.logs.system){
+                                    let timeOut = Date.now() - this.internetConnectionError
+                                    console.info(`\n\x1b[32mDiscord.js: Internet connection reinstated [${new Date(Date.now()).toUTCString()}]\x1b[37m`)
+                                    console.info(`\x1b[32mDiscord.js: The outage lasted ${ms(timeOut)}\x1b[37m`)
+                                }
+                                this.internetConnectionError = null
+                                this.#internetConnectionErrorWarn = false
                             }
-                            this.internetConnectionError = null
-                            this.#internetConnectionErrorWarn = false
-                        }
-                        if(this.discordSide.connectionInfos.connectionNumber === 0) return reject(createError("Could not log in", {state: false, message: "You reached the maximum of daily connection"})) 
-                        const WebSocket = new ws(connectionURL)
-                        if(!WebSocket) return reject(createError("Incorrect Infos"))
-                        this.discordSide.ws = WebSocket
-                        let bodyLogin;
-
-                        if(this._bot.state !== "reconnect"){
-                            bodyLogin = this._bot._getConnection((this._bot.presence || presence))
-                            this._bot.presence = bodyLogin.d.presence
-                        }
-                        this.discordSide.connectionInfos.connectionNumber --
-                        this.#handleWebsocketCalls(bodyLogin)
-
-                        return resolve({result: this._bot, message: "Bot Launched", state: true})
+                            if(this.discordSide.connectionInfos.connectionNumber === 0) return reject(createError("Could not log in", {state: false, message: "You reached the maximum of daily connection"})) 
+                            const WebSocket = new ws(connectionURL)
+                            if(!WebSocket) return reject(createError("Incorrect Infos"))
+                            this.discordSide.ws = WebSocket
+                            let bodyLogin;
+    
+                            if(this._bot.state !== "reconnect"){
+                                bodyLogin = this._bot._getConnection((this._bot.presence || presence))
+                                this._bot.presence = bodyLogin.d.presence
+                            }
+                            this.discordSide.connectionInfos.connectionNumber --
+                            this.#handleWebsocketCalls(bodyLogin)
+    
+                            return resolve({result: this._bot, message: "Bot Launched", state: true})
+                        })
+                        .catch(err => {
+                            let error = this.#handleError(err)
+                            if(error.content && this._bot.logs.system) return console.log(`\x1b[31mDiscord.js: ${error.content}\x1b[37m`)
+                        })
                     })
                     .catch(err => {
                         let error = this.#handleError(err)
-                        if(error.content && this._bot.logs.system) return console.log(`\x1b[31mDiscord.js: ${error.content}\x1b[37m`)
+                        if(error.content) {
+                            if (this._bot.logs.system) console.log('\x1b[31mDiscord.js: Cannot create a DM channel with the given creator ID.\nPlease provide a way to do so (a server in common\x1b[37m')
+                            return reject(error)
+                        }
                     })
                 })
                 .catch(err => {
                     let error = this.#handleError(err)
-                    if(error.content) {
-                        if (this._bot.logs.system) console.log('\x1b[31mDiscord.js: Cannot create a DM channel with the given creator ID.\nPlease provide a way to do so (a server in common\x1b[37m')
-                        return reject(error)
-                    }
+                    if(error.content) return reject(error)
                 })
             })
             .catch(err => {
@@ -168,7 +218,7 @@ class WebsocketHandler{
                 if(!this.discordSide.lastEvent){
                     this.discordSide.ws.close()
                     this.resetDiscordSide()
-                    return reject(createError("Could not log in", {state: false, message: "Connection process failed.\n Try to check if there is any infinite loop.\n Try to check if the intents you gave correspond to the ones in the developer portal."}))
+                    return createError("Could not log in", {state: false, message: "Connection process failed.\n Try to check if there is any infinite loop."})
                 }
             }, 20 * 1000)
         })
@@ -195,9 +245,10 @@ class WebsocketHandler{
                 break;
                 case(0):
                     if(message.d.guild_id && !this._bot.guilds.get(message.d.guild_id)) return
-                    if(this._bot.availableEvents.includes(message.t)){
+                    let event = this.events.find(event => event.name === message.t)
+                    if(event){
                         if(this._bot.logs.events) console.log(`Discord.js: New event received: ${message.t}`)
-                        return require(`./events/${message.t}`)(this._bot, message.d)
+                        return event.execute(this._bot, message.d)
                     }
                     if(this._bot.logs.system) console.info(`\x1b[34mDiscord.js: The Discord event ${message.t} is unavailable !\x1b[37m`)
                 break;
@@ -229,7 +280,8 @@ class WebsocketHandler{
     }
 
     #stopWS(event){
-        require(`./events/${event}`)(this._bot)
+        let eventToExecute = this.events.find(localEvent => localEvent.name === event)
+        eventToExecute.execute(this._bot)
         this.discordSide.ws.close()
         this.discordSide.intervalState = null
         clearInterval(this.discordSide.interval)

@@ -15,7 +15,7 @@ module.exports.create = async (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/webhook")
         let newData = new single(data, informations.bot)
         return newData
@@ -31,7 +31,7 @@ module.exports.getchannel = async (informations) => {
         urlIDS: informations
     }
     let args = []
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const manager = require("../structures/managers/webhooks")
         let newManager = new manager(informations.bot)
         newManager._addMultiple(data)
@@ -48,7 +48,7 @@ module.exports.get = async (informations) => {
         urlIDS: informations
     }
     let args = []
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/webhook")
         let newClass = new single(data, informations.bot)
         return newClass
@@ -68,7 +68,7 @@ module.exports.modify = async (informations, options) => {
     let args = [
         {value: options, data_name: "options", reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/webhook")
         let newClass = new single(data, informations.bot)
         return newClass

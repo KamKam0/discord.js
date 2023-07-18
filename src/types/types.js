@@ -17,6 +17,8 @@ module.exports = {
     option: require("./option"),
     permissions: require("./permissions"),
     textInput: require("./textinput"),
-    userbadges: require("./userbadges"),
-    webhook: require("./webhook")
+    user: require("./user"),
+    webhook: require("./webhook"),
+    application: require("./application"),
+    applicationMetadata: require("./applicationmetadata")
 }

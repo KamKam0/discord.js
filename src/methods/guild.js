@@ -19,7 +19,7 @@ module.exports.deleteinvite = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/invite")
         let newData = new single(data, informations.bot)
         return newData
@@ -39,7 +39,7 @@ module.exports.modify = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/guild")
         let newData = new single(data, informations.bot)
         return newData
@@ -96,7 +96,7 @@ module.exports.modifymember = (informations, options) => {
     let args = [
         {value: options, data_name: "options", order: 3, reason: true, required: true}
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/member")
         let newData = new single(data, informations.bot)
         return newData
@@ -171,7 +171,7 @@ module.exports.getinvites = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/managers/invites")
         let newData = new single(informations.bot)
         newData._addMultiple(data)
@@ -188,7 +188,7 @@ module.exports.getintegrations = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/managers/integrations")
         let newData = new single(informations.bot)
         newData._addMultiple(data)
@@ -220,7 +220,7 @@ module.exports.getwidgetsttings = (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/eventresult/widgetsettings")
         let newData = new single(data, informations.bot)
         return newData
@@ -368,7 +368,7 @@ module.exports.fetchauditlogs = async (informations, queryParams) => {
             ]
         }
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         data.audit_log_entries = data.audit_log_entries.map(each => {return {...each, action_type: Object.entries(types).find(e => e[1] === each.action_type)}})
         if(data.threads) {
             let threads = new Threads(informations.bot)

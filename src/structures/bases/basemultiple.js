@@ -58,6 +58,12 @@ class baseMultiple extends base{
             case("webhook"):
                 this.individualClass = require("../singles/webhook")
             break;
+            case("application"):
+                this.individualClass = require("../singles/application")
+            break;
+            case("applicationmetadata"):
+                this.individualClass = require("../singles/applicationmetadata")
+            break;
             case("threadmember"):
                 this.individualClass = require("../singles/threadmember")
             break;
@@ -66,6 +72,9 @@ class baseMultiple extends base{
             break;
             case("apermissions"):
                 this.individualClass = require("../singles/permissions/application")
+            break;
+            case("applicationmetadata"):
+                this.individualClass = require("../singles/applicationmetadata")
             break;
         }
     }

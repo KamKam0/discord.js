@@ -9,9 +9,6 @@ module.exports = async (bot, datas) => {
     
     const newuser = bot.users.get(datas.id)
 
-    if(olduser.id === bot.user.id) bot.user._modify(datas)
-
-
     let modifications = []
     let olddatas = Object.entries(olduser)
     let newdatas = Object.entries(newuser)

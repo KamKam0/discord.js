@@ -1,4 +1,4 @@
-let types = {
+let badges = {
     Staff: 1,
     Partner: 2,
     HypeSquad: 4,
@@ -17,8 +17,23 @@ let types = {
     SupportCommandsBot: 8953856
 }
 
-module.exports.types = types
+let nitro =  {
+    None: 0,
+    Classic: 1,
+    Nitro: 2,
+    Basic: 3 
+}
 
-module.exports.revert = () => {
+module.exports =  {
+    badges,
+    nitro
+}
+
+module.exports.revert = {
+    badges: () => revert(badges),
+    nitro: () => revert(nitro),
+}
+
+function revert(types){
     return require("../utils/functions").general.revertTypes(types)
 }

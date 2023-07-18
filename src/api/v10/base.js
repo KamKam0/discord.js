@@ -1,7 +1,7 @@
 module.exports = "https://discord.com/api/v10"
 
 module.exports.routes = {
-    applicationMetadata: require("./applicationmetadata"),
+    application: require("./application"),
     autoModeration: require("./automoderation"),
     ban: require("./ban"),
     channel: require("./channel"),

@@ -36,6 +36,15 @@ let nsfwLevel = {
     AgeRestricted: 3 
 }
 
+let systemChannel = {
+    SuppressJoinNotifications:	1 << 0,
+    SuppressPremiumSubscriptions:	1 << 1,
+    SuppressGuildReminderNotifications:	1 << 2,
+    SuppressJoinNotificationReplies:	1 << 3,
+    SuppressRolesubscriptionPurchaseNotifications:	1 << 4,
+    SuppressRolesubscriptionPurchaseNotificationReplies:	1 << 5
+}
+
 
 module.exports = {
     verificationLevel,
@@ -43,7 +52,8 @@ module.exports = {
     explicitContentFilter,
     mfaLevel,
     premiumTier,
-    nsfwLevel
+    nsfwLevel,
+    systemChannel
 }
 
 module.exports.revert = {
@@ -52,7 +62,8 @@ module.exports.revert = {
     explicitContentFilter: () => revert(explicitContentFilter),
     mfaLevel: () => revert(mfaLevel),
     premiumTier: () => revert(premiumTier),
-    nsfwLevel: () => revert(nsfwLevel)
+    nsfwLevel: () => revert(nsfwLevel),
+    systemChannel: () => revert(systemChannel)
 }
 
 function revert(types){

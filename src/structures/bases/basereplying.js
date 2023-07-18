@@ -40,15 +40,12 @@ class baseReplying extends BaseGuild {
         }
         if(type === "reply" && this.receivingType === "message"){
             return this.reply({embeds: [embed], replyto: this.id})
-            // return require("../../methods/message").send(this.bot_token, this.channel_id, {embeds: [embed], replyto: this.id}, undefined, undefined, this._bot)
         } 
         else if(type === "reply" && this.receivingType === "interaction"){
             return this.reply({embeds: [embed], replyto: this.id})
-            // return require("../../methods/interaction").reply(this._token, this, {embeds: [embed], replyto: this.id}, undefined, undefined, this._bot)
         }
         else if(type === "send"){
-            return this.send({embeds: [embed]})
-            // return require("../../methods/message").send(this.bot_token, this.channel_id, {embeds: [embed]}, undefined, undefined, this._bot)
+            return this.channel.send({embeds: [embed]})
         }
     }
 

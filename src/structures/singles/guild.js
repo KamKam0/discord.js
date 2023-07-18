@@ -34,6 +34,7 @@ class Guild extends Base{
         this._modifyConstants.push({name: "mfa_level", data: guildTypes.revert.mfaLevel()})
         this._modifyConstants.push({name: "premium_tier", data: guildTypes.revert.premiumTier()})
         this._modifyConstants.push({name: "nsfw_level", data: guildTypes.revert.nsfwLevel()})
+        this._modifyConstants.push({name: "system_channel", data: guildTypes.revert.systemChannel()})
 
         this.name = guild.name
         this.id = guild.id
@@ -53,7 +54,7 @@ class Guild extends Base{
         this.mfa_level = this._typechange(this._modifyConstants.find(e => e.name === "mfa_level").data, guild.mfa_level)
         this.application_id = guild.application_id
         this.system_channel_id = guild.system_channel_id || null
-        this.system_channel_flags = guild.system_channel_flags || 0
+        this.system_channel_flags = this._typechange(this._modifyConstants.find(e => e.name === "system_channel").data, (guild.system_channel_flags || 0))
         this.rules_channel_id = guild.rules_channel_id || null
         this.joined_at = guild.joined_at
         this.unavailable = guild.unavailable ?? false
@@ -98,7 +99,6 @@ class Guild extends Base{
         this.premium_progress_bar_enabled = guild.premium_progress_bar_enabled ?? false
         this.messages = new managers.Messages(bot, this.id)
         this.me = this.members.get(bot.user.id)
-        this.db_language = guild.db_language
         this.voice = new managers.voiceManager(this._bot, this.id)
     }
 

@@ -79,7 +79,7 @@ module.exports.fetch_message = async (informations) => {
         url: apiPath.get.url
     }
 
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/message")
         let newData = new single(data, informations.bot)
         return newData
@@ -106,7 +106,7 @@ module.exports.fetch_messages = async (informations, queryParams) => {
         url: apiPath.get.list.url
     }
 
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const manager = require("../structures/managers/messages")
         const messages = new manager(informations.bot)
         messages._addMultiple(data)
@@ -136,7 +136,7 @@ module.exports.crosspost = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const single = require("../structures/singles/message")
         let newData = new single(data, informations.bot)
         return newData
@@ -281,7 +281,7 @@ module.exports.fetch_reaction = async (informations, queryParams) => {
             ]
         }
     ]
-    let callBackSuccess = function (data){
+    let callBackSuccess = (data) => {
         const multiple = require("../structures/managers/users")
         let newData = new multiple(informations.bot)
         newData._addMultiple(data)
