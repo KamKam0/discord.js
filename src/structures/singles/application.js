@@ -27,7 +27,28 @@ class Application extends Base{
         this.install_params = application.install_params || null
         this.custom_install_url = application.custom_install_url || null
         this.role_connections_verification_url = application.role_connections_verification_url || null
+        this.type = application.type || null,
+        this.bot = application.bot || null,
+        this.summary = application.summary || null,
+        this.hook = application.hook || false,
+        this.redirect_uris = application.redirect_uris || [],
+        this.interactions_endpoint_url = application.interactions_endpoint_url || null,
+        this.interactions_event_types = application.interactions_event_types || [],
+        this.interactions_version = application.interactions_version,
+        this.explicit_content_filter = application.explicit_content_filter,
+        this.rpc_application_state = application.rpc_application_state,
+        this.store_application_state = application.store_application_state,
+        this.creator_monetization_state = application.creator_monetization_state,
+        this.verification_state = application.verification_state,
+        this.integration_public = application.integration_public || false,
+        this.integration_require_code_grant = application.integration_require_code_grant || false,
+        this.discoverability_state = application.discoverability_state,
+        this.discovery_eligibility_flags = utils.gets.getApplicationFlags(application.discovery_eligibility_flags || 0)
         this.roleConnectionsMetadata = new ApplicationMetadataManager(this._bot)
+        let objectApp = Object.entries(application)
+        let objectDjs = Object.entries(this)
+        objectApp = objectApp.filter(entryApp => !objectDjs.find(entryDjs => entryApp[0]===entryDjs[0]))
+        console.log(objectApp.map(entry => `this.${entry[0]} = application.${entry[0]} || ${typeof entry[1]} (${entry[1]})`))
     }
 
     async getMe(){
