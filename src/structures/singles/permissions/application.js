@@ -3,7 +3,7 @@ const applicationpermissionTypes = require("../../../types/applicationpermission
 
 class Permissions extends base{
     constructor(permissions, bot){
-        super(bot)
+        super(bot, permissions)
 
         this._modifyConstants.push({name: "type", data: applicationpermissionTypes.revert()})
 

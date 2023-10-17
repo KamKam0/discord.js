@@ -3,7 +3,6 @@ const apiPath = require("../api/v10/user")
 const gateawayApiPath = require("../api/v10/gateway")
 const errors = require("../utils/errors.json")
 const presenceFunction = require("../utils/functions").general.presence
-const user = require("../structures/singles/user")
 
 module.exports.getuser = async (informations) => {
     let passedOptions = {
@@ -14,7 +13,8 @@ module.exports.getuser = async (informations) => {
     }
     let args = [ ]
     let callBackSuccess = (data) => {
-        let newData = new user(data, informations.bot)
+        const single = require("../structures/singles/user")
+        let newData = new single(data, informations.bot)
         return newData
     }
     return handler(args, passedOptions, callBackSuccess)

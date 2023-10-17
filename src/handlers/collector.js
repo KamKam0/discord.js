@@ -29,7 +29,7 @@ class Collector extends event{
         }, this.options.time * 1000)
     }
 
-    _end(argu){
+    _end(argu, isAdmin=false){
         if(this.type === "message") this.bot.removeListener("MESSAGE_CREATE", this.HandleFunction)
         if(this.type === "interaction") this.bot.removeListener("INTERACTION_CREATE", this.HandleFunction)
         this.bot.removeListener("CHANNEL_DELETE", this.UnHandleFunction)
@@ -39,6 +39,9 @@ class Collector extends event{
             if((this.options.number || this.options.time) && this.collection.length === 0) this.emit("end")
             else if(this.type2 === 0) this.emit("done", this.collection)
             else if(this.type2 === 1) this.emit("end")
+        }
+        if (isAdmin) {
+            this.emit("end")
         }
         if(this.timeout) clearTimeout(this.timeout)
     }
@@ -124,7 +127,7 @@ module.exports.collect =  (bot, type, datas, options={}) => {
     return Collecotrinstance
 }
 
-function check(datas, options, type){
+function check (datas, options, type){
     if(typeof options !== "object") return {error: "options are not object"}
     if(options.time && typeof options.time !== "number") return {error: "time in options is not number"}
     if(options.number && typeof options.number !== "number") return {error: "number in options is not number"}
@@ -135,5 +138,8 @@ function check(datas, options, type){
         options.message_id = datas.message_id || null
         options.interaction_id = datas.interaction_id || datas.id || null
     }
+    options.type = type
     return options
 }
+
+module.exports.check = check

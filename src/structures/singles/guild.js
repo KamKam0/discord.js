@@ -26,7 +26,7 @@ const guildTypes = require("../../types/guild")
 
 class Guild extends Base{
     constructor(guild, bot){
-        super(bot)
+        super(bot, guild)
 
         this._modifyConstants.push({name: "verification_level", data: guildTypes.revert.verificationLevel()})
         this._modifyConstants.push({name: "default_message_notifications", data: guildTypes.revert.defaultMessageNotifications()})
@@ -65,6 +65,8 @@ class Guild extends Base{
         this.lazy = guild.lazy ?? false
         this.large = guild.large ?? false
         this.hub_type = guild.hub_type || null
+        this.max_stage_video_channel_users = guild.max_stage_video_channel_users || 0
+        this.max_video_channel_users = guild.max_video_channel_users || 0
         this.premium_tier = this._typechange(this._modifyConstants.find(e => e.name === "premium_tier").data, guild.premium_tier)
         this.premium_subscription_count = guild.premium_subscription_count || 0
         this.preferred_locale = guild.preferred_locale
@@ -330,6 +332,47 @@ class Guild extends Base{
             id: this.id
         }
         return methods.guildMethod.modifywidget(informations, options)
+    }
+
+    /**
+     * 
+     * @returns 
+     */
+    async getOnBoarding(){
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            id: this.id
+        }
+        return methods.guildMethod.getonboarding(informations)
+    }
+
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
+    async modifyOnBoarding(options){
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            id: this.id
+        }
+        return methods.guildMethod.modifyonboarding(informations, options)
+    }
+
+    /**
+     * 
+     * @param {object} options 
+     * @returns 
+     */
+    async modifyVanityUrl(options){
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            id: this.id
+        }
+        return methods.guildMethod.modifyvanityurl(informations, options)
     }
 
     /**

@@ -31,9 +31,9 @@ module.exports = async (bot, datas) => {
       })
     
       if(!newsticker || !oldsticker) return
-      oldsticker.guild_id = guild.id
+      
       newsticker.guild_id = guild.id
-      modifyEvent(bot, oldsticker, newsticker)
+      modifyEvent(bot, newsticker)
     break;
   }
 }

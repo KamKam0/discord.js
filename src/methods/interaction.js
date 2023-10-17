@@ -110,7 +110,7 @@ module.exports.defer = async (informations) => {
 }
 
 module.exports.modifyreply = async (informations, response) => {
-    if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
 
     informations.method = apiPath.modify.reponse.method
     informations.path = apiPath.modify.reponse.url
@@ -119,7 +119,7 @@ module.exports.modifyreply = async (informations, response) => {
 }
 
 module.exports.deletereply = async (informations) => {
-    if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
     
     let args = []
     let passedOptions = {
@@ -140,7 +140,7 @@ module.exports.deletereply = async (informations) => {
  * @returns 
  */
 module.exports.getcommands = async (informations, options) => {
-    if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
     let passedOptions = {
         method: commandApiPath.get.global.method,
         token: informations.botToken,
@@ -167,7 +167,7 @@ module.exports.getcommands = async (informations, options) => {
 }
 
 module.exports.getcommand = async (informations) => {
-    if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
     let passedOptions = {
         method: commandApiPath.get.method,
         token: informations.botToken,
@@ -182,7 +182,7 @@ module.exports.getcommand = async (informations) => {
 }
 
 module.exports.deletecommand = async (informations) => {
-    if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
     let passedOptions = {
         method: commandApiPath.delete.method,
         token: informations.botToken,
@@ -194,7 +194,7 @@ module.exports.deletecommand = async (informations) => {
 }
 
 module.exports.getoriginalresponse = async (informations) => {
-    if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
     let passedOptions = {
         method: apiPath.get.reponse.method,
         token: informations.botToken,
@@ -206,7 +206,7 @@ module.exports.getoriginalresponse = async (informations) => {
 }
 
 module.exports.createcommand = async (informations, options) => {
-    if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
     let check = checkApplicationCommand(options)
     if(!check.status) return Promise.reject(check)
     
@@ -223,7 +223,7 @@ module.exports.createcommand = async (informations, options) => {
 }
 
 module.exports.modifycommand = async (informations, options) => {
-    if(!informations.application_id) informations.application_id = (await getBotId(informations.bot))
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
     let check = checkApplicationCommand(options)
     if(!check.status) return Promise.reject(check)
     
@@ -237,13 +237,4 @@ module.exports.modifycommand = async (informations, options) => {
         {value: options, data_name: "options", order: 3}
     ]
     return handler(args, passedOptions, null)
-}
-
-async function getBotId(bot){
-    let informations = {
-        bot,
-        botToken: bot.token
-    }
-    let request = await getMe(informations).catch(err => {})
-    return request?.id
 }

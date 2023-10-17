@@ -7,8 +7,11 @@ const userTypes = require('../../types/user')
 
 class User extends Base{
     constructor(user, bot){
-        super(bot)
+        super(bot, user)
+        this._modifyConstants.push({name: "flags", function: utils.gets.getApplicationMetadataType})
+        this._modifyConstants.push({name: "public_flags", function: utils.gets.getApplicationMetadataType})
         this._modifyConstants.push({name: "premium_type", data: userTypes.revert.nitro()})
+        
         
         this.id = user.id || null
         this.username = user.username || null
@@ -23,9 +26,9 @@ class User extends Base{
         this.locale = user.locale || null
         this.verified = user.verified ?? false
         this.email = user.email || null
-        this.flags = utils.gets.getBadges(user.flags || 0)
+        this.flags = this._modifyConstants.find(e => e.name === "flags").function(user.flags || 0)
         this.premium_type = this._typechange(this._modifyConstants.find(e => e.name === "premium_type").data, user.premium_type)
-        this.public_flags = utils.gets.getBadges(user.public_flags || 0)
+        this.public_flags = this._modifyConstants.find(e => e.name === "public_flags").function(user.public_flags || 0)
         this.avatar_decoration = user.avatar_decoration || null
         this.dm = null
         this.guilds = user.guild_id ? [user.guild_id] : []
@@ -111,7 +114,7 @@ class User extends Base{
     }
 
     get tag(){
-        if (this.discriminator) {
+        if (this.discriminator !== '0') {
             return `${this.username}#${this.discriminator}`
         }
         return `${this.username}@${this.global_name}`

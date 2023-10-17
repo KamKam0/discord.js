@@ -6,6 +6,9 @@ const utils = require("../../utils/functions")
 class Application extends Base{
     constructor(application, bot){
         super(application, bot)
+        this._modifyConstants.push({name: "flags", function: utils.gets.getApplicationFlags})
+        this._modifyConstants.push({name: "discovery_eligibility_flags", function: utils.gets.getApplicationFlags})
+
         this.id	= application.id
         this.name = application.name
         this.icon = application.icon || null
@@ -21,7 +24,7 @@ class Application extends Base{
         this.primary_sku_id = application.primary_sku_id || null
         this.slug = application.slug || null
         this.cover_image = application.cover_image || null
-        this.flags = utils.gets.getApplicationFlags(application.flags || 0)
+        this.flags = this._modifyConstants.find(e => e.name === "flags").function(application.flags || 0)
         this.approximate_guild_count = application.approximate_guild_count || 0
         this.tags = application.tags || []
         this.install_params = application.install_params || null
@@ -43,12 +46,8 @@ class Application extends Base{
         this.integration_public = application.integration_public || false,
         this.integration_require_code_grant = application.integration_require_code_grant || false,
         this.discoverability_state = application.discoverability_state,
-        this.discovery_eligibility_flags = utils.gets.getApplicationFlags(application.discovery_eligibility_flags || 0)
+        this.discovery_eligibility_flags = this._modifyConstants.find(e => e.name === "discovery_eligibility_flags").function(application.discovery_eligibility_flags || 0)
         this.roleConnectionsMetadata = new ApplicationMetadataManager(this._bot)
-        let objectApp = Object.entries(application)
-        let objectDjs = Object.entries(this)
-        objectApp = objectApp.filter(entryApp => !objectDjs.find(entryDjs => entryApp[0]===entryDjs[0]))
-        console.log(objectApp.map(entry => `this.${entry[0]} = application.${entry[0]} || ${typeof entry[1]} (${entry[1]})`))
     }
 
     async getMe(){

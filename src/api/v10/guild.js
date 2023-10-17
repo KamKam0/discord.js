@@ -33,9 +33,17 @@ let routes = {
             method: "PATCH",
             url: baseGuildAPI+"/welcome-screen",
         },
+        onBoarding: {
+            method: "PUT",
+            url: baseGuildAPI+"/onboarding",
+        },
         currentUserVoice: {
             method: "PATCH",
             url: baseGuildAPI+"/voice-states/@me",
+        },
+        vanity: {
+            method: "PATCH",
+            url: baseGuildAPI+"/vanity-url",
         },
         userVoice: {
             method: "PATCH",
@@ -92,6 +100,10 @@ let routes = {
         welcomeScreen: {
             method: "GET",
             url: baseGuildAPI+"/welcome-screen",
+        },
+        onBoarding: {
+            method: "GET",
+            url: baseGuildAPI+"/onboarding",
         },
         logs: {
             method: "GET",

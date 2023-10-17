@@ -1,29 +1,13 @@
-const User = require("../../structures/singles/user")
-module.exports = async (bot, datas) => {
-    let olduser = bot.users.get(datas.id)
+const updateHandler = require('./results/updateHandler')
 
-    if(!olduser) return
-    olduser = new User(olduser, bot)
+module.exports = async (bot, newUser) => {
+    let updateParameters = {
+        name: name(),
+        path: 'users',
+        bot: true,
+    }
 
-    bot.users._modify(datas)
-    
-    const newuser = bot.users.get(datas.id)
-
-    let modifications = []
-    let olddatas = Object.entries(olduser)
-    let newdatas = Object.entries(newuser)
-
-    olddatas.forEach(da => {
-        let filter = ["guild", "bot_token", "user", "member", "channel", "parent", "owner"]
-        if(!filter.includes(da[0])){
-            let comparaison = newdatas.find(e => e[0] === da[0])[1]
-            if(comparaison !== da[1]) modifications.push(da[0])
-        }
-    })
-
-    olduser.modifications = modifications
-
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, olduser, newuser)
+    updateHandler(updateParameters, newUser, bot)
 }
 
 function name(){ return "USER_UPDATE" }

@@ -1,6 +1,7 @@
 const createEvent = require("./VOICE_CREATE")
 const modifyEvent = require("./VOICE_UPDATE")
 const deleteEvent = require("./VOICE_DELETE")
+
 module.exports = async (bot, datas) => {
     const guild = bot.guilds.get(datas.guild_id)
     let member = guild.members.get(datas.user_id) 
@@ -18,7 +19,7 @@ module.exports = async (bot, datas) => {
     if(String(oldvoice) === "undefined" && String(newvoice.channel_id) !== "null")createEvent(bot, newvoice)
     else if(String(oldvoice) !== "undefined" && String(newvoice.channel_id) === "null"){
         oldvoice.guild_id = datas.guild_id
-       deleteEvent(bot, oldvoice)
+        deleteEvent(bot, oldvoice)
     }
-    else if(String(oldvoice) !== "undefined" && String(newvoice.channel_id) !== "null" && String(oldvoice.channel_id) !==  String(newvoice.channel_id))modifyEvent(bot, oldvoice, newvoice)
+    else if(String(oldvoice) !== "undefined" && String(newvoice.channel_id) !== "null" && String(oldvoice.channel_id) !==  String(newvoice.channel_id)) modifyEvent(bot, newvoice)
 }

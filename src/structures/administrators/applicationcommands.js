@@ -61,11 +61,38 @@ class Commands extends Base{
     }
 
     async awaitInteractions(options){
-        return collector(this._bot, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
+        let collectorVerification = this._bot._handleCollectors(collector.check({channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options, "interaction"), 'await')
+        if (collectorVerification) {
+            return Promise.resolve([])
+        }
+
+        return new Promise((resolve, reject) => {
+            collector(this._bot, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
+            .then(data => {
+                this._bot._handleCollectors(collector.check({channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options, "interaction"), 'await', true)
+                return resolve(data)
+            })
+            .catch(err => {
+                this._bot._handleCollectors(collector.check({channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options, "interaction"), 'await', true)
+                return reject(err)
+            })
+        })
     }
 
     collectInteractions(options){
-        return collector.collect(this._bot, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
+        let collectorVerification = this._bot._handleCollectors(collector.check({channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options, "interaction"), 'collect')
+        if (collectorVerification) {
+            return Promise.resolve([])
+        }
+
+        let collectorInstance = collector.collect(this._bot, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
+
+        collectorInstance
+        .once("done", () => this._bot._handleCollectors(collector.check({channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options, "interaction"), 'collect', true))
+        .once("end", () => this._bot._handleCollectors(collector.check({channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options, "interaction"), 'collect', true))
+        .once("error", () => this._bot._handleCollectors(collector.check({channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options, "interaction"), 'collect', true))
+
+        return collectorVerification
     }
 }
 

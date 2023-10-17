@@ -35,6 +35,7 @@ class Bot extends EventEmitter{
         this.state = "processing"
         this.presence = null
         this.user = null
+        this.user_id = null
         this.creator = null
         this.utils = utils
         this.langues = []
@@ -46,6 +47,7 @@ class Bot extends EventEmitter{
         this.config = this.#getInfos()
         this.name = this.#checkName()
         this.sql = this.#attributeSQL(data.database)
+        this._collectors = []
         this.voice = new VoiceManager(this)
         this.messages = new MessageAdministrator(this)
         this.guilds = new Guilds(this)
@@ -133,6 +135,63 @@ class Bot extends EventEmitter{
                 presence: this.utils.general.presence(presence)
             }
         }
+    }
+
+    _handleCollectors(collector, collectorType, toDelete=false) {
+        let collectorFound = null
+
+        if (this._collectors.length) {
+            collectorFound = this._collectors.find(collectorFinder => {
+                let conditionToFind = this._compareCollectorProperty(collector.guild_id, collectorFinder.guild_id)
+                && this._compareCollectorProperty(collector.channel_id, collectorFinder.channel_id)
+                && this._compareCollectorProperty(collector.message_id, collectorFinder.message_id)
+                && this._compareCollectorProperty(collector.interaction_id, collectorFinder.interaction_id)
+                && this._compareCollectorProperty(collector.user_id, collectorFinder.user_id)
+                && collectorFinder.type === collector.type
+                && collectorFinder.collectorType === collectorType
+    
+                return conditionToFind
+            })
+        }
+
+        if (!collectorFound) {
+            this._collectors.push({...collector, collectorType})
+            return false
+        }
+
+        if (toDelete) {
+            this._collectors.splice(this._collectors.indexOf(collectorFound), 1)
+        }
+
+        return true
+    }
+
+    _compareCollectorProperty(collector, collectorFinder){
+        if (!collector && !collectorFinder) {
+            return true
+        }
+
+        if (typeof collector === 'string' && typeof collectorFinder === 'string' && collector === collectorFinder) {
+            return true
+        }
+
+        if (Array.isArray(collector) && Array.isArray(collectorFinder)) {
+            if (collector.length !== collectorFinder.length) {
+                return false
+            }
+
+            if (collector.filter(collectorElement => !collectorFinder.find(collectorFinderElement => collectorFinderElement === collectorElement)).length !== collector.length) {
+                return false
+            }
+
+            if (collectorFinder.filter(collectorFinderElement => !collector.find(collectorElement => collectorElement === collectorFinderElement)).length !== collectorFinder.length) {
+                return false
+            }
+
+            return true
+        }
+
+        return false
     }
 
     #TreatToken(env){

@@ -4,16 +4,16 @@ const automoderationTypes = require("../../../types/channelpermission")
 
 class Permissions extends base{
     constructor(permissions, bot){
-        super(bot)
+        super(bot, permissions)
 
         this._modifyConstants.push({name: "type", data: automoderationTypes.revert()})
 
         this.id = permissions.id
         this.type = this._typechange(this._modifyConstants.find(e => e.name === "type").data, permissions.type)
-        this.allow = Number(permissions.allow)
-        this.deny = Number(permissions.deny)
-        this.allowArray = getPermissionsFromBitfields(this.allow)
-        this.denyArray = getPermissionsFromBitfields(this.deny)
+        this.allow = permissions.allow
+        this.deny = permissions.deny
+        this.allowArray = getPermissionsFromBitfields(Number(this.allow))
+        this.denyArray = getPermissionsFromBitfields(Number(this.deny))
     }
     
     /**

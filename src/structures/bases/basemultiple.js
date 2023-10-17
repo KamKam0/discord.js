@@ -1,80 +1,87 @@
 const base = require("./basemuldecla")
 
 class baseMultiple extends base{
-    constructor(_bot, guild_id, name){
+    constructor(_bot, guild_id, name, getProperty='id'){
         super(_bot, guild_id)
         this.container = []
-        this.name = name || null
-        this.individualClass = null
-        switch(this.name){
+        this._ignoreParameters = []
+        this._getProperty = getProperty
+        this._name = name || null
+        this._individualClass = null
+        this._compareFunction = null
+        this.#getIndividualClass()
+    }
+
+    #getIndividualClass(){
+        switch(this._name){
             case("automod"):
-                this.individualClass = require("../singles/automoderation")
+                this._individualClass = require("../singles/automoderation")
             break;
             case("ban"):
-                this.individualClass = require("../singles/ban")
+                this._individualClass = require("../singles/ban")
             break;
             case("command"):
-                this.individualClass = require("../applicationscommands/command")
+                this._individualClass = require("../applicationscommands/command")
             break;
             case("emoji"):
-                this.individualClass = require("../singles/emoji")
+                this._individualClass = require("../singles/emoji")
             break;
             case("event"):
-                this.individualClass = require("../singles/event")
+                this._individualClass = require("../singles/event")
             break;
             case("guild"):
-                this.individualClass = require("../singles/guild")
+                this._individualClass = require("../singles/guild")
             break;
             case("integration"):
-                this.individualClass = require("../singles/integration")
+                this._individualClass = require("../singles/integration")
             break;
             case("invite"):
-                this.individualClass = require("../singles/invite")
+                this._individualClass = require("../singles/invite")
             break;
             case("member"):
-                this.individualClass = require("../singles/member")
+                this._individualClass = require("../singles/member")
             break;
             case("message"):
-                this.individualClass = require("../singles/message")
+                this._individualClass = require("../singles/message")
             break;
             case("presence"):
-                this.individualClass = require("../singles/presence")
+                this._individualClass = require("../singles/presence")
             break;
             case("role"):
-                this.individualClass = require("../singles/role")
+                this._individualClass = require("../singles/role")
             break;
             case("stage"):
-                this.individualClass = require("../singles/stageinstance")
+                this._individualClass = require("../singles/stageinstance")
             break;
             case("sticker"):
-                this.individualClass = require("../singles/sticker")
+                this._individualClass = require("../singles/sticker")
             break;
             case("template"):
-                this.individualClass = require("../singles/template")
+                this._individualClass = require("../singles/template")
             break;
             case("voice"):
-                this.individualClass = require("../singles/voice")
+                this._individualClass = require("../singles/voice")
             break;
             case("webhook"):
-                this.individualClass = require("../singles/webhook")
+                this._individualClass = require("../singles/webhook")
             break;
             case("application"):
-                this.individualClass = require("../singles/application")
+                this._individualClass = require("../singles/application")
             break;
             case("applicationmetadata"):
-                this.individualClass = require("../singles/applicationmetadata")
+                this._individualClass = require("../singles/applicationmetadata")
             break;
             case("threadmember"):
-                this.individualClass = require("../singles/threadmember")
+                this._individualClass = require("../singles/threadmember")
             break;
             case("cpermissions"):
-                this.individualClass = require("../singles/permissions/channel")
+                this._individualClass = require("../singles/permissions/channel")
             break;
             case("apermissions"):
-                this.individualClass = require("../singles/permissions/application")
+                this._individualClass = require("../singles/permissions/application")
             break;
             case("applicationmetadata"):
-                this.individualClass = require("../singles/applicationmetadata")
+                this._individualClass = require("../singles/applicationmetadata")
             break;
         }
     }
@@ -84,7 +91,7 @@ class baseMultiple extends base{
     }
 
     get(ID){
-        return this.container.find(el => el.id === ID)
+        return this.container.find(el => el[this._getProperty] === ID)
     }
 
     filter(filter){
@@ -107,17 +114,34 @@ class baseMultiple extends base{
         return this.container.length
     }
 
-    _modify(data){
-        let instance = this.get(data.id)
-        if(!instance) return
-        let modifications = instance._modifyDatas(data)
-        if(modifications.length) return modifications
-        this._delete(data.id)
-        this._add(data)
+    _modify(data, isGuild=false){
+        if (!this._individualClass) return null
+
+        let oldInstance = this.get(data[this._getProperty])
+        if(!oldInstance) return null
+
+        if (!data.guild_id) {
+            data = {...data, guild_id: this.guild_id}
+        }
+
+        let newInstance = new this._individualClass(data, this._bot)
+
+        let modifications = oldInstance._modifyDatas(newInstance, this._ignoreParameters, this._compareFunction, isGuild)
+
+        this._delete(data[this._getProperty])
+        this._add(newInstance)
+        
+        if(!modifications.length) return null
+
+        return {
+            modifications,
+            newInstance,
+            oldInstance,
+        }
     }
 
     _delete(data){
-        if(this.container.find(me => me.id === data)) this.container.splice(this.container.indexOf(this.container.find(me => me.id === data)), 1)
+        if(this.container.find(me => me[this._getProperty] === data)) this.container.splice(this.container.indexOf(this.container.find(me => me[this._getProperty] === data)), 1)
         return this
     }
 
@@ -127,8 +151,12 @@ class baseMultiple extends base{
     }
 
     _add(data){
-        if(!this.individualClass) return this
-        this.container.push(new this.individualClass({...data, guild_id: this.guild_id}, this._bot))
+        if(!this._individualClass) return this
+        if (data instanceof this._individualClass) {
+            this.container.push(data)
+        } else {
+            this.container.push(new this._individualClass({...data, guild_id: this.guild_id}, this._bot))
+        }
         return this
     }
 

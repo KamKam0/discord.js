@@ -5,6 +5,10 @@ class ChannelPermissions extends BasePermissions{
     constructor(bot, guild_id, channel_id){
         super(bot, guild_id)
         this.channel_id = channel_id
+        this._ignoreParameters = [
+            'allowArray',
+            'denyArray'
+        ]
     }
 
     /**

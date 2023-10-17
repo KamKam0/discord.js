@@ -5,13 +5,6 @@ class Users extends Base{
         super(_bot, null, "user")
     }
 
-    _modify(data){
-        let instance = this.get(data.id)
-        if(!instance) return
-        let modifications = instance._modifyDatas(data)
-        if(modifications.length) return modifications
-    }
-
     _add(user){
         if(this.container.find(us => us.id === user.id)) this.container.find(us => us.id === user.id).guilds.push(user.guild_id)
         else this.container.push(new User(user, this._bot))
@@ -31,11 +24,6 @@ class Users extends Base{
         if(!user) return
         user.guilds.splice(user.guilds.indexOf(user.guilds.find(gui => gui === data.guild)), 1)
         if(user.guilds.length === 0) this.container.splice(this.container.indexOf(this.get(data.user)), 1)
-        return this
-    }
-
-    _deleteMultiple(IDS){
-        IDS.map(us => this._delete(us))
         return this
     }
 

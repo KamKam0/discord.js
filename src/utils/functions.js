@@ -19,7 +19,7 @@ function getIntentsFromNames(intents){
 }
 
 function getArrayFromBitfield(types, bitfield){
-    if(!bitfield) return "Incorrect number"
+    if(isNaN(bitfield)) return bitfield
     const ACFlags = Object.entries(types).sort((a, b) => Number(b[1]) - Number(a[1]))
     const final_p = []
     let processConvert = Number(bitfield)

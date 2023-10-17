@@ -31,9 +31,9 @@ module.exports = async (bot, datas) => {
         })
       
         if(!newemoji || !oldemoji) return
-        oldemoji.guild_id = guild.id
+        
         newemoji.guild_id = guild.id
-        modifyEvent(bot, oldemoji, newemoji)
+        modifyEvent(bot, newemoji)
       break;
     }
 }

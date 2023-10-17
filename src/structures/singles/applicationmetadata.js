@@ -3,8 +3,10 @@ const utils = require("../../utils/functions")
 
 class ApplicationMetadata extends Base{
     constructor(applicationMetadata, bot){
-        super(applicationMetadata, bot)
-        this.type = utils.gets.getApplicationMetadataType(applicationMetadata.type || 0)
+        super(bot, applicationMetadata)
+        this._modifyConstants.push({name: "type", function: utils.gets.getApplicationMetadataType})
+        
+        this.type = this._modifyConstants.find(e => e.name === "type").function(applicationMetadata.type || 0)
         this.key = applicationMetadata.key
         this.name = applicationMetadata.name
         this.name_localizations = applicationMetadata.name_localizations

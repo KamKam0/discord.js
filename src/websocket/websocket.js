@@ -83,6 +83,7 @@ class WebsocketHandler{
             applicationMethods.getMe(informations)
             .then(applicationData => {
                 this._bot.application = applicationData
+                this._bot.user_id = applicationData.id
                 return resolve(true)
             })
             .catch(err => {

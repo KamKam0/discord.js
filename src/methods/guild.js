@@ -318,6 +318,46 @@ module.exports.modifywelcomescreen = (informations, options) => {
     return handler(args, passedOptions, null)
 }
 
+module.exports.getonboarding = (informations) => {
+    let passedOptions = {
+        method: apiPath.get.onBoarding.method,
+        token: informations.botToken,
+        url: apiPath.get.onBoarding.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null)
+}
+
+
+module.exports.modifyonboarding = (informations, options) => {
+    let passedOptions = {
+        method: apiPath.modify.onBoarding.method,
+        token: informations.botToken,
+        url: apiPath.modify.onBoarding.url,
+        urlIDS: informations,
+        xAuditReasonAvailable: true
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true, required: true}
+    ]
+    return handler(args, passedOptions, null)
+}
+
+module.exports.modifyvanityurl = (informations, options) => {
+    let passedOptions = {
+        method: apiPath.modify.vanity.method,
+        token: informations.botToken,
+        url: apiPath.modify.vanity.url,
+        urlIDS: informations,
+        xAuditReasonAvailable: true
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3, reason: true, required: true}
+    ]
+    return handler(args, passedOptions, null)
+}
+
 module.exports.modifyuservoice = (informations, channelId, suppress) => {
     let passedOptions = {
         method: apiPath.modify.userVoice.method,

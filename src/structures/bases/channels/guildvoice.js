@@ -6,6 +6,8 @@ class guildVoice extends Base{
         this.bitrate = channel.bitrate
         this.user_limit = channel.user_limit
         this.rtc_region = channel.rtc_region
+        this.topic = channel.topic || null
+        this.status = channel.status || null
         this.members = (new Members(this._bot, this.guild_id))
     }
 

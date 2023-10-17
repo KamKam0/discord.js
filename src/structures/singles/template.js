@@ -4,7 +4,7 @@ const templateMethod = require("../../methods/template")
 
 class Template extends Base{
     constructor(template, bot){
-        super(bot)
+        super(bot, template)
         this.code = template.code
         this.name = template.name
         this.description = template.description || null

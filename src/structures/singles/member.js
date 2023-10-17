@@ -23,6 +23,7 @@ class Member extends Base{
         this.joined_at = member.joined_at
         this.deaf = member.deaf ?? false
         this.mute = member.mute ?? false
+        this.unusual_dm_activity_until = member.unusual_dm_activity_until || null
         this.roles = new Roles(bot, this.guild_id, this.user_id)
         this.#handleRoles(member.roles)
         this.voice = {presence: this.guild?.voice_states?.get(this.user_id) || null, channel: this.guild?.voice_states?.get(this.user_id)?.channel || null}
