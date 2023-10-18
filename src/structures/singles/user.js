@@ -46,17 +46,17 @@ class User extends Base{
         }
         return new Promise(async (resolve, reject) => {
             if(this.dm){
-                return messageMethod.send(informations, options)
+                messageMethod.send(informations, options)
+                .then(datas => resolve(datas))
+                .catch(err => reject(err))
             }else{
                 userMethod.createDM({bot: this._bot, botToken: this._token}, this.id)
                 .then(datas => { 
-                    if(datas){
-                        this.dm = datas.id
-                        informations.channel_id = this.dm
-                        messageMethod.send(informations, options)
-                        .then(result => resolve(result))
-                        .catch(err => reject(err))
-                    }
+                    this.dm = datas.id
+                    informations.channel_id = this.dm
+                    messageMethod.send(informations, options)
+                    .then(result => resolve(result))
+                    .catch(err => reject(err))
                 })
                 .catch(err => reject(err))
             }
