@@ -10,15 +10,58 @@ class Messages extends Base{
             'referenced_message',
         ]
         this._compareFunction = (oldProperty, newProperty, property) => {
+            let modifications = []
             if (property.startsWith('mention')) {
+                let oldMentions = oldProperty[property].filter(oldMention => {
+                    return !newProperty[property].find(newMention => newMention.id === oldMention.id)
+                })
 
+                if (oldMentions.length) {
+                    oldMentions.forEach(mention => {
+                        modifications.push({
+                            old: mention,
+                            new: null
+                        })
+                    })
+                }
+
+                let newMentions = newProperty[property].filter(newMention => {
+                    return !oldProperty[property].find(oldMention => oldMention.id === newMention.id)
+                })
+
+                if (newMentions.length) {
+                    newMentions.forEach(mention => {
+                        modifications.push({
+                            old: null,
+                            new: mention
+                        })
+                    })
+                }
             }
-            // mention_roles
-            // mention_channels
-            // mention_members
-            // 
-            // components
-            return []
+            if (property === 'components') {
+                let oldComponents = oldProperty.components.filter(oldComponent => {
+                    return !newProperty.components.find(newComponent => newComponent.custom_id === oldComponent.custom_id)
+                })
+
+                oldComponents.forEach(component => {
+                    modifications.push({
+                        old: component,
+                        new: null
+                    })
+                })
+
+                let newComponents = newProperty.components.filter(newComponent => {
+                    return !oldProperty.components.find(oldComponent => oldComponent.custom_id === newComponent.custom_id)
+                })
+
+                newComponents.forEach(component => {
+                    modifications.push({
+                        old: null,
+                        new: component
+                    })
+                })
+            }
+            return modifications
         }
     }
 }
