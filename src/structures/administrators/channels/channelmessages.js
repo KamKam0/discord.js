@@ -45,19 +45,7 @@ class ChannelMessages extends Base{
      * @returns 
      */
     collectMessages(options){
-        let collectorVerification = this._bot._handleCollectors(collector.check({channel_id: this.id, guild_id: this.guild_id || null}, options, "message"), 'collect')
-        if (collectorVerification) {
-            return Promise.resolve([])
-        }
-
-        let collectorInstance = collector.collect(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
-
-        collectorInstance
-        .once("done", () => this._bot._handleCollectors(collector.check({channel_id: this.id, guild_id: this.guild_id || null}, options, "message"), 'collect', true))
-        .once("end", () => this._bot._handleCollectors(collector.check({channel_id: this.id, guild_id: this.guild_id || null}, options, "message"), 'collect', true))
-        .once("error", () => this._bot._handleCollectors(collector.check({channel_id: this.id, guild_id: this.guild_id || null}, options, "message"), 'collect', true))
-
-        return collectorVerification
+        return collector.collect(this._bot, "message", {channel_id: this.id, guild_id: this.guild_id || null}, options)
     }
 
     /**

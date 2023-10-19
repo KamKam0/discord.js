@@ -80,19 +80,7 @@ class Commands extends Base{
     }
 
     collectInteractions(options){
-        let collectorVerification = this._bot._handleCollectors(collector.check({channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options, "interaction"), 'collect')
-        if (collectorVerification) {
-            return Promise.resolve([])
-        }
-
-        let collectorInstance = collector.collect(this._bot, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
-
-        collectorInstance
-        .once("done", () => this._bot._handleCollectors(collector.check({channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options, "interaction"), 'collect', true))
-        .once("end", () => this._bot._handleCollectors(collector.check({channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options, "interaction"), 'collect', true))
-        .once("error", () => this._bot._handleCollectors(collector.check({channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options, "interaction"), 'collect', true))
-
-        return collectorVerification
+        return collector.collect(this._bot, "interaction", {channel_id: options.channel_id || null, guild_id: options.guild_id || null, message_id: options.message_id || null, interaction_id: options.id || null}, options)
     }
 }
 
