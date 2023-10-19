@@ -18,13 +18,15 @@ module.exports = async (bot, newMessage) => {
         return
     }
 
-    let updateParameters = {
-        name: name(),
-        path: 'messages',
-        guild: true,
+    if (oldmessage && newMessage.content) {
+        let updateParameters = {
+            name: name(),
+            path: 'messages',
+            guild: true,
+        }
+    
+        updateHandler(updateParameters, newMessage, bot)
     }
-
-    updateHandler(updateParameters, newMessage, bot)
 }
 
 function name(){ return "MESSAGE_UPDATE" }

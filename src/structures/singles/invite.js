@@ -13,11 +13,11 @@ class Invite extends Base{
         this.channel_id = invite.channel_id
         this.channel = this.channel_id ? bot.channels.get(this.channel_id) : null
         this.inviter_id = invite.inviter ? invite.inviter.id : null
-        this.inviter = bot.users.get(this.inviter_id) ?? new User(invite.inviter, bot)
+        this.inviter = this.inviter_id ? bot.users.get(this.inviter_id) || new User(invite.inviter, bot) : null
         this.target_type = this._typechange(this._modifyConstants.find(e => e.name === "target_type").data, invite.target_type) || null
         this.expires_at = invite.expires_at || null
         this.uses = invite.uses || 0
-        this.type = invite.type
+        this.type = invite.type || null
         this.temporary = invite.temporary ?? false
         this.max_uses = invite.max_uses || null
         this.max_age = invite.max_age || null

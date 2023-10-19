@@ -12,8 +12,8 @@ class Messages extends Base{
         this._compareFunction = (oldProperty, newProperty, property) => {
             let modifications = []
             if (property.startsWith('mention')) {
-                let oldMentions = oldProperty[property].filter(oldMention => {
-                    return !newProperty[property].find(newMention => newMention.id === oldMention.id)
+                let oldMentions = oldProperty.filter(oldMention => {
+                    return !newProperty.find(newMention => newMention.id === oldMention.id)
                 })
 
                 if (oldMentions.length) {
@@ -25,8 +25,8 @@ class Messages extends Base{
                     })
                 }
 
-                let newMentions = newProperty[property].filter(newMention => {
-                    return !oldProperty[property].find(oldMention => oldMention.id === newMention.id)
+                let newMentions = newProperty.filter(newMention => {
+                    return !oldProperty.find(oldMention => oldMention.id === newMention.id)
                 })
 
                 if (newMentions.length) {
