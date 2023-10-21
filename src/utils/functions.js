@@ -117,7 +117,7 @@ function presence(presence){
     if(typeof presence.status === "string" && (/(online|offline|dnd|idle|invisible)/gm).test(presence.status)) base.status = presence.status
     if((/offline|dnd|invisible/gm).test(presence.status)) return base
     if(Array.isArray(presence.activities)) presence.activities = presence.activities.map(activity => {
-        if(typeof activity === "object" && typeof activity.name === "string" && activity.name.length < 200 && ["string", "number"].includes(typeof activity.type) && (convert[activity.type] || Object.values(convert).includes(activity.type))) return {type: convert[activity.type] || activity.type, name: activity.name} }) 
+        if(typeof activity === "object" && typeof activity.name === "string" && activity.name.length < 200 && ["string", "number"].includes(typeof activity.type) && (convert[activity.type] || Object.values(convert).includes(activity.type))) return {type: convert[activity.type] || activity.type, [convert[activity.type] === 4 ? 'state' : 'name']: activity.name} }) 
     else presence.activities = []
     base.activities = presence.activities
     return base
