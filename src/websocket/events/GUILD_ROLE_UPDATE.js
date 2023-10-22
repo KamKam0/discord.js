@@ -1,4 +1,4 @@
-const updateHandler = require('./results/updateHandler')
+const updateHandler = require('../../handlers/updateHandler')
 
 module.exports = async (bot, newRole) => {
     newRole = {...newRole.role, guild_id: newRole.guild_id}

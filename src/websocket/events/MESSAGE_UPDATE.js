@@ -1,4 +1,4 @@
-const updateHandler = require('./results/updateHandler')
+const updateHandler = require('../../handlers/updateHandler')
 const Message = require('../../structures/singles/message')
 
 module.exports = async (bot, newMessage) => {

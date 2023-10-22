@@ -1,4 +1,4 @@
-const updateHandler = require('./results/updateHandler')
+const updateHandler = require('../../handlers/updateHandler')
 
 module.exports = async (bot, newThread) => {
     const guild = bot.guilds.get(newThread.guild_id)

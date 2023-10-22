@@ -17,7 +17,7 @@ module.exports = (eventData, data, bot) => {
 
     if (!modifications) return null
 
-    if(bot.databaseState || bot.databaseState === null) bot.emit(eventData.name, bot, modifications.oldInstance, modifications.newInstance)
+    if(bot.databaseState || bot.databaseState === null) bot.emit(eventData.name, bot, modifications.oldInstance, modifications.newInstance, modifications.modifications)
 
     return modifications
 }

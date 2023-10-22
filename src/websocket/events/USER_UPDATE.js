@@ -1,4 +1,4 @@
-const updateHandler = require('./results/updateHandler')
+const updateHandler = require('../../handlers/updateHandler')
 
 module.exports = async (bot, newUser) => {
     let updateParameters = {
