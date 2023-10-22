@@ -211,10 +211,12 @@ class WebsocketHandler{
     #handleWebsocketCalls(bodyLogin){
         //setting gateaway
         this.discordSide.ws.on("open", async () => {
-            if(this._bot.state === "reconnect"){
-                let body = {op: 6, d: {token: this._bot.token, session_id: this.discordSide.session_id, seq: (this.discordSide.lastEvent)}}
-                this.discordSide.ws.send(JSON.stringify(body))
-            }else this.discordSide.ws.send(JSON.stringify(bodyLogin))
+            setTimeout(() => {
+                if(this._bot.state === "reconnect"){
+                    let body = {op: 6, d: {token: this._bot.token, session_id: this.discordSide.session_id, seq: (this.discordSide.lastEvent)}}
+                    this.discordSide.ws.send(JSON.stringify(body))
+                }else this.discordSide.ws.send(JSON.stringify(bodyLogin))
+            }, 2 * 1000)
             setTimeout(() => {
                 if(!this.discordSide.lastEvent){
                     this.discordSide.ws.close()
