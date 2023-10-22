@@ -7,6 +7,10 @@ module.exports = async (bot, newUser) => {
         bot: true,
     }
 
+    if (newUser.user) {
+        newUser = newUser.user
+    }
+
     updateHandler(updateParameters, newUser, bot)
 }
 
