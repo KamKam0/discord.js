@@ -17,6 +17,7 @@ class baseForAll {
     }
 
     #compareArrays(oldArray, newArray, ignoredParameters, compareFunction){
+        if (!Array.isArray(oldArray) || !Array.isArray(newArray)) return true
         if (oldArray.length !== newArray.length) return true
 
         let typeData = typeof newArray[0] === 'object' ? 'object' : 'basic'
