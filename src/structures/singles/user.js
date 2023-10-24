@@ -117,6 +117,11 @@ class User extends Base{
         if (this.discriminator !== '0') {
             return `${this.username}#${this.discriminator}`
         }
+
+        if (this.username === this.global_name) {
+            return `@${this.global_name}`
+        }
+
         return `${this.username}@${this.global_name}`
     }
 
