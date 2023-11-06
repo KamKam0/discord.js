@@ -1,6 +1,5 @@
 const reactionClass = require("./results/messagereaction")
 module.exports = async (bot, datas) => {
-    if(bot.databaseState) return 
     let reactionInstance = new reactionClass(datas, bot)
     if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, reactionInstance)
 }

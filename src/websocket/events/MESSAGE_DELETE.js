@@ -7,7 +7,7 @@ module.exports = async (bot, datas) => {
     
     if(bot.databaseState){
         if(!guild) bot.emit(name(), bot, (new Result(datas, bot)))
-        else if(oldmessage_v) bot.emit(name(), bot,oldmessage_v)
+        else if(oldmessage_v) bot.emit(name(), bot, oldmessage_v)
     }
 }
 

@@ -20,8 +20,8 @@ class AutoModeration extends Base{
         this.trigger_metadata = automod.trigger_metadata
         this.actions = {type: this.#actiontype(automod.actions.type), metadata: {channel_id: automod.actions.metadata?.channel_id || null, channel: bot.channels.get(automod.actions.metadata?.channel_id), duration_seconds: automod.actions.metadata?.duration_seconds || null}}
         this.enabled = automod.enabled
-        this.exempt_roles = (new Roles(bot)).push(datas.exempt_roles.map(ro => this.guild.roles.get(ro)).filter(e => e))
-        this.exempt_channels = (new Channels(bot)).push(datas.exempt_channels.map(ch => this.guild.channels.get(ch)).filter(e => e))
+        this.exempt_roles = (new Roles(bot)).push(automod.exempt_roles.map(ro => this.guild.roles.get(ro)).filter(e => e))
+        this.exempt_channels = (new Channels(bot)).push(automod.exempt_channels.map(ch => this.guild.channels.get(ch)).filter(e => e))
     }
 
     #actiontype(type){

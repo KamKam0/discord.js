@@ -27,6 +27,6 @@ module.exports.revert = {
     actionType: () => revert(actionType)
 }
 
-function revert(){
+function revert(types){
     return require("../utils/functions").general.revertTypes(types)
 }
