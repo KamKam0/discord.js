@@ -223,7 +223,7 @@ class WebsocketHandler{
                     this.resetDiscordSide()
                     return createError("Could not log in", {state: false, message: "Connection process failed.\n Try to check if there is any infinite loop."})
                 }
-            }, 20 * 1000)
+            }, 30 * 1000)
         })
         
         //starting gateaway
@@ -285,7 +285,9 @@ class WebsocketHandler{
     #stopWS(event){
         let eventToExecute = this.events.find(localEvent => localEvent.name === event)
         eventToExecute.execute(this._bot)
-        this.discordSide.ws.close()
+        try {
+            this.discordSide.ws.close()
+        } catch{}
         this.discordSide.intervalState = null
         clearInterval(this.discordSide.interval)
         return this.login()
