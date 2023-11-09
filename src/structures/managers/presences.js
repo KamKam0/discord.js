@@ -5,8 +5,13 @@ class Presences extends Base{
     }
 
     _Treat(presence){
-        if(this.get(presence.user_id)) this._modify(presence)
-        else this._add(presence)
+        if(this.get(presence.user_id)) {
+            let modifications = this._modify(presence)
+            return modifications
+        }
+        
+        this._add(presence)
+        return null
     }
 }
 
