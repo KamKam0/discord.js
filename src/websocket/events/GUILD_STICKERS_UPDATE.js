@@ -18,7 +18,15 @@ module.exports = async (bot, datas) => {
 
       let criteres = ["id", "description", "name", "type", "format_type", "available"]
     
-      datas.stickers.forEach(emo => {
+      datas.stickers
+      .map(sticker => {
+        if (!sticker.description.length) {
+          sticker.description = null
+        }
+
+        return sticker
+      })
+      .forEach(emo => {
         if(!newsticker && !oldsticker){
           let tempoemo = guild.stickers.find(em => em.id === emo.id)
           criteres.forEach(cr => {
