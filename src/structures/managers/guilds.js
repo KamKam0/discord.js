@@ -30,7 +30,7 @@ class Guilds extends Base{
         this._update(data.id, verifiedModifications)
 
         return {
-            verifiedModifications,
+            modifications: verifiedModifications,
             oldInstance: new Guild(currentInstance._rawData, this._bot),
             newInstance: currentInstance,
         }
