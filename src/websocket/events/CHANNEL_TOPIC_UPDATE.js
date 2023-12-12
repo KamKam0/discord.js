@@ -1,5 +1,9 @@
 module.exports = async (bot, datas) => {
-    return
+    const guild = bot.guilds.get(datas.guild_id)
+    if(!datas.guild_id || !guild) return
+    let channel = guild.channels.get(datas.id)
+
+    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, channel, datas.topic)
 }
 
 function name(){ return "CHANNEL_TOPIC_UPDATE" }
