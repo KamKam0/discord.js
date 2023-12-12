@@ -12,19 +12,29 @@ class Attachment {
 
     async download(path=null){
         return new Promise(async (resolve, reject) => {
-            let rawRequest = await fetch(this.url, {
-                method: 'GET',
-                headers: {
-                    'content-type': 'application/x-www-form-urlencoded'
-                }
-            })
+            let rawRequest;
+            try {
+                rawRequest = await fetch(this.url, {
+                    method: 'GET',
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded'
+                    }
+                })
+            } catch(err) {
+                return reject(err)
+            }
 
             if (rawRequest.status !== 200) {
                 return reject('Could not download the attachment')
             }
 
-            let requestBuffer = await rawRequest.arrayBuffer()
-            let streamBuffer = Buffer.from(requestBuffer)
+            let streamBuffer;
+            try {
+                let requestBuffer = await rawRequest.arrayBuffer()
+                streamBuffer = Buffer.from(requestBuffer)
+            } catch(err) {
+                return reject(err)
+            }
 
             const info = {
                 buffer: streamBuffer,
