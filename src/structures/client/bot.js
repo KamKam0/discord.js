@@ -278,11 +278,34 @@ class Bot extends EventEmitter{
             }
             if(!state){
                 var datas = fs.readFileSync(process.cwd()+elementOS+name, "utf-8")
-                try{
-                    datas = JSON.parse(datas)
-                }catch(err){
-                    this.launchError = `There is an error in your folder ${name}`
-                    return
+                if (name === '.env') {
+                    try{
+                        datas = JSON.parse(datas)
+                    }catch(err){
+                        let envContent = datas
+                        .split('\n')
+                        .filter(line => line.length && line !== '\r' && line.includes('='))
+                        if (envContent.length) {
+                            envContent = envContent
+                            .map(line => line.split('#'))
+                            .filter(line => line[0].length)
+                        }
+                        if (envContent.length) {
+                            envContent = envContent
+                            .map(line => line[0].split('\r').join(''))
+                        }
+                        datas = {}
+                        envContent.forEach(envLine => {
+                            datas[envLine.split('=')[0]] = envLine.split('=')[1]
+                        })
+                    }
+                } else {
+                    try{
+                        datas = JSON.parse(datas)
+                    }catch(err){
+                        this.launchError = `There is an error in your folder ${name}`
+                        return
+                    }
                 }
             }else return fs.readdirSync(process.cwd()+elementOS+name)
             return datas
