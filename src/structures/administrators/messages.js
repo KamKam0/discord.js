@@ -1,9 +1,22 @@
 const BaseMessage = require("../managers/messages")
+const Message = require('../singles/message')
 const methodMessage = require("../../methods/message")
 
 class Messages extends BaseMessage{
-    constructor(bot, guild_id){
+    constructor(bot, guild_id, limitMessages=false){
         super(bot, guild_id)
+    }
+
+    _add(data){
+        if (limitMessages && this.container.length === 200) {
+            this.container.shift()
+        }
+        if (data instanceof Message) {
+            this.container.push(data)
+        } else {
+            this.container.push(new Message({...data, guild_id: this.guild_id}, this._bot))
+        }
+        return this
     }
 
     async send(channelid, options){

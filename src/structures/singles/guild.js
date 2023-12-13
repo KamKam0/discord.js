@@ -99,7 +99,7 @@ class Guild extends Base{
         this.safety_alerts_channel = this.channels.get(this.safety_alerts_channel_id) || null
         this.public_updates_channel = this.channels.get(this.public_updates_channel_id) || null
         this.premium_progress_bar_enabled = guild.premium_progress_bar_enabled ?? false
-        this.messages = new managers.Messages(bot, this.id)
+        this.messages = new managers.Messages(bot, this.id, true)
         this.me = this.members.get(bot.user.id)
         this.voice = new managers.voiceManager(this._bot, this.id)
     }
