@@ -78,6 +78,14 @@ class Bot extends EventEmitter{
         return this.ws.login(presence)
     }
 
+    async getMe(){
+        let informations = {
+            bot: this,
+            token: this.token
+        }
+        return methodMe.getuser(informations)
+    }
+
     _userStatus(ID){
         return new Promise(async (resolve, reject) => {
             if(!ID) return reject(new Error("Incorrect infos"))
@@ -104,19 +112,6 @@ class Bot extends EventEmitter{
         if(!datas || typeof datas !== "object" || !datas.id || !datas.channel_id) return "invalid"
         this.creator = datas
         return this
-    }
-
-    #checkName(){
-        let link = process.cwd().split(elementOS).filter(e => e.length > 0)
-        return link[link.length - 1]
-    }
-
-    async getMe(){
-        let informations = {
-            bot: this,
-            token: this.token
-        }
-        return methodMe.getuser(informations)
     }
 
     _getConnection(presence){
@@ -192,6 +187,11 @@ class Bot extends EventEmitter{
         }
 
         return false
+    }
+
+    #checkName(){
+        let link = process.cwd().split(elementOS).filter(e => e.length > 0)
+        return link[link.length - 1]
     }
 
     #TreatToken(env){

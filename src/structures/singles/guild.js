@@ -156,6 +156,35 @@ class Guild extends Base{
 
     /**
      * 
+     * @param {object} [params]
+     * @param {string[]} [params.user_ids] userIds array
+     * @param {boolean} [params.presences] fetch the presences
+     * @param {number} [params.limit] fetch limit
+     * @returns 
+     */
+    sendMembersChunk(params={}) {
+        let payload = {
+            "guild_id": this.id,
+            "query": "",
+            "limit": (typeof params.limit === 'number' && !String(params.limit).includes('.')) ? params.limit : 0,
+        }
+
+        if (params.presences && typeof params.presences === 'boolean') {
+            payload.presences = params.presences
+        }
+
+        if (params.user_ids && Array.isArray(params.user_ids) && params.user_ids.length === params.user_ids.length) {
+            payload.presences = params.presences
+        }
+
+        this._bot.ws.discordSide.ws.send(JSON.stringify({
+            "op": 8,
+            "d": payload
+        }))
+    }
+
+    /**
+     * 
      * @returns 
      */
     async leave(){
