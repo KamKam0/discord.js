@@ -211,6 +211,9 @@ class Embed extends origin{
     * @returns {Embed}
     */
     addField(name, value, inline){
+        if (this.fields.length === 25) {
+            return this
+        }
         if (typeof name === 'number') name = String(name)
         if (typeof value === 'number') value = String(value)
         if(typeof name !== "string" || name.length > 256 || typeof value !== "string" || value.length > 1024) return this
