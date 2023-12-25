@@ -7,7 +7,6 @@ const CommandHandler = require("@kamkam1_0/discord-commandhandler")
 const EventHandler = require("@kamkam1_0/discord-eventhandler")
 const VoiceManager = require("../../handlers/voice/voicemanager")
 const ApplicationCommands = require("../administrators/applicationcommands")
-const ORM = require("@kamkam1_0/sql-orm")
 const WebSocketHandler = require('../../websocket/websocket')
 const MessageAdministrator = require("../administrators/messages")
 const Application = require("../singles/application")
@@ -46,7 +45,6 @@ class Bot extends EventEmitter{
         this.intents = this.#attributeintents(data.intents)
         this.config = this.#getInfos()
         this.name = this.#checkName()
-        this.sql = this.#attributeSQL(data.database)
         this._collectors = []
         this.voice = new VoiceManager(this)
         this.messages = new MessageAdministrator(this)
@@ -66,11 +64,6 @@ class Bot extends EventEmitter{
         }
     }
 
-    get databaseState(){
-        if(!this.sql) return null
-        return this.sql.connectionState
-    }
-
     async login(presence){
         this.handler.deploy()
         this.events.deploy(presence)
@@ -84,28 +77,6 @@ class Bot extends EventEmitter{
             token: this.token
         }
         return methodMe.getuser(informations)
-    }
-
-    _userStatus(ID){
-        return new Promise(async (resolve, reject) => {
-            if(!ID) return reject(new Error("Incorrect infos"))
-            let returnInfos = {0: "User", 1: "VIP", 2: "Admin", 3: "Admin & VIP", 4: "Owner"}
-            if(!this.databaseState) return resolve({...returnInfos, value: 0})
-            if(ID === this.config.general["creatorId"]) return resolve({...returnInfos, value: 4})
-            else if(this.sql){
-                let tables = await this.sql.show()
-                tables = tables.map(e => Object.values(e)[0])
-                let value = 0
-                let admin;
-                let vip;
-                if(tables.includes("admin")) admin = await this.sql.select("admin", {ID})
-                if(tables.includes("vip")) vip = await this.sql.select("vip", {ID})
-                if(admin && admin[0]) value += 2
-                if(vip && vip[0]) value += 1
-                return resolve({...returnInfos, value})
-            }
-            return resolve({...returnInfos, value: 0})
-        })
     }
 
     _setCreator(datas){
@@ -202,13 +173,6 @@ class Bot extends EventEmitter{
     #attributeintents(intents){
         if(!intents || !Array.isArray(intents) || intents.filter(e => typeof e === "string").length !== intents.length) return utils.gets.getIntentsFromNames("ALL")
         return utils.gets.getIntentsFromNames(intents)
-    }
-
-    #attributeSQL(database){
-        if(!database) return false
-        if(typeof database === "boolean") return new ORM({host: "127.0.0.1", port: 3306, user: "root", database: this.name})
-        else if (typeof database === "object") return new ORM(database)
-        else return false
     }
     
     #getInfos(){
