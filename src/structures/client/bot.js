@@ -9,7 +9,6 @@ const VoiceManager = require("../../handlers/voice/voicemanager")
 const ApplicationCommands = require("../administrators/applicationcommands")
 const WebSocketHandler = require('../../websocket/websocket')
 const MessageAdministrator = require("../administrators/messages")
-const Application = require("../singles/application")
 const os = require('node:os')
 let elementOS = '/'
 if(os.platform() === "win32") elementOS = '\\'
