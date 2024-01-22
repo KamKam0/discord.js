@@ -4,7 +4,7 @@ module.exports = async (bot, datas) => {
     const oldmember = guild.members.get(datas.user.id)
     guild.members._delete(datas.user.id)
     bot.users._delete({user: datas.user.id, guild: datas.guild_id})
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, oldmember)
+    bot.emit(name(), bot, oldmember)
 }
 
 function name(){ return "GUILD_MEMBER_REMOVE" }

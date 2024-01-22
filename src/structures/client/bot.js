@@ -22,7 +22,6 @@ class Bot extends EventEmitter{
     /**
      * 
      * @param {object} data 
-     * @param {object|boolean} data.database
      * @param {number|undefined|string} data.intents
      * @param {boolean} data.systemLog
      * @param {boolean} data.eventsLog
@@ -171,7 +170,13 @@ class Bot extends EventEmitter{
 
     #attributeintents(intents){
         if(!intents || !Array.isArray(intents) || intents.filter(e => typeof e === "string").length !== intents.length) return utils.gets.getIntentsFromNames("ALL")
-        return utils.gets.getIntentsFromNames(intents)
+        let intentsToReturn =  utils.gets.getIntentsFromNames(intents)
+
+        if (!utils.gets.getIntents(intentsToReturn).includes('GUILDS')) {
+            this.state = 'ready'
+        }
+
+        return intentsToReturn
     }
     
     #getInfos(){

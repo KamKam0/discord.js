@@ -9,7 +9,7 @@ module.exports = async (bot, datas) => {
         event_id: datas.event_id
     }
     
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, dataToReturn)
+    bot.emit(name(), bot, dataToReturn)
 }
 
 function name(){ return "GUILD_SCHEDULED_EVENT_EXCEPTIONS_DELETE" }

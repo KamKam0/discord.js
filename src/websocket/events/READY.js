@@ -8,7 +8,7 @@ module.exports = async (bot, datas) => {
     if(bot.ws.discordSide.guild_ids.length === 0 && bot.state === "processing"){
         delete bot.discordSide.connectionInfos.connectionUrl
         bot.state = "ready"
-        if(bot.databaseState || bot.databaseState === null) bot.emit("READY", bot)
+        bot.emit("READY", bot)
     }
     bot.ws.discordSide.available_ids = datas.guilds
     bot.ws.discordSide.session_id = datas.session_id

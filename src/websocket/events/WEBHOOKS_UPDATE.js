@@ -5,7 +5,7 @@ module.exports = async (bot, datas) => {
     
     if(!datas.guild_id|| !guild) return
     
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, new webhook(datas, bot))
+    bot.emit(name(), bot, new webhook(datas, bot))
 }
 
 function name(){ return "WEBHOOKS_UPDATE" }

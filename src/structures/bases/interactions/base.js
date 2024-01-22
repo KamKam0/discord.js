@@ -15,7 +15,7 @@ class base extends Base{
         this.message = interaction.message ? (new Message({...interaction.message, guild_id: interaction.guild_id, channel_id: interaction.channel_id}, bot)) : null
         this.channel = bot.channels.get(this.channel_id) || channelBackup(interaction.channel_id, bot)
         this.user_id = interaction.user ? interaction.user.id : interaction.member.user.id
-        this.user = bot.users.get(this.user_id) ?? new User(interaction.user, bot)
+        this.user = bot.users.get(this.user_id) ?? new User((interaction.user || interaction.member.user), bot)
         this.member = interaction.member && this.guild ? this.guild.members.get(this.user_id) : null
         this.token = interaction.token
         this.version = interaction.version

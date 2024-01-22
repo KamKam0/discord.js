@@ -18,7 +18,7 @@ module.exports = async (bot, datas) => {
     if(datas.added_members) to_transmit.added_members = (new Members(bot))._addMultiple(datas.added_members)
     if(datas.removed_member) to_transmit.removed_member = (new Members(bot))._addMultiple(datas.removed_member)
 
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, new ThreadUpdate(to_transmit, bot))
+    bot.emit(name(), bot, new ThreadUpdate(to_transmit, bot))
 }
 
 function name(){ return "THREAD_MEMBERS_UPDATE" }

@@ -10,10 +10,10 @@ module.exports = async (bot, newMessage) => {
     }
 
     if(!oldmessage){
-        if(!newMessage.author && (bot.databaseState || bot.databaseState === null)) return bot.emit(name(), bot, newMessage)
+        if(!newMessage.author) return bot.emit(name(), bot, newMessage)
         const messageInstance = new Message(newMessage, bot)
 
-        if(bot.databaseState)  bot.emit(name(), bot, messageInstance)
+        bot.emit(name(), bot, messageInstance)
 
         return
     }

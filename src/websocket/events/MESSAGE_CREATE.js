@@ -8,7 +8,7 @@ module.exports = async (bot, datas) => {
         else message = new Message(datas, bot)
         guild.messages._add(datas)
     }else message = new Message(datas, bot)
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, message)
+    bot.emit(name(), bot, message)
 }
 
 function name(){ return "MESSAGE_CREATE" }

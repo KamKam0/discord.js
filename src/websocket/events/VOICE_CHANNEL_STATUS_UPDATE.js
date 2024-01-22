@@ -7,7 +7,7 @@ module.exports = async (bot, datas) => {
         status: datas.status
     }
 
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, sanitizedData)
+    bot.emit(name(), bot, sanitizedData)
 }
 
 function name(){ return "VOICE_CHANNEL_STATUS_UPDATE" }

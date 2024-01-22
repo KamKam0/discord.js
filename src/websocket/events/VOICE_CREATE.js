@@ -3,7 +3,7 @@ module.exports = async (bot, voice) => {
     guild.voice_states._add(voice)
     guild.channels.get(voice.channel_id).members.container.push(guild.members.get(voice.user_id))
     guild.members.get(voice.user_id).voice = {presence: guild.voice_states.get(voice.user_id), channel: guild.voice_states.get(voice.user_id)?.channel || null}
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, guild.voice_states.get(voice.user_id))
+    bot.emit(name(), bot, guild.voice_states.get(voice.user_id))
 }
 
 function name(){ return "VOICE_CREATE" }

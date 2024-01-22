@@ -15,7 +15,7 @@ module.exports = async (bot, datas) => {
         members
     }
 
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, dataToReturn)
+    bot.emit(name(), bot, dataToReturn)
 }
 
 function name(){ return "GUILD_MEMBERS_CHUNK" }

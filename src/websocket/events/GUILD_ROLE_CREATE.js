@@ -5,7 +5,7 @@ module.exports = async (bot, datas) => {
   
     guild.roles._add({...datas.role, guild_id: guild.id})
     
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, guild.roles.get(datas.role.id))
+    bot.emit(name(), bot, guild.roles.get(datas.role.id))
 }
 
 function name(){ return "GUILD_ROLE_CREATE" }

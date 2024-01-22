@@ -4,7 +4,7 @@ module.exports = async (bot, datas) => {
   }
   else if(bot.state === "ready"){
     deployGuild(bot, datas)
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, bot.guilds.get(datas.id))
+    bot.emit(name(), bot, bot.guilds.get(datas.id))
   }
   else if(bot.state === "isession"){
     if(!bot.guilds.get(datas.id)) deployGuild(bot, datas)
@@ -28,9 +28,9 @@ function analyseGuild(bot, datas){
     bot.ws.discordSide.available_ids.splice(bot.ws.discordSide.available_ids.indexOf(tempoGuild), 1)
     if(bot.ws.discordSide.available_ids.length === 0 && bot.state === "processing"){
       bot.state = "ready"
-      if(bot.databaseState || bot.databaseState === null) bot.emit("READY", bot)
+      bot.emit("READY", bot)
     }
-  }else if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, bot.guilds.get(datas.id))
+  }else bot.emit(name(), bot, bot.guilds.get(datas.id))
 }
 
 async function deployGuild(bot, datas, state){

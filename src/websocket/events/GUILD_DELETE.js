@@ -12,7 +12,7 @@ module.exports = async (bot, datas) => {
     bot.users._deleteMultiple(guild.members.map(users => { return {user: users.ID, guild: guild.id}}))
     bot.channels._deleteMultiple(guild.channels.map(ch => ch.id))
 
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, guild)
+    bot.emit(name(), bot, guild)
 }
 
 function name(){ return "GUILD_DELETE" }

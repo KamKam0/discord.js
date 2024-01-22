@@ -15,7 +15,19 @@ function getBietfielfFromPermissions(permissions){
 function getIntentsFromNames(intents){
     if(!Array.isArray(intents) && typeof intents !== "string" && intents !== "ALL") return "Incorrect Intents"
     if(intents === "ALL") return Object.values(intentsConstance).reduce((a, b) => a+b, 0)
-    return intents.reduce((a, b) => intents[b] ? a + intents[b] : a+0, 0)
+
+    let mappedConstanceIntents = Object.keys(intentsConstance).map(key => {
+        return {
+            original: key,
+            mapped: key.replaceAll('_', '').toLowerCase()
+        }
+    })
+
+    let mappedGivenIntents = intents.map(key => String(key).replaceAll('_', '').toLowerCase())
+
+    return mappedConstanceIntents
+    .filter(mappedConstanceIntent => mappedGivenIntents.find(mappedGivenIntent => mappedConstanceIntent.mapped === mappedGivenIntent))
+    .reduce((a, b) => a += intentsConstance[b.original], 0)
 }
 
 function getArrayFromBitfield(types, bitfield){

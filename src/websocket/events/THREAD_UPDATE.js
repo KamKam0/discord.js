@@ -9,7 +9,7 @@ module.exports = async (bot, newThread) => {
     if(!oldthread){
         guild.threads._add(newThread)
         const modifiedThread = guild.threads.get(newThread.id)
-        if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, null, modifiedThread)
+        bot.emit(name(), bot, null, modifiedThread)
         return
     }
 

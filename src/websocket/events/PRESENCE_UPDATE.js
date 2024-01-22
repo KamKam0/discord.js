@@ -8,7 +8,7 @@ module.exports = async (bot, datas) => {
 
     let modifications = guild.presences._Treat(datas)
 
-    if(modifications && (bot.databaseState || bot.databaseState === null)) bot.emit(name(), bot, modifications.oldInstance, modifications.newInstance, modifications.modifications)
+    if(modifications) bot.emit(name(), bot, modifications.oldInstance, modifications.newInstance, modifications.modifications)
    
 }
 

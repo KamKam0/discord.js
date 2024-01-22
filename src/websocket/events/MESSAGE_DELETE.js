@@ -12,7 +12,7 @@ module.exports = async (bot, datas) => {
         dataToSend = new Result(datas, bot)
     }
     
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot, dataToSend)
+    bot.emit(name(), bot, dataToSend)
 }
 
 function name(){ return "MESSAGE_DELETE" }

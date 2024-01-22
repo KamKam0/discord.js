@@ -6,6 +6,6 @@ module.exports = async (bot, datas) => {
     if(datas.type === 5) vtype = "modal"
     delete datas.guild
     let classResult = require(`../../structures/singles/interactions/${vtype}`)
-    if(bot.databaseState || bot.databaseState === null) bot.emit(name(), bot,  new classResult(datas, bot))
+    bot.emit(name(), bot,  new classResult(datas, bot))
 }
 function name(){ return "INTERACTION_CREATE" }
