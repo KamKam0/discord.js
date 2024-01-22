@@ -57,7 +57,7 @@ class WebsocketHandler{
     async #connectionURL(){
         return new Promise(async (resolve, reject) => {
             let trueurl;
-            if(this._bot.state === "processing" && !this.discordSide.connectionInfos.connectionUrl){
+            if(!this.discordSide.connectionInfos.connectionUrl){
                 const basedatas = await getGateway(this._bot.token).catch(err => reject(err))
                 if(!basedatas) return
                 this.discordSide.connectionInfos = {
