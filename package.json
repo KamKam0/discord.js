@@ -16,7 +16,7 @@
   "keywords": ["Discordjs", "Events", "Handler"],
   "homepage": "https://github.com/KamKam0/discord.js",
   "author": "KamKam <kamkam.dev.contact@gmail.com>",
-  "license": "ISC",
+  "license": "MPL 2.0",
   "dependencies": {
     "@kamkam1_0/cooldown": "^2.0.0",
     "@kamkam1_0/discord-eventhandler": "^1.2.12",
