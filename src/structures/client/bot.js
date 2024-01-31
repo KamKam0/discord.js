@@ -65,7 +65,7 @@ class Bot extends EventEmitter{
     async login(presence){
         this.handler.deploy()
         this.events.deploy(presence)
-        this.cooldown.Deploy(["global", "commands", "verif", "mention"])
+        this.cooldown.deploy(["global", "commands", "verif", "mention"])
         return this.ws.login(presence)
     }
 
