@@ -5,10 +5,12 @@ const methodMessage = require("../../methods/message")
 class Messages extends BaseMessage{
     constructor(bot, guild_id, limitMessages=false){
         super(bot, guild_id)
+
+        this.limitMessages = limitMessages
     }
 
     _add(data){
-        if (limitMessages && this.container.length === 200) {
+        if (this.limitMessages && this.container.length === 200) {
             this.container.shift()
         }
         if (data instanceof Message) {
