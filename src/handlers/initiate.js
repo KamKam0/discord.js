@@ -18,7 +18,7 @@ class Initiate{
             let commands = await this._bot.commands.fetchAll({with_localizations: true}).catch(err => reject(err))
             if(!commands) return
     
-            this._bot.handler.getCommandsfi().filter(cmd => !cmd.help.unclass).forEach(commande => {
+            this._bot.handler.getUserCommands().filter(cmd => !cmd.help.unclass).forEach(commande => {
                 let descriptions_cmd, names_cmd, descriptions_opt, names_opt, names_cho;
     
                 let las = (commande.help.langues) ? this._bot.handler.getLanguages() : this._bot.langues
