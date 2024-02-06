@@ -10,6 +10,7 @@ const componentsClass = {
 }
 const User = require("./user")
 const optionsTypes = require("../../types/option").types
+const ReactionsAdministrator = require('../administrators/reactions')
 
 class Message extends Base{
     constructor(message, bot){
@@ -34,6 +35,7 @@ class Message extends Base{
         this.mention_members = (message.mentions && message.mentions.filter(e => e.member)[0]) ? (new Mentions(bot, this.guild_id, "member"))._addMultiple(message.mentions.filter(e => e.member).map(e => e.id)) :  new Mentions(bot, this.guild_id, "member")
         this.attachments = message.attachments || []
         this.embeds = message.embeds?.map(embed => new Embed(embed)) || []
+        this.reactions = new ReactionsAdministrator(bot, this.channel_id, this.id)
         this.reactions = message.reactions || []
         this.nonce = message.nonce || null
         this.pinned = message.pinned ?? false

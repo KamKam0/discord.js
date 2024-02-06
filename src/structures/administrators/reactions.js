@@ -1,4 +1,4 @@
-const Base = require("../bases/basemuldecla")
+const Base = require("../managers/reactions")
 const messageMethod = require("../../methods/message")
 
 class Reactions extends Base{

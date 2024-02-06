@@ -1,6 +1,15 @@
-class Reactions{
-    constructor(){
+const Base = require("../bases/basemuldecla")
+
+class Reactions extends Base{
+    constructor(bot){
+        super(bot)
+
         this.container = []
+    }
+
+    _addMultiple(datas){
+        datas.map(data => this._add(data))
+        return this
     }
 
     _add(reaction){
