@@ -1,4 +1,4 @@
-const queueManager = require("./queueManager")
+const queueManager = require("./queuemanager")
 const {StreamType, createAudioResource, createAudioPlayer, getVoiceConnection} = require("@discordjs/voice")
 const ffmpeg = require("fluent-ffmpeg")
 const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg")
