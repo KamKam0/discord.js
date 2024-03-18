@@ -1,6 +1,6 @@
 {
   "name": "@kamkam1_0/discord.js",
-  "version": "4.2.8",
+  "version": "4.2.9",
   "description": "Allows you to fully interact with discord's apis",
   "main": "./src/index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "license": "MPL 2.0",
   "dependencies": {
     "@kamkam1_0/cooldown": "^2.0.1",
-    "@kamkam1_0/discord-eventhandler": "^1.2.15",
+    "@kamkam1_0/discord-eventhandler": "^1.2.16",
     "@kamkam1_0/discord-commandhandler": "^1.8.1",
     "@kamkam1_0/ms": "^1.0.6",
     "form-data": "^4.0.0",
