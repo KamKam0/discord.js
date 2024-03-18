@@ -1,7 +1,7 @@
 const queueManager = require("./queuemanager")
 const {StreamType, createAudioResource, createAudioPlayer, getVoiceConnection} = require("@discordjs/voice")
 const ffmpeg = require("fluent-ffmpeg")
-const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg")
+// const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg")
 class voiceManager{
     #timeout;
     #timeoutMusic;
@@ -152,10 +152,10 @@ class voiceManager{
             if(!this.state || (options && typeof options !== "object") || this.playing) return reject(null)
             if(!this.state) return reject(null)
             let volume = this.#trvolume(options.volume)
-            if(options.seek && typeof options.seek === "number") {
-                ffmpeg.setFfmpegPath(ffmpegInstaller.path)
-                stream = ffmpeg({source: stream}).toFormat("mp3").setStartTime(options.seek)
-            }
+            // if(options.seek && typeof options.seek === "number") {
+            //     ffmpeg.setFfmpegPath(ffmpegInstaller.path)
+            //     stream = ffmpeg({source: stream}).toFormat("mp3").setStartTime(options.seek)
+            // }
             const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary, inlineVolume: true});
             resource.volume.setVolume(volume)
             const player = createAudioPlayer();
