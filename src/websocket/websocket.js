@@ -37,7 +37,8 @@ class WebsocketHandler{
                 connectionUrl: null,
                 connectionNumber: null,
                 shardAdvised: null
-            }
+            },
+            timeoutGuildCreate: null
         }
         this.initiate = new Initiate(bot)
         this.events = this.getEventsRequired(events)

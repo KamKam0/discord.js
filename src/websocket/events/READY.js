@@ -11,9 +11,23 @@ module.exports = async (bot, datas) => {
     if (bot.state === 'ready') {
         bot.emit("READY", bot)
     } else {
-        if(bot.ws.discordSide.guild_ids.length === 0 && bot.state === "processing"){
-            bot.state = "ready"
-            bot.emit("READY", bot)
+        if (bot.state === "processing") {
+            if (bot.ws.discordSide.guild_ids.length === 0) {
+                if (bot.ws.discordSide.timeoutGuildCreate) {
+                    clearTimeout(bot.ws.discordSide.timeoutGuildCreate)
+                    bot.ws.discordSide.timeoutGuildCreate = null
+                }
+                bot.state = "ready"
+                bot.emit("READY", bot)
+            } else {
+                bot.ws.discordSide.timeoutGuildCreate = setTimeout(() => {
+                    if (bot.state !== 'ready') {
+                        bot.state = "ready"
+                        bot.emit("READY", bot)
+                    }
+                    bot.ws.discordSide.timeoutGuildCreate = null
+                }, 2 * 1000)
+            }
         }
         if(bot.state === "isession"){
             let gu = bot.guilds.filter(g => !bot.ws.discordSide.guild_ids.includes(g.id))

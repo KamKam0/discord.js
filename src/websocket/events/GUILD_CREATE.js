@@ -1,10 +1,6 @@
 module.exports = async (bot, datas) => {
-  if(bot.state === "processing"){
-    deployGuild(bot, datas, true)
-  }
-  else if(bot.state === "ready"){
+  if(['processing', 'ready'].includes(bot.state)){
     deployGuild(bot, datas)
-    bot.emit(name(), bot, bot.guilds.get(datas.id))
   }
   else if(bot.state === "isession"){
     if(!bot.guilds.get(datas.id)) deployGuild(bot, datas)
@@ -25,10 +21,22 @@ function name(){ return "GUILD_CREATE" }
 function analyseGuild(bot, datas){
   let tempoGuild = bot.ws.discordSide.available_ids.find(id => id.id === datas.id)
   if(tempoGuild){
+    if (bot.ws.discordSide.timeoutGuildCreate) {
+      clearTimeout(bot.ws.discordSide.timeoutGuildCreate)
+      bot.ws.discordSide.timeoutGuildCreate = null
+    }
     bot.ws.discordSide.available_ids.splice(bot.ws.discordSide.available_ids.indexOf(tempoGuild), 1)
     if(bot.ws.discordSide.available_ids.length === 0 && bot.state === "processing"){
       bot.state = "ready"
       bot.emit("READY", bot)
+    } else {
+      bot.ws.discordSide.timeoutGuildCreate = setTimeout(() => {
+        if (bot.state !== 'ready') {
+          bot.state = "ready"
+          bot.emit("READY", bot)
+        }
+        bot.ws.discordSide.timeoutGuildCreate = null
+      }, 2 * 1000)
     }
   }else bot.emit(name(), bot, bot.guilds.get(datas.id))
 }
@@ -39,7 +47,7 @@ async function deployGuild(bot, datas, state){
   bot.guilds._add(datas)
   bot.channels._addMultiple(datas.channels.map(ch => { return {...ch, guild_id: datas.id}}))
   bot.channels._addMultiple(datas.threads.map(ch => { return {...ch, guild_id: datas.id}}))
-  if(bot.state !== "ready") analyseGuild(bot, datas, state)
+  analyseGuild(bot, datas)
 }
 
 function analysePresences(datas){
