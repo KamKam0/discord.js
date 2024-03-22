@@ -26,17 +26,19 @@ function analyseGuild(bot, datas){
       bot.ws.discordSide.timeoutGuildCreate = null
     }
     bot.ws.discordSide.available_ids.splice(bot.ws.discordSide.available_ids.indexOf(tempoGuild), 1)
-    if(bot.ws.discordSide.available_ids.length === 0 && bot.state === "processing"){
-      bot.state = "ready"
-      bot.emit("READY", bot)
-    } else {
-      bot.ws.discordSide.timeoutGuildCreate = setTimeout(() => {
-        if (bot.state !== 'ready') {
-          bot.state = "ready"
-          bot.emit("READY", bot)
-        }
-        bot.ws.discordSide.timeoutGuildCreate = null
-      }, 2 * 1000)
+    if (bot.state === "processing") {
+      if(bot.ws.discordSide.available_ids.length === 0){
+        bot.state = "ready"
+        bot.emit("READY", bot)
+      } else {
+        bot.ws.discordSide.timeoutGuildCreate = setTimeout(() => {
+          if (bot.state !== 'ready') {
+            bot.state = "ready"
+            bot.emit("READY", bot)
+          }
+          bot.ws.discordSide.timeoutGuildCreate = null
+        }, 2 * 1000)
+      }
     }
   }else bot.emit(name(), bot, bot.guilds.get(datas.id))
 }
