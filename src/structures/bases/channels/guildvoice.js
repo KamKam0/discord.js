@@ -1,5 +1,7 @@
 const Base = require("./baseguild")
 const Members = require("../../../structures/managers/members")
+const { getVoiceConnection, joinVoiceChannel } = require("@discordjs/voice")
+
 class guildVoice extends Base{
     constructor(channel, bot){
         super(channel, bot)
@@ -23,13 +25,14 @@ class guildVoice extends Base{
             if(parameters.deaf && typeof parameters.deaf !== "boolean") parameters.deaf = false
             if(parameters.timeout && typeof parameters.timeout !== "number") delete parameters.timeout
         }else parameters = {}
-        const {joinVoiceChannel} = require("@discordjs/voice")
         let guild = this._bot.guilds.get(this.guild_id)
         guild.voice.stop()
         guild.voice._deploy()
         guild.voice.state = true
         guild.voice.channel_id = this.id
+        
         if(parameters.timeout) guild.voice._setDefaultTiemout(parameters.timeout)
+
         joinVoiceChannel({
             channelId: this.id,
             guildId: this.guild_id,
@@ -40,7 +43,6 @@ class guildVoice extends Base{
     }
 
     leave(){
-        const {getVoiceConnection} = require("@discordjs/voice")
         let guild = this._bot.guilds.get(this.guild_id)
         if(guild.voice.state) getVoiceConnection(this.guild_id).disconnect()
         if(guild.voice.state) guild.voice.stop()

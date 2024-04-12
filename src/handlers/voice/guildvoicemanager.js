@@ -1,7 +1,7 @@
 const queueManager = require("./queuemanager")
 const {StreamType, createAudioResource, createAudioPlayer, getVoiceConnection} = require("@discordjs/voice")
-const ffmpeg = require("fluent-ffmpeg")
-// const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg")
+const ytdl = require('ytdl-core')
+
 class voiceManager{
     #timeout;
     #timeoutMusic;
@@ -147,15 +147,17 @@ class voiceManager{
         }
     }
 
-    play(stream, options){
+    play(link, options){
         return new Promise((resolve, reject) => {
             if(!this.state || (options && typeof options !== "object") || this.playing) return reject(null)
             if(!this.state) return reject(null)
             let volume = this.#trvolume(options.volume)
-            // if(options.seek && typeof options.seek === "number") {
-            //     ffmpeg.setFfmpegPath(ffmpegInstaller.path)
-            //     stream = ffmpeg({source: stream}).toFormat("mp3").setStartTime(options.seek)
-            // }
+            let stream;
+            if (options.seek) {
+                stream = ytdl(link, { filter: 'audioandvideo', begin: options.seek })
+            } else {
+                stream = ytdl(link, { filter: 'audioonly' })
+            }
             const resource = createAudioResource(stream, { inputType: StreamType.Arbitrary, inlineVolume: true});
             resource.volume.setVolume(volume)
             const player = createAudioPlayer();
@@ -177,6 +179,7 @@ class voiceManager{
 
     #mamangeinter(){
         this.connection.on("stateChange", async (oldstate, newstate) => {
+            console.log(22)
             if(newstate.status === "playing" && this.#timeoutMusic){
                 clearTimeout(this.#timeoutMusic)
                 this.#timeoutMusic = null
@@ -229,7 +232,7 @@ class voiceManager{
         }) 
     }
 
-    seek(stream, options){
+    seek(link, options){
         return new Promise((resolve, reject) => {
             if(!this.playing || !this.queue.np || !options || typeof options !== "object" || !options.seek || (typeof options.seek !== "number" && isNaN(options.seek))) return reject(null)
             if(typeof options.seek !== "number") options.seek = Number(options.seek)
@@ -237,7 +240,7 @@ class voiceManager{
             this.queue.setNP({...this.queue.np, seek: options.seek})
             this.end()
             setTimeout(() => {
-                this.play(stream, options)
+                this.play(link, options)
                 setTimeout(() => {
                     return resolve(null)
                 }, 1000)
@@ -267,17 +270,17 @@ class voiceManager{
 
     get voiceAdapterCreator() {
         return methods => {
-          this._bot.voice.adapters.set(this.id, methods);
-          return {
-            sendPayload: data => {
-              if (this._bot.state !== "ready") return false;
-              this._bot.ws.discordSide.ws.send(JSON.stringify(data));
-              return true;
-            },
-            destroy: () => {
-              this._bot.voice.adapters.delete(this.id);
-            },
-          };
+            this._bot.voice.adapters.set(this.id, methods);
+            return {
+                sendPayload: data => {
+                    if (this._bot.state !== "ready") return false;
+                    this._bot.ws.discordSide.ws.send(JSON.stringify(data));
+                    return true;
+                },
+                destroy: () => {
+                    this._bot.voice.adapters.delete(this.id);
+                },
+            };
         };
     }
 }
