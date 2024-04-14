@@ -1,6 +1,6 @@
 {
   "name": "@kamkam1_0/discord.js",
-  "version": "4.2.15",
+  "version": "4.2.16",
   "description": "Allows you to fully interact with discord's apis",
   "main": "./src/index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   "author": "KamKam <kamkam.dev.contact@gmail.com>",
   "license": "MPL 2.0",
   "dependencies": {
-    "@discordjs/voice": "0.14.0",
+    "@discordjs/voice": "0.16.1",
     "@kamkam1_0/cooldown": "^2.0.1",
     "@kamkam1_0/discord-commandhandler": "^1.8.1",
     "@kamkam1_0/discord-eventhandler": "^1.2.16",

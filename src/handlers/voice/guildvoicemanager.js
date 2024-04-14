@@ -179,7 +179,6 @@ class voiceManager{
 
     #mamangeinter(){
         this.connection.on("stateChange", async (oldstate, newstate) => {
-            console.log(22)
             if(newstate.status === "playing" && this.#timeoutMusic){
                 clearTimeout(this.#timeoutMusic)
                 this.#timeoutMusic = null
@@ -194,9 +193,7 @@ class voiceManager{
                 if(!this.#timeoutMusic) this.#timeoutMusic = setTimeout(() => this.stop(), this.#realDefaultTiemout)
                 this.queue._update(this)
             }
-        })
-        this.connection.on("stateChange", async (oldstate, newstate) => { 
-            if(newstate.status === "disconnected" || newstate.status === "autopaused") return this.stop() 
+            if(newstate.status === "disconnected" || newstate.status === "autopaused") this.stop() 
         })
     }
 
