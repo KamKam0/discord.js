@@ -19,8 +19,8 @@
   "license": "MPL 2.0",
   "dependencies": {
     "@kamkam1_0/cooldown": "^2.0.1",
-    "@kamkam1_0/discord-eventhandler": "^1.2.16",
-    "@kamkam1_0/discord-commandhandler": "^1.8.1",
+    "@kamkam1_0/discord-eventhandler": "1.2.18",
+    "@kamkam1_0/discord-commandhandler": "1.8.2",
     "@kamkam1_0/ms": "^1.0.6",
     "form-data": "^4.0.0",
     "node-fetch": "^2.6.7",

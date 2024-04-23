@@ -9,6 +9,20 @@ const errors = require("../utils/errors.json")
 const ApplicationCommand = require("../structures/applicationscommands/command")
 const ApplicationCommandManager = require("../structures/managers/applicationcommands")
 
+module.exports.replyToAutocomplete = async (informations, choices) => {
+    let args = [
+        {value: { type: 8, data: { choices } }, data_name: "options"}
+    ]
+    let passedOptions = {
+        method: apiPath.create.response.method,
+        token: informations.botToken,
+        url: apiPath.create.response.url,
+        urlIDS: informations
+    }
+
+    return handler(args, passedOptions, null)
+}
+
 module.exports.reply = async (informations, response, isDeferredResponse=false) => {
     return new Promise(async (resolve, reject) => {
         if(!response) return reject(utils.checks.checkId("An error happened", {code: errors["44"].code, message: errors["44"].message, file: "Interaction"}))

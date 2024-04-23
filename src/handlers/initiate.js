@@ -114,7 +114,11 @@ class Initiate{
             if(!cmd.help) error.push({cmd: cmd.name, err: "no help"})
             else{
                 let verif = slashChecker({...cmd.help, name: cmd.name}, true, ((cmd.help.langues ) ? this._bot.handler.getLanguages() : this._bot.langues))
-                if(!verif.status) error.push({...verif, cmd: cmd.name})
+                if(!verif.status) {
+                    error.push({...verif, cmd: cmd.name})
+                } else if (cmd.help?.options?.find(option => option.autocomplete) && typeof cmd.choicesLoader !== 'function') {
+                    error.push({type: 'cmd', errors: [{err: "autocomplete option wihtout choicesLoader function"}], status: false, cmd: cmd.name})
+                }
             }
         })
         if(error.length !== 0){

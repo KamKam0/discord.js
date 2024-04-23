@@ -1,3 +1,5 @@
+const interactionAutocompleteCreateEvent = require('./INTERACTION_AUTOCOMPLETE_CREATE')
+
 module.exports = async (bot, datas) => {
     let vtype = null
     if(datas.type === 3 && datas.data && datas.data.component_type && datas.data.component_type === 2) vtype = "Button"
@@ -5,6 +7,11 @@ module.exports = async (bot, datas) => {
     if(datas.type === 2) vtype = "Slash"
     if(datas.type === 5) vtype = "modal"
     delete datas.guild
+
+    if (!vtype) {
+        return interactionAutocompleteCreateEvent(bot, datas)
+    }
+
     let classResult = require(`../../structures/singles/interactions/${vtype}`)
     bot.emit(name(), bot,  new classResult(datas, bot))
 }

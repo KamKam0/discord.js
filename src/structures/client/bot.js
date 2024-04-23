@@ -288,7 +288,6 @@ class Bot extends EventEmitter{
             if(e === "") return elementOS
             return e
         }).join(elementOS)
-        const fs = require("node:fs")
         return fs.readdirSync(truePath).filter(e => e.endsWith(".js")).map(e => e.split(".js")[0])
     }
 }
