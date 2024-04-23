@@ -1,5 +1,10 @@
 const Base = require("../../bases/interactions/base")
 const Attachment = require('../../../handlers/attachment')
+const User = require('../user')
+const Member = require('../member')
+const Role = require('../role')
+const channelTypes = require("../../../types/channels")
+const revertChannelTypes = channelTypes.revert()
 
 class Slash extends Base{
     constructor(slash, bot){
@@ -7,7 +12,7 @@ class Slash extends Base{
         this.id = slash.id
         this.command_id = slash.data.id || null
         this.attachments = this.#analyseAttachments(slash.data.resolved)
-        this.options = this.#analyseOptions(slash.data.options)
+        this.options = this.#analyseOptions(slash.data.options, slash.data.resolved, this.guild_id, bot)
     }
 
     getOption(name){
@@ -27,25 +32,57 @@ class Slash extends Base{
         return Object.values(resolved.attachments).map(attachment => new Attachment(attachment))
     }
 
-    #analyseOptions(options) {
+    #analyseOptions(options, resolvedData, guildId, bot) {
         if (!options || !options.length) {
             return []
         }
-        
-        const definitiveOptions = this.attachments.length 
-        ? options.map(option => {
-                if (!option.value) {
-                    return option
-                }
-                
-                let linkedAttachment = this.attachments.find(attachment => attachment.id === option.value)
-                if (linkedAttachment) {
-                    option.value = linkedAttachment
-                }
 
+        const definitiveOptions = options.map(option => {
+            if (!option.value) {
                 return option
-            })
-        : options
+            }
+
+            switch(option.type) {
+                case (6):
+                    if (resolvedData.members[option.value]) {
+                        resolvedData.members[option.value].user = resolvedData.users[option.value]
+                        resolvedData.members[option.value].guild_id = guildId
+                        option.value = new Member(resolvedData.members[option.value], bot)
+                    } else {
+                        option.value = new User(resolvedData.users[option.value], bot)
+                    }
+                break;
+                case (7):
+                    let channelClass = require(`../channels/channel${revertChannelTypes[resolvedData.channels[option.value].type].toLowerCase()}`)
+                    resolvedData.channels[option.value].guild_id = guildId
+                    option.value = new channelClass(resolvedData.channels[option.value], bot)
+                break;
+                case (8):
+                    resolvedData.roles[option.value].guild_id = guildId
+                    option.value = new Role(resolvedData.roles[option.value], bot)
+                break;
+                case (9):
+                    if (resolvedData.members[option.value]) {
+                        resolvedData.members[option.value].user = resolvedData.users[option.value]
+                        resolvedData.members[option.value].guild_id = guildId
+                        option.value = new Member(resolvedData.members[option.value], bot)
+                    } else if (resolvedData.users[option.value]) {
+                        option.value = new User(resolvedData.users[option.value], bot)
+                    } else {
+                        resolvedData.roles[option.value].guild_id = guildId
+                        option.value = new Role(resolvedData.roles[option.value], bot)
+                    }
+                break;
+                case (11):
+                    let linkedAttachment = this.attachments.find(attachment => attachment.id === option.value)
+                    if (linkedAttachment) {
+                        option.value = linkedAttachment
+                    }
+                break;
+            }
+            
+            return option
+        })
 
         return definitiveOptions
     }
