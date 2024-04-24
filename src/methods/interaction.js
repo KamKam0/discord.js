@@ -9,6 +9,7 @@ const errors = require("../utils/errors.json")
 const ApplicationCommand = require("../structures/applicationscommands/command")
 const ApplicationCommandManager = require("../structures/managers/applicationcommands")
 const Message = require("../structures/singles/message")
+const FormData = require("form-data")
 
 module.exports.replyToAutocomplete = async (informations, choices) => {
     let args = [
@@ -75,7 +76,6 @@ module.exports.reply = async (informations, response, isDeferredResponse=false) 
 
             let checkfiles = utils.checks.checkFiles(options.files)
             if(checkfiles && Array.isArray(checkfiles) === true && checkfiles[0]){
-                const FormData = require("form-data")
                 let body_files = new FormData()
                 for(const file in checkfiles){
                     body_files.append(`files[${file}]`, checkfiles[file].getBuffer(), checkfiles[file].getFullName());

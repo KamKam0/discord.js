@@ -69,10 +69,18 @@ class Bot extends EventEmitter{
         return this.ws.login(presence)
     }
 
+    async modifyBotData(options) {
+        let informations = {
+            bot: this,
+            botToken: this.token
+        }
+        return methodMe.modifybBot(informations, options)
+    }
+
     async getMe(){
         let informations = {
             bot: this,
-            token: this.token
+            botToken: this.token
         }
         return methodMe.getuser(informations)
     }

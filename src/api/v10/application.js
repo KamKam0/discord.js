@@ -6,6 +6,10 @@ let routes = {
         method: "GET",
         url: apiBase+'/applications/@me'
     },
+    modify: {
+        method: "PATCH",
+        url: apiBase+'/applications/@me'
+    },
     metadata: {
         get: {
             method: "GET",
