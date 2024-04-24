@@ -8,6 +8,7 @@ const getMe = require("./me").getuser
 const errors = require("../utils/errors.json")
 const ApplicationCommand = require("../structures/applicationscommands/command")
 const ApplicationCommandManager = require("../structures/managers/applicationcommands")
+const Message = require("../structures/singles/message")
 
 module.exports.replyToAutocomplete = async (informations, choices) => {
     let args = [
@@ -69,6 +70,7 @@ module.exports.reply = async (informations, response, isDeferredResponse=false) 
             body.components = utils.checks.checkComponents(options.components)
             body.sticker_ids = utils.checks.checkStickers(options.sticker_ids)
             body.content = utils.checks.checkContent(options.content)
+            body.poll = utils.checks.checkPoll(options.poll)
             if(response.ephemeral === true) body.flags = 64
 
             let checkfiles = utils.checks.checkFiles(options.files)
@@ -87,7 +89,7 @@ module.exports.reply = async (informations, response, isDeferredResponse=false) 
                 ]
                 passedOptions.contentType = "file"
                 basedatas = handler(args, passedOptions, callBackSuccess)
-            }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject(createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Interaction"}))
+            }else if(!body.content && !body.poll && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids.length === 0) return reject(createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Interaction"}))
             
             if(!checkfiles || !Array.isArray(checkfiles) || !checkfiles[0]) {
                 let args = []
@@ -216,7 +218,10 @@ module.exports.getoriginalresponse = async (informations) => {
         urlIDS: informations
     }
     let args = [ ]
-    return handler(args, passedOptions, null)
+    let callBackSuccess = (data) => {
+        return new Message(data, informations.bot)
+    }
+    return handler(args, passedOptions, callBackSuccess)
 }
 
 module.exports.createcommand = async (informations, options) => {
