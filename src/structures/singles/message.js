@@ -89,7 +89,7 @@ class Message extends Base{
         let returnedOptions = []
         for (const option in options){
             let associatedValue = splittedMessageContent[option]
-            if(!associatedValue[option]) return returnedOptions
+            if(!associatedValue) return returnedOptions
             if(!isNaN(associatedValue)) associatedValue = +associatedValue
             if(!allowedOptionTypes.includes(typeof associatedValue)) continue
             let typeOfAssociatedValue = typeof associatedValue
