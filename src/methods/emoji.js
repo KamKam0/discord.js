@@ -6,7 +6,7 @@ const fileManager = require("../handlers/filemanager")
 module.exports.create = async (informations, options) => {
     if(typeof options === "object" && typeof options.image === "object" && options.image instanceof fileManager){
         let extensions = ["jpg", "gif", "png"]
-        if(!extensions[options.image.getExtension().toLowerCase()]) return Promise.reject(`The emoji extension is not one of (${extensions.join(", ")})`)
+        if(!extensions.includes(options.image.getExtension().toLowerCase())) return Promise.reject(`The emoji extension is not one of (${extensions.join(", ")})`)
         options.image = options.image.getImageFile()
     }
     let passedOptions = {

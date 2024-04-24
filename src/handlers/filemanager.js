@@ -81,7 +81,7 @@ class FileManager{
     }
 
     getImageFile(){
-        let baseData = Buffer.from(this.#buffer, "base64")
+        let baseData = Buffer.from(this.#buffer).toString('base64')
         return `data:image/${this.#extension};base64,${baseData}`
     }
 }
