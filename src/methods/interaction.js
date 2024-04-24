@@ -257,3 +257,98 @@ module.exports.modifycommand = async (informations, options) => {
     ]
     return handler(args, passedOptions, null)
 }
+
+/**
+ * 
+ * @param {object} informations 
+ * @param {object} options 
+ * @param {boolean} options.with_localizations
+ * @returns 
+ */
+module.exports.getcommandsByGuild = async (informations, options) => {
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
+    let passedOptions = {
+        method: commandApiPath.get.guild.list.method,
+        token: informations.botToken,
+        url: commandApiPath.get.guild.list.url,
+        urlIDS: informations
+    }
+    let args = [
+        {
+            value: options, 
+            data_name: "infosURL", 
+            order: 3, 
+            required: false, 
+            check: [
+                {name: "with_localizations", type: "boolean"}
+            ]
+        }
+    ]
+    let callBackSuccess = (data) => {
+        const commands = new ApplicationCommandManager(informations.bot)
+        commands._addMultiple(data)
+        return commands
+    }
+    return handler(args, passedOptions, callBackSuccess)
+}
+
+module.exports.getcommandByGuild = async (informations) => {
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
+    let passedOptions = {
+        method: commandApiPath.get.guild.method,
+        token: informations.botToken,
+        url: commandApiPath.get.guild.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    let callBackSuccess = (data) => {
+        return new ApplicationCommand(data, informations.bot)
+    }
+    return handler(args, passedOptions, callBackSuccess)
+}
+
+module.exports.deletecommandByGuild = async (informations) => {
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
+    let passedOptions = {
+        method: commandApiPath.delete.guild.method,
+        token: informations.botToken,
+        url: commandApiPath.delete.guild.url,
+        urlIDS: informations
+    }
+    let args = [ ]
+    return handler(args, passedOptions, null)
+}
+
+module.exports.createcommandByGuild = async (informations, options) => {
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
+    let check = checkApplicationCommand(options)
+    if(!check.status) return Promise.reject(check)
+    
+    let passedOptions = {
+        method: commandApiPath.create.guild.method,
+        token: informations.botToken,
+        url: commandApiPath.create.guild.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    return handler(args, passedOptions, null)
+}
+
+module.exports.modifycommandByGuild = async (informations, options) => {
+    if(!informations.application_id) informations.application_id = informations.bot.user_id
+    let check = checkApplicationCommand(options)
+    if(!check.status) return Promise.reject(check)
+    
+    let passedOptions = {
+        method: commandApiPath.modify.guild.method,
+        token: informations.botToken,
+        url: commandApiPath.modify.guild.url,
+        urlIDS: informations
+    }
+    let args = [
+        {value: options, data_name: "options", order: 3}
+    ]
+    return handler(args, passedOptions, null)
+}

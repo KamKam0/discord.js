@@ -10,7 +10,7 @@ class Slash extends Base{
         this.application_id = slash.application_id || null
         this.version = slash.version || null
         this.default_member_permissions = slash.default_member_permissions ? this.#analyseDefaultMember(slash.default_member_permissions) : null
-        this.onlydm = slash.onlydm ?? false
+        this.guild_id = slash.guild_id || null
         this.options = slash.options ? slash.options.map(opt => new Option(opt)) : []
         this.contexts = slash.contexts ? this.#getContexts(slash.contexts) : null
         this.type = 1
@@ -26,6 +26,10 @@ class Slash extends Base{
             botToken: this._token,
             application_id: ID
         }
+        if (this.guild_id) {
+            informations.guild_id = this.guild_id
+            return interactionMethod.createcommandByGuild(informations, this.toJSON())
+        }
         return interactionMethod.createcommand(informations, this.toJSON())
     }
 
@@ -36,6 +40,10 @@ class Slash extends Base{
             botToken: this._token,
             application_id: ID,
             id: this.id
+        }
+        if (this.guild_id) {
+            informations.guild_id = this.guild_id
+            return interactionMethod.modifycommandByGuild(informations, this.toJSON())
         }
         return interactionMethod.modifycommand(informations, this.toJSON())
     }
@@ -48,11 +56,19 @@ class Slash extends Base{
             application_id: ID,
             id: this.id
         }
+        if (this.guild_id) {
+            informations.guild_id = this.guild_id
+            return interactionMethod.deletecommandByGuild(informations, this.toJSON())
+        }
         return interactionMethod.deletecommand(informations)
     }
 
     #getContexts(contexts) {
-        if (!Array.isArray(contexts)) {
+        if (this.guild_id) {
+            return null
+        }
+
+        if (!Array.isArray(contexts) || !contexts.length) {
             return null
         }
 
@@ -121,10 +137,6 @@ class Slash extends Base{
 
     setNSFW(bool){
         return this._setBoolean("nsfw", bool)
-    }
-
-    setOnlyDM(bool){
-        return this._setBoolean("onlydm", bool)
     }
 
     setDefaultMemberPermission(value){
