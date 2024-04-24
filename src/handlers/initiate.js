@@ -50,11 +50,14 @@ class Initiate{
                 })
                 
                 let cmd = commands.find(cmd => cmd.name === commande.name)
-                let newCmd  = new ApplicationCommand({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_permission: commande.help.dm, default_member_permissions: commande.help.autorisation, id: cmd?.id, application_id: cmd?.application_id, version: cmd?.version}, this._bot)
+                let newCmd  = new ApplicationCommand({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, contexts: commande.help.contexts, default_member_permissions: commande.help.autorisation, id: cmd?.id, application_id: cmd?.application_id, version: cmd?.version}, this._bot)
                 
                 if(!cmd) newCmd.create().catch(err => {})
                 else{
-                    if(!newCmd.compare(cmd)) newCmd.modify().catch(err => {})
+                    if(!newCmd.compare(cmd)) {
+                        console.log(cmd.name)
+                        newCmd.modify().catch(err => {})
+                    }
                     commands = commands._delete(cmd.name)
                 }
             })

@@ -3,13 +3,18 @@ const Attachment = require('../../../handlers/attachment')
 const User = require('../user')
 const Member = require('../member')
 const Role = require('../role')
+const interactionTypes = require("../../../types/slashcommand")
 const channelTypes = require("../../../types/channels")
 const revertChannelTypes = channelTypes.revert()
 
 class Slash extends Base{
     constructor(slash, bot){
         super("slash", slash, bot)
+        
+        this._modifyConstants.push({name: "context", data: interactionTypes.revert()})
+
         this.id = slash.id
+        this.context = this._typechange(this._modifyConstants.find(e => e.name === "context").data, slash.context)
         this.command_id = slash.data.id || null
         this.attachments = this.#analyseAttachments(slash.data.resolved)
         this.options = this.#analyseOptions(slash.data.options, slash.data.resolved, this.guild_id, bot)

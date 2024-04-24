@@ -2,6 +2,7 @@ const Option = require("./commandoption")
 const Base = require("../bases/commands/base")
 const interactionMethod = require("../../methods/interaction")
 const utils = require("../../utils/functions")
+const interactionTypes = require('../../types/slashcommand')
 class Slash extends Base{
     constructor(slash, bot){
         super(slash)
@@ -10,8 +11,8 @@ class Slash extends Base{
         this.version = slash.version || null
         this.default_member_permissions = slash.default_member_permissions ? this.#analyseDefaultMember(slash.default_member_permissions) : null
         this.onlydm = slash.onlydm ?? false
-        this.dm_permission = slash.dm_permission ? this.#analyseDMPerm(slash.dm_permission) : null
         this.options = slash.options ? slash.options.map(opt => new Option(opt)) : []
+        this.contexts = slash.contexts ? this.#getContexts(slash.contexts) : null
         this.type = 1
         this.nsfw = slash.nsfw ?? false
         this._bot = bot
@@ -50,15 +51,39 @@ class Slash extends Base{
         return interactionMethod.deletecommand(informations)
     }
 
-    #analyseDMPerm(dm_perm){
-        switch(dm_perm){
-            case(null):
-                this.onlydm = true
-                return false
-            case(true):
-                return true
-            default:
-                return false
+    #getContexts(contexts) {
+        if (!Array.isArray(contexts)) {
+            return null
+        }
+
+        if (typeof contexts[0] === 'string') {
+            contexts = contexts
+            .map(context => {
+                if (typeof context !== 'string') {
+                    return null
+                }
+    
+                return context.toLowerCase()
+            })
+            .filter(Boolean)
+    
+            let permissions = []
+    
+            if (contexts.includes('dm')) {
+                permissions.push(interactionTypes.types.BotDm)
+            }
+    
+            if (contexts.includes('guild')) {
+                permissions.push(interactionTypes.types.Guild)
+            }
+    
+            if (contexts.includes('private')) {
+                permissions.push(interactionTypes.types.PrivateChannel)
+            }
+    
+            return permissions
+        } else {
+            return contexts.filter(context => [0, 1, 2].includes(context))
         }
     }
 
@@ -104,11 +129,6 @@ class Slash extends Base{
 
     setDefaultMemberPermission(value){
         this.default_member_permissions = this.#analyseDefaultMember(value)
-        return this
-    }
-
-    setDMPermissions(value){
-        this.dm_permission = this.#analyseDMPerm(value)
         return this
     }
 
