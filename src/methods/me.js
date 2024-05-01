@@ -1,5 +1,7 @@
 const handler = require("../api/requests/handler")
 const apiPath = require("../api/v10/user")
+const utils = require('../utils/functions')
+const apiBotPath = require("../api/v10/application")
 const gateawayApiPath = require("../api/v10/gateway")
 const errors = require("../utils/errors.json")
 const presenceFunction = require("../utils/functions").general.presence
@@ -18,6 +20,37 @@ module.exports.getuser = async (informations) => {
         return newData
     }
     return handler(args, passedOptions, callBackSuccess)
+}
+
+module.exports.modifybBot = async (informations, options) => {
+    let passedOptions = {
+        method: apiBotPath.modify.method,
+        token: informations.botToken,
+        url: apiBotPath.modify.url,
+        urlIDS: informations
+    }
+
+    if (options.icon) {
+        let verification = utils.checks.checkFiles([options.icon])
+        if (verification) {
+            options.icon = verification[0].getImageFile()
+        } else {
+            delete options.icon
+        }
+    }
+    if (options.cover_image) {
+        let verification = utils.checks.checkFiles([options.cover_image])
+        if (verification) {
+            options.cover_image = verification[0].getImageFile()
+        } else {
+            delete options.cover_image
+        }
+    }
+
+    let args = [
+        {value: options, data_name: "options"}
+    ]
+    return handler(args, passedOptions, null)
 }
 
 /**

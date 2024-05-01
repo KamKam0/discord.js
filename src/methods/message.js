@@ -21,6 +21,7 @@ module.exports.send = async (informations, options) => {
         body.embeds = utils.checks.checkEmbed(options.embeds)
         body.components = utils.checks.checkComponents(options.components)
         body.content = utils.checks.checkContent(options.content)
+        body.poll = utils.checks.checkPoll(options.poll)
         if(!method) body.sticker_ids = utils.checks.checkStickers(options.sticker_ids)
         
         let checkfiles = utils.checks.checkFiles(options.files)
@@ -33,7 +34,7 @@ module.exports.send = async (informations, options) => {
             }
             boundary = body_files.getBoundary()
             body_files.append("payload_json", JSON.stringify(body))
-        }else if(!body.content && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids?.length === 0) return reject(utils.general.createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Message"}))
+        }else if(!body.content && !body.poll && body.embeds.length === 0 && body.components.length === 0 && body.sticker_ids?.length === 0) return reject(utils.general.createError("An error happened", {code: errors["74"].code, message: errors["74"].message, file: "Message"}))
 
         let args = [
             {value: body_files || body, data_name: "options", stringified: false, order: 3}

@@ -38,7 +38,7 @@ class Queue{
 
     loop(){
         if(this.#loop_state) this.#loop_state = false
-        if(!this.#loop_state) this.#loop_state = true
+        else if(!this.#loop_state) this.#loop_state = true
         return this.#loop_state
     }
 
@@ -48,7 +48,7 @@ class Queue{
 
     queueloop(){
         if(this.#queueloop_state) this.#queueloop_state = false
-        if(!this.#queueloop_state) this.#queueloop_state = true
+        else if(!this.#queueloop_state) this.#queueloop_state = true
         return this.#queueloop_state
     }
 

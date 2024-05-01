@@ -7,55 +7,75 @@ class Commands extends Base{
         super(bot)
     }
 
-    create(options){
+    create(options, guildId){
         let ID = this._bot?.user?.id
         let informations = {
             bot: this._bot,
             botToken: this._token,
             application_id: ID
         }
+        if (guildId) {
+            informations.guild_id = guildId
+            return interactionMethod.createcommandByGuild(informations, options)
+        }
         return interactionMethod.create(informations, options)
     }
 
-    modify(cmdID, options){
+    modify(cmdID, options, guildId){
         let ID = this._bot?.user?.id
         let informations = {
             bot: this._bot,
             botToken: this._token,
             application_id: ID,
-            command_id: cmdID
+            id: cmdID
+        }
+        if (guildId) {
+            informations.guild_id = guildId
+            return interactionMethod.modifycommandByGuild(informations, options)
         }
         return interactionMethod.modifycommand(informations, options)
     }
 
-    delete(ID){
-        let app = this._bot?.user?.id
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            application_id: app,
-            command_id: ID
-        }
-        return interactionMethod.deletecommand(informations)
-    }
-
-    fetchAll(queryParams){
-        let ID = this._bot?.user?.id
-        let informations = {
-            botToken: this._token,
-            bot: this._bot,
-            application_id: ID
-        }
-        return interactionMethod.getcommands(informations, queryParams)
-    }
-
-    fetchById(ID){
+    delete(ID, guildId){
         let app = this._bot?.user?.id
         let informations = {
             botToken: this._token,
             bot: this._bot,
             application_id: app,
             id: ID
+        }
+        if (guildId) {
+            informations.guild_id = guildId
+            return interactionMethod.deletecommandByGuild(informations)
+        }
+        return interactionMethod.deletecommand(informations)
+    }
+
+    fetchAll(queryParams, guildId){
+        let ID = this._bot?.user?.id
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            application_id: ID
+        }
+        if (guildId) {
+            informations.guild_id = guildId
+            return interactionMethod.getcommandsByGuild(informations, queryParams)
+        }
+        return interactionMethod.getcommands(informations, queryParams)
+    }
+
+    fetchById(ID, guildId){
+        let app = this._bot?.user?.id
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            application_id: app,
+            id: ID
+        }
+        if (guildId) {
+            informations.guild_id = guildId
+            return interactionMethod.getcommandByGuild(informations)
         }
         return interactionMethod.getcommand(informations)
     }

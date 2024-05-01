@@ -9,6 +9,7 @@ const componentsClass = {
     selectMenu: require("../components/selectmenu")
 }
 const User = require("./user")
+const Poll = require('./interactions/Poll')
 const optionsTypes = require("../../types/option").types
 const ReactionsAdministrator = require('../administrators/reactions')
 
@@ -64,6 +65,7 @@ class Message extends Base{
         this.commandName = null
         this.isCommand = this.#handleCommand()
         this.options = this.#handleOptions()
+        this.poll = message.poll ? new Poll({...message.poll, message_id: this.id, channel_id: this.channel_id }, bot) : null
     }
 
     #handleCommand(){
@@ -87,7 +89,7 @@ class Message extends Base{
         let returnedOptions = []
         for (const option in options){
             let associatedValue = splittedMessageContent[option]
-            if(!associatedValue[option]) return returnedOptions
+            if(!associatedValue) return returnedOptions
             if(!isNaN(associatedValue)) associatedValue = +associatedValue
             if(!allowedOptionTypes.includes(typeof associatedValue)) continue
             let typeOfAssociatedValue = typeof associatedValue

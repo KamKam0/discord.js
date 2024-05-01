@@ -68,9 +68,6 @@ class baseMultiple extends base{
             case("application"):
                 this._individualClass = require("../singles/application")
             break;
-            case("applicationmetadata"):
-                this._individualClass = require("../singles/applicationmetadata")
-            break;
             case("threadmember"):
                 this._individualClass = require("../singles/threadmember")
             break;

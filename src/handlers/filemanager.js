@@ -1,4 +1,11 @@
 const fs = require("fs")
+const os = require('os')
+
+let osSymbol = '/'
+if (os.platform() === 'win32') {
+    osSymbol = '\\'
+}
+
 class FileManager{
     #extension
     #buffer
@@ -17,18 +24,25 @@ class FileManager{
         this.#buffer = data.buffer || null
     }
 
-    loadFile(relativePath){
-        if(typeof relativePath !== "string" || !relativePath.startsWith(".") || !relativePath.includes("/")) return false
+    loadFile(path){
+        if(typeof path !== "string" || !path.includes(".") || !path.includes(osSymbol)) return this
         try{
-            let data = fs.readFileSync(relativePath)
+            let data = fs.readFileSync(path)
             this.#buffer = data
-            let splittedPath = relativePath.split(".")
-            let splittedPathOsSep = relativePath.split("/")
-            this.#extension = splittedPath[splittedPath.length - 1]
-            if(!this.#name) this.#name = splittedPathOsSep[splittedPathOsSep.length - 1]?.split(".")?.[0]
-            return true
-        }catch(err){ 
-            return false
+            let splittedPathOsSep = path.split(osSymbol)
+            let fileInfo = splittedPathOsSep[splittedPathOsSep.length - 1]
+            this.#extension = fileInfo?.split('.')?.[1]
+            if (!this.#extension) {
+                this.#buffer = null
+                return this
+            }
+            if(!this.#name) {
+                this.#name = fileInfo?.split('.')?.[0]
+            }
+            this.path = path
+            return this
+        }catch(err){
+            return this
         }
     }
 
@@ -66,8 +80,8 @@ class FileManager{
         return `${this.#name}.${this.#extension}`
     }
 
-    getEmojiFile(){
-        let baseData = Buffer.from(this.#buffer, "base64")
+    getImageFile(){
+        let baseData = Buffer.from(this.#buffer).toString('base64')
         return `data:image/${this.#extension};base64,${baseData}`
     }
 }

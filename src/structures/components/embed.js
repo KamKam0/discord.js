@@ -91,6 +91,7 @@ class Embed extends origin{
     * @returns {Embed}
     */
     setImage(image){
+        if (!image) return this
         if((typeof image !== "string" || image.length > 1000) && (typeof image !== "object" || typeof image.url !== "string")) return this
         if(typeof image === "string"){
             if(image.startsWith("http")) this.image = {url: image}

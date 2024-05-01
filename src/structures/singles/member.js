@@ -1,5 +1,6 @@
 const Base = require("../bases/baseguild")
 const Roles = require("../administrators/memberroles")
+const User = require('./user')
 const methods = {
     user: require("../../methods/user"),
     message: require("../../methods/message"),
@@ -16,7 +17,7 @@ class Member extends Base{
     constructor(member, bot){
         super(member, bot)
         this.user_id = member.user?.id || member.user_id
-        this.user = bot.users.get(this.user_id) || null
+        this.user = bot.users.get(this.user_id) || member.user ? new User(member.user, bot) : null || null
         this.nick = member.nick || null
         this.avatar = member.avatar || null
         this.premium_since = member.premium_since || null

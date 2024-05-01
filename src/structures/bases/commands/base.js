@@ -60,7 +60,7 @@ class commandBase {
     }
 
     compare(slash){
-        for (const point of Object.keys(this).filter(e => !["id", "version", "application_id", "onlydm"].includes(e))){
+        for (const point of Object.keys(this).filter(e => !["id", "version", "application_id"].includes(e))){
             let point2 = slash[point]
             if(["description_localizations", "name_localizations"].includes(point)){
                 let ppoint = Object.entries(this[point])
@@ -78,7 +78,25 @@ class commandBase {
                     if(!option.compare(point2.find(opt => opt.name === option.name))) return false
                 }
                 for(const option of slash[point]) if(!this[point].find(opt => opt.name === option.name)) return false
-            }else if(this[point] !== point2) return false
+            } else if(point === 'contexts') {
+                let isSlashContextsArray = Array.isArray(this[point])
+                if (isSlashContextsArray !== Array.isArray(slash[point])) {
+                    return false
+                }
+                if (isSlashContextsArray) {
+                    if (this[point]?.length !== slash[point]?.length) {
+                        return false
+                    }
+                    if (this[point].filter(localContext => !slash[point].includes(localContext)).length) {
+                        return false
+                    }
+                    if (slash[point].filter(slashContext => !this[point].includes(slashContext)).length) {
+                        return false
+                    }
+                }
+            } else if(this[point] !== point2) {
+                return false
+            }
         }
         return true
     }

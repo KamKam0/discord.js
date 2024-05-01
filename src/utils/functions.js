@@ -115,6 +115,7 @@ function correctMessageData(options){
     if(options && options.modal) return options
     if(typeof options !== "object" && typeof options === "string") return {content: options}
     else if(typeof options === "object" && (options.content || options.embeds || options.files || options.modal || options.components || options.sticker_ids)) return options
+    else if(typeof options === "object" && (options.question || options.answers || options.duration)) return {poll: options}
     else if(typeof options === "object" && (options.description || options.title || options.fields)) return {embeds: [options]}
     else if(typeof options === "object" && (options.name || options.buffer || options.extension)) return {files: [options]}
     else if(typeof options === "object" && options.custom_id !== undefined) return {components: [options]}
@@ -133,6 +134,28 @@ function presence(presence){
     else presence.activities = []
     base.activities = presence.activities
     return base
+}
+
+function checkPoll (poll) {
+    if (!poll) return null
+    if (typeof poll !== 'object') return null
+    if (typeof poll.question !== 'object') return null
+    if (typeof poll.question.text !== 'string') return null
+    if (poll.question.emoji && (typeof poll.question.emoji.name !== 'string' && typeof poll.question.emoji.id !== 'string')) return null
+    if (typeof poll.duration !== 'number') return null
+    if (typeof poll.layout_type !== 'number') return null
+    if (typeof poll.allow_multiselect !== 'boolean') return null
+    if (!Array.isArray(poll.answers) || !poll.answers.length) return null
+    poll.answers = poll.answers
+    .map(answer => {
+        if (typeof answer.answer_id !== 'number') return null
+        if (typeof answer.poll_media !== 'object') return null
+        if (typeof answer.poll_media.text !== 'string') return null
+        if (answer.poll_media.emoji && (typeof answer.poll_media.emoji.name !== 'string' && typeof answer.poll_media.emoji.id !== 'string')) return null
+        return answer
+    })
+    .filter(Boolean)
+    return poll
 }
 
 function checkEmbed(embeds){
@@ -367,7 +390,8 @@ module.exports.checks = {
     checkApplicationCommand,
     checkCommands,
     checkOptions,
-    checkChoices
+    checkChoices,
+    checkPoll
 }
 
 module.exports.general = {

@@ -18,7 +18,7 @@ class Initiate{
             let commands = await this._bot.commands.fetchAll({with_localizations: true}).catch(err => reject(err))
             if(!commands) return
     
-            this._bot.handler.getUserCommands().filter(cmd => !cmd.help.unclass).forEach(commande => {
+            for (let commande of this._bot.handler.getUserCommands().filter(cmd => !cmd.help.unclass)) {
                 let descriptions_cmd, names_cmd, descriptions_opt, names_opt, names_cho;
     
                 let las = (commande.help.langues) ? this._bot.handler.getLanguages() : this._bot.langues
@@ -49,15 +49,22 @@ class Initiate{
                     })
                 })
                 
-                let cmd = commands.find(cmd => cmd.name === commande.name)
-                let newCmd  = new ApplicationCommand({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, description_localizations: descriptions_cmd, name_localizations: names_cmd, dm_permission: commande.help.dm, default_member_permissions: commande.help.autorisation, id: cmd?.id, application_id: cmd?.application_id, version: cmd?.version}, this._bot)
+                let cmd;
+                if (commande.guild) {
+                    let guildCommands = await this._bot.commands.fetchAll({with_localizations: true}, commande.guild)
+                    cmd = guildCommands.find(cmd => cmd.name === commande.name)
+                } else {
+                    cmd = commands.find(cmd => cmd.name === commande.name)
+                }
+                
+                let newCmd  = new ApplicationCommand({name: commande.name, description: commande.description, options: commande.help.options || [], nsfw: commande.help.nsfw || undefined, guild_id: commande.guild, description_localizations: descriptions_cmd, name_localizations: names_cmd, contexts: commande.help.contexts, default_member_permissions: commande.help.autorisation, id: cmd?.id, application_id: cmd?.application_id, version: cmd?.version}, this._bot)
                 
                 if(!cmd) newCmd.create().catch(err => {})
                 else{
                     if(!newCmd.compare(cmd)) newCmd.modify().catch(err => {})
                     commands = commands._delete(cmd.name)
                 }
-            })
+            }
             if(commands.length > 0) commands.container.forEach(cmd => cmd.delete().catch(err => {}))
 
             return resolve(null)
@@ -114,7 +121,11 @@ class Initiate{
             if(!cmd.help) error.push({cmd: cmd.name, err: "no help"})
             else{
                 let verif = slashChecker({...cmd.help, name: cmd.name}, true, ((cmd.help.langues ) ? this._bot.handler.getLanguages() : this._bot.langues))
-                if(!verif.status) error.push({...verif, cmd: cmd.name})
+                if(!verif.status) {
+                    error.push({...verif, cmd: cmd.name})
+                } else if (cmd.help?.options?.find(option => option.autocomplete) && typeof cmd.choicesLoader !== 'function') {
+                    error.push({type: 'cmd', errors: [{err: "autocomplete option wihtout choicesLoader function"}], status: false, cmd: cmd.name})
+                }
             }
         })
         if(error.length !== 0){

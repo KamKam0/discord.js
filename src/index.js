@@ -18,6 +18,7 @@ exports.SlashCommand = require("./structures/applicationscommands/command")
 // Message Components //
 
 exports.Embed = require("./structures/components/embed")
+exports.Poll = require("./structures/components/poll")
 exports.Button = require("./structures/components/button")
 exports.SelectMenu = require("./structures/components/selectmenu")
 exports.SelectMenuOption = require("./structures/components/selectoption")

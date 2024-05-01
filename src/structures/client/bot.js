@@ -69,10 +69,18 @@ class Bot extends EventEmitter{
         return this.ws.login(presence)
     }
 
+    async modifyBotData(options) {
+        let informations = {
+            bot: this,
+            botToken: this.token
+        }
+        return methodMe.modifybBot(informations, options)
+    }
+
     async getMe(){
         let informations = {
             bot: this,
-            token: this.token
+            botToken: this.token
         }
         return methodMe.getuser(informations)
     }
@@ -288,7 +296,6 @@ class Bot extends EventEmitter{
             if(e === "") return elementOS
             return e
         }).join(elementOS)
-        const fs = require("node:fs")
         return fs.readdirSync(truePath).filter(e => e.endsWith(".js")).map(e => e.split(".js")[0])
     }
 }

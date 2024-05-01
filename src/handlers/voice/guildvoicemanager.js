@@ -234,7 +234,9 @@ class voiceManager{
             if(!this.playing || !this.queue.np || !options || typeof options !== "object" || !options.seek || (typeof options.seek !== "number" && isNaN(options.seek))) return reject(null)
             if(typeof options.seek !== "number") options.seek = Number(options.seek)
             this.managing = false
-            this.queue.setNP({...this.queue.np, seek: options.seek})
+            if (this.queue.np) {
+                this.queue.setNP({...this.queue.np, seek: options.seek / 1000})
+            }
             this.end()
             setTimeout(() => {
                 this.play(link, options)

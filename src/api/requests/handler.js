@@ -28,7 +28,7 @@ module.exports = async (args, options, callbackSuccess) => {
         let basedata;
 
         // mise en place des headers
-        let contentType = require("../headers/contenttypes")[(options.contentType || "basic")]
+        let contentType = require("../headers/contenttypes")[(options.contentType || "basic")] || options.contentType
         if(!contentType) return reject(createError(errors["89"].message, {code: errors["89"].code, message: errors["89"].message}))
         if(options.contentType === "file") contentType+=options.boundary
         headers = {...headers, "Content-Type": contentType}

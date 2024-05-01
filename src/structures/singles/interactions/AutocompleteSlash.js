@@ -1,23 +1,45 @@
-const Base = require("../../bases/interactions/base")
+const Base = require("../../bases/baseguild")
 const Attachment = require('../../../handlers/attachment')
 const User = require('../user')
 const Member = require('../member')
 const Role = require('../role')
-const interactionTypes = require("../../../types/slashcommand")
+const interactionMethod = require("../../../methods/interaction")
 const channelTypes = require("../../../types/channels")
+const { channelBackup } = require("../../../utils/functions").general
 const revertChannelTypes = channelTypes.revert()
 
-class Slash extends Base{
-    constructor(slash, bot){
-        super("slash", slash, bot)
-        
-        this._modifyConstants.push({name: "context", data: interactionTypes.revert()})
+class AutoComplete extends Base{
+    constructor(interaction, bot){
+        super(interaction, bot)
+        this.id = interaction.id
+        this.application_id = interaction.application_id
+        this.name = interaction.data.name || null
+        this.channel_id = interaction.channel_id
+        this.channel = bot.channels.get(this.channel_id) || channelBackup(interaction.channel_id, bot)
+        this.user_id = interaction.user ? interaction.user.id : interaction.member.user.id
+        this.user = bot.users.get(this.user_id) ?? new User((interaction.user || interaction.member.user), bot)
+        this.member = interaction.member && this.guild ? this.guild.members.get(this.user_id) : null
+        this.token = interaction.token
+        this.version = interaction.version
+        this.guild_locale = interaction.guild_locale
+        this.locale = interaction.locale
+        this.receivingTypePrecision = "slash"
+        this.receivingType = "interaction"
+        this.id = interaction.id
+        this.command_id = interaction.data.id || null
+        this.attachments = this.#analyseAttachments(interaction.data.resolved)
+        this.options = this.#analyseOptions(interaction.data.options, interaction.data.resolved, this.guild_id, bot)
+        this.isAutocomplete = true
+    }
 
-        this.id = slash.id
-        this.context = this._typechange(this._modifyConstants.find(e => e.name === "context").data, slash.context)
-        this.command_id = slash.data.id || null
-        this.attachments = this.#analyseAttachments(slash.data.resolved)
-        this.options = this.#analyseOptions(slash.data.options, slash.data.resolved, this.guild_id, bot)
+    async returnSuggestedChoices(choices) {
+        let informations = {
+            botToken: this._token,
+            bot: this._bot,
+            interaction_id: this.id,
+            interaction_token: this.token
+        }
+        return interactionMethod.replyToAutocomplete(informations, choices)
     }
 
     getOption(name){
@@ -93,4 +115,4 @@ class Slash extends Base{
     }
 }
 
-module.exports = Slash
+module.exports = AutoComplete
